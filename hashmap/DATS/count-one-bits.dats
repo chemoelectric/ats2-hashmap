@@ -1,5 +1,8 @@
 (*
 
+Count the number of 1-bits in a word.
+
+Copyright © 2012-2021 Free Software Foundation, Inc.
 Copyright © 2021 Barry Schwartz
 
 This program is free software: you can redistribute it and/or
@@ -16,29 +19,16 @@ You should have received copies of the GNU General Public License
 along with this program. If not, see
 <https://www.gnu.org/licenses/>.
 
+Written by Ben Pfaff. (See the count-one-bits module of Gnulib.)
+
+Modified for ats2-hashmap by Barry Schwartz.
+
 *)
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+staload "hashmap/SATS/count-one-bits.sats"
 
-%{#
-#include "hashmap/CATS/count-one-bits.cats"
+%{
+#if 1500 <= _MSC_VER && (defined _M_IX86 || defined _M_X64)
+int ats2_hashmap_popcount_support = -1;
+#endif
 %}
-
-fun
-count_one_bits_uint : uint -<> int = "mac#%"
-
-fun
-count_one_bits_ulint : ulint -<> int = "mac#%"
-
-fun
-count_one_bits_ullint : ullint -<> int = "mac#%"
-
-fun
-count_one_bits_uintptr : uintptr -<> int = "mac#%"
-
-symintr count_one_bits
-overload count_one_bits with count_one_bits_uint
-overload count_one_bits with count_one_bits_ulint
-overload count_one_bits with count_one_bits_ullint
-overload count_one_bits with count_one_bits_uintptr

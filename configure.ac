@@ -53,7 +53,6 @@ AM_CONDITIONAL([DEPENDENCY_TRACKING],
 # Checks for programs.
 
 AC_PROG_CC
-gl_EARLY
 AC_PROG_CC_C_O
 AC_CHECK_PROGS([PATSOPT],[patsopt])
 AC_PROG_INSTALL
@@ -64,11 +63,6 @@ AC_PROG_AWK
 AC_PROG_SED
 AC_PROG_FGREP
 AC_PROG_EGREP
-
-gl_INIT
-
-PKG_PROG_PKG_CONFIG
-PKG_CONFIG="${PKG_CONFIG} --define-variable=PATSHOME=\"${PATSHOME}\""
 
 # Enable optional code coverage analysis.
 AX_CODE_COVERAGE
@@ -88,6 +82,7 @@ AX_CODE_COVERAGE
 AC_CHECK_SIZEOF([unsigned int])
 AC_CHECK_SIZEOF([unsigned long int])
 AC_CHECK_SIZEOF([unsigned long long int])
+AC_CHECK_SIZEOF([uintptr_t])
 
 #--------------------------------------------------------------------------
 #
@@ -105,11 +100,8 @@ CFLAGS="${CFLAGS}${CFLAGS+ }\$(CODE_COVERAGE_CFLAGS)"
 # @GNU@ here may be better.)
 AC_SUBST([GNU],[])
 
-AC_CONFIG_HEADERS([config.h])
-
 StM_REQUIRE_GNU_MAKE_IN_PATH
 StM_CONFIG_MAKEFILES
-StM_CONFIG_MAKEFILES([lib/Makefile],[lib/GNUmakefile])
 
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
@@ -117,14 +109,8 @@ StM_CONFIG_MAKEFILES([lib/Makefile],[lib/GNUmakefile])
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 
 # What to use as the shell in shebangs.
-AC_ARG_VAR([POSIX_SH],[The full absolute path of a POSIX shell])
-if test -z "${POSIX_SH}" ; then
-  if test -n "${POSIX_SHELL}"; then
-    POSIX_SH="${POSIX_SHELL}"
-  else
-    POSIX_SH=`command -p -v sh`
-  fi
-fi
+#AC_ARG_VAR([POSIX_SH],[The full absolute path of a POSIX shell])
+#POSIX_SH=${POSIX_SH-`command -p -v sh`}
 
 AC_OUTPUT
 

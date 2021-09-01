@@ -24,8 +24,6 @@ AUTOMAKE_OPTIONS += foreign
 AUTOMAKE_OPTIONS += subdir-objects
 AUTOMAKE_OPTIONS += -Wno-portability
 
-SUBDIRS = lib
-
 include $(top_srcdir)/aminclude_static.am
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
@@ -56,8 +54,6 @@ EXTRA_DIST += AUTHORS
 
 DISTCLEANFILES += Makefile
 DISTCLEANFILES += GNUmakefile
-DISTCLEANFILES += lib/Makefile
-DISTCLEANFILES += lib/GNUmakefile
 
 # We will not be using exceptions.
 AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
@@ -133,48 +129,38 @@ TESTS_PATSOPTFLAGS += -IATS $(srcdir)/tests
 ats-includes-distclean:
 	-rm -f -R ats-dependencies
 
-@GNU@ define insert-config-h =
-@GNU@	$(AWK) 'BEGIN { print "#include <config.h>" }; { print }'
-@GNU@ endef
-
 if DEPENDENCY_TRACKING
 
 %_sats.c: %.sats $(PATSOPT_DEPS) list-ats-dependencies
 	@$(call write-dependencies-file,$(@),$(<))
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -s $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -s $(<)
 
 %_dats.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
 	@$(call write-dependencies-file,$(@),$(<))
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -d $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
 %_tests.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
 	@$(call write-dependencies-file,$(@),$(<))
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) \
-			$(TESTS_PATSOPTFLAGS) -d $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
+			$(TESTS_PATSOPTFLAGS) -d $(<)
 
 else !DEPENDENCY_TRACKING
 
 %_sats.c: %.sats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -s $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -s $(<)
 
 %_dats.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -d $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
 %_tests.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) \
-			$(TESTS_PATSOPTFLAGS) -d $(<) | \
-		$(call insert-config-h) > $(@)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
+			$(TESTS_PATSOPTFLAGS) -d $(<)
 
 endif !DEPENDENCY_TRACKING
 
@@ -191,6 +177,7 @@ lib_LTLIBRARIES += libats2-hashmap.la
 
 libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
+libats2_hashmap_la_LIBADD =
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
@@ -198,9 +185,16 @@ EXTRA_DIST += hashmap/SATS/hashmap.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
 CLEANFILES += hashmap/SATS/count-one-bits_sats.c
+CLEANFILES += hashmap/DATS/count-one-bits_dats.c
 EXTRA_DIST += hashmap/SATS/count-one-bits.sats
 EXTRA_DIST += hashmap/CATS/count-one-bits.cats
+EXTRA_DIST += hashmap/SATS/count-one-bits.dats
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
+CLEANFILES += hashmap/SATS/structure_sats.c
+EXTRA_DIST += hashmap/SATS/structure.sats
 
 #--------------------------------------------------------------------------
 #

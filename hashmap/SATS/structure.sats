@@ -21,24 +21,13 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
-%{#
-#include "hashmap/CATS/count-one-bits.cats"
-%}
+typedef node_entry_t (left : int, right : addr) =
+  @(uintptr left, ptr right)
+typedef node_entry_t =
+  [left : int] [right : addr] node_entry_t (left, right)
 
-fun
-count_one_bits_uint : uint -<> int = "mac#%"
+viewdef node_v (length : int, p : addr) =
+  @[node_entry_t][length] @ p
 
-fun
-count_one_bits_ulint : ulint -<> int = "mac#%"
-
-fun
-count_one_bits_ullint : ullint -<> int = "mac#%"
-
-fun
-count_one_bits_uintptr : uintptr -<> int = "mac#%"
-
-symintr count_one_bits
-overload count_one_bits with count_one_bits_uint
-overload count_one_bits with count_one_bits_ulint
-overload count_one_bits with count_one_bits_ullint
-overload count_one_bits with count_one_bits_uintptr
+vtypedef node_vt (length : int, p : addr) =
+  @(node_v (length, p) | ptr p)
