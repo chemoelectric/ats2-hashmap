@@ -1,0 +1,14 @@
+Hash Maps for ATS2/Postiats
+---------------------------
+
+Implementation by array-mapped trees.
+
+FIXME: Say more.
+
+License: GPL version 3 or higher
+
+References:
+* Bagwell, Phil. Ideal hash trees. 2001.
+* Bagwell, Phil. Fast and space efficient trie searches. 2000.
+
+FIXME: Give more information in the references.

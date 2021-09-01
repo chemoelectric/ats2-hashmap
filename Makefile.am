@@ -1,0 +1,234 @@
+#
+# Copyright © 2021 Barry Schwartz
+#
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License, as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received copies of the GNU General Public License
+# along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
+.DELETE_ON_ERROR:
+
+ACLOCAL_AMFLAGS = -I m4 --install
+AUTOMAKE_OPTIONS =
+AUTOMAKE_OPTIONS += foreign
+AUTOMAKE_OPTIONS += subdir-objects
+AUTOMAKE_OPTIONS += -Wno-portability
+
+SUBDIRS = lib
+
+include $(top_srcdir)/aminclude_static.am
+@GNU@ include $(top_srcdir)/silent-rules.mk
+@GNU@ -include ats-dependencies/*.mk
+
+EXTRA_DIST =
+MOSTLYCLEANFILES =
+CLEANFILES =
+DISTCLEANFILES =
+BUILT_SOURCES =
+AM_CPPFLAGS =
+AM_CFLAGS =
+AM_LDFLAGS =
+LDADD =
+bin_PROGRAMS =
+lib_LTLIBRARIES =
+EXTRA_PROGRAMS =
+nobase_nodist_pkginclude_HEADERS =
+
+pkgconfigdir = ${libdir}/pkgconfig
+nodist_pkgconfig_DATA =
+
+EXTRA_DIST += silent-rules.mk
+EXTRA_DIST += m4/gnulib-cache.m4
+EXTRA_DIST += COPYING
+EXTRA_DIST += INSTALL
+EXTRA_DIST += README
+EXTRA_DIST += AUTHORS
+
+DISTCLEANFILES += Makefile
+DISTCLEANFILES += GNUmakefile
+DISTCLEANFILES += lib/Makefile
+DISTCLEANFILES += lib/GNUmakefile
+
+# We will not be using exceptions.
+AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
+
+AM_CPPFLAGS += -I$(builddir)
+AM_CPPFLAGS += -I$(srcdir)
+AM_CPPFLAGS += -I$(builddir)/lib
+AM_CPPFLAGS += -I$(srcdir)/lib
+AM_CPPFLAGS += -I$(PATSHOME)
+AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
+
+LDADD += $(CODE_COVERAGE_LIBS)
+
+CODE_COVERAGE_IGNORE_PATTERN =
+CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*
+CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*/*
+CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/ccomp/runtime/*
+CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/prelude/CATS/*
+
+clean-local: code-coverage-clean # tests-clean
+distclean-local: code-coverage-dist-clean ats-includes-distclean
+
+#---------------------------------------------------------------------
+#
+# Some GNU Make aids you might want to use.
+#
+
+comma := ,
+empty :=
+space := $(empty) $(empty)
+
+# Escape things for sed expressions, etc.
+escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(subst \,\\,$(1)))))))
+
+#--------------------------------------------------------------------------
+
+PATSOPT_DEPS =
+
+#DATS_WORDS_BIGENDIAN := \
+#	$(shell echo x $(DEFS) | \
+#		$(EGREP) -q '[[:space:]]-DWORDS_BIGENDIAN(=1)?([[:space:]]|$$)?' && \
+#				echo x'-DATS WORDS_BIGENDIAN=1' | \
+#		$(SED) -e 's|^x||')
+
+#DATS_HAVE_ALIGNED_ACCESS_REQUIRED := \
+#	$(shell echo x $(DEFS) | \
+#		$(EGREP) -q '[[:space:]]-DHAVE_ALIGNED_ACCESS_REQUIRED(=1)?([[:space:]]|$$)?' && \
+#				echo x'-DATS HAVE_ALIGNED_ACCESS_REQUIRED=1' | \
+#		$(SED) -e 's|^x||')
+
+AM_PATSOPTFLAGS =
+#AM_PATSOPTFLAGS += $(DATS_WORDS_BIGENDIAN)
+#AM_PATSOPTFLAGS += $(DATS_HAVE_ALIGNED_ACCESS_REQUIRED)
+AM_PATSOPTFLAGS += -IATS $(builddir)
+AM_PATSOPTFLAGS += -IATS $(srcdir)
+
+TOTAL_PATSOPTFLAGS =
+TOTAL_PATSOPTFLAGS += $(AM_PATSOPTFLAGS)
+TOTAL_PATSOPTFLAGS += $(PATSOPTFLAGS)
+TOTAL_PATSOPTFLAGS += $(XPATSOPTFLAGS)
+
+TESTS_PATSOPTFLAGS =
+TESTS_PATSOPTFLAGS += -IATS $(builddir)/tests
+TESTS_PATSOPTFLAGS += -IATS $(srcdir)/tests
+
+@GNU@ define write-dependencies-file =
+@GNU@	$(MKDIR_P) ats-dependencies && \
+@GNU@		echo $(1): $(shell ./list-ats-dependencies $(2)) \
+@GNU@			> ats-dependencies/`echo $(@) | $(SED) 's|/|_057_|g'`.mk
+@GNU@ endef
+
+.PHONY: ats-includes-distclean
+ats-includes-distclean:
+	-rm -f -R ats-dependencies
+
+@GNU@ define insert-config-h =
+@GNU@	$(AWK) 'BEGIN { print "#include <config.h>" }; { print }'
+@GNU@ endef
+
+if DEPENDENCY_TRACKING
+
+%_sats.c: %.sats $(PATSOPT_DEPS) list-ats-dependencies
+	@$(call write-dependencies-file,$(@),$(<))
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -s $(<) | \
+		$(call insert-config-h) > $(@)
+
+%_dats.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
+	@$(call write-dependencies-file,$(@),$(<))
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -d $(<) | \
+		$(call insert-config-h) > $(@)
+
+%_tests.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
+	@$(call write-dependencies-file,$(@),$(<))
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) \
+			$(TESTS_PATSOPTFLAGS) -d $(<) | \
+		$(call insert-config-h) > $(@)
+
+else !DEPENDENCY_TRACKING
+
+%_sats.c: %.sats $(PATSOPT_DEPS)
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -s $(<) | \
+		$(call insert-config-h) > $(@)
+
+%_dats.c: %.dats $(PATSOPT_DEPS)
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) -d $(<) | \
+		$(call insert-config-h) > $(@)
+
+%_tests.c: %.dats $(PATSOPT_DEPS)
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) $(TOTAL_PATSOPTFLAGS) \
+			$(TESTS_PATSOPTFLAGS) -d $(<) | \
+		$(call insert-config-h) > $(@)
+
+endif !DEPENDENCY_TRACKING
+
+%_depsprog.c: %.dats $(PATSOPT_DEPS)
+	@$(MKDIR_P) $(@D)
+	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
+
+#--------------------------------------------------------------------------
+#
+# The ATS2 library.
+#
+
+lib_LTLIBRARIES += libats2-hashmap.la
+
+libats2_hashmap_la_SOURCES =
+libats2_hashmap_la_DEPENDENCIES =
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
+CLEANFILES += hashmap/SATS/hashmap_sats.c
+EXTRA_DIST += hashmap/SATS/hashmap.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
+CLEANFILES += hashmap/SATS/count-one-bits_sats.c
+EXTRA_DIST += hashmap/SATS/count-one-bits.sats
+EXTRA_DIST += hashmap/CATS/count-one-bits.cats
+
+#--------------------------------------------------------------------------
+#
+# Computation of dependencies.
+#
+
+EXTRA_PROGRAMS += list-ats-dependencies
+EXTRA_DIST += list-ats-dependencies.dats
+CLEANFILES += list-ats-dependencies
+CLEANFILES += list-ats-dependencies_depsprog.c
+
+list_ats_dependencies_SOURCES =
+list_ats_dependencies_SOURCES += list-ats-dependencies_depsprog.c
+list_ats_dependencies_CPPFLAGS =
+list_ats_dependencies_CPPFLAGS += $(AM_CPPFLAGS)
+list_ats_dependencies_CPPFLAGS += -DATS_MEMALLOC_LIBC
+list_ats_dependencies_DEPENDENCIES =
+list_ats_dependencies_DEPENDENCIES += list-ats-dependencies.dats
+list_ats_dependencies_LDADD =
+list_ats_dependencies_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib'
+list_ats_dependencies_LDADD += -latslib
+
+#--------------------------------------------------------------------------
+
+#nodist_pkgconfig_DATA += ats2-hashmap.pc
+#nodist_pkgconfig_DATA += hashmap.pc
+
+#--------------------------------------------------------------------------
+# local variables:
+# coding: utf-8
+# end:
