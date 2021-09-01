@@ -193,8 +193,11 @@ EXTRA_DIST += hashmap/CATS/count-one-bits.cats
 EXTRA_DIST += hashmap/SATS/count-one-bits.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
 CLEANFILES += hashmap/SATS/structure_sats.c
+CLEANFILES += hashmap/DATS/structure_dats.c
 EXTRA_DIST += hashmap/SATS/structure.sats
+EXTRA_DIST += hashmap/DATS/structure.dats
 
 #--------------------------------------------------------------------------
 #

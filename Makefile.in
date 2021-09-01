@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Wed Sep  1 09:38:22 CDT 2021
+# from AX_AM_MACROS_STATIC on Wed Sep  1 12:40:02 CDT 2021
 
 
 
@@ -173,7 +173,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/SATS/count-one-bits_sats.lo \
 	hashmap/DATS/count-one-bits_dats.lo \
-	hashmap/SATS/structure_sats.lo
+	hashmap/SATS/structure_sats.lo hashmap/DATS/structure_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -198,6 +198,7 @@ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/structure_dats.Plo \
 	hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/structure_sats.Plo
@@ -439,13 +440,13 @@ EXTRA_DIST = silent-rules.mk m4/gnulib-cache.m4 COPYING INSTALL README \
 	hashmap/SATS/count-one-bits.sats \
 	hashmap/CATS/count-one-bits.cats \
 	hashmap/SATS/count-one-bits.dats hashmap/SATS/structure.sats \
-	list-ats-dependencies.dats
+	hashmap/DATS/structure.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
-	hashmap/SATS/structure_sats.c list-ats-dependencies \
-	list-ats-dependencies_depsprog.c
+	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c \
+	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = 
 
@@ -502,7 +503,7 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
-	hashmap/SATS/structure_sats.c
+	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = 
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
@@ -655,6 +656,8 @@ hashmap/DATS/count-one-bits_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/structure_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/structure_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 
 libats2-hashmap.la: $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_DEPENDENCIES) $(EXTRA_libats2_hashmap_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) -rpath $(libdir) $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_LIBADD) $(LIBS)
@@ -675,6 +678,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/structure_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/structure_sats.Plo@am__quote@ # am--include-marker
@@ -1068,6 +1072,7 @@ distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
@@ -1121,6 +1126,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo

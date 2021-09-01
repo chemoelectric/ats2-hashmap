@@ -14585,6 +14585,46 @@ fi
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+# The cast to long int works around a bug in the HP C Compiler,
+# see AC_CHECK_SIZEOF for more information.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking alignment of long double" >&5
+printf %s "checking alignment of long double... " >&6; }
+if test ${ac_cv_alignof_long_double+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) offsetof (ac__type_alignof_, y)" "ac_cv_alignof_long_double"        "$ac_includes_default
+typedef struct { char x; long double y; } ac__type_alignof_;"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_long_double" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute alignment of long double
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_alignof_long_double=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_alignof_long_double" >&5
+printf "%s\n" "$ac_cv_alignof_long_double" >&6; }
+
+
+
+printf "%s\n" "#define ALIGNOF_LONG_DOUBLE $ac_cv_alignof_long_double" >>confdefs.h
+
+
+if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
+  # The implementation here assumes (a) that memory is allocated by
+  # malloc(3) or a compatible equivalent (such as Boehm GC); (b) that
+  # values entered in the tree are allocated with such a malloc;
+  # (c) that malloc aligns the allocated memory on an even address.
+  as_fn_error $? "malloc(3) might return odd addresses. Bailing out." "$LINENO" 5
+fi
+
 # The cast to long int works around a bug in the HP C Compiler
 # version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
 # declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.

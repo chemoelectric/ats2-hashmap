@@ -1,8 +1,5 @@
 (*
 
-Count the number of 1-bits in a word.
-
-Copyright © 2012-2021 Free Software Foundation, Inc.
 Copyright © 2021 Barry Schwartz
 
 This program is free software: you can redistribute it and/or
@@ -19,18 +16,23 @@ You should have received copies of the GNU General Public License
 along with this program. If not, see
 <https://www.gnu.org/licenses/>.
 
-Written by Ben Pfaff. (See the count-one-bits module of Gnulib.)
-
-Modified for ats2-hashmap by Barry Schwartz.
-
 *)
 
 #define ATS_DYNLOADFLAG 0
 
-staload "hashmap/SATS/count-one-bits.sats"
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
 
-%{
-#if 1500 <= _MSC_VER && (defined _M_IX86 || defined _M_X64)
-int ats2_hashmap_popcount_support = -1;
-#endif
-%}
+staload "hashmap/SATS/structure.sats"
+
+implement {}
+node_entry_right2value_ptr (right) =
+  (* Clear the "This is a value pointer" bit. *)
+  $UNSAFE.cast (pred ($UNSAFE.cast{uintptr} right))
+
+implement {}
+value_ptr2node_entry_right (p) =
+  (* Set the "This is a value pointer" bit. The least
+     significant bit of the actual pointer will be clear,
+     due to alignment of the node. *)
+  $UNSAFE.cast (succ ($UNSAFE.cast{uintptr} p))

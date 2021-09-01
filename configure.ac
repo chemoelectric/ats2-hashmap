@@ -79,6 +79,15 @@ AX_CODE_COVERAGE
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+AC_CHECK_ALIGNOF([long double])
+if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
+  # The implementation here assumes (a) that memory is allocated by
+  # malloc(3) or a compatible equivalent (such as Boehm GC); (b) that
+  # values entered in the tree are allocated with such a malloc;
+  # (c) that malloc aligns the allocated memory on an even address.
+  AC_MSG_ERROR([malloc(3) might return odd addresses. Bailing out.])
+fi
+
 AC_CHECK_SIZEOF([unsigned int])
 AC_CHECK_SIZEOF([unsigned long int])
 AC_CHECK_SIZEOF([unsigned long long int])
