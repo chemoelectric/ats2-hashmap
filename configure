@@ -14585,6 +14585,9 @@ fi
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+# FIXME FIXME FIXME: Instead of bailing out, use a ‘safer’ implementation.
+#                    Make the ‘safer’ implementation optional for all
+#                    platforms.
 # The cast to long int works around a bug in the HP C Compiler,
 # see AC_CHECK_SIZEOF for more information.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking alignment of long double" >&5

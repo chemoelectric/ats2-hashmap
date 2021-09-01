@@ -79,6 +79,9 @@ AX_CODE_COVERAGE
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+# FIXME FIXME FIXME: Instead of bailing out, use a ‘safer’ implementation.
+#                    Make the ‘safer’ implementation optional for all
+#                    platforms.
 AC_CHECK_ALIGNOF([long double])
 if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
   # The implementation here assumes (a) that memory is allocated by

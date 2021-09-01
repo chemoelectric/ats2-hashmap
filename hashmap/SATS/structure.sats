@@ -23,6 +23,12 @@ along with this program. If not, see
 
 %{
 
+/*
+# FIXME FIXME FIXME: Instead of bailing out, use a ‘safer’ implementation.
+#                    Make the ‘safer’ implementation optional for all
+#                    platforms.
+*/
+
 /* The implementation here assumes (a) that memory is allocated by
  * malloc(3) or a compatible equivalent (such as Boehm GC); (b) that
  * values entered in the tree are allocated with such a malloc;
@@ -36,9 +42,18 @@ _Static_assert (_Alignof (long double) % 2 != 1,
 
 (********************************************************************)
 
+absprop IS_VALUE_PTR (i : int, b : bool)
+
 abst@ype node_entry_left_t (i : int) = uintptr i
 typedef node_entry_left_t = [i : int] node_entry_left_t i
 
+/*
+# FIXME FIXME FIXME: By conditional compilation, if desired or necessary
+#                    use a ‘safer’ implementation, whereby node_entry_right_t
+#                    is a tuple of a pointer and a boolean.
+#                    Make the ‘safer’ implementation optional for all
+#                    platforms.
+*/
 abst@ype node_entry_right_t (i : int) = uintptr i
 typedef node_entry_right_t = [i : int] node_entry_right_t i
 
@@ -61,14 +76,15 @@ key_ptr2node_entry_left : key_ptr_t -<> node_entry_left_t
 
 fun {}
 node_entry_right2value_ptr :
-  {i : int | i mod 2 == 1}
-  node_entry_right_t i -<> value_ptr_t
+  {i : int}
+  (IS_VALUE_PTR (i, true) | node_entry_right_t i) -<>
+    value_ptr_t
 
 fun {}
 value_ptr2node_entry_right :
   value_ptr_t -<>
-    [i : int | i mod 2 == 1]
-    node_entry_right_t i
+    [i : int]
+    (IS_VALUE_PTR (i, true) | node_entry_right_t i)
 
 (********************************************************************)
 
@@ -82,17 +98,18 @@ vtypedef node_vt (length : int) =
 vtypedef node_vt =
   [length : int] node_vt (length)
 
-castfn
+fun {}
 node_entry_right2node_vt :
   {length : int}
-  {i      : int | i mod 2 == 0}
-  node_entry_right_t i -<> node_vt (length)
+  {i      : int}
+  (IS_VALUE_PTR (i, false) | node_entry_right_t i) -<>
+    node_vt (length)
 
-castfn
+fun {}
 node_vt2node_entry_right :
   {length : int}
   node_vt (length) -<>
-    [i : int | i mod 2 == 0]
-    node_entry_right_t i
+    [i : int]
+    (IS_VALUE_PTR (i, false) | node_entry_right_t i)
 
 (********************************************************************)
