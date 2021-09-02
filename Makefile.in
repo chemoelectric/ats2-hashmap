@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Wed Sep  1 13:24:00 CDT 2021
+# from AX_AM_MACROS_STATIC on Thu Sep  2 11:18:35 CDT 2021
 
 
 
@@ -435,11 +435,10 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 # sanitizes the test-name: replaces with underscores: dashes and dots
 @CODE_COVERAGE_ENABLED_TRUE@code_coverage_sanitize = $(subst -,_,$(subst .,_,$(1)))
 @CODE_COVERAGE_ENABLED_TRUE@AM_DISTCHECK_CONFIGURE_FLAGS := $(AM_DISTCHECK_CONFIGURE_FLAGS) --disable-code-coverage
-EXTRA_DIST = silent-rules.mk m4/gnulib-cache.m4 COPYING INSTALL README \
-	AUTHORS hashmap/SATS/hashmap.sats \
-	hashmap/SATS/count-one-bits.sats \
+EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
+	hashmap/SATS/hashmap.sats hashmap/SATS/count-one-bits.sats \
 	hashmap/CATS/count-one-bits.cats \
-	hashmap/SATS/count-one-bits.dats hashmap/SATS/structure.sats \
+	hashmap/DATS/count-one-bits.dats hashmap/SATS/structure.sats \
 	hashmap/DATS/structure.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
@@ -482,21 +481,14 @@ escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(su
 
 #--------------------------------------------------------------------------
 PATSOPT_DEPS = 
+DATS_ENABLE_ODD_ALIGNMENT := \
+	$(shell echo x $(DEFS) | \
+		$(EGREP) -q '[[:space:]]-DENABLE_ODD_ALIGNMENT(=1)?([[:space:]]|$$)?' && \
+				echo x'-DATS ENABLE_ODD_ALIGNMENT=1' | \
+		$(SED) -e 's|^x||')
 
-#DATS_WORDS_BIGENDIAN := \
-#	$(shell echo x $(DEFS) | \
-#		$(EGREP) -q '[[:space:]]-DWORDS_BIGENDIAN(=1)?([[:space:]]|$$)?' && \
-#				echo x'-DATS WORDS_BIGENDIAN=1' | \
-#		$(SED) -e 's|^x||')
-
-#DATS_HAVE_ALIGNED_ACCESS_REQUIRED := \
-#	$(shell echo x $(DEFS) | \
-#		$(EGREP) -q '[[:space:]]-DHAVE_ALIGNED_ACCESS_REQUIRED(=1)?([[:space:]]|$$)?' && \
-#				echo x'-DATS HAVE_ALIGNED_ACCESS_REQUIRED=1' | \
-#		$(SED) -e 's|^x||')
-#AM_PATSOPTFLAGS += $(DATS_WORDS_BIGENDIAN)
-#AM_PATSOPTFLAGS += $(DATS_HAVE_ALIGNED_ACCESS_REQUIRED)
-AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
+AM_PATSOPTFLAGS = $(DATS_ENABLE_ODD_ALIGNMENT) -IATS $(builddir) -IATS \
+	$(srcdir)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests

@@ -46,7 +46,6 @@ pkgconfigdir = ${libdir}/pkgconfig
 nodist_pkgconfig_DATA =
 
 EXTRA_DIST += silent-rules.mk
-EXTRA_DIST += m4/gnulib-cache.m4
 EXTRA_DIST += COPYING
 EXTRA_DIST += INSTALL
 EXTRA_DIST += README
@@ -92,21 +91,14 @@ escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(su
 
 PATSOPT_DEPS =
 
-#DATS_WORDS_BIGENDIAN := \
-#	$(shell echo x $(DEFS) | \
-#		$(EGREP) -q '[[:space:]]-DWORDS_BIGENDIAN(=1)?([[:space:]]|$$)?' && \
-#				echo x'-DATS WORDS_BIGENDIAN=1' | \
-#		$(SED) -e 's|^x||')
-
-#DATS_HAVE_ALIGNED_ACCESS_REQUIRED := \
-#	$(shell echo x $(DEFS) | \
-#		$(EGREP) -q '[[:space:]]-DHAVE_ALIGNED_ACCESS_REQUIRED(=1)?([[:space:]]|$$)?' && \
-#				echo x'-DATS HAVE_ALIGNED_ACCESS_REQUIRED=1' | \
-#		$(SED) -e 's|^x||')
+DATS_ENABLE_ODD_ALIGNMENT := \
+	$(shell echo x $(DEFS) | \
+		$(EGREP) -q '[[:space:]]-DENABLE_ODD_ALIGNMENT(=1)?([[:space:]]|$$)?' && \
+				echo x'-DATS ENABLE_ODD_ALIGNMENT=1' | \
+		$(SED) -e 's|^x||')
 
 AM_PATSOPTFLAGS =
-#AM_PATSOPTFLAGS += $(DATS_WORDS_BIGENDIAN)
-#AM_PATSOPTFLAGS += $(DATS_HAVE_ALIGNED_ACCESS_REQUIRED)
+AM_PATSOPTFLAGS += $(DATS_ENABLE_ODD_ALIGNMENT)
 AM_PATSOPTFLAGS += -IATS $(builddir)
 AM_PATSOPTFLAGS += -IATS $(srcdir)
 
@@ -190,7 +182,7 @@ CLEANFILES += hashmap/SATS/count-one-bits_sats.c
 CLEANFILES += hashmap/DATS/count-one-bits_dats.c
 EXTRA_DIST += hashmap/SATS/count-one-bits.sats
 EXTRA_DIST += hashmap/CATS/count-one-bits.cats
-EXTRA_DIST += hashmap/SATS/count-one-bits.dats
+EXTRA_DIST += hashmap/DATS/count-one-bits.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c

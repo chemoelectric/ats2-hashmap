@@ -814,6 +814,7 @@ with_sysroot
 enable_libtool_lock
 with_gcov
 enable_code_coverage
+enable_odd_alignment
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1469,6 +1470,8 @@ Optional Features:
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-code-coverage  Whether to enable code coverage support
+  --enable-odd-alignment  enable support for value objects on odd alignments,
+                          at some expense in space and performance
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -14573,6 +14576,29 @@ fi
 
 
 
+ if test x"${enable_dependency_tracking}" != xno; then
+  DEPENDENCY_TRACKING_TRUE=
+  DEPENDENCY_TRACKING_FALSE='#'
+else
+  DEPENDENCY_TRACKING_TRUE='#'
+  DEPENDENCY_TRACKING_FALSE=
+fi
+
+
+# Check whether --enable-odd-alignment was given.
+if test ${enable_odd_alignment+y}
+then :
+  enableval=$enable_odd_alignment; enable_odd_alignment="${enableval}"
+else $as_nop
+  enable_odd_alignment=no
+fi
+
+if test x"${enable_odd_alignment}" = xyes; then
+
+printf "%s\n" "#define ENABLE_ODD_ALIGNMENT 1" >>confdefs.h
+
+fi
+
 #--------------------------------------------------------------------------
 #
 # Checks for libraries.
@@ -14585,9 +14611,6 @@ fi
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
-# FIXME FIXME FIXME: Instead of bailing out, use a ‘safer’ implementation.
-#                    Make the ‘safer’ implementation optional for all
-#                    platforms.
 # The cast to long int works around a bug in the HP C Compiler,
 # see AC_CHECK_SIZEOF for more information.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking alignment of long double" >&5
@@ -14621,11 +14644,9 @@ printf "%s\n" "#define ALIGNOF_LONG_DOUBLE $ac_cv_alignof_long_double" >>confdef
 
 
 if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
-  # The implementation here assumes (a) that memory is allocated by
-  # malloc(3) or a compatible equivalent (such as Boehm GC); (b) that
-  # values entered in the tree are allocated with such a malloc;
-  # (c) that malloc aligns the allocated memory on an even address.
-  as_fn_error $? "malloc(3) might return odd addresses. Bailing out." "$LINENO" 5
+  if test x"${enable_odd_alignment}" != xyes ; then
+    as_fn_error $? "malloc(3) might return odd addresses. Try adding --enable-odd-alignment to configure options." "$LINENO" 5
+  fi
 fi
 
 # The cast to long int works around a bug in the HP C Compiler
@@ -15093,6 +15114,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${CODE_COVERAGE_ENABLED_TRUE}" && test -z "${CODE_COVERAGE_ENABLED_FALSE}"; then
   as_fn_error $? "conditional \"CODE_COVERAGE_ENABLED\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE}"; then
+  as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

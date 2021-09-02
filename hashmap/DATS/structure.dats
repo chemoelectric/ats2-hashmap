@@ -26,35 +26,124 @@ along with this program. If not, see
 staload "hashmap/SATS/structure.sats"
 
 extern praxi
-make_IS_VALUE_PTR :
-  {i : int} () -<prf> IS_VALUE_PTR (i, i mod 2 == 1)
+make_proof_is_value_ptr :
+  () -<prf> IS_VALUE_PTR
 
 extern praxi
-elim_IS_VALUE_PTR :
-  {i : int} {b : bool}
-  IS_VALUE_PTR (i, b) -<prf>
-    [(b && i mod 2 == 1) || (~b && i mod 2 == 0)]
-    void
+make_proof_is_base_ptr :
+  () -<prf> IS_BASE_PTR
+
+extern praxi
+make_node_v_of_length :
+  {length : int} {p : addr}
+  () -<prf> @[node_entry_t][length] @ p
+
+#ifdef ENABLE_ODD_ALIGNMENT #then
+  (* A pointer, plus a uint8 set to 1 if the pointer is to
+     a value object, or set to 0 if the pointer is to an
+     internal node. *)
+  assume node_entry_right_t = @(ptr, uint8)
+  fn {} value_ptr_true () :<> uint8 = $UNSAFE.cast 1
+  fn {} value_ptr_false () :<> uint8 = $UNSAFE.cast 0
+#else
+  (* An evenly-aligned pointer, with the least significant
+     bit set for a pointer to a value object, clear for a
+     pointer to an internal node. *)
+  assume node_entry_right_t = uintptr
+#endif
+
+(********************************************************************)
+(* Key-value pairs. (That is, leaf nodes.) *)
 
 implement {}
-node_entry_right2value_ptr {i} (pf | right) =
-  let
-    prval _ = elim_IS_VALUE_PTR pf
-    prval _ = prop_verify {i mod 2 == 1} ()
-  in
-    (* Clear the "This is a value pointer" bit. *)
+node_entry_left2key_ptr (left) =
+  $UNSAFE.cast left
+
+implement {}
+key_ptr2node_entry_left (key_p) =
+  $UNSAFE.cast key_p
+
+#ifdef ENABLE_ODD_ALIGNMENT #then
+
+  implement {}
+  node_entry_right2value_ptr (pf | right) =
+    $UNSAFE.cast (right.0)
+
+  implement {}
+  value_ptr2node_entry_right (p) =
+    @(make_proof_is_value_ptr () |
+      @($UNSAFE.cast p, value_ptr_true ()))
+
+#else
+
+  implement {}
+  node_entry_right2value_ptr (pf | right) =
+    (* Clear the "This is a value pointer" bit. This
+       will have been set to 1 to indicate that the
+       pointer is to a value rather than a map-base pair. *)
     $UNSAFE.cast (pred ($UNSAFE.cast{uintptr} right))
-  end
 
-implement {}
-value_ptr2node_entry_right (p) =
-  let
+  implement {}
+  value_ptr2node_entry_right (p) =
     (* Set the "This is a value pointer" bit. The least
        significant bit of the actual pointer will be clear,
-       due to alignment of the node. *)
-    val i = succ ($UNSAFE.cast{uintptr} p)
-    val [i : int] i = $UNSAFE.cast{[i : int] uintptr i} i
-    prval _ = $UNSAFE.prop_assert {i mod 2 == 1} ()
-  in
-    (make_IS_VALUE_PTR {i} () | $UNSAFE.cast i)
-  end
+       due to alignment of the malloc(3). *)
+    @(make_proof_is_value_ptr () | succ ($UNSAFE.cast{uintptr} p))
+
+#endif
+
+(********************************************************************)
+(* Map-base pairs. (That is, internal nodes.) *)
+
+implement {}
+node_entry_left2entry_map (left) =
+  $UNSAFE.cast left
+
+implement {}
+entry_map2node_entry_left (map) =
+  $UNSAFE.cast map
+
+#ifdef ENABLE_ODD_ALIGNMENT #then
+
+  implement {}
+  node_entry_right2node_vt {length} (pf | right) =
+    let
+      val [p : addr] p = g1ofg0 (right.0)
+    in
+      @(make_node_v_of_length {length} {p} () | p)
+    end
+
+  implement {}
+  node_vt2node_entry_right {length} (node) =
+    let
+      val @(_ | p) = node
+    in
+      (make_proof_is_base_ptr () |
+       @($UNSAFE.cast p, value_ptr_false ()))
+    end
+
+#else
+
+  implement {}
+  node_entry_right2node_vt {length} (pf | right) =
+    (* The "This is a value pointer" bit will already be clear.
+       Leave it alone. *)
+    let
+      val [p : addr] p = g1ofg0 ($UNSAFE.cast{ptr} right)
+    in
+      @(make_node_v_of_length {length} {p} () | p)
+    end
+
+  implement {}
+  node_vt2node_entry_right {length} (node) =
+    (* "This is a value pointer" bit will already be clear.
+       Leave it alone. *)
+    let
+      val @(_ | p) = node
+    in
+      (make_proof_is_base_ptr () | $UNSAFE.cast p)
+    end
+
+#endif
+
+(********************************************************************)

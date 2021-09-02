@@ -67,6 +67,18 @@ AC_PROG_EGREP
 # Enable optional code coverage analysis.
 AX_CODE_COVERAGE
 
+AM_CONDITIONAL([DEPENDENCY_TRACKING],
+  [test x"${enable_dependency_tracking}" != xno])
+
+AC_ARG_ENABLE([odd-alignment],
+  [AS_HELP_STRING([--enable-odd-alignment],
+    [enable support for value objects on odd alignments, at some expense in space and performance])],
+  [enable_odd_alignment="${enableval}"],
+  [enable_odd_alignment=no])
+if test x"${enable_odd_alignment}" = xyes; then
+  AC_DEFINE([ENABLE_ODD_ALIGNMENT],[1],[Define to 1 to allow odd alignment of value objects.])
+fi
+
 #--------------------------------------------------------------------------
 #
 # Checks for libraries.
@@ -79,16 +91,11 @@ AX_CODE_COVERAGE
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
-# FIXME FIXME FIXME: Instead of bailing out, use a ‘safer’ implementation.
-#                    Make the ‘safer’ implementation optional for all
-#                    platforms.
 AC_CHECK_ALIGNOF([long double])
 if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
-  # The implementation here assumes (a) that memory is allocated by
-  # malloc(3) or a compatible equivalent (such as Boehm GC); (b) that
-  # values entered in the tree are allocated with such a malloc;
-  # (c) that malloc aligns the allocated memory on an even address.
-  AC_MSG_ERROR([malloc(3) might return odd addresses. Bailing out.])
+  if test x"${enable_odd_alignment}" != xyes ; then
+    AC_MSG_ERROR([malloc(3) might return odd addresses. Try adding --enable-odd-alignment to configure options.])
+  fi
 fi
 
 AC_CHECK_SIZEOF([unsigned int])
