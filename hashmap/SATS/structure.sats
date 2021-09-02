@@ -23,8 +23,10 @@ along with this program. If not, see
 
 (********************************************************************)
 
-absprop IS_VALUE_PTR
-absprop IS_BASE_PTR
+absprop IS_VALUE_PTR (b : bool)
+propdef IS_VALUE_PTR = IS_VALUE_PTR (true)
+propdef IS_BASE_PTR (b : bool) = IS_VALUE_PTR (~b)
+propdef IS_BASE_PTR = IS_VALUE_PTR (false)
 
 abst@ype node_entry_left_t = uintptr
 
@@ -35,6 +37,14 @@ abst@ype node_entry_left_t = uintptr
 #endif
 
 typedef node_entry_t = @(node_entry_left_t, node_entry_right_t)
+
+fun {}
+node_entry_right_is_value_ptr :
+  node_entry_right_t -<> [b : bool] @(IS_VALUE_PTR (b) | bool b)
+
+fun {}
+node_entry_right_is_base_ptr :
+  node_entry_right_t -<> [b : bool] @(IS_BASE_PTR (b) | bool b)
 
 (********************************************************************)
 (* Key-value pairs. (That is, leaf nodes.) *)

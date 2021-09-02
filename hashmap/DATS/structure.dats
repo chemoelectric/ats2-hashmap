@@ -25,13 +25,15 @@ along with this program. If not, see
 
 staload "hashmap/SATS/structure.sats"
 
+(********************************************************************)
+
 extern praxi
 make_proof_is_value_ptr :
-  () -<prf> IS_VALUE_PTR
+  {b : bool} () -<prf> IS_VALUE_PTR (b)
 
 extern praxi
 make_proof_is_base_ptr :
-  () -<prf> IS_BASE_PTR
+  {b : bool} () -<prf> IS_BASE_PTR (b)
 
 extern praxi
 make_node_v_of_length :
@@ -50,6 +52,50 @@ make_node_v_of_length :
      bit set for a pointer to a value object, clear for a
      pointer to an internal node. *)
   assume node_entry_right_t = uintptr
+#endif
+
+#ifdef ENABLE_ODD_ALIGNMENT #then
+
+  implement {}
+  node_entry_right_is_value_ptr (right) =
+    let
+      val [b : bool] b = g1ofg0 (right.1 <> value_ptr_false ())
+    in
+      @(make_proof_is_value_ptr {b} () | b)
+    end
+
+  implement {}
+  node_entry_right_is_base_ptr (right) =
+    let
+      val [b : bool] b = g1ofg0 (right.1 = value_ptr_false ())
+    in
+      @(make_proof_is_base_ptr {b} () | b)
+    end
+
+#else
+
+  implement {}
+  node_entry_right_is_value_ptr (right) =
+    let
+      macdef zero = $UNSAFE.cast{uintptr} 0
+      macdef one = $UNSAFE.cast{uintptr} 1
+      val i = $UNSAFE.cast{uintptr} right
+      val [b : bool] b = g1ofg0 (g0uint_land_uintptr (i, one) <> zero)
+    in
+      @(make_proof_is_value_ptr {b} () | b)
+    end
+
+  implement {}
+  node_entry_right_is_base_ptr (right) =
+    let
+      macdef zero = $UNSAFE.cast{uintptr} 0
+      macdef one = $UNSAFE.cast{uintptr} 1
+      val i = $UNSAFE.cast{uintptr} right
+      val [b : bool] b = g1ofg0 (g0uint_land_uintptr (i, one) = zero)
+    in
+      @(make_proof_is_base_ptr {b} () | b)
+    end
+
 #endif
 
 (********************************************************************)
@@ -71,7 +117,7 @@ key_ptr2node_entry_left (key_p) =
 
   implement {}
   value_ptr2node_entry_right (p) =
-    @(make_proof_is_value_ptr () |
+    @(make_proof_is_value_ptr {true} () |
       @($UNSAFE.cast p, value_ptr_true ()))
 
 #else
@@ -88,7 +134,8 @@ key_ptr2node_entry_left (key_p) =
     (* Set the "This is a value pointer" bit. The least
        significant bit of the actual pointer will be clear,
        due to alignment of the malloc(3). *)
-    @(make_proof_is_value_ptr () | succ ($UNSAFE.cast{uintptr} p))
+    @(make_proof_is_value_ptr {true} () |
+      succ ($UNSAFE.cast{uintptr} p))
 
 #endif
 
@@ -118,7 +165,7 @@ entry_map2node_entry_left (map) =
     let
       val @(_ | p) = node
     in
-      (make_proof_is_base_ptr () |
+      (make_proof_is_base_ptr {true} () |
        @($UNSAFE.cast p, value_ptr_false ()))
     end
 
@@ -141,7 +188,7 @@ entry_map2node_entry_left (map) =
     let
       val @(_ | p) = node
     in
-      (make_proof_is_base_ptr () | $UNSAFE.cast p)
+      (make_proof_is_base_ptr {true} () | $UNSAFE.cast p)
     end
 
 #endif
