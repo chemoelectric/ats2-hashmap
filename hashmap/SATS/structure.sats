@@ -77,7 +77,7 @@ lemma_node_v_param :
   (!node_v (length, p) >> _) -<prf> [0 <= length] void
 
 fun {}
-get_node_entry {length : int | length <= sizeof (uintptr)}
+get_node_entry {length : int | length <= 8 * sizeof (uintptr)}
                {i      : int | i < length}
                (node   : &node_vt (length) >> _,
                 i      : uint i) :<!ref>
