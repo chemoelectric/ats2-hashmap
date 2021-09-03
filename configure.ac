@@ -107,6 +107,12 @@ StM_CONFIG_MAKEFILES
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
+AC_SUBST([SIZEOF_UINT],[${ac_cv_sizeof_unsigned_int}])
+AC_SUBST([SIZEOF_ULINT],[${ac_cv_sizeof_unsigned_long_int}])
+AC_SUBST([SIZEOF_ULLINT],[${ac_cv_sizeof_unsigned_long_long_int}])
+AC_SUBST([SIZEOF_UINTPTR],[${ac_cv_sizeof_uintptr_t}])
+AC_CONFIG_FILES([hashmap/HATS/config.hats])
+
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 
 # What to use as the shell in shebangs.

@@ -71,10 +71,15 @@ vtypedef node_vt (length : int) =
 vtypedef node_vt =
   [length : int] node_vt (length)
 
+praxi
+lemma_node_v_param :
+  {length : int} {p : addr}
+  (!node_v (length, p) >> _) -<prf> [0 <= length] void
+
 fun {}
 get_node_entry {length : int | length <= sizeof (uintptr)}
                {i      : int | i < sizeof (uintptr)}
-               (node   : node_vt (length),
+               (node   : &node_vt (length) >> _,
                 i      : size_t i) :<!ref>
     @(bool,      (* Is the entry stored? *)
       bool,      (* Is the entry a leaf? *)

@@ -660,6 +660,10 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+SIZEOF_UINTPTR
+SIZEOF_ULLINT
+SIZEOF_ULINT
+SIZEOF_UINT
 GNU_MAKE
 GNU
 CODE_COVERAGE_LIBS
@@ -14871,6 +14875,17 @@ printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
+SIZEOF_UINT=${ac_cv_sizeof_unsigned_int}
+
+SIZEOF_ULINT=${ac_cv_sizeof_unsigned_long_int}
+
+SIZEOF_ULLINT=${ac_cv_sizeof_unsigned_long_long_int}
+
+SIZEOF_UINTPTR=${ac_cv_sizeof_uintptr_t}
+
+ac_config_files="$ac_config_files hashmap/HATS/config.hats"
+
+
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
 
@@ -15920,6 +15935,7 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
+    "hashmap/HATS/config.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/config.hats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

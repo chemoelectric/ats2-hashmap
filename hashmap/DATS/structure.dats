@@ -23,5 +23,58 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
+#include "hashmap/HATS/config.hats"
+
 staload "hashmap/SATS/structure.sats"
 staload "hashmap/SATS/count-one-bits.sats"
+
+prval _ = $UNSAFE.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
+
+symintr <<
+infixl ( * ) <<
+overload << with g0uint_lsl_uintptr
+
+symintr &
+infixl ( * ) &
+overload & with g0uint_land_uintptr
+
+symintr lnot
+overload lnot with g0uint_lnot_uintptr
+
+implement {}
+get_node_entry {length} {i} (node, i) =
+  let
+    macdef zero = g1int2uint<intknd,uintptrknd>  0
+    macdef one = g1int2uint<intknd,uintptrknd> 1
+
+    val @(pf_node | p_node) = node
+    prval _ = lemma_node_v_param {length} pf_node
+    macdef nod = !p_node
+
+    val population_map = nod[0]
+    val bit_selection_mask = (one << sz2i i)
+    val is_stored = ((population_map & bit_selection_mask) <> zero)
+
+    val result =
+      if is_stored then
+        let
+          val node_kind_map = nod[1]
+          val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
+
+          val popcount_mask = lnot ((lnot zero) << sz2i i)
+          val [index : int] index =
+            count_one_bits (population_map & popcount_mask)
+          prval _ = prop_verify {0 <= index} ()
+          prval _ = $UNSAFE.prop_assert {index < length} ()
+
+          val entry = nod[index + 2]
+        in
+          @(true, is_leaf, entry)
+        end
+      else
+        @(false, true, g1i2u 0)
+
+    prval _ = $effmask_wrt (node := @(pf_node | p_node))
+  in
+    result
+  end

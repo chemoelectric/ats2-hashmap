@@ -91,14 +91,14 @@ escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(su
 
 PATSOPT_DEPS =
 
-DATS_ENABLE_ODD_ALIGNMENT := \
-	$(shell echo x $(DEFS) | \
-		$(EGREP) -q '[[:space:]]-DENABLE_ODD_ALIGNMENT(=1)?([[:space:]]|$$)?' && \
-				echo x'-DATS ENABLE_ODD_ALIGNMENT=1' | \
-		$(SED) -e 's|^x||')
+#DATS_SIZEOF_UINTPTR_T := \
+#	$(shell echo x $(DEFS) | \
+#		$(EGREP) -e '[[:space:]]-DSIZEOF_UINTPTR_T=([[:digit:]]+)([[:space:]]|$$)?' | \
+#			$(SED) -e 's|^.*[ 	]-DSIZEOF_UINTPTR_T=||' \
+#			       -e 's|^\([0-9][0-9]*\).*|-DATS SIZEOF_UINTPTR=\1|')
 
 AM_PATSOPTFLAGS =
-AM_PATSOPTFLAGS += $(DATS_ENABLE_ODD_ALIGNMENT)
+#AM_PATSOPTFLAGS += $(DATS_SIZEOF_UINTPTR_T)
 AM_PATSOPTFLAGS += -IATS $(builddir)
 AM_PATSOPTFLAGS += -IATS $(srcdir)
 

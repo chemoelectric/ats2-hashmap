@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Fri Sep  3 06:24:49 CDT 2021
+# from AX_AM_MACROS_STATIC on Fri Sep  3 08:27:27 CDT 2021
 
 
 
@@ -136,7 +136,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = list-ats-dependencies.dats
+CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
+	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)"
@@ -259,10 +260,11 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/build-aux/depcomp \
 	$(top_srcdir)/build-aux/install-sh \
 	$(top_srcdir)/build-aux/ltmain.sh \
-	$(top_srcdir)/build-aux/missing AUTHORS COPYING INSTALL README \
-	build-aux/compile build-aux/config.guess build-aux/config.sub \
-	build-aux/depcomp build-aux/install-sh build-aux/ltmain.sh \
-	build-aux/missing
+	$(top_srcdir)/build-aux/missing \
+	$(top_srcdir)/hashmap/HATS/config.hats.in AUTHORS COPYING \
+	INSTALL README build-aux/compile build-aux/config.guess \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -359,6 +361,10 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SIZEOF_UINT = @SIZEOF_UINT@
+SIZEOF_UINTPTR = @SIZEOF_UINTPTR@
+SIZEOF_ULINT = @SIZEOF_ULINT@
+SIZEOF_ULLINT = @SIZEOF_ULLINT@
 STRIP = @STRIP@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -481,14 +487,14 @@ escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(su
 
 #--------------------------------------------------------------------------
 PATSOPT_DEPS = 
-DATS_ENABLE_ODD_ALIGNMENT := \
-	$(shell echo x $(DEFS) | \
-		$(EGREP) -q '[[:space:]]-DENABLE_ODD_ALIGNMENT(=1)?([[:space:]]|$$)?' && \
-				echo x'-DATS ENABLE_ODD_ALIGNMENT=1' | \
-		$(SED) -e 's|^x||')
 
-AM_PATSOPTFLAGS = $(DATS_ENABLE_ODD_ALIGNMENT) -IATS $(builddir) -IATS \
-	$(srcdir)
+#DATS_SIZEOF_UINTPTR_T := \
+#	$(shell echo x $(DEFS) | \
+#		$(EGREP) -e '[[:space:]]-DSIZEOF_UINTPTR_T=([[:digit:]]+)([[:space:]]|$$)?' | \
+#			$(SED) -e 's|^.*[ 	]-DSIZEOF_UINTPTR_T=||' \
+#			       -e 's|^\([0-9][0-9]*\).*|-DATS SIZEOF_UINTPTR=\1|')
+#AM_PATSOPTFLAGS += $(DATS_SIZEOF_UINTPTR_T)
+AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
@@ -542,6 +548,8 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
+hashmap/HATS/config.hats: $(top_builddir)/config.status $(top_srcdir)/hashmap/HATS/config.hats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
