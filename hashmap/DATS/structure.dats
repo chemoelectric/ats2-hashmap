@@ -38,9 +38,6 @@ symintr &
 infixl ( * ) &
 overload & with g0uint_land_uintptr
 
-symintr lnot
-overload lnot with g0uint_lnot_uintptr
-
 implement {}
 get_node_entry {length} {i} (node, i) =
   let
