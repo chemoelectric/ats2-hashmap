@@ -59,7 +59,7 @@ get_node_entry {length} {i} (node, i) =
           val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
 
           val [index : int] (pf_index | index) =
-            count_low_one_bits_uintptr (g1ofg0 population_map, i)
+            popcount_low_bits (g1ofg0 population_map, i)
           prval _ = popcount_low_bits_is_nonnegative pf_index
           prval _ = popcount_low_bits_bound pf_index
           prval _ = prop_verify {0 <= index} ()
