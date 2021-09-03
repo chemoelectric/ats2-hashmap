@@ -44,15 +44,15 @@ overload lnot with g0uint_lnot_uintptr
 implement {}
 get_node_entry {length} {i} (node, i) =
   let
-    macdef zero = g1int2uint<intknd,uintptrknd>  0
+    macdef zero = g1int2uint<intknd,uintptrknd> 0
     macdef one = g1int2uint<intknd,uintptrknd> 1
 
     val @(pf_node | p_node) = node
     prval _ = lemma_node_v_param {length} pf_node
     macdef nod = !p_node
 
-    val population_map = nod[0]
-    val bit_selection_mask = (one << sz2i i)
+    val [population_map : int] population_map = g1ofg0 (nod[0])
+    val bit_selection_mask = (one << (u2i i))
     val is_stored = ((population_map & bit_selection_mask) <> zero)
 
     val result =
@@ -61,18 +61,20 @@ get_node_entry {length} {i} (node, i) =
           val node_kind_map = nod[1]
           val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
 
-          val popcount_mask = lnot ((lnot zero) << sz2i i)
-          val [index : int] index =
-            count_one_bits (population_map & popcount_mask)
+          val [index : int] (pf_index | index) =
+            count_low_one_bits_uintptr (g1ofg0 population_map, i)
+          prval _ = popcount_low_bits_is_nonnegative pf_index
+          prval _ = popcount_low_bits_bound pf_index
           prval _ = prop_verify {0 <= index} ()
-          prval _ = $UNSAFE.prop_assert {index < length} ()
+          prval _ = prop_verify {index <= i} ()
+          prval _ = prop_verify {index < length} ()
 
           val entry = nod[index + 2]
         in
           @(true, is_leaf, entry)
         end
       else
-        @(false, true, g1i2u 0)
+        @(false, true, zero)
 
     prval _ = $effmask_wrt (node := @(pf_node | p_node))
   in

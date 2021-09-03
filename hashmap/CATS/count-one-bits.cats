@@ -170,4 +170,36 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 #error "I failed to find a count-one-bits implementation for uintptr_t."
 #endif
 
+/* Compute and return the number of 1-bits set in X,
+   ignoring all bits of index i or higher. */
+ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
+ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
+{
+  return ats2_hashmap_count_one_bits_uint (x & ~((~(unsigned int) 0) << i));
+}
+
+/* Compute and return the number of 1-bits set in X,
+   ignoring all bits of index i or higher. */
+ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
+ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
+{
+  return ats2_hashmap_count_one_bits_ulint (x & ~((~(unsigned long int) 0) << i));
+}
+
+/* Compute and return the number of 1-bits set in X,
+   ignoring all bits of index i or higher. */
+ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
+ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
+{
+  return ats2_hashmap_count_one_bits_ullint (x & ~((~(unsigned long long int) 0) << i));
+}
+
+/* Compute and return the number of 1-bits set in X,
+   ignoring all bits of index i or higher. */
+ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
+ats2_hashmap_count_low_one_bits_uintptr (uintptr_t x, int i)
+{
+  return ats2_hashmap_count_one_bits_uintptr (x & ~((~(uintptr_t) 0) << i));
+}
+
 #endif /* HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__ */

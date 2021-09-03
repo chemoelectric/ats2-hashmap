@@ -78,9 +78,9 @@ lemma_node_v_param :
 
 fun {}
 get_node_entry {length : int | length <= sizeof (uintptr)}
-               {i      : int | i < sizeof (uintptr)}
+               {i      : int | i < length}
                (node   : &node_vt (length) >> _,
-                i      : size_t i) :<!ref>
+                i      : uint i) :<!ref>
     @(bool,      (* Is the entry stored? *)
       bool,      (* Is the entry a leaf? *)
       uintptr)   (* Entry's value, or 0 if the entry is not stored. *)

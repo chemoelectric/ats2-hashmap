@@ -25,20 +25,96 @@ along with this program. If not, see
 #include "hashmap/CATS/count-one-bits.cats"
 %}
 
-fun
-count_one_bits_uint : uint -<> intGte 0 = "mac#%"
+(********************************************************************)
+
+absprop POPCOUNT (x : int, popcount : int)
+absprop POPCOUNT_LOW_BITS (x : int, i : int, popcont : int)
+
+praxi
+popcount_is_nonnegative :
+  {x : int} {popcount : int}
+  POPCOUNT (x, popcount) -<prf> [0 <= popcount] void
+
+praxi
+popcount_low_bits_is_nonnegative :
+  {x : int} {i : int} {popcount : int}
+  POPCOUNT_LOW_BITS (x, i, popcount) -<prf> [0 <= popcount] void
+
+praxi
+popcount_low_bits_bound :
+  {x : int} {i : int} {popcount : int}
+  POPCOUNT_LOW_BITS (x, i, popcount) -<prf> [popcount <= i] void
+
+(********************************************************************)
 
 fun
-count_one_bits_ulint : ulint -<> intGte 0 = "mac#%"
+count_one_bits_uint :
+  {x : int} uint x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
-count_one_bits_ullint : ullint -<> intGte 0 = "mac#%"
+count_one_bits_ulint :
+  {x : int} ulint x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
-count_one_bits_uintptr : uintptr -<> intGte 0 = "mac#%"
+count_one_bits_ullint :
+  {x : int} ullint x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
+count_one_bits_uintptr :
+  {x : int} uintptr x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+(********************************************************************)
+
+fun
+count_low_one_bits_uint :
+  {x : int} {i : int} (uint x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_ulint :
+  {x : int} {i : int} (ulint x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_ullint :
+  {x : int} {i : int} (ullint x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_uintptr :
+  {x : int} {i : int} (uintptr x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+(********************************************************************)
 
 symintr count_one_bits
 overload count_one_bits with count_one_bits_uint
 overload count_one_bits with count_one_bits_ulint
 overload count_one_bits with count_one_bits_ullint
 overload count_one_bits with count_one_bits_uintptr
+
+symintr popcount
+overload popcount with count_one_bits
+
+symintr count_low_one_bits
+overload count_low_one_bits with count_low_one_bits_uint
+overload count_low_one_bits with count_low_one_bits_ulint
+overload count_low_one_bits with count_low_one_bits_ullint
+overload count_low_one_bits with count_low_one_bits_uintptr
+
+symintr popcount_low_bits
+overload popcount_low_bits with count_low_one_bits
+
+(********************************************************************)
