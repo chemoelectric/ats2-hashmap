@@ -48,7 +48,7 @@ get_node_entry {length} {i} (node, i) =
     prval _ = lemma_node_v_param {length} pf_node
     macdef nod = !p_node
 
-    val [population_map : int] population_map = g1ofg0 (nod[0])
+    val population_map = nod[0]
     val bit_selection_mask = (one << (u2i i))
     val is_stored = ((population_map & bit_selection_mask) <> zero)
 
