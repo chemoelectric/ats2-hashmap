@@ -23,60 +23,46 @@ along with this program. If not, see
 
 (********************************************************************)
 
-absprop IS_VALUE_PTR (b : bool)
-propdef IS_VALUE_PTR = IS_VALUE_PTR (true)
-propdef IS_BASE_PTR (b : bool) = IS_VALUE_PTR (~b)
-propdef IS_BASE_PTR = IS_VALUE_PTR (false)
+(*
 
-abst@ype node_entry_left_t = uintptr
+This implementation structures the nodes differently from how
+Bagwell's paper suggests.
 
-#ifdef ENABLE_ODD_ALIGNMENT #then
-  abst@ype node_entry_right_t = @(ptr, uint8)
-#else
-  abst@ype node_entry_right_t = uintptr
-#endif
+Of the following reasons for doing this, the first is by far the more
+important:
 
-typedef node_entry_t = @(node_entry_left_t, node_entry_right_t)
+  * Bagwell's scheme is incompatible with Boehm GC. The collector
+    might (and surely often would) collect nodes that were pointed to
+    by pointers that had their LSB set.
 
-fun {}
-node_entry_right_is_value_ptr :
-  node_entry_right_t -<> [b : bool] @(IS_VALUE_PTR (b) | bool b)
+  * Bagwell's scheme would not work if, for any reason, an object
+    might be placed at an odd address.
 
-fun {}
-node_entry_right_is_base_ptr :
-  node_entry_right_t -<> [b : bool] @(IS_BASE_PTR (b) | bool b)
+  * The structures implemented here have obvious uses as integer maps,
+    integer sets, hash sets, etc.
 
-(********************************************************************)
-(* Key-value pairs. (That is, leaf nodes.) *)
+In the implementation used here, an internal node is laid out as
+follows:
 
-abstype key_ptr_t (p : addr) = ptr p
-typedef key_ptr_t = [p : addr] key_ptr_t p
+    population_map (uintptr)   -- used to compute indices into the
+                                  array of *this* node.
+    node_kind_map  (uintptr)   -- if a bit is set, the corresponding
+                                  array entry is or points to a
+                                  leaf node.
+    entry 0        (uintptr)
+    entry 1        (uintptr)
+    entry 2        (uintptr)
+       .
+       .
+       .
+    entry N        (uintptr)   -- where N < sizeof (uintptr)
 
-abstype value_ptr_t (p : addr) = ptr p
-typedef value_ptr_t = [p : addr] value_ptr_t p
-
-fun {}
-node_entry_left2key_ptr : node_entry_left_t -<> key_ptr_t
-
-fun {}
-key_ptr2node_entry_left : key_ptr_t -<> node_entry_left_t
-
-fun {}
-node_entry_right2value_ptr :
-  (IS_VALUE_PTR | node_entry_right_t) -<> value_ptr_t
-
-fun {}
-value_ptr2node_entry_right :
-  value_ptr_t -<> @(IS_VALUE_PTR | node_entry_right_t)
+*)
 
 (********************************************************************)
-(* Map-base pairs. (That is, internal nodes.) *)
-
-typedef entry_map_t (i : int) = uintptr i
-typedef entry_map_t = [i : int] uintptr i
 
 viewdef node_v (length : int, p : addr) =
-  @[node_entry_t][length] @ p
+  @[uintptr][length + 2] @ p
 
 vtypedef node_vt (length : int, p : addr) =
   @(node_v (length, p) | ptr p)
@@ -86,19 +72,12 @@ vtypedef node_vt =
   [length : int] node_vt (length)
 
 fun {}
-node_entry_left2entry_map : node_entry_left_t -<> entry_map_t
-
-fun {}
-entry_map2node_entry_left : entry_map_t -<> node_entry_left_t
-
-fun {}
-node_entry_right2node_vt :
-  {length : int}
-  (IS_BASE_PTR | node_entry_right_t) -<> node_vt (length)
-
-fun {}
-node_vt2node_entry_right :
-  {length : int}
-  node_vt (length) -<> @(IS_BASE_PTR | node_entry_right_t)
+get_node_entry {length : int | length <= sizeof (uintptr)}
+               {i      : int | i < sizeof (uintptr)}
+               (node   : node_vt (length),
+                i      : size_t i) :<!ref>
+    @(bool,      (* Is the entry stored? *)
+      bool,      (* Is the entry a leaf? *)
+      uintptr)   (* Entry's value, or 0 if the entry is not stored. *)
 
 (********************************************************************)

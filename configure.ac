@@ -70,15 +70,6 @@ AX_CODE_COVERAGE
 AM_CONDITIONAL([DEPENDENCY_TRACKING],
   [test x"${enable_dependency_tracking}" != xno])
 
-AC_ARG_ENABLE([odd-alignment],
-  [AS_HELP_STRING([--enable-odd-alignment],
-    [enable support for value objects on odd alignments, at some expense in space and performance])],
-  [enable_odd_alignment="${enableval}"],
-  [enable_odd_alignment=no])
-if test x"${enable_odd_alignment}" = xyes; then
-  AC_DEFINE([ENABLE_ODD_ALIGNMENT],[1],[Define to 1 to allow odd alignment of value objects.])
-fi
-
 #--------------------------------------------------------------------------
 #
 # Checks for libraries.
@@ -91,13 +82,6 @@ fi
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
-AC_CHECK_ALIGNOF([long double])
-if test `expr ${ac_cv_alignof_long_double} % 2` -eq 1; then
-  if test x"${enable_odd_alignment}" != xyes ; then
-    AC_MSG_ERROR([malloc(3) might return odd addresses. Try adding --enable-odd-alignment to configure options.])
-  fi
-fi
-
 AC_CHECK_SIZEOF([unsigned int])
 AC_CHECK_SIZEOF([unsigned long int])
 AC_CHECK_SIZEOF([unsigned long long int])
@@ -106,8 +90,6 @@ AC_CHECK_SIZEOF([uintptr_t])
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
-
-
 
 #--------------------------------------------------------------------------
 
