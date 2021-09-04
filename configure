@@ -660,6 +660,21 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+SIZEOF_BITINDEXOF_UINTPTR
+SIZEOF_BITINDEXOF_ULLINT
+SIZEOF_BITINDEXOF_ULINT
+SIZEOF_BITINDEXOF_UINT
+MAXVALOF_BITINDEX_8
+MAXVALOF_BITINDEX_7
+MAXVALOF_BITINDEX_6
+MAXVALOF_BITINDEX_5
+MAXVALOF_BITINDEX_4
+MAX_SIZEOF_BITINDEX
+MIN_SIZEOF_BITINDEX
+BITSIZEOF_UINTPTR
+BITSIZEOF_ULLINT
+BITSIZEOF_ULINT
+BITSIZEOF_UINT
 SIZEOF_UINTPTR
 SIZEOF_ULLINT
 SIZEOF_ULINT
@@ -14883,7 +14898,60 @@ SIZEOF_ULLINT=${ac_cv_sizeof_unsigned_long_long_int}
 
 SIZEOF_UINTPTR=${ac_cv_sizeof_uintptr_t}
 
+
+BITSIZEOF_UINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`
+
+BITSIZEOF_ULINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`
+
+BITSIZEOF_ULLINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`
+
+BITSIZEOF_UINTPTR=`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`
+
+
+bits_in_index_of ()
+{
+  if test 32 -le $1 ; then
+    echo 8
+  elif test 16 -le $1 ; then
+    echo 7
+  elif test 8 -le $1 ; then
+    echo 6
+  elif test 4 -le $1 ; then
+    echo 5
+  elif test 2 -le $1 ; then
+    echo 4
+  else
+    as_fn_error $? "uintptr_t must be at least 2 bytes long" "$LINENO" 5
+  fi
+}
+MIN_SIZEOF_BITINDEX=4
+
+MAX_SIZEOF_BITINDEX=8
+
+
+MAXVALOF_BITINDEX_4=15
+
+MAXVALOF_BITINDEX_5=31
+
+MAXVALOF_BITINDEX_6=63
+
+MAXVALOF_BITINDEX_7=127
+
+MAXVALOF_BITINDEX_8=255
+
+
+SIZEOF_BITINDEXOF_UINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_int}`
+
+SIZEOF_BITINDEXOF_ULINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_long_int}`
+
+SIZEOF_BITINDEXOF_ULLINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_long_long_int}`
+
+SIZEOF_BITINDEXOF_UINTPTR=`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`
+
+
 ac_config_files="$ac_config_files hashmap/HATS/config.hats"
+
+ac_config_files="$ac_config_files hashmap/HATS/bits-source-include.hats"
 
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
@@ -15936,6 +16004,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
     "hashmap/HATS/config.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/config.hats" ;;
+    "hashmap/HATS/bits-source-include.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/bits-source-include.hats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

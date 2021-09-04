@@ -171,6 +171,10 @@ libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD =
 
+libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/config.hats
+libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/config.hats.in
+hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
+
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
 EXTRA_DIST += hashmap/SATS/hashmap.sats
@@ -183,6 +187,20 @@ CLEANFILES += hashmap/DATS/count-one-bits_dats.c
 EXTRA_DIST += hashmap/SATS/count-one-bits.sats
 EXTRA_DIST += hashmap/CATS/count-one-bits.cats
 EXTRA_DIST += hashmap/DATS/count-one-bits.dats
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
+libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/bits-source-include.hats.in
+CLEANFILES += hashmap/HATS/bits-source-include.hats
+CLEANFILES += hashmap/SATS/bits-source_sats.c
+CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
+EXTRA_DIST += hashmap/SATS/bits-source.sats
+EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
+EXTRA_DIST += hashmap/DATS/bits-source-uint32.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c

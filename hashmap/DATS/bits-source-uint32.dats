@@ -1,0 +1,121 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+#include "hashmap/HATS/config.hats"
+#include "hashmap/HATS/bits-source-include.hats"
+
+staload "hashmap/SATS/bits-source.sats"
+
+%{^
+#undef ats2_hashmap_bits_source_lshift
+#define ats2_hashmap_bits_source_lshift(u, i) ((u) << (i))
+
+#undef ats2_hashmap_bits_source_rshift
+#define ats2_hashmap_bits_source_rshift(u, i) ((u) >> (i))
+
+#undef ats2_hashmap_bits_source_lnot
+#define ats2_hashmap_bits_source_lnot(u) (~(u))
+
+#undef ats2_hashmap_bits_source_land
+#define ats2_hashmap_bits_source_land(u, v) ((u) & (v))
+%}
+
+extern fn
+lshift_uint {u, i : int}
+            (u    : uint u,
+             i    : uint i) :<>
+    [v : int | v <= u]
+    uint v = "mac#ats2_hashmap_bits_source_lshift"
+
+extern fn
+rshift_uint32 {u, i : int}
+              (u    : uint32 u,
+               i    : uint i) :<>
+    [v : int | v <= u]
+    uint32 v = "mac#ats2_hashmap_bits_source_rshift"
+
+extern fn
+lnot_uint {u : int}
+          (u : uint u) :<>
+    [v : int]
+    uint v = "mac#ats2_hashmap_bits_source_lnot"
+
+extern fn
+land_uint {u, v : int}
+          (u    : uint u,
+           v    : uint v) :<>
+    [w : int | w <= u; w <= v]
+    uint w = "mac#ats2_hashmap_bits_source_land"
+
+infix <<
+overload << with lshift_uint of 1000
+infix >>
+overload >> with rshift_uint32 of 1000
+prefix ~
+overload ~ with lnot_uint of 1000
+infix &
+overload & with land_uint of 1000
+
+extern castfn
+int_of_uint : {u : int} uint u -<> int u
+
+extern castfn
+uint32_of_uint : {u : int} uint u -<> uint32 u
+
+extern castfn
+uint_of_uint32 : {u : int} uint32 u -<> uint u
+
+implement
+make_bits_source_uint32 {num_bits} (num_bits, u) =
+  let
+    val [mask : int] mask = ~((~0U) << num_bits)
+    val _ = assertloc (bits_source_check_mask (num_bits, mask))
+    val q = g1uint_div (32U, num_bits)
+    val r = g1uint_mod (32U, num_bits)
+    val index_bound = (if iseqz r then q else succ q) : uint
+    val index_bound = g1ofg0 index_bound
+  in
+    lam i =>
+      let
+        val i = g1ofg0 i
+      in
+        if i < index_bound then
+          let
+            val shift = num_bits * i
+            val u_shifted = (g1ofg0 u) >> shift
+            val [bits : int] bits = (uint_of_uint32 u_shifted) & mask
+            prval _ = lemma_g1uint_param bits
+            prval _ = prop_verify {0 <= bits} ()
+            prval _ = prop_verify {bits_maxval (num_bits, bits)} ()
+          in
+            int_of_uint (bits)
+          end
+        else
+          (~1)
+      end
+  end

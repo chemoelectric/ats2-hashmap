@@ -1,0 +1,44 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#ifndef ATS2_HASHMAP_BITS_SOURCE_INCLUDE_HEADER_GUARD__ #then
+#define ATS2_HASHMAP_BITS_SOURCE_INCLUDE_HEADER_GUARD__
+
+#define MIN_SIZEOF_BITINDEX @MIN_SIZEOF_BITINDEX@
+#define MAX_SIZEOF_BITINDEX @MAX_SIZEOF_BITINDEX@
+
+stadef valid_num_bits (num_bits : int) : bool =
+  (MIN_SIZEOF_BITINDEX <= num_bits &&
+      num_bits <= MAX_SIZEOF_BITINDEX)
+
+#define MAXVALOF_BITINDEX_4 @MAXVALOF_BITINDEX_4@
+#define MAXVALOF_BITINDEX_5 @MAXVALOF_BITINDEX_5@
+#define MAXVALOF_BITINDEX_6 @MAXVALOF_BITINDEX_6@
+#define MAXVALOF_BITINDEX_7 @MAXVALOF_BITINDEX_7@
+#define MAXVALOF_BITINDEX_8 @MAXVALOF_BITINDEX_8@
+
+stadef bits_maxval (num_bits : int, bits : int) : bool =
+  (num_bits == 4 && bits <= MAXVALOF_BITINDEX_4) ||
+  (num_bits == 5 && bits <= MAXVALOF_BITINDEX_5) ||
+  (num_bits == 6 && bits <= MAXVALOF_BITINDEX_6) ||
+  (num_bits == 7 && bits <= MAXVALOF_BITINDEX_7) ||
+  (num_bits == 8 && bits <= MAXVALOF_BITINDEX_8)
+
+#endif (* ATS2_HASHMAP_BITS_SOURCE_INCLUDE_HEADER_GUARD__ *)

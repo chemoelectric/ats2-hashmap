@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Fri Sep  3 08:27:27 CDT 2021
+# from AX_AM_MACROS_STATIC on Sat Sep  4 15:27:17 CDT 2021
 
 
 
@@ -137,6 +137,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
+	hashmap/HATS/bits-source-include.hats \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -174,6 +175,9 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/SATS/count-one-bits_sats.lo \
 	hashmap/DATS/count-one-bits_dats.lo \
+	hashmap/SATS/bits-source_sats.lo \
+	hashmap/DATS/bits-source-check-mask_dats.lo \
+	hashmap/DATS/bits-source-uint32_dats.lo \
 	hashmap/SATS/structure_sats.lo hashmap/DATS/structure_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -198,8 +202,11 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
+	hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/structure_dats.Plo \
+	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/structure_sats.Plo
@@ -261,6 +268,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/build-aux/install-sh \
 	$(top_srcdir)/build-aux/ltmain.sh \
 	$(top_srcdir)/build-aux/missing \
+	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in AUTHORS COPYING \
 	INSTALL README build-aux/compile build-aux/config.guess \
 	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
@@ -292,6 +300,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BITSIZEOF_UINT = @BITSIZEOF_UINT@
+BITSIZEOF_UINTPTR = @BITSIZEOF_UINTPTR@
+BITSIZEOF_ULINT = @BITSIZEOF_ULINT@
+BITSIZEOF_ULLINT = @BITSIZEOF_ULLINT@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -339,6 +351,13 @@ LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
+MAXVALOF_BITINDEX_4 = @MAXVALOF_BITINDEX_4@
+MAXVALOF_BITINDEX_5 = @MAXVALOF_BITINDEX_5@
+MAXVALOF_BITINDEX_6 = @MAXVALOF_BITINDEX_6@
+MAXVALOF_BITINDEX_7 = @MAXVALOF_BITINDEX_7@
+MAXVALOF_BITINDEX_8 = @MAXVALOF_BITINDEX_8@
+MAX_SIZEOF_BITINDEX = @MAX_SIZEOF_BITINDEX@
+MIN_SIZEOF_BITINDEX = @MIN_SIZEOF_BITINDEX@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -361,6 +380,10 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SIZEOF_BITINDEXOF_UINT = @SIZEOF_BITINDEXOF_UINT@
+SIZEOF_BITINDEXOF_UINTPTR = @SIZEOF_BITINDEXOF_UINTPTR@
+SIZEOF_BITINDEXOF_ULINT = @SIZEOF_BITINDEXOF_ULINT@
+SIZEOF_BITINDEXOF_ULLINT = @SIZEOF_BITINDEXOF_ULLINT@
 SIZEOF_UINT = @SIZEOF_UINT@
 SIZEOF_UINTPTR = @SIZEOF_UINTPTR@
 SIZEOF_ULINT = @SIZEOF_ULINT@
@@ -444,12 +467,19 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/SATS/hashmap.sats hashmap/SATS/count-one-bits.sats \
 	hashmap/CATS/count-one-bits.cats \
-	hashmap/DATS/count-one-bits.dats hashmap/SATS/structure.sats \
-	hashmap/DATS/structure.dats list-ats-dependencies.dats
+	hashmap/DATS/count-one-bits.dats hashmap/SATS/bits-source.sats \
+	hashmap/DATS/bits-source-check-mask.dats \
+	hashmap/DATS/bits-source-uint32.dats \
+	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
+	list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
+	hashmap/HATS/bits-source-include.hats \
+	hashmap/SATS/bits-source_sats.c \
+	hashmap/DATS/bits-source-check-mask_dats.c \
+	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
@@ -468,7 +498,9 @@ LDADD = $(CODE_COVERAGE_LIBS)
 # The ATS2 library.
 #
 lib_LTLIBRARIES = libats2-hashmap.la
-nobase_nodist_pkginclude_HEADERS = hashmap/SATS/hashmap.sats
+nobase_nodist_pkginclude_HEADERS = hashmap/SATS/hashmap.sats \
+	hashmap/SATS/bits-source.sats \
+	hashmap/HATS/bits-source-include.hats
 pkgconfigdir = ${libdir}/pkgconfig
 nodist_pkgconfig_DATA = 
 CODE_COVERAGE_IGNORE_PATTERN = /usr/include/* /usr/include/*/* \
@@ -501,8 +533,13 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
+	hashmap/SATS/bits-source_sats.c \
+	hashmap/DATS/bits-source-check-mask_dats.c \
+	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c
-libats2_hashmap_la_DEPENDENCIES = 
+libats2_hashmap_la_DEPENDENCIES = hashmap/HATS/config.hats \
+	hashmap/HATS/config.hats.in \
+	hashmap/HATS/bits-source-include.hats.in
 libats2_hashmap_la_LIBADD = 
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
@@ -549,6 +586,8 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
 hashmap/HATS/config.hats: $(top_builddir)/config.status $(top_srcdir)/hashmap/HATS/config.hats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/HATS/bits-source-include.hats: $(top_builddir)/config.status $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -654,6 +693,13 @@ hashmap/DATS/$(DEPDIR)/$(am__dirstamp):
 	@: > hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/count-one-bits_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/bits-source_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits-source-check-mask_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits-source-uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/structure_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/structure_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -677,8 +723,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/structure_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/structure_sats.Plo@am__quote@ # am--include-marker
@@ -1071,8 +1120,11 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
@@ -1125,8 +1177,11 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
@@ -1329,6 +1384,7 @@ ats-includes-distclean:
 %_depsprog.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
+hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
 #--------------------------------------------------------------------------
 

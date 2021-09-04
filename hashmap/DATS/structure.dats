@@ -28,7 +28,10 @@ along with this program. If not, see
 staload "hashmap/SATS/structure.sats"
 staload "hashmap/SATS/count-one-bits.sats"
 
+stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
+
 prval _ = $UNSAFE.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
+prval _ = prop_verify {bitsizeof (uintptr) == BITSIZEOF_UINTPTR} ()
 
 symintr <<
 infixl ( * ) <<
@@ -37,6 +40,15 @@ overload << with g0uint_lsl_uintptr
 symintr &
 infixl ( * ) &
 overload & with g0uint_land_uintptr
+
+extern fun {}
+get_node_entry {length : int | length <= bitsizeof (uintptr)}
+               {i      : int | i < length}
+               (node   : &node_vt (length) >> _,
+                i      : uint i) :<!ref>
+    @(bool,      (* Is the entry stored? *)
+      bool,      (* Is the entry a leaf? *)
+      uintptr)   (* Entry's value, or 0 if the entry is not stored. *)
 
 implement {}
 get_node_entry {length} {i} (node, i) =
