@@ -69,8 +69,45 @@ test_num_bits_eq_4 () : void =
     val _ = cloptr_free_unsafe (bits_source)
   }
 
+fn
+test_num_bits_eq_5 () : void =
+  {
+    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val bits_source = make_bits_source_uint32 (5U, hash)
+    val _ = assertloc (bits_source (0U) = 0x18)
+    val _ = assertloc (bits_source (1U) = 0x13)
+    val _ = assertloc (bits_source (2U) = 0x15)
+    val _ = assertloc (bits_source (3U) = 0x08)
+    val _ = assertloc (bits_source (4U) = 0x03)
+    val _ = assertloc (bits_source (5U) = 0x09)
+    val _ = assertloc (bits_source (6U) = 0x00)
+    val _ = assertloc (bits_source (7U) = ~1)
+    val _ = assertloc (bits_source (8U) = ~1)
+    val _ = assertloc (bits_source (9U) = ~1)
+    val _ = assertloc (bits_source (10U) = ~1)
+    val _ = assertloc (bits_source (100U) = ~1)
+    val _ = cloptr_free_unsafe (bits_source)
+
+    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val bits_source = make_bits_source_uint32 (5U, hash)
+    val _ = assertloc (bits_source (0U) = 0x0F)
+    val _ = assertloc (bits_source (1U) = 0x17)
+    val _ = assertloc (bits_source (2U) = 0x0F)
+    val _ = assertloc (bits_source (3U) = 0x1B)
+    val _ = assertloc (bits_source (4U) = 0x0A)
+    val _ = assertloc (bits_source (5U) = 0x0F)
+    val _ = assertloc (bits_source (6U) = 0x03)
+    val _ = assertloc (bits_source (7U) = ~1)
+    val _ = assertloc (bits_source (8U) = ~1)
+    val _ = assertloc (bits_source (9U) = ~1)
+    val _ = assertloc (bits_source (10U) = ~1)
+    val _ = assertloc (bits_source (100U) = ~1)
+    val _ = cloptr_free_unsafe (bits_source)
+  }
+
 implement
 main0 () =
   {
     val _ = test_num_bits_eq_4 ()
+    val _ = test_num_bits_eq_5 ()
   }
