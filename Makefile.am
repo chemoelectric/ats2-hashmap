@@ -36,6 +36,7 @@ BUILT_SOURCES =
 AM_CPPFLAGS =
 AM_CFLAGS =
 AM_LDFLAGS =
+TESTS =
 LDADD =
 bin_PROGRAMS =
 lib_LTLIBRARIES =
@@ -208,6 +209,30 @@ CLEANFILES += hashmap/SATS/structure_sats.c
 CLEANFILES += hashmap/DATS/structure_dats.c
 EXTRA_DIST += hashmap/SATS/structure.sats
 EXTRA_DIST += hashmap/DATS/structure.dats
+
+#--------------------------------------------------------------------------
+#
+# Tests.
+#
+
+AM_DEFAULT_SOURCE_EXT = _dats.c
+
+TESTS += $(check_PROGRAMS)
+
+check_PROGRAMS =
+
+TESTS_CPPFLAGS =
+TESTS_CPPFLAGS += $(AM_CPPFLAGS)
+TESTS_CPPFLAGS += -DATS_MEMALLOC_LIBC
+
+TESTS_LDADD =
+TESTS_LDADD += $(lib_LTLIBRARIES)
+
+check_PROGRAMS += tests/test-bits-source-uint32
+CLEANFILES += tests/test-bits-source-uint32
+CLEANFILES += tests/test-bits-source-uint32_dats.c
+tests_test_bits_source_uint32_CPPFLAGS = $(TESTS_CPPFLAGS)
+tests_test_bits_source_uint32_LDADD = $(TESTS_LDADD)
 
 #--------------------------------------------------------------------------
 #
