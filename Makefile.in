@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Sat Sep  4 16:25:27 CDT 2021
+# from AX_AM_MACROS_STATIC on Sat Sep  4 19:16:07 CDT 2021
 
 
 
@@ -138,7 +138,10 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
-	hashmap/HATS/bits-source-include.hats \
+	hashmap/HATS/bits-source-include.hats common-macros.m4 \
+	hashmap/DATS/bits-source-uintNN.dats.m4 \
+	hashmap/DATS/bits-source-uint32.dats.m4 \
+	hashmap/DATS/bits-source-uint64.dats.m4 \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -179,6 +182,7 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/SATS/bits-source_sats.lo \
 	hashmap/DATS/bits-source-check-mask_dats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
+	hashmap/DATS/bits-source-uint64_dats.lo \
 	hashmap/SATS/structure_sats.lo hashmap/DATS/structure_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -187,10 +191,11 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
 list_ats_dependencies_OBJECTS = $(am_list_ats_dependencies_OBJECTS)
-tests_test_bits_source_uint32_SOURCES =  \
-	tests/test-bits-source-uint32_dats.c
-tests_test_bits_source_uint32_OBJECTS = tests/test_bits_source_uint32-test-bits-source-uint32_dats.$(OBJEXT)
-tests_test_bits_source_uint32_DEPENDENCIES = $(TESTS_LDADD)
+am_tests_test_bits_source_uint32_OBJECTS =  \
+	tests/test-bits-source-uint32_dats.$(OBJEXT)
+tests_test_bits_source_uint32_OBJECTS =  \
+	$(am_tests_test_bits_source_uint32_OBJECTS)
+tests_test_bits_source_uint32_DEPENDENCIES = $(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -209,13 +214,14 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
 	hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/structure_dats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/structure_sats.Plo \
-	tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po
+	tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -237,10 +243,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
-	tests/test-bits-source-uint32_dats.c
+	$(tests_test_bits_source_uint32_SOURCES)
 DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
-	tests/test-bits-source-uint32_dats.c
+	$(tests_test_bits_source_uint32_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -443,7 +449,7 @@ TEST_LOGS = $(am__test_logs2:.test.log=.log)
 TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/build-aux/test-driver
 TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
-am__DIST_COMMON = $(srcdir)/Makefile.in \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(srcdir)/list-ats-dependencies.dats.in \
 	$(top_srcdir)/aminclude_static.am \
 	$(top_srcdir)/build-aux/compile \
@@ -454,6 +460,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/build-aux/ltmain.sh \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/build-aux/test-driver \
+	$(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits-source-uintNN.dats.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in AUTHORS COPYING \
 	INSTALL README build-aux/compile build-aux/config.guess \
@@ -534,6 +543,7 @@ LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
+M4 = @M4@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -655,9 +665,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/CATS/count-one-bits.cats \
 	hashmap/DATS/count-one-bits.dats hashmap/SATS/bits-source.sats \
 	hashmap/DATS/bits-source-check-mask.dats \
-	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
-	list-ats-dependencies.dats
+	tests/test-bits-source-uint32.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
@@ -666,19 +675,28 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/bits-source_sats.c \
 	hashmap/DATS/bits-source-check-mask_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
+	hashmap/DATS/bits-source-uint32.dats \
+	hashmap/DATS/bits-source-uint64_dats.c \
+	hashmap/DATS/bits-source-uint64.dats \
 	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c \
 	tests/test-bits-source-uint32 \
 	tests/test-bits-source-uint32_dats.c list-ats-dependencies \
 	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
-BUILT_SOURCES = 
+BUILT_SOURCES = hashmap/HATS/bits-source-include.hats
+AM_M4FLAGS = 
 
 # We will not be using exceptions.
-AM_CPPFLAGS = -D_ATS_CCOMP_EXCEPTION_NONE -I$(builddir) -I$(srcdir) \
-	-I$(builddir)/lib -I$(srcdir)/lib -I$(PATSHOME) \
-	-I$(PATSHOME)/ccomp/runtime/
+AM_CPPFLAGS = -D_ATS_CCOMP_EXCEPTION_NONE -DATS_MEMALLOC_LIBC \
+	-I$(builddir) -I$(srcdir) -I$(builddir)/lib -I$(srcdir)/lib \
+	-I$(PATSHOME) -I$(PATSHOME)/ccomp/runtime/
 AM_CFLAGS = 
 AM_LDFLAGS = 
+
+#--------------------------------------------------------------------------
+#
+# Tests.
+#
 TESTS = $(check_PROGRAMS)
 LDADD = $(CODE_COVERAGE_LIBS)
 
@@ -707,7 +725,11 @@ space := $(empty) $(empty)
 escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(subst \,\\,$(1)))))))
 
 #--------------------------------------------------------------------------
+TOTAL_M4FLAGS = $(AM_M4FLAGS) $(M4FLAGS) $(XM4FLAGS)
+
+#--------------------------------------------------------------------------
 PATSOPT_DEPS = 
+PATSCC_DEPS = 
 
 #DATS_SIZEOF_UINTPTR_T := \
 #	$(shell echo x $(DEFS) | \
@@ -725,21 +747,12 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/bits-source_sats.c \
 	hashmap/DATS/bits-source-check-mask_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
+	hashmap/DATS/bits-source-uint64_dats.c \
 	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c
-libats2_hashmap_la_DEPENDENCIES = hashmap/HATS/config.hats \
-	hashmap/HATS/config.hats.in \
-	hashmap/HATS/bits-source-include.hats.in
+libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = 
-
-#--------------------------------------------------------------------------
-#
-# Tests.
-#
-AM_DEFAULT_SOURCE_EXT = _dats.c
-TESTS_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
-TESTS_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_uint32_CPPFLAGS = $(TESTS_CPPFLAGS)
-tests_test_bits_source_uint32_LDADD = $(TESTS_LDADD)
+tests_test_bits_source_uint32_SOURCES = tests/test-bits-source-uint32_dats.c
+tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -787,6 +800,14 @@ $(am__aclocal_m4_deps):
 hashmap/HATS/config.hats: $(top_builddir)/config.status $(top_srcdir)/hashmap/HATS/config.hats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/HATS/bits-source-include.hats: $(top_builddir)/config.status $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+common-macros.m4: $(top_builddir)/config.status $(srcdir)/common-macros.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/bits-source-uintNN.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uintNN.dats.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/bits-source-uint32.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/bits-source-uint64.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -908,6 +929,8 @@ hashmap/DATS/bits-source-check-mask_dats.lo:  \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits-source-uint64_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/structure_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/structure_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -925,8 +948,8 @@ tests/$(am__dirstamp):
 tests/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tests/$(DEPDIR)
 	@: > tests/$(DEPDIR)/$(am__dirstamp)
-tests/test_bits_source_uint32-test-bits-source-uint32_dats.$(OBJEXT):  \
-	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+tests/test-bits-source-uint32_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-bits-source-uint32$(EXEEXT): $(tests_test_bits_source_uint32_OBJECTS) $(tests_test_bits_source_uint32_DEPENDENCIES) $(EXTRA_tests_test_bits_source_uint32_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits-source-uint32$(EXEEXT)
@@ -946,13 +969,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/structure_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/structure_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -997,20 +1021,6 @@ list_ats_dependencies-list-ats-dependencies_depsprog.obj: list-ats-dependencies_
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='list-ats-dependencies_depsprog.c' object='list_ats_dependencies-list-ats-dependencies_depsprog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(list_ats_dependencies_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list_ats_dependencies-list-ats-dependencies_depsprog.obj `if test -f 'list-ats-dependencies_depsprog.c'; then $(CYGPATH_W) 'list-ats-dependencies_depsprog.c'; else $(CYGPATH_W) '$(srcdir)/list-ats-dependencies_depsprog.c'; fi`
-
-tests/test_bits_source_uint32-test-bits-source-uint32_dats.o: tests/test-bits-source-uint32_dats.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_bits_source_uint32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_bits_source_uint32-test-bits-source-uint32_dats.o -MD -MP -MF tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Tpo -c -o tests/test_bits_source_uint32-test-bits-source-uint32_dats.o `test -f 'tests/test-bits-source-uint32_dats.c' || echo '$(srcdir)/'`tests/test-bits-source-uint32_dats.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Tpo tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-bits-source-uint32_dats.c' object='tests/test_bits_source_uint32-test-bits-source-uint32_dats.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_bits_source_uint32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_bits_source_uint32-test-bits-source-uint32_dats.o `test -f 'tests/test-bits-source-uint32_dats.c' || echo '$(srcdir)/'`tests/test-bits-source-uint32_dats.c
-
-tests/test_bits_source_uint32-test-bits-source-uint32_dats.obj: tests/test-bits-source-uint32_dats.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_bits_source_uint32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_bits_source_uint32-test-bits-source-uint32_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Tpo -c -o tests/test_bits_source_uint32-test-bits-source-uint32_dats.obj `if test -f 'tests/test-bits-source-uint32_dats.c'; then $(CYGPATH_W) 'tests/test-bits-source-uint32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-bits-source-uint32_dats.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Tpo tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-bits-source-uint32_dats.c' object='tests/test_bits_source_uint32-test-bits-source-uint32_dats.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_bits_source_uint32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_bits_source_uint32-test-bits-source-uint32_dats.obj `if test -f 'tests/test-bits-source-uint32_dats.c'; then $(CYGPATH_W) 'tests/test-bits-source-uint32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-bits-source-uint32_dats.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1529,13 +1539,14 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
-	-rm -f tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-local distclean-tags
@@ -1587,13 +1598,14 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
-	-rm -f tests/$(DEPDIR)/test_bits_source_uint32-test-bits-source-uint32_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1750,8 +1762,16 @@ code-coverage-capture-hook:
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
 
-clean-local: code-coverage-clean # tests-clean
+clean-local: code-coverage-clean
 distclean-local: code-coverage-dist-clean ats-includes-distclean
+
+%.hats: %.hats.m4 common-macros.m4
+	@$(MKDIR_P) $(@D)
+	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
+
+%.dats: %.dats.m4 common-macros.m4
+	@$(MKDIR_P) $(@D)
+	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
 
 @GNU@ define write-dependencies-file =
 @GNU@	$(MKDIR_P) ats-dependencies && \
@@ -1773,12 +1793,6 @@ ats-includes-distclean:
 @DEPENDENCY_TRACKING_TRUE@	@$(MKDIR_P) $(@D)
 @DEPENDENCY_TRACKING_TRUE@	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
-@DEPENDENCY_TRACKING_TRUE@%_tests.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
-@DEPENDENCY_TRACKING_TRUE@	@$(call write-dependencies-file,$(@),$(<))
-@DEPENDENCY_TRACKING_TRUE@	@$(MKDIR_P) $(@D)
-@DEPENDENCY_TRACKING_TRUE@	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
-@DEPENDENCY_TRACKING_TRUE@			$(TESTS_PATSOPTFLAGS) -d $(<)
-
 @DEPENDENCY_TRACKING_FALSE@%_sats.c: %.sats $(PATSOPT_DEPS)
 @DEPENDENCY_TRACKING_FALSE@	@$(MKDIR_P) $(@D)
 @DEPENDENCY_TRACKING_FALSE@	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -s $(<)
@@ -1787,15 +1801,19 @@ ats-includes-distclean:
 @DEPENDENCY_TRACKING_FALSE@	@$(MKDIR_P) $(@D)
 @DEPENDENCY_TRACKING_FALSE@	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
-@DEPENDENCY_TRACKING_FALSE@%_tests.c: %.dats $(PATSOPT_DEPS)
-@DEPENDENCY_TRACKING_FALSE@	@$(MKDIR_P) $(@D)
-@DEPENDENCY_TRACKING_FALSE@	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
-@DEPENDENCY_TRACKING_FALSE@			$(TESTS_PATSOPTFLAGS) -d $(<)
-
 %_depsprog.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
+
 hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
+hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
+hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
+hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
+hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
+tests/test-bits-source-uint32_dats.c: tests/test-bits-source-uint32.dats
 
 #--------------------------------------------------------------------------
 

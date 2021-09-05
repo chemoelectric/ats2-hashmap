@@ -54,6 +54,7 @@ AM_CONDITIONAL([DEPENDENCY_TRACKING],
 
 AC_PROG_CC
 AC_PROG_CC_C_O
+AC_CHECK_PROGS([M4],[m4])
 AC_CHECK_PROGS([PATSOPT],[patsopt])
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -149,6 +150,11 @@ AC_SUBST([SIZEOF_BITINDEXOF_UINTPTR],[`bits_in_index_of ${ac_cv_sizeof_uintptr_t
 
 AC_CONFIG_FILES([hashmap/HATS/config.hats])
 AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
+
+AC_CONFIG_FILES([common-macros.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uintNN.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

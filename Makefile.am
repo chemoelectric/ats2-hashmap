@@ -33,6 +33,7 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 BUILT_SOURCES =
+AM_M4FLAGS =
 AM_CPPFLAGS =
 AM_CFLAGS =
 AM_LDFLAGS =
@@ -58,6 +59,7 @@ DISTCLEANFILES += GNUmakefile
 # We will not be using exceptions.
 AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
 
+AM_CPPFLAGS += -DATS_MEMALLOC_LIBC
 AM_CPPFLAGS += -I$(builddir)
 AM_CPPFLAGS += -I$(srcdir)
 AM_CPPFLAGS += -I$(builddir)/lib
@@ -73,7 +75,7 @@ CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/ccomp/runtime/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/prelude/CATS/*
 
-clean-local: code-coverage-clean # tests-clean
+clean-local: code-coverage-clean
 distclean-local: code-coverage-dist-clean ats-includes-distclean
 
 #---------------------------------------------------------------------
@@ -90,7 +92,23 @@ escape = $(subst $$,\$$,$(subst ^,\^,$(subst ],\],$(subst [,\[,$(subst .,\.,$(su
 
 #--------------------------------------------------------------------------
 
+TOTAL_M4FLAGS =
+TOTAL_M4FLAGS += $(AM_M4FLAGS)
+TOTAL_M4FLAGS += $(M4FLAGS)
+TOTAL_M4FLAGS += $(XM4FLAGS)
+
+%.hats: %.hats.m4 common-macros.m4
+	@$(MKDIR_P) $(@D)
+	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
+
+%.dats: %.dats.m4 common-macros.m4
+	@$(MKDIR_P) $(@D)
+	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
+
+#--------------------------------------------------------------------------
+
 PATSOPT_DEPS =
+PATSCC_DEPS =
 
 #DATS_SIZEOF_UINTPTR_T := \
 #	$(shell echo x $(DEFS) | \
@@ -134,12 +152,6 @@ if DEPENDENCY_TRACKING
 	@$(MKDIR_P) $(@D)
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
-%_tests.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
-	@$(call write-dependencies-file,$(@),$(<))
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
-			$(TESTS_PATSOPTFLAGS) -d $(<)
-
 else !DEPENDENCY_TRACKING
 
 %_sats.c: %.sats $(PATSOPT_DEPS)
@@ -149,11 +161,6 @@ else !DEPENDENCY_TRACKING
 %_dats.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
-
-%_tests.c: %.dats $(PATSOPT_DEPS)
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) \
-			$(TESTS_PATSOPTFLAGS) -d $(<)
 
 endif !DEPENDENCY_TRACKING
 
@@ -172,8 +179,6 @@ libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD =
 
-libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/config.hats
-libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/config.hats.in
 hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
@@ -192,16 +197,26 @@ EXTRA_DIST += hashmap/DATS/count-one-bits.dats
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
-libats2_hashmap_la_DEPENDENCIES += hashmap/HATS/bits-source-include.hats.in
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
+BUILT_SOURCES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint32.dats
+CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint64.dats
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
-EXTRA_DIST += hashmap/DATS/bits-source-uint32.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
+hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
+hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
+hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
+hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
@@ -215,24 +230,17 @@ EXTRA_DIST += hashmap/DATS/structure.dats
 # Tests.
 #
 
-AM_DEFAULT_SOURCE_EXT = _dats.c
-
 TESTS += $(check_PROGRAMS)
 
 check_PROGRAMS =
 
-TESTS_CPPFLAGS =
-TESTS_CPPFLAGS += $(AM_CPPFLAGS)
-TESTS_CPPFLAGS += -DATS_MEMALLOC_LIBC
-
-TESTS_LDADD =
-TESTS_LDADD += $(lib_LTLIBRARIES)
-
 check_PROGRAMS += tests/test-bits-source-uint32
+tests_test_bits_source_uint32_SOURCES = tests/test-bits-source-uint32_dats.c
+tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits-source-uint32.dats
 CLEANFILES += tests/test-bits-source-uint32
 CLEANFILES += tests/test-bits-source-uint32_dats.c
-tests_test_bits_source_uint32_CPPFLAGS = $(TESTS_CPPFLAGS)
-tests_test_bits_source_uint32_LDADD = $(TESTS_LDADD)
+tests/test-bits-source-uint32_dats.c: tests/test-bits-source-uint32.dats
 
 #--------------------------------------------------------------------------
 #

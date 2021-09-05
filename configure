@@ -694,6 +694,7 @@ CODE_COVERAGE_ENABLED
 CODE_COVERAGE_ENABLED_FALSE
 CODE_COVERAGE_ENABLED_TRUE
 PATSOPT
+M4
 DEPENDENCY_TRACKING_FALSE
 DEPENDENCY_TRACKING_TRUE
 PKGCONFIG_PATSHOME
@@ -13846,6 +13847,53 @@ printf "%s\n" "#define NO_MINUS_C_MINUS_O 1" >>confdefs.h
 
 fi
 
+for ac_prog in m4
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_M4+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$M4"; then
+  ac_cv_prog_M4="$M4" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_M4="$ac_prog"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+M4=$ac_cv_prog_M4
+if test -n "$M4"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $M4" >&5
+printf "%s\n" "$M4" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+  test -n "$M4" && break
+done
+
 for ac_prog in patsopt
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
@@ -14954,6 +15002,15 @@ ac_config_files="$ac_config_files hashmap/HATS/config.hats"
 ac_config_files="$ac_config_files hashmap/HATS/bits-source-include.hats"
 
 
+ac_config_files="$ac_config_files common-macros.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintNN.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint32.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64.dats.m4"
+
+
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
 
@@ -16005,6 +16062,10 @@ do
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
     "hashmap/HATS/config.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/config.hats" ;;
     "hashmap/HATS/bits-source-include.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/bits-source-include.hats" ;;
+    "common-macros.m4") CONFIG_FILES="$CONFIG_FILES common-macros.m4" ;;
+    "hashmap/DATS/bits-source-uintNN.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintNN.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint32.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64.dats.m4" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

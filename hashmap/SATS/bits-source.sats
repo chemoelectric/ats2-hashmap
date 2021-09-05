@@ -41,6 +41,12 @@ in
     {num_bits : int | valid_num_bits (num_bits)}
     (uint num_bits, uint32) -> bits_source_cloptr (num_bits)
 
+  (* Make a bits source from a uint64. *)
+  fun
+  make_bits_source_uint64 :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits, uint64) -> bits_source_cloptr (num_bits)
+
   (* You can put a call to bits_source_check_mask in an assertloc
      to avoid proving that your mask is small enough. *)
   fun

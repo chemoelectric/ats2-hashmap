@@ -1,0 +1,3 @@
+include(`common-macros.m4')
+m4_define(`NN',`64')
+m4_include(`hashmap/DATS/bits-source-uintNN.dats.m4')
