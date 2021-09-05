@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Sat Sep  4 19:16:07 CDT 2021
+# from AX_AM_MACROS_STATIC on Sat Sep  4 19:21:43 CDT 2021
 
 
 
@@ -675,14 +675,17 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/bits-source_sats.c \
 	hashmap/DATS/bits-source-check-mask_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
-	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/DATS/bits-source-uint64_dats.c \
+	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/DATS/bits-source-uint64.dats \
 	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c \
 	tests/test-bits-source-uint32 \
 	tests/test-bits-source-uint32_dats.c list-ats-dependencies \
 	list-ats-dependencies_depsprog.c
-DISTCLEANFILES = Makefile GNUmakefile
+DISTCLEANFILES = Makefile GNUmakefile \
+	hashmap/DATS/bits-source-uintNN.dats.m4 \
+	hashmap/DATS/bits-source-uint32.dats.m4 \
+	hashmap/DATS/bits-source-uint64.dats.m4
 BUILT_SOURCES = hashmap/HATS/bits-source-include.hats
 AM_M4FLAGS = 
 
@@ -741,6 +744,18 @@ AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
+#hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
+#hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
+#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uint64.dats.m4.in
 libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
@@ -1762,8 +1777,8 @@ code-coverage-capture-hook:
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
 
-clean-local: code-coverage-clean
-distclean-local: code-coverage-dist-clean ats-includes-distclean
+clean-local: code-coverage-clean ats-includes-clean
+distclean-local: code-coverage-dist-clean
 
 %.hats: %.hats.m4 common-macros.m4
 	@$(MKDIR_P) $(@D)
@@ -1779,8 +1794,8 @@ distclean-local: code-coverage-dist-clean ats-includes-distclean
 @GNU@			> ats-dependencies/`echo $(@) | $(SED) 's|/|_057_|g'`.mk
 @GNU@ endef
 
-.PHONY: ats-includes-distclean
-ats-includes-distclean:
+.PHONY: ats-includes-clean
+ats-includes-clean:
 	-rm -f -R ats-dependencies
 
 @DEPENDENCY_TRACKING_TRUE@%_sats.c: %.sats $(PATSOPT_DEPS) list-ats-dependencies
@@ -1806,13 +1821,6 @@ ats-includes-distclean:
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
 
 hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
-hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
-hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
-hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
-hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
 tests/test-bits-source-uint32_dats.c: tests/test-bits-source-uint32.dats
 
 #--------------------------------------------------------------------------

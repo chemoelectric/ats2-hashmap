@@ -30,22 +30,22 @@ in
   (* A bits source returns ~1 if the index is past the last
      available bit.
      FIXME: Say more about what a bits source does. *)
-  vtypedef bits_source_cloptr (num_bits : int) =
-    uint -<cloptr1>
+  vtypedef bits_source_cloptr (data_vt : vt@ype, num_bits : int) =
+    (data_vt, uint) -<cloptr1>
       [bits : int | (~1) <= bits; bits_maxval (num_bits, bits)]
       int bits
 
-  (* Make a bits source from a uint32. *)
+  (* Make a bits source of a uint32. *)
   fun
   make_bits_source_uint32 :
     {num_bits : int | valid_num_bits (num_bits)}
-    (uint num_bits, uint32) -> bits_source_cloptr (num_bits)
+    (uint num_bits) -> bits_source_cloptr (uint32, num_bits)
 
-  (* Make a bits source from a uint64. *)
+  (* Make a bits source of a uint64. *)
   fun
   make_bits_source_uint64 :
     {num_bits : int | valid_num_bits (num_bits)}
-    (uint num_bits, uint64) -> bits_source_cloptr (num_bits)
+    (uint num_bits) -> bits_source_cloptr (uint64, num_bits)
 
   (* You can put a call to bits_source_check_mask in an assertloc
      to avoid proving that your mask is small enough. *)

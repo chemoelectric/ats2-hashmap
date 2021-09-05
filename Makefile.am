@@ -75,8 +75,8 @@ CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/ccomp/runtime/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/prelude/CATS/*
 
-clean-local: code-coverage-clean
-distclean-local: code-coverage-dist-clean ats-includes-distclean
+clean-local: code-coverage-clean ats-includes-clean
+distclean-local: code-coverage-dist-clean
 
 #---------------------------------------------------------------------
 #
@@ -136,8 +136,8 @@ TESTS_PATSOPTFLAGS += -IATS $(srcdir)/tests
 @GNU@			> ats-dependencies/`echo $(@) | $(SED) 's|/|_057_|g'`.mk
 @GNU@ endef
 
-.PHONY: ats-includes-distclean
-ats-includes-distclean:
+.PHONY: ats-includes-clean
+ats-includes-clean:
 	-rm -f -R ats-dependencies
 
 if DEPENDENCY_TRACKING
@@ -203,20 +203,28 @@ CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
-CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
+DISTCLEANFILES += hashmap/DATS/bits-source-uintNN.dats.m4
+DISTCLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
+DISTCLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
-hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
-hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
-hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
-hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
-hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
+#hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
+#hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
+#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uint32.dats.m4.in
+#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
+#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uint64.dats.m4.in
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
