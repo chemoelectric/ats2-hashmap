@@ -153,6 +153,7 @@ AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
 
 AC_CONFIG_FILES([common-macros.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uintNN.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
 

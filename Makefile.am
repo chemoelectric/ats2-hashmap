@@ -170,16 +170,20 @@ EXTRA_DIST += hashmap/DATS/count-one-bits.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint16_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
 DISTCLEANFILES += hashmap/DATS/bits-source-uintNN.dats.m4
+DISTCLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
 DISTCLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
 DISTCLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
@@ -202,6 +206,14 @@ EXTRA_DIST += hashmap/DATS/structure.dats
 TESTS += $(check_PROGRAMS)
 
 check_PROGRAMS =
+
+check_PROGRAMS += tests/test-bits-source-uint16
+tests_test_bits_source_uint16_SOURCES = tests/test-bits-source-uint16_dats.c
+tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits-source-uint16.dats
+CLEANFILES += tests/test-bits-source-uint16
+CLEANFILES += tests/test-bits-source-uint16_dats.c
+tests/test-bits-source-uint16_dats.c: tests/test-bits-source-uint16.dats
 
 check_PROGRAMS += tests/test-bits-source-uint32
 tests_test_bits_source_uint32_SOURCES = tests/test-bits-source-uint32_dats.c

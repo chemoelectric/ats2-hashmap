@@ -52,6 +52,21 @@ in
       (BITS_SOURCE_BITS (num_bits, bits) | int bits)
 
   (******************************************************************)
+  (* Make a bits source of a uint16. *)
+
+  fun
+  make_bits_source_uint16 :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (uint16, num_bits)
+
+  fun
+  free_bits_source_uint16 :
+    {num_bits : int}
+    bits_source_cloptr (uint16, num_bits) -> void
+
+  overload free with free_bits_source_uint16
+
+  (******************************************************************)
   (* Make a bits source of a uint32. *)
 
   fun
