@@ -26,26 +26,62 @@ local
   #include "hashmap/HATS/bits-source-include.hats"
 
 in
-
+  (******************************************************************)
   (* A bits source returns ~1 if the index is past the last
      available bit.
      FIXME: Say more about what a bits source does. *)
+
+  absprop BITS_SOURCE_BITS (num_bits : int, bits : int)
+
+  praxi
+  bits_source_bits_make :
+    {num_bits : int}
+    {bits     : int | (~1) <= bits && bits_maxval (num_bits, bits)}
+    () -<prf> BITS_SOURCE_BITS (num_bits, bits)
+
+  praxi
+  bits_source_bits_bounds :
+    {num_bits : int}
+    {bits     : int}
+    BITS_SOURCE_BITS (num_bits, bits) -<prf>
+      [(~1) <= bits && bits_maxval (num_bits, bits)] void
+
   vtypedef bits_source_cloptr (data_vt : vt@ype, num_bits : int) =
     (data_vt, uint) -<cloptr1>
-      [bits : int | (~1) <= bits; bits_maxval (num_bits, bits)]
-      int bits
+      [bits : int]
+      (BITS_SOURCE_BITS (num_bits, bits) | int bits)
 
+  (******************************************************************)
   (* Make a bits source of a uint32. *)
+
   fun
   make_bits_source_uint32 :
     {num_bits : int | valid_num_bits (num_bits)}
     (uint num_bits) -> bits_source_cloptr (uint32, num_bits)
 
+  fun
+  free_bits_source_uint32 :
+    {num_bits : int}
+    bits_source_cloptr (uint32, num_bits) -> void
+
+  overload free with free_bits_source_uint32
+
+  (******************************************************************)
   (* Make a bits source of a uint64. *)
+
   fun
   make_bits_source_uint64 :
     {num_bits : int | valid_num_bits (num_bits)}
     (uint num_bits) -> bits_source_cloptr (uint64, num_bits)
+
+  fun
+  free_bits_source_uint64 :
+    {num_bits : int}
+    bits_source_cloptr (uint64, num_bits) -> void
+
+  overload free with free_bits_source_uint64
+
+  (******************************************************************)
 
   (* You can put a call to bits_source_check_mask in an assertloc
      to avoid proving that your mask is small enough. *)

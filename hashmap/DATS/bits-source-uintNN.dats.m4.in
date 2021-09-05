@@ -113,9 +113,14 @@ make_bits_source_uint`'NN {num_bits} (num_bits) =
             prval _ = prop_verify {0 <= bits} ()
             prval _ = prop_verify {bits_maxval (num_bits, bits)} ()
           in
-            int_of_uint (bits)
+            (bits_source_bits_make {num_bits} {bits} () |
+             int_of_uint (bits))
           end
         else
-          (~1)
+          (bits_source_bits_make {num_bits} {~1} () | (~1))
       end
   end
+
+implement
+free_bits_source_uint`'NN bits_source =
+  cloptr_free ($UNSAFE.castvwtp0{cloptr0} bits_source)

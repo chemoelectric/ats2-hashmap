@@ -25,6 +25,8 @@ AUTOMAKE_OPTIONS += subdir-objects
 AUTOMAKE_OPTIONS += -Wno-portability
 
 include $(top_srcdir)/aminclude_static.am
+include $(top_srcdir)/config-status-deps.am
+
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
 
@@ -97,27 +99,15 @@ TOTAL_M4FLAGS += $(AM_M4FLAGS)
 TOTAL_M4FLAGS += $(M4FLAGS)
 TOTAL_M4FLAGS += $(XM4FLAGS)
 
-%.hats: %.hats.m4 common-macros.m4
-	@$(MKDIR_P) $(@D)
-	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
-
-%.dats: %.dats.m4 common-macros.m4
-	@$(MKDIR_P) $(@D)
-	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) $(<) > $(@)
+@GNU@ include $(top_srcdir)/m4-rules.mk
+EXTRA_DIST += m4-rules.mk
 
 #--------------------------------------------------------------------------
 
 PATSOPT_DEPS =
 PATSCC_DEPS =
 
-#DATS_SIZEOF_UINTPTR_T := \
-#	$(shell echo x $(DEFS) | \
-#		$(EGREP) -e '[[:space:]]-DSIZEOF_UINTPTR_T=([[:digit:]]+)([[:space:]]|$$)?' | \
-#			$(SED) -e 's|^.*[ 	]-DSIZEOF_UINTPTR_T=||' \
-#			       -e 's|^\([0-9][0-9]*\).*|-DATS SIZEOF_UINTPTR=\1|')
-
 AM_PATSOPTFLAGS =
-#AM_PATSOPTFLAGS += $(DATS_SIZEOF_UINTPTR_T)
 AM_PATSOPTFLAGS += -IATS $(builddir)
 AM_PATSOPTFLAGS += -IATS $(srcdir)
 
@@ -140,33 +130,17 @@ TESTS_PATSOPTFLAGS += -IATS $(srcdir)/tests
 ats-includes-clean:
 	-rm -f -R ats-dependencies
 
-if DEPENDENCY_TRACKING
-
-%_sats.c: %.sats $(PATSOPT_DEPS) list-ats-dependencies
-	@$(call write-dependencies-file,$(@),$(<))
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -s $(<)
-
-%_dats.c: %.dats $(PATSOPT_DEPS) list-ats-dependencies
-	@$(call write-dependencies-file,$(@),$(<))
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
-
-else !DEPENDENCY_TRACKING
-
-%_sats.c: %.sats $(PATSOPT_DEPS)
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -s $(<)
-
-%_dats.c: %.dats $(PATSOPT_DEPS)
-	@$(MKDIR_P) $(@D)
-	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
-
-endif !DEPENDENCY_TRACKING
-
 %_depsprog.c: %.dats $(PATSOPT_DEPS)
 	@$(MKDIR_P) $(@D)
 	$(call v,PATSOPT)$(PATSOPT) -o $(@) $(TOTAL_PATSOPTFLAGS) -d $(<)
+
+if DEPENDENCY_TRACKING
+@GNU@ include $(top_srcdir)/ats-deptracking-rules.mk
+else !DEPENDENCY_TRACKING
+@GNU@ include $(top_srcdir)/ats-nodeptracking-rules.mk
+endif !DEPENDENCY_TRACKING
+EXTRA_DIST += ats-deptracking-rules.mk
+EXTRA_DIST += ats-nodeptracking-rules.mk
 
 #--------------------------------------------------------------------------
 #
@@ -198,7 +172,6 @@ libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
-BUILT_SOURCES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
@@ -213,18 +186,6 @@ EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
-#hashmap/HATS/bits-source-include.hats: hashmap/HATS/bits-source-include.hats.in
-#hashmap/DATS/bits-source-uintNN.dats.m4: hashmap/DATS/bits-source-uintNN.dats.m4.in
-#hashmap/DATS/bits-source-uint32.dats.m4: hashmap/DATS/bits-source-uint32.dats.m4.in
-#hashmap/DATS/bits-source-uint64.dats.m4: hashmap/DATS/bits-source-uint64.dats.m4.in
-#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
-#hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4.in
-#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uintNN.dats.m4.in
-#hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4.in
-#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
-#hashmap/DATS/bits-source-uint32_dats.c: hashmap/DATS/bits-source-uint32.dats.m4.in
-#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uintNN.dats.m4.in
-#hashmap/DATS/bits-source-uint64_dats.c: hashmap/DATS/bits-source-uint64.dats.m4.in
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
