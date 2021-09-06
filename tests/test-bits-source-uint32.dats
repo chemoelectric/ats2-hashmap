@@ -28,11 +28,28 @@ along with this program. If not, see
 
 staload "hashmap/SATS/bits-source.sats"
 
+macdef cast32 = $UNSAFE.cast{uint32}
+
 fn
 test_num_bits_eq_4 () : void =
   {
-    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val hash = cast32 0x12345678U
     val bits_source = make_bits_source_uint32 (4U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 16U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 8)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 7)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 6)
@@ -48,8 +65,23 @@ test_num_bits_eq_4 () : void =
     val _ = assertloc ((bits_source (hash, 100U)).1 = ~1)
     val _ = free (bits_source)
 
-    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val hash = cast32 0xDEADBEEFU
     val bits_source = make_bits_source_uint32 (4U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 16U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0xF)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0xE)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0xE)
@@ -69,8 +101,23 @@ test_num_bits_eq_4 () : void =
 fn
 test_num_bits_eq_5 () : void =
   {
-    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val hash = cast32 0x12345678U
     val bits_source = make_bits_source_uint32 (5U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 32U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x18)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x13)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x15)
@@ -86,8 +133,23 @@ test_num_bits_eq_5 () : void =
     val _ = assertloc ((bits_source (hash, 100U)).1 = ~1)
     val _ = free (bits_source)
 
-    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val hash = cast32 0xDEADBEEFU
     val bits_source = make_bits_source_uint32 (5U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 32U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x0F)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x17)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x0F)
@@ -107,8 +169,23 @@ test_num_bits_eq_5 () : void =
 fn
 test_num_bits_eq_6 () : void =
   {
-    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val hash = cast32 0x12345678U
     val bits_source = make_bits_source_uint32 (6U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 64U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x38)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x19)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x05)
@@ -124,8 +201,23 @@ test_num_bits_eq_6 () : void =
     val _ = assertloc ((bits_source (hash, 100U)).1 = ~1)
     val _ = free (bits_source)
 
-    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val hash = cast32 0xDEADBEEFU
     val bits_source = make_bits_source_uint32 (6U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 64U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x2F)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x3B)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x1B)
@@ -145,8 +237,23 @@ test_num_bits_eq_6 () : void =
 fn
 test_num_bits_eq_7 () : void =
   {
-    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val hash = cast32 0x12345678U
     val bits_source = make_bits_source_uint32 (7U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 128U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x78)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x2C)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x51)
@@ -162,8 +269,23 @@ test_num_bits_eq_7 () : void =
     val _ = assertloc ((bits_source (hash, 100U)).1 = ~1)
     val _ = free (bits_source)
 
-    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val hash = cast32 0xDEADBEEFU
     val bits_source = make_bits_source_uint32 (7U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 128U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x6F)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x7D)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x36)
@@ -183,8 +305,23 @@ test_num_bits_eq_7 () : void =
 fn
 test_num_bits_eq_8 () : void =
   {
-    val hash : uint32 = $UNSAFE.cast 0x12345678U
+    val hash = cast32 0x12345678U
     val bits_source = make_bits_source_uint32 (8U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 256U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0x78)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0x56)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0x34)
@@ -199,8 +336,23 @@ test_num_bits_eq_8 () : void =
     val _ = assertloc ((bits_source (hash, 100U)).1 = ~1)
     val _ = free (bits_source)
 
-    val hash : uint32 = $UNSAFE.cast 0xDEADBEEFU
+    val hash = cast32 0xDEADBEEFU
     val bits_source = make_bits_source_uint32 (8U)
+    val _ =
+      let
+        var i : [i : nat] uint i
+        var u : uint32 = cast32 0
+        var factor : uint32 = cast32 1
+      in
+        for (i := 0U; i < 35U; i := succ i)
+          let
+            val bits = cast32 (bits_source (hash, i)).1
+          in
+            u := u + (bits * factor);
+            factor := factor * (cast32 256U)
+          end;
+        assertloc (u = hash)
+      end
     val _ = assertloc ((bits_source (hash, 0U)).1 = 0xEF)
     val _ = assertloc ((bits_source (hash, 1U)).1 = 0xBE)
     val _ = assertloc ((bits_source (hash, 2U)).1 = 0xAD)

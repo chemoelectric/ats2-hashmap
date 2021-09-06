@@ -173,6 +173,7 @@ libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
@@ -194,6 +195,7 @@ BUILT_SOURCES += hashmap/DATS/bits-source-uint16.dats.m4
 BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats.m4
 BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
+EXTRA_DIST += hashmap/DATS/bits-source-uint64-uint64.dats
 EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
@@ -238,6 +240,13 @@ tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits-source-uint64.dats
 CLEANFILES += tests/test-bits-source-uint64
 CLEANFILES += tests/test-bits-source-uint64_dats.c
+
+check_PROGRAMS += tests/test-bits-source-uint64-uint64
+tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits-source-uint64-uint64_dats.c
+tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits-source-uint64-uint64.dats
+CLEANFILES += tests/test-bits-source-uint64-uint64
+CLEANFILES += tests/test-bits-source-uint64-uint64_dats.c
 
 #--------------------------------------------------------------------------
 #

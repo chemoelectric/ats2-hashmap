@@ -97,9 +97,25 @@ in
   overload free with free_bits_source_uint64
 
   (******************************************************************)
+  (* Make a bits source of a pair of uint64. *)
 
+  fun
+  make_bits_source_uint64_uint64 :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) ->
+      bits_source_cloptr (@(uint64, uint64), num_bits)
+
+  fun
+  free_bits_source_uint64_uint64 :
+    {num_bits : int}
+    bits_source_cloptr (@(uint64, uint64), num_bits) -> void
+
+  overload free with free_bits_source_uint64_uint64
+
+  (******************************************************************)
   (* You can put a call to bits_source_check_mask in an assertloc
-     to avoid proving that your mask is small enough. *)
+     to avoid actually *proving* that your bitmask is small enough. *)
+
   fun
   bits_source_check_mask {num_bits : int | valid_num_bits (num_bits)}
                          {mask     : int}
