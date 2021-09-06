@@ -88,6 +88,14 @@ AC_CHECK_SIZEOF([unsigned long int])
 AC_CHECK_SIZEOF([unsigned long long int])
 AC_CHECK_SIZEOF([uintptr_t])
 
+AC_CHECK_TYPE([unsigned __int128])
+if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
+  HAVE_UINT128=1
+else
+  HAVE_UINT128=0
+fi
+AC_SUBST([HAVE_UINT128])
+
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
@@ -156,6 +164,7 @@ AC_CONFIG_FILES([hashmap/DATS/bits-source-uintNN.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
+AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

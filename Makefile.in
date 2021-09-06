@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Mon Sep  6 08:13:56 CDT 2021
+# from AX_AM_MACROS_STATIC on Mon Sep  6 12:14:24 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -167,6 +167,7 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/bits-source-uint16.dats.m4 \
 	hashmap/DATS/bits-source-uint32.dats.m4 \
 	hashmap/DATS/bits-source-uint64.dats.m4 \
+	tests/test-bits-source-uint64-uint64.dats \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -520,10 +521,11 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uintNN.dats.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
-	$(top_srcdir)/hashmap/HATS/config.hats.in AUTHORS COPYING \
-	INSTALL README build-aux/compile build-aux/config.guess \
-	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
-	build-aux/ltmain.sh build-aux/missing
+	$(top_srcdir)/hashmap/HATS/config.hats.in \
+	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
+	AUTHORS COPYING INSTALL README build-aux/compile \
+	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
+	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -584,6 +586,7 @@ GENHTML = @GENHTML@
 GNU = @GNU@
 GNU_MAKE = @GNU_MAKE@
 GREP = @GREP@
+HAVE_UINT128 = @HAVE_UINT128@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -725,6 +728,7 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source.hats.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
+	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
@@ -737,9 +741,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
 	tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
-	tests/test-bits-source-uint64.dats \
-	tests/test-bits-source-uint64-uint64.dats \
-	list-ats-dependencies.dats
+	tests/test-bits-source-uint64.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
@@ -764,6 +766,7 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	tests/test-bits-source-uint32_dats.c \
 	tests/test-bits-source-uint64 \
 	tests/test-bits-source-uint64_dats.c \
+	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-bits-source-uint64-uint64 \
 	tests/test-bits-source-uint64-uint64_dats.c \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
@@ -902,6 +905,8 @@ hashmap/DATS/bits-source-uint16.dats.m4: $(top_builddir)/config.status $(top_src
 hashmap/DATS/bits-source-uint32.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/bits-source-uint64.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

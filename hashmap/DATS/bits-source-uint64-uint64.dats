@@ -131,8 +131,7 @@ rshift_and_mask
          bits from uu.1 *)
       let
         val u0_shifted = (g1ofg0 (uu.0)) >> shift_uu
-        val shift_u1 = num_bits - (64U - shift_uu)
-        val u1_shifted = (g1ofg0 (uu.1)) << shift_u1
+        val u1_shifted = (g1ofg0 (uu.1)) << (64U - shift_uu)
         val u_shifted = u0_shifted + u1_shifted
       in
         (uint_of_uint64 (u_shifted)) & mask
