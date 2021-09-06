@@ -182,14 +182,25 @@ CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
-DISTCLEANFILES += hashmap/DATS/bits-source-uintNN.dats.m4
-DISTCLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
-DISTCLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
-DISTCLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
+BUILT_SOURCES += hashmap/DATS/bits-source-uint16.dats
+BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats
+BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats
+CLEANFILES += hashmap/DATS/bits-source-uintNN.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
+BUILT_SOURCES += hashmap/DATS/bits-source-uintNN.dats.m4
+BUILT_SOURCES += hashmap/DATS/bits-source-uint16.dats.m4
+BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats.m4
+BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
+hashmap/DATS/bits-source-uintNN.dats: hashmap/DATS/bits-source-uintNN.dats.m4
+hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-uint16.dats.m4
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4
+hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
@@ -213,7 +224,6 @@ tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits-source-uint16.dats
 CLEANFILES += tests/test-bits-source-uint16
 CLEANFILES += tests/test-bits-source-uint16_dats.c
-tests/test-bits-source-uint16_dats.c: tests/test-bits-source-uint16.dats
 
 check_PROGRAMS += tests/test-bits-source-uint32
 tests_test_bits_source_uint32_SOURCES = tests/test-bits-source-uint32_dats.c
@@ -221,7 +231,13 @@ tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits-source-uint32.dats
 CLEANFILES += tests/test-bits-source-uint32
 CLEANFILES += tests/test-bits-source-uint32_dats.c
-tests/test-bits-source-uint32_dats.c: tests/test-bits-source-uint32.dats
+
+check_PROGRAMS += tests/test-bits-source-uint64
+tests_test_bits_source_uint64_SOURCES = tests/test-bits-source-uint64_dats.c
+tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits-source-uint64.dats
+CLEANFILES += tests/test-bits-source-uint64
+CLEANFILES += tests/test-bits-source-uint64_dats.c
 
 #--------------------------------------------------------------------------
 #

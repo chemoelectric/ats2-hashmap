@@ -16,6 +16,9 @@
 # <https://www.gnu.org/licenses/>.
 #
 
+# FIXME: Is there a better way to just be sure to run ./config.status
+#        again when one of these files changes?
+
 CONFIG_STATUS_DEPENDENCIES =
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/common-macros.m4.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/config.h.in
