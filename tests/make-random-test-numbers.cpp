@@ -1,4 +1,6 @@
 // One can use this to generate random numbers for testing.
+//
+// See https://stackoverflow.com/questions/28115724/getting-big-random-numbers-in-c-c
 
 #include <random>
 #include <iostream>
