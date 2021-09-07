@@ -82,25 +82,33 @@ count_one_bits_uintptr :
 
 fun
 count_low_one_bits_uint :
-  {x : int} {i : int} (uint x, uint i) -<>
+  {x : int}
+  {i : int | i < 8 * sizeof (uint)}
+  (uint x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 fun
 count_low_one_bits_ulint :
-  {x : int} {i : int} (ulint x, uint i) -<>
+  {x : int}
+  {i : int | i < 8 * sizeof (ulint)}
+  (ulint x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 fun
 count_low_one_bits_ullint :
-  {x : int} {i : int} (ullint x, uint i) -<>
+  {x : int}
+  {i : int | i < 8 * sizeof (ullint)}
+  (ullint x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 fun
 count_low_one_bits_uintptr :
-  {x : int} {i : int} (uintptr x, uint i) -<>
+  {x : int}
+  {i : int | i < 8 * sizeof (uintptr)}
+  (uintptr x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 

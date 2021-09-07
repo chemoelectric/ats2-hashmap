@@ -171,33 +171,30 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 #endif
 
 /* Compute and return the number of 1-bits set in X,
-   ignoring all bits of index i or higher. */
+   ignoring all bits of index i or higher,
+   for i < 8 * sizeof (unsigned int). */
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
 {
-  return
-    ats2_hashmap_count_one_bits_uint
-    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned int) 0) << i)) : x);
+  return ats2_hashmap_count_one_bits_uint (x & ~((~(unsigned int) 0) << i));
 }
 
 /* Compute and return the number of 1-bits set in X,
-   ignoring all bits of index i or higher. */
+   ignoring all bits of index i or higher,
+   for i < 8 * sizeof (unsigned long int). */
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
 {
-  return
-    ats2_hashmap_count_one_bits_ulint
-    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned long int) 0) << i)) : x);
+  return ats2_hashmap_count_one_bits_ulint (x & ~((~(unsigned long int) 0) << i));
 }
 
 /* Compute and return the number of 1-bits set in X,
-   ignoring all bits of index i or higher. */
+   ignoring all bits of index i or higher,
+   for i < 8 * sizeof (unsigned long long int). */
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
 {
-  return
-    ats2_hashmap_count_one_bits_ullint
-    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned long long int) 0) << i)) : x);
+  return ats2_hashmap_count_one_bits_ullint (x & ~((~(unsigned long long int) 0) << i));
 }
 
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT

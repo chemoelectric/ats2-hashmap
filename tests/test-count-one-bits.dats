@@ -93,9 +93,9 @@ test_popcount_uintptr (u : uintptr) : void =
 fn
 test_popcount_low_bits_uint (u : uint) : void =
   let
-    var j : [j : int | 0 <= j; j <= 100] int j
+    var j : [j : int | 0 <= j] int j
   in
-    for (j := 0; j < 100; j := succ j)
+    for (j := 0; j < 8 * (sz2i sizeof<uint>); j := succ j)
       let
         val j1 = min ((i2sz 8) * sizeof<uint>, i2sz j)
         val b1 = brute_force_popcount_low_bits (u, j1)
@@ -108,9 +108,9 @@ test_popcount_low_bits_uint (u : uint) : void =
 fn
 test_popcount_low_bits_ulint (u : ulint) : void =
   let
-    var j : [j : int | 0 <= j; j <= 100] int j
+    var j : [j : int | 0 <= j] int j
   in
-    for (j := 0; j < 100; j := succ j)
+    for (j := 0; j < 8 * (sz2i sizeof<ulint>); j := succ j)
       let
         val j1 = min ((i2sz 8) * sizeof<ulint>, i2sz j)
         val b1 = brute_force_popcount_low_bits (u, j1)
@@ -123,9 +123,9 @@ test_popcount_low_bits_ulint (u : ulint) : void =
 fn
 test_popcount_low_bits_ullint (u : ullint) : void =
   let
-    var j : [j : int | 0 <= j; j <= 100] int j
+    var j : [j : int | 0 <= j] int j
   in
-    for (j := 0; j < 100; j := succ j)
+    for (j := 0; j < 8 * (sz2i sizeof<ullint>); j := succ j)
       let
         val j1 = min ((i2sz 8) * sizeof<ullint>, i2sz j)
         val b1 = brute_force_popcount_low_bits (u, j1)
@@ -138,9 +138,9 @@ test_popcount_low_bits_ullint (u : ullint) : void =
 fn
 test_popcount_low_bits_uintptr (u : uintptr) : void =
   let
-    var j : [j : int | 0 <= j; j <= 100] int j
+    var j : [j : int | 0 <= j] int j
   in
-    for (j := 0; j < 100; j := succ j)
+    for (j := 0; j < 8 * (sz2i sizeof<uintptr>); j := succ j)
       let
         val j1 = min ((i2sz 8) * sizeof<uintptr>, i2sz j)
         val b1 = brute_force_popcount_low_bits (u, j1)
