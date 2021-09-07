@@ -175,7 +175,9 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
 {
-  return ats2_hashmap_count_one_bits_uint (x & ~((~(unsigned int) 0) << i));
+  return
+    ats2_hashmap_count_one_bits_uint
+    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned int) 0) << i)) : x);
 }
 
 /* Compute and return the number of 1-bits set in X,
@@ -183,7 +185,9 @@ ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ulint (x & ~((~(unsigned long int) 0) << i));
+  return
+    ats2_hashmap_count_one_bits_ulint
+    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned long int) 0) << i)) : x);
 }
 
 /* Compute and return the number of 1-bits set in X,
@@ -191,15 +195,19 @@ ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ullint (x & ~((~(unsigned long long int) 0) << i));
+  return
+    ats2_hashmap_count_one_bits_ullint
+    ((i < 8 * sizeof (x)) ? (x & ~((~(unsigned long long int) 0) << i)) : x);
 }
 
-/* Compute and return the number of 1-bits set in X,
-   ignoring all bits of index i or higher. */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_low_one_bits_uintptr (uintptr_t x, int i)
-{
-  return ats2_hashmap_count_one_bits_uintptr (x & ~((~(uintptr_t) 0) << i));
-}
+#if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for uintptr_t."
+#endif
 
 #endif /* HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__ */

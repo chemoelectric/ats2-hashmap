@@ -248,6 +248,13 @@ CLEANFILES += tests/test-bits-source-uint64-uint64.dats
 CLEANFILES += tests/test-bits-source-uint64-uint64
 CLEANFILES += tests/test-bits-source-uint64-uint64_dats.c
 
+check_PROGRAMS += tests/test-count-one-bits
+tests_test_count_one_bits_SOURCES = tests/test-count-one-bits_dats.c
+tests_test_count_one_bits_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-count-one-bits.dats
+CLEANFILES += tests/test-count-one-bits
+CLEANFILES += tests/test-count-one-bits_dats.c
+
 #--------------------------------------------------------------------------
 #
 # Computation of dependencies.

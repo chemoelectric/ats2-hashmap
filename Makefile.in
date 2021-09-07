@@ -138,7 +138,8 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 check_PROGRAMS = tests/test-bits-source-uint16$(EXEEXT) \
 	tests/test-bits-source-uint32$(EXEEXT) \
 	tests/test-bits-source-uint64$(EXEEXT) \
-	tests/test-bits-source-uint64-uint64$(EXEEXT)
+	tests/test-bits-source-uint64-uint64$(EXEEXT) \
+	tests/test-count-one-bits$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_ac_append_to_file.m4 \
@@ -240,6 +241,11 @@ tests_test_bits_source_uint64_uint64_OBJECTS =  \
 	$(am_tests_test_bits_source_uint64_uint64_OBJECTS)
 tests_test_bits_source_uint64_uint64_DEPENDENCIES =  \
 	$(lib_LTLIBRARIES)
+am_tests_test_count_one_bits_OBJECTS =  \
+	tests/test-count-one-bits_dats.$(OBJEXT)
+tests_test_count_one_bits_OBJECTS =  \
+	$(am_tests_test_count_one_bits_OBJECTS)
+tests_test_count_one_bits_DEPENDENCIES = $(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -270,7 +276,8 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-bits-source-uint16_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint32_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po \
-	tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
+	tests/$(DEPDIR)/test-bits-source-uint64_dats.Po \
+	tests/$(DEPDIR)/test-count-one-bits_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -295,13 +302,15 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
-	$(tests_test_bits_source_uint64_uint64_SOURCES)
+	$(tests_test_bits_source_uint64_uint64_SOURCES) \
+	$(tests_test_count_one_bits_SOURCES)
 DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
-	$(tests_test_bits_source_uint64_uint64_SOURCES)
+	$(tests_test_bits_source_uint64_uint64_SOURCES) \
+	$(tests_test_count_one_bits_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -769,7 +778,9 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-bits-source-uint64-uint64 \
 	tests/test-bits-source-uint64-uint64_dats.c \
-	list-ats-dependencies list-ats-dependencies_depsprog.c
+	tests/test-count-one-bits.dats tests/test-count-one-bits \
+	tests/test-count-one-bits_dats.c list-ats-dependencies \
+	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits-source-uint16.dats \
 	hashmap/DATS/bits-source-uint32.dats \
@@ -848,6 +859,8 @@ tests_test_bits_source_uint64_SOURCES = tests/test-bits-source-uint64_dats.c
 tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
 tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits-source-uint64-uint64_dats.c
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
+tests_test_count_one_bits_SOURCES = tests/test-count-one-bits_dats.c
+tests_test_count_one_bits_LDADD = $(lib_LTLIBRARIES)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1076,6 +1089,12 @@ tests/test-bits-source-uint64-uint64_dats.$(OBJEXT):  \
 tests/test-bits-source-uint64-uint64$(EXEEXT): $(tests_test_bits_source_uint64_uint64_OBJECTS) $(tests_test_bits_source_uint64_uint64_DEPENDENCIES) $(EXTRA_tests_test_bits_source_uint64_uint64_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits-source-uint64-uint64$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_uint64_uint64_OBJECTS) $(tests_test_bits_source_uint64_uint64_LDADD) $(LIBS)
+tests/test-count-one-bits_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-count-one-bits$(EXEEXT): $(tests_test_count_one_bits_OBJECTS) $(tests_test_count_one_bits_DEPENDENCIES) $(EXTRA_tests_test_count_one_bits_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-count-one-bits$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_count_one_bits_OBJECTS) $(tests_test_count_one_bits_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -1104,6 +1123,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-count-one-bits_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -1434,6 +1454,13 @@ tests/test-bits-source-uint64-uint64.log: tests/test-bits-source-uint64-uint64$(
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-count-one-bits.log: tests/test-count-one-bits$(EXEEXT)
+	@p='tests/test-count-one-bits$(EXEEXT)'; \
+	b='tests/test-count-one-bits'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1700,6 +1727,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
+	-rm -f tests/$(DEPDIR)/test-count-one-bits_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-local distclean-tags
@@ -1764,6 +1792,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
+	-rm -f tests/$(DEPDIR)/test-count-one-bits_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

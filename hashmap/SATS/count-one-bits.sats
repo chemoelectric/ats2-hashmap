@@ -27,8 +27,12 @@ along with this program. If not, see
 
 (********************************************************************)
 
+(* "popcount" is the number of 1-bits set in x. *)
 absprop POPCOUNT (x : int, popcount : int)
-absprop POPCOUNT_LOW_BITS (x : int, i : int, popcont : int)
+
+(* "popcount" is the number of 1-bits set in x,
+   ignoring all bits of index i or higher. *)
+absprop POPCOUNT_LOW_BITS (x : int, i : int, popcount : int)
 
 praxi
 popcount_is_nonnegative :
@@ -46,6 +50,7 @@ popcount_low_bits_bound :
   POPCOUNT_LOW_BITS (x, i, popcount) -<prf> [popcount <= i] void
 
 (********************************************************************)
+(* Compute and return the number of 1-bits set in x. *)
 
 fun
 count_one_bits_uint :
@@ -72,6 +77,8 @@ count_one_bits_uintptr :
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 (********************************************************************)
+(* Compute and return the number of 1-bits set in x,
+   ignoring all bits of index i or higher. *)
 
 fun
 count_low_one_bits_uint :
@@ -98,6 +105,11 @@ count_low_one_bits_uintptr :
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 (********************************************************************)
+(* For simplicity, use overloads rather than typekind templates.
+   We really need only the uintptr implementations.
+
+   For a general-use library, we would want to write typekind
+   templates. *)
 
 symintr count_one_bits
 overload count_one_bits with count_one_bits_uint
