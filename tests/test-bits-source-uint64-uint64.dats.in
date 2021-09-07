@@ -76,21 +76,6 @@ test_num_bits_eq_4 () : void =
     val hash = @(cast64 0xBA5EBA11FACEF00DU,
                  cast64 0xDEADBEEF12345678U)
     val bits_source = make_bits_source_uint64_uint64 (4U)
-    val _ =
-      let
-        var i : [i : nat] uint i
-        var u0 : uint64 = cast64 0
-        var factor : uint64 = cast64 1
-      in
-        for (i := 0U; i < 41U; i := succ i)
-          let
-            val bits = cast64 (bits_source (hash, i)).1
-          in
-            u0 := u0 + (bits * factor);
-            factor := factor * (cast64 16U)
-          end;
-        assertloc (u0 = hash.0)
-      end
     #ifdef HAVE_UINT128 #then
       val _ =
         let
@@ -161,21 +146,6 @@ test_num_bits_eq_5 () : void =
     val hash = @(cast64 0xBA5EBA11FACEF00DU,
                  cast64 0xDEADBEEF12345678U)
     val bits_source = make_bits_source_uint64_uint64 (5U)
-    val _ =
-      let
-        var i : [i : nat] uint i
-        var u0 : uint64 = cast64 0
-        var factor : uint64 = cast64 1
-      in
-        for (i := 0U; i < 41U; i := succ i)
-          let
-            val bits = cast64 (bits_source (hash, i)).1
-          in
-            u0 := u0 + (bits * factor);
-            factor := factor * (cast64 32U)
-          end;
-        assertloc (u0 = hash.0)
-      end
     #ifdef HAVE_UINT128 #then
       val _ =
         let
@@ -242,21 +212,6 @@ test_num_bits_eq_6 () : void =
     val hash = @(cast64 0xBA5EBA11FACEF00DU,
                  cast64 0xDEADBEEF12345678U)
     val bits_source = make_bits_source_uint64_uint64 (6U)
-    val _ =
-      let
-        var i : [i : nat] uint i
-        var u0 : uint64 = cast64 0
-        var factor : uint64 = cast64 1
-      in
-        for (i := 0U; i < 41U; i := succ i)
-          let
-            val bits = cast64 (bits_source (hash, i)).1
-          in
-            u0 := u0 + (bits * factor);
-            factor := factor * (cast64 64U)
-          end;
-        assertloc (u0 = hash.0)
-      end
     #ifdef HAVE_UINT128 #then
       val _ =
         let
@@ -323,21 +278,6 @@ test_num_bits_eq_7 () : void =
     val hash = @(cast64 0xBA5EBA11FACEF00DU,
                  cast64 0xDEADBEEF12345678U)
     val bits_source = make_bits_source_uint64_uint64 (7U)
-    val _ =
-      let
-        var i : [i : nat] uint i
-        var u0 : uint64 = cast64 0
-        var factor : uint64 = cast64 1
-      in
-        for (i := 0U; i < 41U; i := succ i)
-          let
-            val bits = cast64 (bits_source (hash, i)).1
-          in
-            u0 := u0 + (bits * factor);
-            factor := factor * (cast64 128U)
-          end;
-        assertloc (u0 = hash.0)
-      end
     #ifdef HAVE_UINT128 #then
       val _ =
         let
@@ -404,21 +344,6 @@ test_num_bits_eq_8 () : void =
     val hash = @(cast64 0xBA5EBA11FACEF00DU,
                  cast64 0xDEADBEEF12345678U)
     val bits_source = make_bits_source_uint64_uint64 (8U)
-    val _ =
-      let
-        var i : [i : nat] uint i
-        var u0 : uint64 = cast64 0
-        var factor : uint64 = cast64 1
-      in
-        for (i := 0U; i < 41U; i := succ i)
-          let
-            val bits = cast64 (bits_source (hash, i)).1
-          in
-            u0 := u0 + (bits * factor);
-            factor := factor * (cast64 256U)
-          end;
-        assertloc (u0 = hash.0)
-      end
     #ifdef HAVE_UINT128 #then
       val _ =
         let
