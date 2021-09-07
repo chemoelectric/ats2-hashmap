@@ -1,3 +1,5 @@
+// One can use this to generate random numbers for testing.
+
 #include <random>
 #include <iostream>
 
