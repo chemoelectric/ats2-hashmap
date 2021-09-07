@@ -176,7 +176,7 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
 {
-  return ats2_hashmap_count_one_bits_uint (x & ~((~(unsigned int) 0) << i));
+  return ats2_hashmap_count_one_bits_uint (x & ((1U << i) - 1U));
 }
 
 /* Compute and return the number of 1-bits set in X,
@@ -185,7 +185,7 @@ ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ulint (x & ~((~(unsigned long int) 0) << i));
+  return ats2_hashmap_count_one_bits_ulint (x & ((1UL << i) - 1UL));
 }
 
 /* Compute and return the number of 1-bits set in X,
@@ -194,7 +194,7 @@ ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
 ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
 ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ullint (x & ~((~(unsigned long long int) 0) << i));
+  return ats2_hashmap_count_one_bits_ullint (x & ((1ULL << i) - 1ULL));
 }
 
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
