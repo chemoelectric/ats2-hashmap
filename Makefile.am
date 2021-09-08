@@ -205,12 +205,12 @@ hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-uint16.dats.m4
 hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4
 hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/structure_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/structure_dats.c
-CLEANFILES += hashmap/SATS/structure_sats.c
-CLEANFILES += hashmap/DATS/structure_dats.c
-EXTRA_DIST += hashmap/SATS/structure.sats
-EXTRA_DIST += hashmap/DATS/structure.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree_dats.c
+CLEANFILES += hashmap/SATS/array-mapped-tree_sats.c
+CLEANFILES += hashmap/DATS/array-mapped-tree_dats.c
+EXTRA_DIST += hashmap/SATS/array-mapped-tree.sats
+EXTRA_DIST += hashmap/DATS/array-mapped-tree.dats
 
 #--------------------------------------------------------------------------
 #

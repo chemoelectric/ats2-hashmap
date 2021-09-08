@@ -212,7 +212,8 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
 	hashmap/DATS/bits-source-uint64_dats.lo \
 	hashmap/DATS/bits-source-uint64-uint64_dats.lo \
-	hashmap/SATS/structure_sats.lo hashmap/DATS/structure_dats.lo
+	hashmap/SATS/array-mapped-tree_sats.lo \
+	hashmap/DATS/array-mapped-tree_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -262,17 +263,17 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
+	hashmap/DATS/$(DEPDIR)/array-mapped-tree_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
-	hashmap/DATS/$(DEPDIR)/structure_dats.Plo \
+	hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
-	hashmap/SATS/$(DEPDIR)/structure_sats.Plo \
 	tests/$(DEPDIR)/test-bits-source-uint16_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint32_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po \
@@ -756,7 +757,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/count-one-bits-microsoft-c.dats \
 	hashmap/SATS/bits-source.sats \
 	hashmap/DATS/bits-source-uint64-uint64.dats \
-	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
+	hashmap/SATS/array-mapped-tree.sats \
+	hashmap/DATS/array-mapped-tree.dats \
 	tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
 	tests/test-bits-source-uint64.dats \
@@ -779,7 +781,8 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/DATS/bits-source-uint16.dats.m4 \
 	hashmap/DATS/bits-source-uint32.dats.m4 \
 	hashmap/DATS/bits-source-uint64.dats.m4 \
-	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c \
+	hashmap/SATS/array-mapped-tree_sats.c \
+	hashmap/DATS/array-mapped-tree_dats.c \
 	tests/test-bits-source-uint16 \
 	tests/test-bits-source-uint16_dats.c \
 	tests/test-bits-source-uint32 \
@@ -858,7 +861,8 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
 	hashmap/DATS/bits-source-uint64-uint64_dats.c \
-	hashmap/SATS/structure_sats.c hashmap/DATS/structure_dats.c
+	hashmap/SATS/array-mapped-tree_sats.c \
+	hashmap/DATS/array-mapped-tree_dats.c
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = 
 tests_test_bits_source_uint16_SOURCES = tests/test-bits-source-uint16_dats.c
@@ -1058,9 +1062,9 @@ hashmap/DATS/bits-source-uint64_dats.lo: hashmap/DATS/$(am__dirstamp) \
 hashmap/DATS/bits-source-uint64-uint64_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/structure_sats.lo: hashmap/SATS/$(am__dirstamp) \
+hashmap/SATS/array-mapped-tree_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/DATS/structure_dats.lo: hashmap/DATS/$(am__dirstamp) \
+hashmap/DATS/array-mapped-tree_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 
 libats2-hashmap.la: $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_DEPENDENCIES) $(EXTRA_libats2_hashmap_la_DEPENDENCIES) 
@@ -1118,17 +1122,17 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/structure_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/structure_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint16_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po@am__quote@ # am--include-marker
@@ -1722,17 +1726,17 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
@@ -1787,17 +1791,17 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/structure_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
