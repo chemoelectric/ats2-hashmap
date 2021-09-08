@@ -82,6 +82,7 @@ implement
 main0 () =
   {
     var test_numbers : @[uint64][100] =
+      (* A list of randomly chosen numbers. *)
       @[uint64][100] ($UNSAFE.cast 0xBA0A47B98D803A39,
                       $UNSAFE.cast 0x4F15E0617975FCE2,
                       $UNSAFE.cast 0x1D3BFB0532987994,
