@@ -52,33 +52,58 @@ popcount_low_bits_bound :
 (********************************************************************)
 (* Compute and return the number of 1-bits set in x. *)
 
+fun {tk : tkind}
+count_one_bits :
+  {x : int}
+  g1uint (tk, x) -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount)
+
+symintr popcount
+overload popcount with count_one_bits
+
 fun
 count_one_bits_uint :
-  {x : int} uint x -<>
+  {x : int}
+  uint x -<>
     [popcount : int]
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
 count_one_bits_ulint :
-  {x : int} ulint x -<>
+  {x : int}
+  ulint x -<>
     [popcount : int]
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
 count_one_bits_ullint :
-  {x : int} ullint x -<>
+  {x : int}
+  ullint x -<>
     [popcount : int]
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
 count_one_bits_uintptr :
-  {x : int} uintptr x -<>
+  {x : int}
+  uintptr x -<>
     [popcount : int]
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 (********************************************************************)
 (* Compute and return the number of 1-bits set in x,
    ignoring all bits of index i or higher. *)
+
+fun {tk : tkind}
+count_low_one_bits :
+  {x : int}
+  {i : int | i < 8 * sizeof (g1uint (tk, x))}
+  (g1uint (tk, x), uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount)
+
+symintr popcount_low_bits
+overload popcount_low_bits with count_low_one_bits
 
 fun
 count_low_one_bits_uint :
@@ -111,30 +136,5 @@ count_low_one_bits_uintptr :
   (uintptr x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
-
-(********************************************************************)
-(* For simplicity, use overloads rather than typekind templates.
-   We really need only the uintptr implementations.
-
-   For a general-use library, we would want to write typekind
-   templates. *)
-
-symintr count_one_bits
-overload count_one_bits with count_one_bits_uint
-overload count_one_bits with count_one_bits_ulint
-overload count_one_bits with count_one_bits_ullint
-overload count_one_bits with count_one_bits_uintptr
-
-symintr popcount
-overload popcount with count_one_bits
-
-symintr count_low_one_bits
-overload count_low_one_bits with count_low_one_bits_uint
-overload count_low_one_bits with count_low_one_bits_ulint
-overload count_low_one_bits with count_low_one_bits_ullint
-overload count_low_one_bits with count_low_one_bits_uintptr
-
-symintr popcount_low_bits
-overload popcount_low_bits with count_low_one_bits
 
 (********************************************************************)

@@ -206,6 +206,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/SATS/count-one-bits_sats.lo \
 	hashmap/DATS/count-one-bits_dats.lo \
+	hashmap/DATS/count-one-bits-microsoft-c_dats.lo \
 	hashmap/SATS/bits-source_sats.lo \
 	hashmap/DATS/bits-source-uint16_dats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
@@ -265,6 +266,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/structure_dats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
@@ -742,21 +744,26 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	ats-nodeptracking-rules.mk hashmap/SATS/hashmap.sats \
 	hashmap/SATS/count-one-bits.sats \
 	hashmap/CATS/count-one-bits.cats \
-	hashmap/DATS/count-one-bits.dats hashmap/SATS/bits-source.sats \
+	hashmap/DATS/count-one-bits.dats \
+	hashmap/DATS/count-one-bits-microsoft-c.dats \
+	hashmap/SATS/bits-source.sats \
 	hashmap/DATS/bits-source-uint64-uint64.dats \
 	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
 	tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
-	tests/test-bits-source-uint64.dats list-ats-dependencies.dats
+	tests/test-bits-source-uint64.dats \
+	tests/test-count-one-bits.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
+	hashmap/DATS/count-one-bits-microsoft-c_dats.c \
 	hashmap/HATS/bits-source-include.hats \
 	hashmap/SATS/bits-source_sats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
+	hashmap/DATS/bits-source-uint64-uint64_dats.c \
 	hashmap/DATS/bits-source-uint16.dats \
 	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/DATS/bits-source-uint64.dats \
@@ -774,9 +781,8 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-bits-source-uint64-uint64 \
 	tests/test-bits-source-uint64-uint64_dats.c \
-	tests/test-count-one-bits.dats tests/test-count-one-bits \
-	tests/test-count-one-bits_dats.c list-ats-dependencies \
-	list-ats-dependencies_depsprog.c
+	tests/test-count-one-bits tests/test-count-one-bits_dats.c \
+	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits-source-uint16.dats \
 	hashmap/DATS/bits-source-uint32.dats \
@@ -838,6 +844,7 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
+	hashmap/DATS/count-one-bits-microsoft-c_dats.c \
 	hashmap/SATS/bits-source_sats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
@@ -1029,6 +1036,9 @@ hashmap/DATS/$(DEPDIR)/$(am__dirstamp):
 	@: > hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/count-one-bits_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/count-one-bits-microsoft-c_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/bits-source_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint16_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1104,6 +1114,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/structure_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
@@ -1707,6 +1718,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
@@ -1771,6 +1783,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/structure_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo

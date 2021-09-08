@@ -26,7 +26,9 @@ along with this program. If not, see
 #include "hashmap/HATS/config.hats"
 
 staload "hashmap/SATS/structure.sats"
+
 staload "hashmap/SATS/count-one-bits.sats"
+staload _ = "hashmap/DATS/count-one-bits.dats"
 
 stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
 
@@ -71,7 +73,7 @@ get_node_entry {length} {i} (node, i) =
           val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
 
           val [index : int] (pf_index | index) =
-            popcount_low_bits (g1ofg0 population_map, i)
+            popcount_low_bits<uintptrknd> (g1ofg0 population_map, i)
           prval _ = popcount_low_bits_is_nonnegative pf_index
           prval _ = popcount_low_bits_bound pf_index
           prval _ = prop_verify {0 <= index} ()

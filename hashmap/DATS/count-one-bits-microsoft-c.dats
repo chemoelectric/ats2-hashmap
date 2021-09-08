@@ -27,8 +27,6 @@ Modified for ats2-hashmap by Barry Schwartz.
 
 #define ATS_DYNLOADFLAG 0
 
-staload "hashmap/SATS/count-one-bits.sats"
-
 %{
 #if 1500 <= _MSC_VER && (defined _M_IX86 || defined _M_X64)
 int ats2_hashmap_popcount_support = -1;

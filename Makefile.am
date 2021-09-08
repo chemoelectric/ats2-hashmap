@@ -162,11 +162,14 @@ nobase_nodist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
 CLEANFILES += hashmap/SATS/count-one-bits_sats.c
 CLEANFILES += hashmap/DATS/count-one-bits_dats.c
+CLEANFILES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
 EXTRA_DIST += hashmap/SATS/count-one-bits.sats
 EXTRA_DIST += hashmap/CATS/count-one-bits.cats
 EXTRA_DIST += hashmap/DATS/count-one-bits.dats
+EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
@@ -178,6 +181,7 @@ CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
@@ -248,7 +252,7 @@ CLEANFILES += tests/test-bits-source-uint64-uint64_dats.c
 check_PROGRAMS += tests/test-count-one-bits
 tests_test_count_one_bits_SOURCES = tests/test-count-one-bits_dats.c
 tests_test_count_one_bits_LDADD = $(lib_LTLIBRARIES)
-CLEANFILES += tests/test-count-one-bits.dats
+EXTRA_DIST += tests/test-count-one-bits.dats
 CLEANFILES += tests/test-count-one-bits
 CLEANFILES += tests/test-count-one-bits_dats.c
 
