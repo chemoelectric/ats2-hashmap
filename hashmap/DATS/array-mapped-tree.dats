@@ -265,13 +265,17 @@ get_subtree_entry
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
 
+    (* Cast index_data_p to a pointer to an object of type vt,
+       by creating a view. *)
     val (pf_index_data | index_data) =
       $UNSAFE.castvwtp1{(vt @ index_data_p | ptr index_data_p)}
         index_data_p
+
     val [bits : int] (pf_bits | bits) =
       bits_source (!index_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
 
+    (* The view no longer is needed. *)
     extern praxi
     consume_pf :
       {p : addr} (vt @ p) -<prf> void
