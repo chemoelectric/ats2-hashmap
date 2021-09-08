@@ -29,6 +29,10 @@ along with this program. If not, see
 staload "hashmap/SATS/count-one-bits.sats"
 
 implement
+count_one_bits<usintknd> {x} (x) =
+  count_one_bits_usint {x} (x)
+
+implement
 count_one_bits<uintknd> {x} (x) =
   count_one_bits_uint {x} (x)
 
@@ -41,8 +45,32 @@ count_one_bits<ullintknd> {x} (x) =
   count_one_bits_ullint {x} (x)
 
 implement
+count_one_bits<sizeknd> {x} (x) =
+  count_one_bits_size {x} (x)
+
+implement
 count_one_bits<uintptrknd> {x} (x) =
   count_one_bits_uintptr {x} (x)
+
+implement
+count_one_bits<uint8knd> {x} (x) =
+  count_one_bits_uint8 {x} (x)
+
+implement
+count_one_bits<uint16knd> {x} (x) =
+  count_one_bits_uint16 {x} (x)
+
+implement
+count_one_bits<uint32knd> {x} (x) =
+  count_one_bits_uint32 {x} (x)
+
+implement
+count_one_bits<uint64knd> {x} (x) =
+  count_one_bits_uint64 {x} (x)
+
+implement
+count_low_one_bits<usintknd> {x} {i} (x, i) =
+  count_low_one_bits_usint {x} {i} (x, i)
 
 implement
 count_low_one_bits<uintknd> {x} {i} (x, i) =
@@ -57,5 +85,25 @@ count_low_one_bits<ullintknd> {x} {i} (x, i) =
   count_low_one_bits_ullint {x} {i} (x, i)
 
 implement
+count_low_one_bits<sizeknd> {x} {i} (x, i) =
+  count_low_one_bits_size {x} {i} (x, i)
+
+implement
 count_low_one_bits<uintptrknd> {x} {i} (x, i) =
   count_low_one_bits_uintptr {x} {i} (x, i)
+
+implement
+count_low_one_bits<uint8knd> {x} {i} (x, i) =
+  count_low_one_bits_uint8 {x} {i} (x, i)
+
+implement
+count_low_one_bits<uint16knd> {x} {i} (x, i) =
+  count_low_one_bits_uint16 {x} {i} (x, i)
+
+implement
+count_low_one_bits<uint32knd> {x} {i} (x, i) =
+  count_low_one_bits_uint32 {x} {i} (x, i)
+
+implement
+count_low_one_bits<uint64knd> {x} {i} (x, i) =
+  count_low_one_bits_uint64 {x} {i} (x, i)

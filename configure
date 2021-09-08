@@ -661,9 +661,6 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
 SIZEOF_BITINDEXOF_UINTPTR
-SIZEOF_BITINDEXOF_ULLINT
-SIZEOF_BITINDEXOF_ULINT
-SIZEOF_BITINDEXOF_UINT
 MAXVALOF_BITINDEX_8
 MAXVALOF_BITINDEX_7
 MAXVALOF_BITINDEX_6
@@ -671,14 +668,26 @@ MAXVALOF_BITINDEX_5
 MAXVALOF_BITINDEX_4
 MAX_SIZEOF_BITINDEX
 MIN_SIZEOF_BITINDEX
+BITSIZEOF_UINT64
+BITSIZEOF_UINT32
+BITSIZEOF_UINT16
+BITSIZEOF_UINT8
 BITSIZEOF_UINTPTR
+BITSIZEOF_SIZE
 BITSIZEOF_ULLINT
 BITSIZEOF_ULINT
 BITSIZEOF_UINT
+BITSIZEOF_USINT
+SIZEOF_UINT64
+SIZEOF_UINT32
+SIZEOF_UINT16
+SIZEOF_UINT8
 SIZEOF_UINTPTR
+SIZEOF_SIZE
 SIZEOF_ULLINT
 SIZEOF_ULINT
 SIZEOF_UINT
+SIZEOF_USINT
 GNU_MAKE
 GNU
 HAVE_UINT128
@@ -14723,6 +14732,39 @@ fi
 # version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
 # declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
 # This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned short int" >&5
+printf %s "checking size of unsigned short int... " >&6; }
+if test ${ac_cv_sizeof_unsigned_short_int+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned short int))" "ac_cv_sizeof_unsigned_short_int"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned_short_int" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned short int)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned_short_int=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned_short_int" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned_short_int" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED_SHORT_INT $ac_cv_sizeof_unsigned_short_int" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned int" >&5
 printf %s "checking size of unsigned int... " >&6; }
 if test ${ac_cv_sizeof_unsigned_int+y}
@@ -14822,6 +14864,39 @@ printf "%s\n" "#define SIZEOF_UNSIGNED_LONG_LONG_INT $ac_cv_sizeof_unsigned_long
 # version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
 # declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
 # This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of size_t" >&5
+printf %s "checking size of size_t... " >&6; }
+if test ${ac_cv_sizeof_size_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (size_t))" "ac_cv_sizeof_size_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_size_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (size_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_size_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_size_t" >&5
+printf "%s\n" "$ac_cv_sizeof_size_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_SIZE_T $ac_cv_sizeof_size_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uintptr_t" >&5
 printf %s "checking size of uintptr_t... " >&6; }
 if test ${ac_cv_sizeof_uintptr_t+y}
@@ -14849,6 +14924,138 @@ printf "%s\n" "$ac_cv_sizeof_uintptr_t" >&6; }
 
 
 printf "%s\n" "#define SIZEOF_UINTPTR_T $ac_cv_sizeof_uintptr_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint8_t" >&5
+printf %s "checking size of uint8_t... " >&6; }
+if test ${ac_cv_sizeof_uint8_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint8_t))" "ac_cv_sizeof_uint8_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint8_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint8_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint8_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint8_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint8_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT8_T $ac_cv_sizeof_uint8_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint16_t" >&5
+printf %s "checking size of uint16_t... " >&6; }
+if test ${ac_cv_sizeof_uint16_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint16_t))" "ac_cv_sizeof_uint16_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint16_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint16_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint16_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint16_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint16_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT16_T $ac_cv_sizeof_uint16_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint32_t" >&5
+printf %s "checking size of uint32_t... " >&6; }
+if test ${ac_cv_sizeof_uint32_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint32_t))" "ac_cv_sizeof_uint32_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint32_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint32_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint32_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint32_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint32_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT32_T $ac_cv_sizeof_uint32_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint64_t" >&5
+printf %s "checking size of uint64_t... " >&6; }
+if test ${ac_cv_sizeof_uint64_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint64_t))" "ac_cv_sizeof_uint64_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint64_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint64_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint64_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint64_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint64_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT64_T $ac_cv_sizeof_uint64_t" >>confdefs.h
 
 
 
@@ -15009,14 +15216,28 @@ printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
+SIZEOF_USINT=${ac_cv_sizeof_unsigned_short_int}
+
 SIZEOF_UINT=${ac_cv_sizeof_unsigned_int}
 
 SIZEOF_ULINT=${ac_cv_sizeof_unsigned_long_int}
 
 SIZEOF_ULLINT=${ac_cv_sizeof_unsigned_long_long_int}
 
+SIZEOF_SIZE=${ac_cv_sizeof_size_t}
+
 SIZEOF_UINTPTR=${ac_cv_sizeof_uintptr_t}
 
+SIZEOF_UINT8=${ac_cv_sizeof_uint8_t}
+
+SIZEOF_UINT16=${ac_cv_sizeof_uint16_t}
+
+SIZEOF_UINT32=${ac_cv_sizeof_uint32_t}
+
+SIZEOF_UINT64=${ac_cv_sizeof_uint64_t}
+
+
+BITSIZEOF_USINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int}`
 
 BITSIZEOF_UINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`
 
@@ -15024,7 +15245,33 @@ BITSIZEOF_ULINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`
 
 BITSIZEOF_ULLINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`
 
+BITSIZEOF_SIZE=`expr 8 '*' ${ac_cv_sizeof_size_t}`
+
 BITSIZEOF_UINTPTR=`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`
+
+BITSIZEOF_UINT8=`expr 8 '*' ${ac_cv_sizeof_uint8_t}`
+
+BITSIZEOF_UINT16=`expr 8 '*' ${ac_cv_sizeof_uint16_t}`
+
+BITSIZEOF_UINT32=`expr 8 '*' ${ac_cv_sizeof_uint32_t}`
+
+BITSIZEOF_UINT64=`expr 8 '*' ${ac_cv_sizeof_uint64_t}`
+
+
+MIN_SIZEOF_BITINDEX=4
+
+MAX_SIZEOF_BITINDEX=8
+
+
+MAXVALOF_BITINDEX_4=15
+
+MAXVALOF_BITINDEX_5=31
+
+MAXVALOF_BITINDEX_6=63
+
+MAXVALOF_BITINDEX_7=127
+
+MAXVALOF_BITINDEX_8=255
 
 
 bits_in_index_of ()
@@ -15043,28 +15290,6 @@ bits_in_index_of ()
     as_fn_error $? "uintptr_t must be at least 2 bytes long" "$LINENO" 5
   fi
 }
-MIN_SIZEOF_BITINDEX=4
-
-MAX_SIZEOF_BITINDEX=8
-
-
-MAXVALOF_BITINDEX_4=15
-
-MAXVALOF_BITINDEX_5=31
-
-MAXVALOF_BITINDEX_6=63
-
-MAXVALOF_BITINDEX_7=127
-
-MAXVALOF_BITINDEX_8=255
-
-
-SIZEOF_BITINDEXOF_UINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_int}`
-
-SIZEOF_BITINDEXOF_ULINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_long_int}`
-
-SIZEOF_BITINDEXOF_ULLINT=`bits_in_index_of ${ac_cv_sizeof_unsigned_long_long_int}`
-
 SIZEOF_BITINDEXOF_UINTPTR=`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`
 
 

@@ -160,6 +160,18 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
   ATS2_HASHMAP_COUNT_ONE_BITS (__builtin_popcountll, __popcnt64, unsigned long long int);
 }
 
+#define ats2_hashmap_count_one_bits_usint ats2_hashmap_count_one_bits_uint
+
+#if SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_uint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_ulint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_ullint
+#else
+#error "I failed to find a count-one-bits implementation for size_t."
+#endif
+
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
 #define ats2_hashmap_count_one_bits_uintptr ats2_hashmap_count_one_bits_uint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
@@ -168,6 +180,46 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 #define ats2_hashmap_count_one_bits_uintptr ats2_hashmap_count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uintptr_t."
+#endif
+
+#if SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_uint
+#elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_ulint
+#elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_ullint
+#else
+#error "I failed to find a count-one-bits implementation for uint8_t."
+#endif
+
+#if SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_uint
+#elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_ulint
+#elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_ullint
+#else
+#error "I failed to find a count-one-bits implementation for uint16_t."
+#endif
+
+#if SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_uint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_ulint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_ullint
+#else
+#error "I failed to find a count-one-bits implementation for uint32_t."
+#endif
+
+#if SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_uint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_ulint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_ullint
+#else
+#error "I failed to find a count-one-bits implementation for uint64_t."
 #endif
 
 /* Compute and return the number of 1-bits set in X,
@@ -197,6 +249,18 @@ ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
   return ats2_hashmap_count_one_bits_ullint (x & ((1ULL << i) - 1ULL));
 }
 
+#define ats2_hashmap_count_low_one_bits_usint ats2_hashmap_count_low_one_bits_uint
+
+#if SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for size_t."
+#endif
+
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
 #define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_uint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
@@ -205,6 +269,46 @@ ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
 #define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uintptr_t."
+#endif
+
+#if SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for uint8_t."
+#endif
+
+#if SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for uint16_t."
+#endif
+
+#if SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for uint32_t."
+#endif
+
+#if SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_INT
+#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_uint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_ulint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_ullint
+#else
+#error "I failed to find a count-low-one-bits implementation for uint64_t."
 #endif
 
 #endif /* HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__ */

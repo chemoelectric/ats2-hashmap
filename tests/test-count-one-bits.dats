@@ -184,6 +184,12 @@ main0 () =
                       $UNSAFE.cast 0xBE42D9C89583950,
                       $UNSAFE.cast 0x245843F08774E2A1)
     var i : [i : nat | i <= 100] int i
+
+    (* Test popcount() *)
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount<usintknd>
+          ($UNSAFE.cast{usint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
         test_popcount<uintknd>
@@ -198,8 +204,34 @@ main0 () =
           ($UNSAFE.cast{ullint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
+        test_popcount<sizeknd>
+          ($UNSAFE.cast{size_t} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
         test_popcount<uintptrknd>
           ($UNSAFE.cast{uintptr} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount<uint8knd>
+          ($UNSAFE.cast{uint8} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount<uint16knd>
+          ($UNSAFE.cast{uint16} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount<uint32knd>
+          ($UNSAFE.cast{uint32} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount<uint64knd>
+          ($UNSAFE.cast{uint64} (test_numbers[i]))
+
+    (* Test popcount_low_bits() *)
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<usintknd>
+          ($UNSAFE.cast{usint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
         test_popcount_low_bits<uintknd>
@@ -214,6 +246,26 @@ main0 () =
           ($UNSAFE.cast{ullint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<sizeknd>
+          ($UNSAFE.cast{size_t} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
         test_popcount_low_bits<uintptrknd>
           ($UNSAFE.cast{uintptr} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<uint8knd>
+          ($UNSAFE.cast{uint8} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<uint16knd>
+          ($UNSAFE.cast{uint16} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<uint32knd>
+          ($UNSAFE.cast{uint32} (test_numbers[i]))
+    val _ =
+      for (i := 0; i < 100; i := succ i)
+        test_popcount_low_bits<uint64knd>
+          ($UNSAFE.cast{uint64} (test_numbers[i]))
   }

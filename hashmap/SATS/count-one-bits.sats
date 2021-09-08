@@ -63,6 +63,13 @@ symintr popcount
 overload popcount with count_one_bits
 
 fun
+count_one_bits_usint :
+  {x : int}
+  usint x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
 count_one_bits_uint :
   {x : int}
   uint x -<>
@@ -84,9 +91,44 @@ count_one_bits_ullint :
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
 fun
+count_one_bits_size :
+  {x : int}
+  size_t x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
 count_one_bits_uintptr :
   {x : int}
   uintptr x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
+count_one_bits_uint8 :
+  {x : int}
+  uint8 x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
+count_one_bits_uint16 :
+  {x : int}
+  uint16 x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
+count_one_bits_uint32 :
+  {x : int}
+  uint32 x -<>
+    [popcount : int]
+    @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
+
+fun
+count_one_bits_uint64 :
+  {x : int}
+  uint64 x -<>
     [popcount : int]
     @(POPCOUNT (x, popcount) | int popcount) = "mac#%"
 
@@ -104,6 +146,14 @@ count_low_one_bits :
 
 symintr popcount_low_bits
 overload popcount_low_bits with count_low_one_bits
+
+fun
+count_low_one_bits_usint :
+  {x : int}
+  {i : int | i < 8 * sizeof (usint)}
+  (usint x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 fun
 count_low_one_bits_uint :
@@ -130,10 +180,50 @@ count_low_one_bits_ullint :
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 
 fun
+count_low_one_bits_size :
+  {x : int}
+  {i : int | i < 8 * sizeof (size_t)}
+  (size_t x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
 count_low_one_bits_uintptr :
   {x : int}
   {i : int | i < 8 * sizeof (uintptr)}
   (uintptr x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_uint8 :
+  {x : int}
+  {i : int | i < 8 * sizeof (uint8)}
+  (uint8 x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_uint16 :
+  {x : int}
+  {i : int | i < 8 * sizeof (uint16)}
+  (uint16 x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_uint32 :
+  {x : int}
+  {i : int | i < 8 * sizeof (uint32)}
+  (uint32 x, uint i) -<>
+    [popcount : int]
+    @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
+
+fun
+count_low_one_bits_uint64 :
+  {x : int}
+  {i : int | i < 8 * sizeof (uint64)}
+  (uint64 x, uint i) -<>
     [popcount : int]
     @(POPCOUNT_LOW_BITS (x, i, popcount) | int popcount) = "mac#%"
 

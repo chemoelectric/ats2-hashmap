@@ -83,10 +83,16 @@ AM_CONDITIONAL([DEPENDENCY_TRACKING],
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+AC_CHECK_SIZEOF([unsigned short int])
 AC_CHECK_SIZEOF([unsigned int])
 AC_CHECK_SIZEOF([unsigned long int])
 AC_CHECK_SIZEOF([unsigned long long int])
+AC_CHECK_SIZEOF([size_t])
 AC_CHECK_SIZEOF([uintptr_t])
+AC_CHECK_SIZEOF([uint8_t])
+AC_CHECK_SIZEOF([uint16_t])
+AC_CHECK_SIZEOF([uint32_t])
+AC_CHECK_SIZEOF([uint64_t])
 
 AC_CHECK_TYPE([unsigned __int128])
 if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
@@ -116,15 +122,36 @@ StM_CONFIG_MAKEFILES
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
+AC_SUBST([SIZEOF_USINT],[${ac_cv_sizeof_unsigned_short_int}])
 AC_SUBST([SIZEOF_UINT],[${ac_cv_sizeof_unsigned_int}])
 AC_SUBST([SIZEOF_ULINT],[${ac_cv_sizeof_unsigned_long_int}])
 AC_SUBST([SIZEOF_ULLINT],[${ac_cv_sizeof_unsigned_long_long_int}])
+AC_SUBST([SIZEOF_SIZE],[${ac_cv_sizeof_size_t}])
 AC_SUBST([SIZEOF_UINTPTR],[${ac_cv_sizeof_uintptr_t}])
+AC_SUBST([SIZEOF_UINT8],[${ac_cv_sizeof_uint8_t}])
+AC_SUBST([SIZEOF_UINT16],[${ac_cv_sizeof_uint16_t}])
+AC_SUBST([SIZEOF_UINT32],[${ac_cv_sizeof_uint32_t}])
+AC_SUBST([SIZEOF_UINT64],[${ac_cv_sizeof_uint64_t}])
 
+AC_SUBST([BITSIZEOF_USINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int}`])
 AC_SUBST([BITSIZEOF_UINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`])
 AC_SUBST([BITSIZEOF_ULINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`])
 AC_SUBST([BITSIZEOF_ULLINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`])
+AC_SUBST([BITSIZEOF_SIZE],[`expr 8 '*' ${ac_cv_sizeof_size_t}`])
 AC_SUBST([BITSIZEOF_UINTPTR],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`])
+AC_SUBST([BITSIZEOF_UINT8],[`expr 8 '*' ${ac_cv_sizeof_uint8_t}`])
+AC_SUBST([BITSIZEOF_UINT16],[`expr 8 '*' ${ac_cv_sizeof_uint16_t}`])
+AC_SUBST([BITSIZEOF_UINT32],[`expr 8 '*' ${ac_cv_sizeof_uint32_t}`])
+AC_SUBST([BITSIZEOF_UINT64],[`expr 8 '*' ${ac_cv_sizeof_uint64_t}`])
+
+AC_SUBST([MIN_SIZEOF_BITINDEX],[4])
+AC_SUBST([MAX_SIZEOF_BITINDEX],[8])
+
+AC_SUBST([MAXVALOF_BITINDEX_4],[15])
+AC_SUBST([MAXVALOF_BITINDEX_5],[31])
+AC_SUBST([MAXVALOF_BITINDEX_6],[63])
+AC_SUBST([MAXVALOF_BITINDEX_7],[127])
+AC_SUBST([MAXVALOF_BITINDEX_8],[255])
 
 bits_in_index_of ()
 {
@@ -142,18 +169,6 @@ bits_in_index_of ()
     AC_MSG_ERROR([uintptr_t must be at least 2 bytes long])
   fi
 }
-AC_SUBST([MIN_SIZEOF_BITINDEX],[4])
-AC_SUBST([MAX_SIZEOF_BITINDEX],[8])
-
-AC_SUBST([MAXVALOF_BITINDEX_4],[15])
-AC_SUBST([MAXVALOF_BITINDEX_5],[31])
-AC_SUBST([MAXVALOF_BITINDEX_6],[63])
-AC_SUBST([MAXVALOF_BITINDEX_7],[127])
-AC_SUBST([MAXVALOF_BITINDEX_8],[255])
-
-AC_SUBST([SIZEOF_BITINDEXOF_UINT],[`bits_in_index_of ${ac_cv_sizeof_unsigned_int}`])
-AC_SUBST([SIZEOF_BITINDEXOF_ULINT],[`bits_in_index_of ${ac_cv_sizeof_unsigned_long_int}`])
-AC_SUBST([SIZEOF_BITINDEXOF_ULLINT],[`bits_in_index_of ${ac_cv_sizeof_unsigned_long_long_int}`])
 AC_SUBST([SIZEOF_BITINDEXOF_UINTPTR],[`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`])
 
 AC_CONFIG_FILES([hashmap/HATS/config.hats])
