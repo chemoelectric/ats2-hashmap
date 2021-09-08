@@ -207,7 +207,6 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/SATS/count-one-bits_sats.lo \
 	hashmap/DATS/count-one-bits_dats.lo \
 	hashmap/SATS/bits-source_sats.lo \
-	hashmap/DATS/bits-source-check-mask_dats.lo \
 	hashmap/DATS/bits-source-uint16_dats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
 	hashmap/DATS/bits-source-uint64_dats.lo \
@@ -262,7 +261,6 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
-	hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo \
@@ -746,7 +744,6 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/CATS/count-one-bits.cats \
 	hashmap/DATS/count-one-bits.dats hashmap/SATS/bits-source.sats \
 	hashmap/DATS/bits-source-uint64-uint64.dats \
-	hashmap/DATS/bits-source-check-mask.dats \
 	hashmap/SATS/structure.sats hashmap/DATS/structure.dats \
 	tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
@@ -757,7 +754,6 @@ CLEANFILES = hashmap/SATS/hashmap_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
 	hashmap/HATS/bits-source-include.hats \
 	hashmap/SATS/bits-source_sats.c \
-	hashmap/DATS/bits-source-check-mask_dats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
@@ -843,7 +839,6 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
 	hashmap/SATS/bits-source_sats.c \
-	hashmap/DATS/bits-source-check-mask_dats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
@@ -1036,9 +1031,6 @@ hashmap/DATS/count-one-bits_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/bits-source_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/DATS/bits-source-check-mask_dats.lo:  \
-	hashmap/DATS/$(am__dirstamp) \
-	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint16_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1108,7 +1100,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo@am__quote@ # am--include-marker
@@ -1712,7 +1703,6 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
-	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
@@ -1777,7 +1767,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
-	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-check-mask_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo

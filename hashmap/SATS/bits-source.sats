@@ -113,14 +113,4 @@ in
   overload free with free_bits_source_uint64_uint64
 
   (******************************************************************)
-  (* You can put a call to bits_source_check_mask in an assertloc
-     to avoid actually *proving* that your bitmask is small enough. *)
-
-  fun
-  bits_source_check_mask {num_bits : int | valid_num_bits (num_bits)}
-                         {mask     : int}
-                         (num_bits : uint num_bits,
-                          mask     : uint mask) :<>
-      bool (bits_maxval (num_bits, mask))
-
 end

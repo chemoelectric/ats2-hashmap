@@ -145,11 +145,22 @@ rshift_and_mask
       end
   end
 
+fn
+make_mask {num_bits : int | valid_num_bits (num_bits)}
+          (num_bits : uint num_bits) :<>
+    [mask : int | bits_maxval (num_bits, mask)]
+    uint mask =
+  case- num_bits of
+  | 4U => g1i2u MAXVALOF_BITINDEX_4
+  | 5U => g1i2u MAXVALOF_BITINDEX_5
+  | 6U => g1i2u MAXVALOF_BITINDEX_6
+  | 7U => g1i2u MAXVALOF_BITINDEX_7
+  | 8U => g1i2u MAXVALOF_BITINDEX_8
+
 implement
 make_bits_source_uint64_uint64 {num_bits} (num_bits) =
   let
-    val [mask : int] mask = ~((~0U) << num_bits)
-    val _ = assertloc (bits_source_check_mask (num_bits, mask))
+    val mask = make_mask (num_bits)
     val q = g1uint_div (128U, num_bits)
     val r = g1uint_mod (128U, num_bits)
     val index_bound = (if iseqz r then q else succ q) : uint

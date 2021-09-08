@@ -87,11 +87,22 @@ uint`'NN`'_of_uint : {u : int} uint u -<> uint`'NN u
 extern castfn
 uint_of_uint`'NN : {u : int} uint`'NN u -<> uint u
 
+fn
+make_mask {num_bits : int | valid_num_bits (num_bits)}
+          (num_bits : uint num_bits) :<>
+    [mask : int | bits_maxval (num_bits, mask)]
+    uint mask =
+  case- num_bits of
+  | 4U => g1i2u MAXVALOF_BITINDEX_4
+  | 5U => g1i2u MAXVALOF_BITINDEX_5
+  | 6U => g1i2u MAXVALOF_BITINDEX_6
+  | 7U => g1i2u MAXVALOF_BITINDEX_7
+  | 8U => g1i2u MAXVALOF_BITINDEX_8
+
 implement
 make_bits_source_uint`'NN {num_bits} (num_bits) =
   let
-    val [mask : int] mask = ~((~0U) << num_bits)
-    val _ = assertloc (bits_source_check_mask (num_bits, mask))
+    val mask = make_mask (num_bits)
     val q = g1uint_div (`'NN`'U, num_bits)
     val r = g1uint_mod (`'NN`'U, num_bits)
     val index_bound = (if iseqz r then q else succ q) : uint

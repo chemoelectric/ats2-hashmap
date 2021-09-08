@@ -169,14 +169,12 @@ EXTRA_DIST += hashmap/CATS/count-one-bits.cats
 EXTRA_DIST += hashmap/DATS/count-one-bits.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-check-mask_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
-CLEANFILES += hashmap/DATS/bits-source-check-mask_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
@@ -196,7 +194,6 @@ BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats.m4
 BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-uint64-uint64.dats
-EXTRA_DIST += hashmap/DATS/bits-source-check-mask.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
 hashmap/DATS/bits-source-uintNN.dats: hashmap/DATS/bits-source-uintNN.dats.m4
