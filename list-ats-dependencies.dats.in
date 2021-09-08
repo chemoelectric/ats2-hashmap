@@ -43,6 +43,12 @@ along with this program. If not, see
 #define BUILDDIR "@abs_builddir@/"
 #define SRCDIR "@abs_srcdir@/"
 
+macdef cst = $UNSAFE.castvwtp1
+
+macdef digit = "0123456789"
+macdef alnum =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789"
+
 (********************************************************************)
 (* replace: free s1 and return s2. *)
 
@@ -74,6 +80,11 @@ strncmp (s1 : string,
   $extfcall (int, "strncmp", s1, s2, n)
 
 fn
+strchr (s : string,
+        c : char) : ptr =
+  $extfcall (ptr, "strchr", s, c)
+
+fn
 open_source_file (filename : string) :
     Option_vt @(Strnptr1, FILEref) =
   if strncmp (filename, "/", i2sz 1) = 0 then
@@ -94,8 +105,7 @@ open_source_file (filename : string) :
       val fullpath = strptr2strnptr fullpath
       val _ = assertloc (i2ssz 0 <= length fullpath)
     in
-      case+ fileref_open_opt ($UNSAFE.castvwtp1 fullpath,
-                              file_mode_r) of
+      case+ fileref_open_opt (cst fullpath, file_mode_r) of
       | ~ Some_vt f => Some_vt @(fullpath, f)
       | ~ None_vt () =>
         let
@@ -104,7 +114,7 @@ open_source_file (filename : string) :
           val fullpath = strptr2strnptr fullpath
           val _ = assertloc (i2ssz 0 <= length fullpath)
         in
-          case+ fileref_open_opt ($UNSAFE.castvwtp1 fullpath,
+          case+ fileref_open_opt (cst fullpath,
                                   file_mode_r) of
           | ~ Some_vt f => Some_vt @(fullpath, f)
           | ~ None_vt () =>
@@ -128,8 +138,8 @@ exists_in_strnptr_list (s   : !Strnptr1 >> _,
       case+ lst of
       | NIL => false
       | @ head :: tail =>
-        if strcmp ($UNSAFE.castvwtp1 head,
-                   $UNSAFE.castvwtp1 s) = 0 then
+        if strcmp (cst head,
+                   cst s) = 0 then
           let
             prval _ = fold@ lst
           in
@@ -212,16 +222,19 @@ is_include (s : string) : bool =
   strncmp (s, "#include", i2sz 8) = 0
 
 fn
-trim_leading_space {p : addr} {n : nat}
-                   (s : !strnptr (p, n) >> _) :
-    Strnptr1 =
+skip_leading_space {p : addr} {n : nat}
+                   {i : int | i <= n}
+                   (s : !strnptr (p, n) >> _,
+                    n : size_t n,
+                    i : size_t i) :
+    [j : int | j <= n] size_t j =
   let
-    val n : size_t n = g1i2u (length s)
+    prval _ = lemma_g1uint_param i
     fun
-    find_past {i : nat | i <= n} .<n - i>.
+    find_past {i : int | 0 <= i; i <= n} .<n - i>.
               (s : !strnptr (p, n) >> _,
                i : size_t i) :
-        [j : nat | j <= n] size_t j =
+        [j : int | j <= n] size_t j =
       if i = n then
         i
       else if strnptr_get_at (s, i) = ' ' then
@@ -230,9 +243,89 @@ trim_leading_space {p : addr} {n : nat}
         find_past (s, succ i)
       else
         i
-    val i = find_past (s, i2sz 0)
   in
-    string_make_substring ($UNSAFE.castvwtp1{string n} s, i, n - i)
+    find_past (s, i)
+  end
+
+fn
+trim_leading_space {p : addr} {n : nat}
+                   (s : !strnptr (p, n) >> _) :
+    Strnptr1 =
+  let
+    val n : size_t n = g1i2u (length s)
+    val i = skip_leading_space (s, n, i2sz 0)
+    prval _ = lemma_g1uint_param i
+  in
+    string_make_substring (cst{string n} s, i, n - i)
+  end
+
+fn
+trim_past_equals {p : addr} {n : nat}
+                 (s : !strnptr (p, n) >> _) :
+    Strnptr1 =
+  let
+    val t = trim_leading_space (s)
+  in
+    if strncmp (cst t, "=", i2sz 1) = 0 then
+      let
+        val [m : int] m = g1ofg0 (length t)
+        val _ = assertloc (i2ssz 1 <= m)
+        val m : size_t m = g1i2u m
+        val t =
+          replace (t, string_make_substring (cst{string m} t,
+                                             i2sz 1, m - i2sz 1))
+      in
+        replace (t, trim_leading_space (t))
+      end
+    else
+      begin
+        free t;
+        fprintln!
+          (stderr_ref,
+           "Equals sign missing in staload or dynload. Quitting.");
+        exit (1);
+        string1_copy ("")
+      end
+  end
+
+fn
+trim_past_name {p : addr} {n : nat}
+               (s : !strnptr (p, n) >> _) :
+    Strnptr1 =
+  let
+    val n : size_t n = g1i2u (length s)
+    val _ = assertloc (i2sz 0 <= n)
+    fun
+    skip {i : int | 0 <= i; i <= n} .<n - i>.
+         (s : !strnptr (p, n) >> _,
+          i : size_t i) :
+        [j : int | j <= n] size_t j =
+      if i = n then
+        begin
+          fprintln! (stderr_ref, "staload or dynload line \"",
+                     s, "\" confuses me. Quitting.");
+          exit (1);
+          i
+        end
+      else if ptr_isnot_null (strchr (alnum, s[i])) then
+        begin
+          if i = i2sz 0 &&
+             ptr_isnot_null (strchr (digit, s[i])) then
+            begin
+              fprintln! (stderr_ref,
+                         "staload or dynload name starts ",
+                         "with a digit. Quitting.");
+              exit (1);
+            end;
+          skip (s, succ i)
+        end
+      else
+        i
+    val j = skip (s, i2sz 0)
+    prval _ = lemma_g1uint_param j
+    val t = string_make_substring (cst{string n} s, j, n - j)
+  in
+    replace (t, trim_leading_space (t))
   end
 
 fn
@@ -240,29 +333,49 @@ trim_past_start {p : addr} {n : nat}
                 (s : !strnptr (p, n) >> _) :
     Strnptr1 =
   let
-    val n : size_t n = g1i2u (length s)
-    fn
-    skip (s : !strnptr (p, n) >> _) :
-        [j : nat] size_t j =
-      if is_staload ($UNSAFE.castvwtp1 s) then
-        i2sz 7
-      else if is_dynload ($UNSAFE.castvwtp1 s) then
-        i2sz 7
-      else if is_include ($UNSAFE.castvwtp1 s) then
-        i2sz 8
-      else
-        begin
-          fprintln! (stderr_ref, "Line \"", s,
-                     "\" confuses me. Quitting.");
-          exit (1);
-          i2sz 0
-        end
-    val i = skip s
-    val _ = assertloc (i <= n)
-    val t =
-      string_make_substring ($UNSAFE.castvwtp1{string n} s, i, n - i)
+    val t = trim_leading_space (s)
+    val [m : int] m = g1ofg0 (length t)
+    val _ = assertloc (i2ssz 0 <= m)
+    val m : size_t m = g1i2u m
   in
-    replace (t, trim_leading_space (t))
+    if is_staload (cst t) ||
+       is_dynload (cst t) then
+      let
+        val _ = assertloc (i2sz 7 <= m)
+        val t =
+          replace (t, string_make_substring (cst{string m} t,
+                                             i2sz 7, m - i2sz 7))
+        val t = replace (t, trim_leading_space (t))
+      in
+        if strncmp (cst t, "\"", i2sz 1) = 0 ||
+           strncmp (cst t, "<", i2sz 1) = 0 then
+          t
+        else
+          let
+            val t = replace (t, trim_past_name (t))
+          in
+            replace (t, trim_past_equals (t))
+          end
+      end
+    else if is_include (cst s) then
+      let
+        val _ = assertloc (i2sz 8 <= m)
+        val t =
+          replace
+            (t, string_make_substring (cst{string m} t,
+                                       i2sz 8, m - i2sz 8))
+        val t = replace (t, trim_leading_space (t))
+      in
+        t
+      end
+    else
+      begin
+        free (t);
+        fprintln! (stderr_ref, "Line \"", s,
+                   "\" confuses me. Quitting.");
+        exit (1);
+        string1_copy ("")
+      end
   end
 
 fn
@@ -270,8 +383,8 @@ trim_past_quote {p : addr} {n : nat}
                 (s : !strnptr (p, n) >> _) :
     Strnptr1 =
   (* For simplicity, accept #include "..> and #include <.." *)
-  if strncmp ($UNSAFE.castvwtp1 s, "\"", i2sz 1) <> 0 &&
-     strncmp ($UNSAFE.castvwtp1 s, "<", i2sz 1) <> 0 then
+  if strncmp (cst s, "\"", i2sz 1) <> 0 &&
+     strncmp (cst s, "<", i2sz 1) <> 0 then
     begin
       fprintln! (stderr_ref, "String \"", s,
                  "\" confuses me. Quitting.");
@@ -284,7 +397,7 @@ trim_past_quote {p : addr} {n : nat}
       val _ = assertloc (i2sz 1 <= n)
       val i = i2sz 1
     in
-      string_make_substring ($UNSAFE.castvwtp1{string n} s, i, n - i)
+      string_make_substring (cst{string n} s, i, n - i)
     end
 
 fn
@@ -297,7 +410,7 @@ take_until_quote {p : addr} {n : nat}
     find_quote {i : nat | i <= n} .<n - i>.
                (s : !strnptr (p, n) >> _,
                 i : size_t i) :
-        [j : nat | j <= n] size_t j =
+        [j : int | 0 <= j; j <= n] size_t j =
       if i = n then
         begin
           fprintln! (stderr_ref, "Unterminated quoted string \"",
@@ -313,7 +426,7 @@ take_until_quote {p : addr} {n : nat}
         find_quote (s, succ i)
     val i = find_quote (s, i2sz 0)
   in
-    string_make_substring ($UNSAFE.castvwtp1{string n} s, i2sz 0, i)
+    string_make_substring (cst{string n} s, i2sz 0, i)
   end
 
 extern fn
@@ -350,16 +463,16 @@ find_depends_fileref (f) =
               val s = trim_leading_space line
             in
               free line;
-              if (is_staload ($UNSAFE.castvwtp1 s) ||
-                  is_dynload ($UNSAFE.castvwtp1 s) ||
-                  is_include ($UNSAFE.castvwtp1 s)) then
+              if (is_staload (cst s) ||
+                  is_dynload (cst s) ||
+                  is_include (cst s)) then
                 let
                   val s = replace (s, trim_past_start (s))
                   val s = replace (s, trim_past_quote (s))
                   val s = replace (s, take_until_quote (s))
                   val _ = assertloc (i2ssz 0 <= length s)
                   val deps =
-                    find_depends_filename ($UNSAFE.castvwtp1 s)
+                    find_depends_filename (cst s)
                   val _ = free s
                   val lst = list_vt_append (lst, deps)
                 in
@@ -411,7 +524,7 @@ main0 (argc, argv) =
       | @ filename :: tail =>
         let
           val new_deps =
-            find_depends_filename ($UNSAFE.castvwtp1 filename)
+            find_depends_filename (cst filename)
           val new_deps = delete_duplicates new_deps
           val deps = list_vt_append (deps, new_deps)
           val deps = delete_duplicates deps
