@@ -34,6 +34,13 @@ stadef valid_num_bits (num_bits : int) : bool =
 #define MAXVALOF_BITINDEX_7 @MAXVALOF_BITINDEX_7@
 #define MAXVALOF_BITINDEX_8 @MAXVALOF_BITINDEX_8@
 
+stadef bits_mask (num_bits : int, mask : int) : bool =
+  (num_bits == 4 && mask == MAXVALOF_BITINDEX_4) ||
+  (num_bits == 5 && mask == MAXVALOF_BITINDEX_5) ||
+  (num_bits == 6 && mask == MAXVALOF_BITINDEX_6) ||
+  (num_bits == 7 && mask == MAXVALOF_BITINDEX_7) ||
+  (num_bits == 8 && mask == MAXVALOF_BITINDEX_8)
+
 stadef bits_maxval (num_bits : int, bits : int) : bool =
   (num_bits == 4 && bits <= MAXVALOF_BITINDEX_4) ||
   (num_bits == 5 && bits <= MAXVALOF_BITINDEX_5) ||

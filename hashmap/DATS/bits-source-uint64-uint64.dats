@@ -148,7 +148,7 @@ rshift_and_mask
 fn
 make_mask {num_bits : int | valid_num_bits (num_bits)}
           (num_bits : uint num_bits) :<>
-    [mask : int | bits_maxval (num_bits, mask)]
+    [mask : int | bits_mask (num_bits, mask)]
     uint mask =
   case- num_bits of
   | 4U => g1i2u MAXVALOF_BITINDEX_4
