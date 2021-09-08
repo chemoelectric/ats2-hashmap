@@ -51,105 +51,28 @@ brute_force_popcount_low_bits_uintmax (uintmax_t u, unsigned int i)
 macdef brute_force_popcount_low_bits (u, i) =
   $extfcall (int, "brute_force_popcount_low_bits_uintmax", ,(u), ,(i))
 
-fn
-test_popcount_uint (u : uint) : void =
+fn {tk : tkind}
+test_popcount (u : g0uint (tk)) : void =
   let
     val b1 =
-      brute_force_popcount_low_bits (u, (i2sz 8) * sizeof<uint>)
-    val (_ | b2) = popcount (g1ofg0 u)
+      brute_force_popcount_low_bits
+        (u, (i2sz 8) * sizeof<g0uint (tk)>)
+    val (_ | b2) = popcount<tk> (g1ofg0 u)
   in
     assertloc ((g1ofg0 b1) = b2)
   end
 
-fn
-test_popcount_ulint (u : ulint) : void =
-  let
-    val b1 =
-      brute_force_popcount_low_bits (u, (i2sz 8) * sizeof<ulint>)
-    val (_ | b2) = popcount (g1ofg0 u)
-  in
-    assertloc ((g1ofg0 b1) = b2)
-  end
-
-fn
-test_popcount_ullint (u : ullint) : void =
-  let
-    val b1 =
-      brute_force_popcount_low_bits (u, (i2sz 8) * sizeof<ullint>)
-    val (_ | b2) = popcount (g1ofg0 u)
-  in
-    assertloc ((g1ofg0 b1) = b2)
-  end
-
-fn
-test_popcount_uintptr (u : uintptr) : void =
-  let
-    val b1 =
-      brute_force_popcount_low_bits (u, (i2sz 8) * sizeof<uintptr>)
-    val (_ | b2) = popcount (g1ofg0 u)
-  in
-    assertloc ((g1ofg0 b1) = b2)
-  end
-
-fn
-test_popcount_low_bits_uint (u : uint) : void =
+fn {tk : tkind}
+test_popcount_low_bits (u : g0uint (tk)) : void =
   let
     var j : [j : int | 0 <= j] int j
-    val n = 8 * (sz2i sizeof<uint>)
+    val n = 8 * (sz2i sizeof<g0uint (tk)>)
   in
     for (j := 0; j < n; j := succ j)
       let
         val j1 = min (n, j)
         val b1 = brute_force_popcount_low_bits (u, j1)
-        val (_ | b2) = popcount_low_bits (g1ofg0 u, i2u j)
-      in
-        assertloc ((g1ofg0 b1) = b2)
-      end
-  end
-
-fn
-test_popcount_low_bits_ulint (u : ulint) : void =
-  let
-    var j : [j : int | 0 <= j] int j
-    val n = 8 * (sz2i sizeof<ulint>)
-  in
-    for (j := 0; j < n; j := succ j)
-      let
-        val j1 = min (n, j)
-        val b1 = brute_force_popcount_low_bits (u, j1)
-        val (_ | b2) = popcount_low_bits (g1ofg0 u, i2u j)
-      in
-        assertloc ((g1ofg0 b1) = b2)
-      end
-  end
-
-fn
-test_popcount_low_bits_ullint (u : ullint) : void =
-  let
-    var j : [j : int | 0 <= j] int j
-    val n = 8 * (sz2i sizeof<ullint>)
-  in
-    for (j := 0; j < n; j := succ j)
-      let
-        val j1 = min (n, j)
-        val b1 = brute_force_popcount_low_bits (u, j1)
-        val (_ | b2) = popcount_low_bits (g1ofg0 u, i2u j)
-      in
-        assertloc ((g1ofg0 b1) = b2)
-      end
-  end
-
-fn
-test_popcount_low_bits_uintptr (u : uintptr) : void =
-  let
-    var j : [j : int | 0 <= j] int j
-    val n = 8 * (sz2i sizeof<uintptr>)
-  in
-    for (j := 0; j < n; j := succ j)
-      let
-        val j1 = min (n, j)
-        val b1 = brute_force_popcount_low_bits (u, j1)
-        val (_ | b2) = popcount_low_bits (g1ofg0 u, i2u j)
+        val (_ | b2) = popcount_low_bits<tk> (g1ofg0 u, i2u j)
       in
         assertloc ((g1ofg0 b1) = b2)
       end
@@ -262,26 +185,34 @@ main0 () =
     var i : [i : nat | i <= 100] int i
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_uint ($UNSAFE.cast{uint} (test_numbers[i]))
+        test_popcount<uintknd>
+          ($UNSAFE.cast{uint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_ulint ($UNSAFE.cast{ulint} (test_numbers[i]))
+        test_popcount<ulintknd>
+          ($UNSAFE.cast{ulint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_ullint ($UNSAFE.cast{ullint} (test_numbers[i]))
+        test_popcount<ullintknd>
+          ($UNSAFE.cast{ullint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_uintptr ($UNSAFE.cast{uintptr} (test_numbers[i]))
+        test_popcount<uintptrknd>
+          ($UNSAFE.cast{uintptr} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_low_bits_uint ($UNSAFE.cast{uint} (test_numbers[i]))
+        test_popcount_low_bits<uintknd>
+          ($UNSAFE.cast{uint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_low_bits_ulint ($UNSAFE.cast{ulint} (test_numbers[i]))
+        test_popcount_low_bits<ulintknd>
+          ($UNSAFE.cast{ulint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_low_bits_ullint ($UNSAFE.cast{ullint} (test_numbers[i]))
+        test_popcount_low_bits<ullintknd>
+          ($UNSAFE.cast{ullint} (test_numbers[i]))
     val _ =
       for (i := 0; i < 100; i := succ i)
-        test_popcount_low_bits_uintptr ($UNSAFE.cast{uintptr} (test_numbers[i]))
+        test_popcount_low_bits<uintptrknd>
+          ($UNSAFE.cast{uintptr} (test_numbers[i]))
   }
