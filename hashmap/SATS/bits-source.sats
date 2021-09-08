@@ -47,7 +47,7 @@ in
       [(~1) <= bits && bits_maxval (num_bits, bits)] void
 
   vtypedef bits_source_cloptr (data_vt : vt@ype, num_bits : int) =
-    (!data_vt >> _, uint) -<cloptr1>
+    (&data_vt >> _, uint) -<cloptr1>
       [bits : int]
       (BITS_SOURCE_BITS (num_bits, bits) | int bits)
 

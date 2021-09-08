@@ -264,8 +264,9 @@ get_subtree_entry
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
 
-    val index_data = $UNSAFE.castvwtp0{vt} index_data_p
-    val [bits : int] (pf_bits | bits) = bits_source (index_data, depth)
+    var index_data = $UNSAFE.castvwtp0{vt} index_data_p
+    val [bits : int] (pf_bits | bits) =
+      bits_source (index_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
     prval _ = $UNSAFE.cast2void index_data
   in
