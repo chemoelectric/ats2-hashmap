@@ -256,19 +256,26 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 fun {vt : vt@ype}
 get_subtree_entry
           {length       : int | length <= bitsizeof (uintptr)}
+          {index_data_p : addr}
           (node         : !node_vt (length) >> _,
            bits_source  : !bits_source_cloptr (vt, NUM_BITS) >> _,
-           index_data_p : ptr,
+           index_data_p : ptr index_data_p,
            depth        : uint) :
     subtree_entry_t =
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
 
-    var index_data = $UNSAFE.castvwtp0{vt} index_data_p
+    val (pf_index_data | index_data) =
+      $UNSAFE.castvwtp1{(vt @ index_data_p | ptr index_data_p)}
+        index_data_p
     val [bits : int] (pf_bits | bits) =
-      bits_source (index_data, depth)
+      bits_source (!index_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
-    prval _ = $UNSAFE.cast2void index_data
+
+    extern praxi
+    consume_pf :
+      {p : addr} (vt @ p) -<prf> void
+    prval _ = consume_pf pf_index_data
   in
     if bits = ~1 then
       @{
