@@ -29,13 +29,22 @@ prfun
 lemma_array_mapped_tree_vt_param
         {size : int}
         (tree : !array_mapped_tree_vt (size) >> _) :<prf>
-    [0 <= size] void
+    [0 <= size]
+    void
 
 fun
 array_mapped_tree_is_empty
         {size : int}
         (tree : !array_mapped_tree_vt (size) >> _) :<>
-    bool (size == 0)
+    [is_empty : bool | is_empty == (size == 0)]
+    bool is_empty
+
+fun
+array_mapped_tree_is_nonempty
+        {size : int}
+        (tree : !array_mapped_tree_vt (size) >> _) :<>
+    [is_nonempty : bool | is_nonempty == (size <> 0)]
+    bool is_nonempty
 
 fun
 array_mapped_tree_size

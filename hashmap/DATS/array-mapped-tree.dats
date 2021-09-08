@@ -30,6 +30,8 @@ staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/count-one-bits.sats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 
+staload "hashmap/SATS/bits-source.sats"
+
 (********************************************************************)
 
 (*
@@ -76,6 +78,8 @@ In the implementation below, an internal node is laid out as follows:
 
 (********************************************************************)
 
+#define NUM_BITS SIZEOF_BITINDEXOF_UINTPTR
+
 stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
 
 prval _ = $UNSAFE.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
@@ -103,8 +107,31 @@ vtypedef node_vt =
 
 extern praxi
 lemma_node_v_param :
-  {length : int} {p : addr}
-  (!node_v (length, p) >> _) -<prf> [0 <= length] void
+  {length : int}
+  {p : addr}
+  (!node_v (length, p) >> _) -<prf>
+    [0 < length] void
+
+extern praxi
+lemma_node_v_bound :
+  {length : int}
+  {p : addr}
+  (!node_v (length, p) >> _) -<prf>
+    [length <= bitsizeof (uintptr)] void
+
+extern praxi
+lemma_node_vt_param :
+  {length : int}
+  {p : addr}
+  (!node_vt (length, p) >> _) -<prf>
+    [0 < length] void
+
+extern prfn
+lemma_node_vt_bound :
+  {length : int}
+  {p : addr}
+  (!node_vt (length, p) >> _) -<prf>
+    [length <= bitsizeof (uintptr)] void
 
 datavtype tree_vt (size : int) =
 | {size == 0}
@@ -114,6 +141,24 @@ datavtype tree_vt (size : int) =
 
 assume array_mapped_tree_vt (entry_count : int) =
   tree_vt (entry_count : int)
+
+(********************************************************************)
+
+primplement
+lemma_node_vt_param {length} {p} (node) =
+  {
+    prval (pf | p) = node
+    prval _ = lemma_node_v_param {length} {p} pf
+    prval _ = node := (pf | p)
+  }
+
+primplement
+lemma_node_vt_bound {length} {p} (node) =
+  {
+    prval (pf | p) = node
+    prval _ = lemma_node_v_bound {length} {p} pf
+    prval _ = node := (pf | p)
+  }
 
 (********************************************************************)
 
@@ -130,6 +175,12 @@ array_mapped_tree_is_empty (tree) =
   | tree_vt_node _ => false
 
 implement
+array_mapped_tree_is_nonempty (tree) =
+  case+ tree of
+  | tree_vt_nil () => false
+  | tree_vt_node _ => true
+
+implement
 array_mapped_tree_size (tree) =
   case+ tree of
   | tree_vt_nil () => i2sz 0
@@ -137,19 +188,25 @@ array_mapped_tree_size (tree) =
 
 (********************************************************************)
 
+typedef node_entry_t =
+  @{
+    is_leaf = bool,
+    is_stored = bool,
+    value = uintptr
+  }
+
 typedef subtree_entry_t =
   @{
-    entry_is_stored = bool,
-    entry_value = uintptr
+    is_stored = bool,
+    value = uintptr
   }
 
 fn {}
 get_node_entry {length : int | length <= bitsizeof (uintptr)}
-               {i      : int | i < length}
-               (node   : &node_vt (length) >> _,
-                i      : uint i) :<!ref>
-    @(bool,      (* Is the entry a leaf? *)
-      subtree_entry_t) =
+               {i      : int | i < bitsizeof (uintptr)}
+               (node   : !node_vt (length) >> _,
+                i      : uint i) :
+    node_entry_t =
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
     macdef one = g1int2uint<intknd,uintptrknd> 1
@@ -167,35 +224,89 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
         let
           val node_kind_map = node_array[1]
           val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
-
           val [index : int] (pf_index | index) =
             popcount_low_bits<uintptrknd> (g1ofg0 population_map, i)
           prval _ = popcount_low_bits_is_nonnegative pf_index
           prval _ = popcount_low_bits_bound pf_index
           prval _ = prop_verify {0 <= index} ()
           prval _ = prop_verify {index <= i} ()
-          prval _ = prop_verify {index < length} ()
+
+          prval _ = $UNSAFE.prop_assert {index < length} ()
 
           val entry = node_array[index + 2]
         in
-          @(is_leaf, @{ entry_is_stored = true, entry_value = entry })
+          @{
+            is_leaf = is_leaf,
+            is_stored = true,
+            value = entry
+          }
         end
       else
-        @(true, @{ entry_is_stored = false, entry_value = zero })
+        @{
+          is_leaf = true,
+          is_stored = false,
+          value = zero
+        }
 
-    prval _ = $effmask_wrt (node := @(pf_node | p_node))
+    prval _ = node := @(pf_node | p_node)
   in
     result
   end
 
-(*
-fn {}
-get_subtree_entry {length : int | length <= bitsizeof (uintptr)}
-                  {i      : int | i < length}
-                  (node   : &node_vt (length) >> _,
-                   i      : uint i) :<!ref>
+fun {vt : vt@ype}
+get_subtree_entry
+          {length       : int | length <= bitsizeof (uintptr)}
+          (node         : !node_vt (length) >> _,
+           bits_source  : !bits_source_cloptr (vt, NUM_BITS) >> _,
+           index_data_p : ptr,
+           depth        : uint) :
     subtree_entry_t =
   let
-*)
+    macdef zero = g1int2uint<intknd,uintptrknd> 0
+
+    val index_data = $UNSAFE.castvwtp0{vt} index_data_p
+    val [bits : int] (pf_bits | bits) = bits_source (index_data, depth)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = $UNSAFE.cast2void index_data
+  in
+    if bits = ~1 then
+      @{
+        is_stored = false,
+        value = zero
+      }
+    else
+      let
+        val bits = g1int2uint<intknd,uintknd> bits
+        val @{
+              is_leaf = is_leaf,
+              is_stored = is_stored,
+              value = value
+            } = get_node_entry {length} {bits} (node, bits)
+      in
+        if not is_stored then
+          @{
+            is_stored = false,
+            value = value
+          }
+        else if is_leaf then
+          @{
+            is_stored = true,
+            value = value
+          }
+        else
+          let
+            val [length1 : int] [p1 : addr] next_node =
+              $UNSAFE.castvwtp0{node_vt} value
+            prval _ = lemma_node_vt_param {length1} {p1} (next_node)
+            prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
+            val result =
+              get_subtree_entry {length1} (next_node, bits_source,
+                                           index_data_p, succ depth)
+            prval _ = $UNSAFE.cast2void next_node
+          in
+            result
+          end
+      end
+  end
 
 (********************************************************************)
