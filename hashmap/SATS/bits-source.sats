@@ -31,6 +31,8 @@ in
      available bit.
      FIXME: Say more about what a bits source does. *)
 
+  #define BITS_SOURCE_EXHAUSTED (~1)
+
   absprop BITS_SOURCE_BITS (num_bits : int, bits : int)
 
   praxi

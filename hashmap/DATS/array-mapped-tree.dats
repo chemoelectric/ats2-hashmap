@@ -281,7 +281,7 @@ get_subtree_entry
       {p : addr} (vt @ p) -<prf> void
     prval _ = consume_pf pf_index_data
   in
-    if bits = ~1 then
+    if bits = BITS_SOURCE_EXHAUSTED then
       @{
         is_stored = false,
         value = zero
