@@ -23,14 +23,16 @@ along with this program. If not, see
 
 (********************************************************************)
 
-vtypedef array_mapped_tree_vt =
-  [node_p : addr] ptr node_p
+typedef array_mapped_tree_vt (node_p : addr) =
+  ptr node_p
+typedef array_mapped_tree_vt =
+  [node_p : addr] array_mapped_tree_vt node_p
 
 fun
 free_array_mapped_tree
         {node_p       : addr}
-        {free_entry_p : addr}
-        (node_p       : ptr node_p,
+        {free_entry_p : addr}   (* May be null. *)
+        (node_p       : array_mapped_tree_vt node_p,
          free_entry_p : ptr free_entry_p) :
     void
 
@@ -47,7 +49,7 @@ array_mapped_tree_get_entry
         {node_p        : addr}
         {bits_source_p : addr}
         {index_data_p  : addr}
-        (node_p        : ptr node_p,
+        (node_p        : array_mapped_tree_vt node_p,
          bits_source_p : ptr bits_source_p,
          index_data_p  : ptr index_data_p) :
     array_mapped_tree_get_entry_t
