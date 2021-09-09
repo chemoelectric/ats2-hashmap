@@ -172,8 +172,9 @@ skip_unpopulated (population : uintptr,
 fn
 free_nodes {free_entry_p : addr}   (* May be null. *)
            (nodes        : nodes_vt,
-            free_entry_p : ptr free_entry_p) :
-    more_nodes_vt =
+            free_entry_p : ptr free_entry_p,
+            more_nodes   : &more_nodes_vt? >> more_nodes_vt) :
+    void =
   let
     fun
     for_each_node
@@ -290,7 +291,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
     prval _ = lemma_list_vt_param nodes
   in
-    for_each_node (nodes, NIL)
+    more_nodes := for_each_node (nodes, NIL)
   end
 
 fun
@@ -303,11 +304,11 @@ free_more_nodes {free_entry_p : addr} (* May be null. *)
   | ~ NIL => ()
   | ~ nodes :: tail =>
     let
-      val more_nodes =
-        list_vt_reverse_append (free_nodes (nodes, free_entry_p),
-                                tail)
+      var yet_more_nodes : more_nodes_vt
     in
-      free_more_nodes (free_entry_p, more_nodes)
+      free_nodes (nodes, free_entry_p, yet_more_nodes);
+      free_more_nodes (free_entry_p,
+                       list_vt_reverse_append (yet_more_nodes, tail))
     end
 
 implement
