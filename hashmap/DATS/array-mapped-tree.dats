@@ -18,6 +18,9 @@ along with this program. If not, see
 
 *)
 
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_define.hats"
@@ -92,6 +95,13 @@ overload << with g0uint_lsl_uintptr
 symintr &
 infixl ( * ) &
 overload & with g0uint_land_uintptr
+
+extern castfn
+g1int2uint_int_uintpr :
+  {i : int | 0 <= i} int i -<> uintptr i
+
+implement
+g1int2uint<intknd,uintptrknd> = g1int2uint_int_uintptr
 
 (********************************************************************)
 
@@ -253,17 +263,24 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
     result
   end
 
-fun {vt : vt@ype}
+fun
 get_subtree_entry
-          {length       : int | length <= bitsizeof (uintptr)}
-          {index_data_p : addr}
-          (node         : !node_vt (length) >> _,
-           bits_source  : !bits_source_cloptr (vt, NUM_BITS) >> _,
-           index_data_p : ptr index_data_p,
-           depth        : uint) :
+          {vt : vt@ype}
+          {length        : int | length <= bitsizeof (uintptr)}
+          {bits_source_p : addr}
+          {index_data_p  : addr}
+          (node          : !node_vt (length) >> _,
+           bits_source_p : ptr bits_source_p,
+           index_data_p  : ptr index_data_p,
+           depth         : uint) :
     subtree_entry_t =
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
+
+    (* Cast bits_source_p to the closure it really is. *)
+    val bits_source =
+      $UNSAFE.castvwtp1{bits_source_cloptr (vt, NUM_BITS)}
+        bits_source_p
 
     (* Cast index_data_p to a pointer to an object of type vt,
        by creating a view. *)
@@ -280,6 +297,12 @@ get_subtree_entry
     consume_pf :
       {p : addr} (vt @ p) -<prf> void
     prval _ = consume_pf pf_index_data
+
+    (* The closure no longer is needed. *)
+    extern praxi
+    forget_closure :
+      bits_source_cloptr (vt, NUM_BITS) -<prf> void
+    prval _ = forget_closure bits_source
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       @{
@@ -312,8 +335,10 @@ get_subtree_entry
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
             val result =
-              get_subtree_entry {length1} (next_node, bits_source,
-                                           index_data_p, succ depth)
+              get_subtree_entry {vt} {length1}
+                                {bits_source_p} {index_data_p}
+                                (next_node, bits_source_p,
+                                index_data_p, succ depth)
             prval _ = $UNSAFE.cast2void next_node
           in
             result
