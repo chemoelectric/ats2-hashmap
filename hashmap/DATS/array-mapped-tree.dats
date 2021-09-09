@@ -267,9 +267,10 @@ fun
 get_subtree_entry
           {vt : vt@ype}
           {length        : int | length <= bitsizeof (uintptr)}
+          {node_p        : addr}
           {bits_source_p : addr}
           {index_data_p  : addr}
-          (node          : !node_vt (length) >> _,
+          (node_p        : ptr node_p,
            bits_source_p : ptr bits_source_p,
            index_data_p  : ptr index_data_p,
            depth         : uint) :
@@ -279,13 +280,13 @@ get_subtree_entry
 
     (* Cast bits_source_p to the closure it really is. *)
     val bits_source =
-      $UNSAFE.castvwtp1{bits_source_cloptr (vt, NUM_BITS)}
+      $UNSAFE.castvwtp0{bits_source_cloptr (vt, NUM_BITS)}
         bits_source_p
 
     (* Cast index_data_p to a pointer to an object of type vt,
        by creating a view. *)
     val (pf_index_data | index_data) =
-      $UNSAFE.castvwtp1{(vt @ index_data_p | ptr index_data_p)}
+      $UNSAFE.castvwtp0{(vt @ index_data_p | ptr index_data_p)}
         index_data_p
 
     val [bits : int] (pf_bits | bits) =
@@ -293,16 +294,10 @@ get_subtree_entry
     prval _ = bits_source_bits_bounds pf_bits
 
     (* The view no longer is needed. *)
-    extern praxi
-    consume_pf :
-      {p : addr} (vt @ p) -<prf> void
-    prval _ = consume_pf pf_index_data
+    prval _ = $UNSAFE.castview2void{void} pf_index_data
 
     (* The closure no longer is needed. *)
-    extern praxi
-    forget_closure :
-      bits_source_cloptr (vt, NUM_BITS) -<prf> void
-    prval _ = forget_closure bits_source
+    prval _ = $UNSAFE.castvwtp0{void} bits_source
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       @{
@@ -311,12 +306,18 @@ get_subtree_entry
       }
     else
       let
+        (* Cast node_p to the node_vt it really is. *)
+        val node = $UNSAFE.castvwtp0{node_vt (length, node_p)} node_p
+
         val bits = g1int2uint<intknd,uintknd> bits
         val @{
               is_leaf = is_leaf,
               is_stored = is_stored,
               value = value
             } = get_node_entry {length} {bits} (node, bits)
+
+        (* The node_vt no longer is needed. *)
+        prval _ = $UNSAFE.castvwtp0{void} node
       in
         if not is_stored then
           @{
@@ -335,11 +336,11 @@ get_subtree_entry
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
             val result =
-              get_subtree_entry {vt} {length1}
+              get_subtree_entry {vt} {length1} {p1}
                                 {bits_source_p} {index_data_p}
-                                (next_node, bits_source_p,
-                                index_data_p, succ depth)
-            prval _ = $UNSAFE.cast2void next_node
+                                ($UNSAFE.castvwtp0{ptr p1} next_node,
+                                 bits_source_p, index_data_p,
+                                 succ depth)
           in
             result
           end
