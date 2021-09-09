@@ -172,8 +172,7 @@ skip_unpopulated (population : uintptr,
 fn
 free_nodes {free_entry_p : addr}   (* May be null. *)
            (nodes        : nodes_vt,
-            free_entry_p : ptr free_entry_p,
-            more_nodes   : more_nodes_vt) :
+            free_entry_p : ptr free_entry_p) :
     more_nodes_vt =
   let
     fun
@@ -208,7 +207,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
           val length = i2sz length
 
           (* The length of the node equals the popcount. *)
-          val _ = $UNSAFE.prop_assert {length == popcount} ()
+          prval _ = $UNSAFE.prop_assert {length == popcount} ()
 
           fun
           for_each_bit {vt         : vtype}
@@ -291,15 +290,29 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
     prval _ = lemma_list_vt_param nodes
   in
-    for_each_node (nodes, more_nodes)
+    for_each_node (nodes, NIL)
   end
 
-(*
+fun
+free_more_nodes {free_entry_p : addr} (* May be null. *)
+                (free_entry_p : ptr free_entry_p,
+                 more_nodes   : more_nodes_vt) : void =
+  (* The more_nodes list may temporarily grow, but should
+     eventually shrink to NIL. *)
+  case+ more_nodes of
+  | ~ NIL => ()
+  | ~ nodes :: tail =>
+    let
+      val more_nodes =
+        list_vt_reverse_append (free_nodes (nodes, free_entry_p),
+                                tail)
+    in
+      free_more_nodes (free_entry_p, more_nodes)
+    end
+
 implement
-free_array_mapped_tree {node_p} {free_entry_p}
-                       (node_p, free_entry_p) =
-  free_subtree {..} {node_p} {free_entry_p} (node_p, free_entry_p)
-*)
+free_array_mapped_tree (node_p, free_entry_p) =
+  free_more_nodes (free_entry_p, ((node_p :: NIL) :: NIL))
 
 (********************************************************************)
 
