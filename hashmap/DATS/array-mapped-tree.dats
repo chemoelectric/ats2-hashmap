@@ -143,15 +143,6 @@ lemma_node_vt_bound :
   (!node_vt (length, p) >> _) -<prf>
     [length <= bitsizeof (uintptr)] void
 
-datavtype tree_vt (size : int) =
-| {size == 0}
-  tree_vt_nil of ()
-| {0 < size}
-  tree_vt_node of @(size_t size, node_vt)
-
-assume array_mapped_tree_vt (entry_count : int) =
-  tree_vt (entry_count : int)
-
 (********************************************************************)
 
 primplement
@@ -172,41 +163,9 @@ lemma_node_vt_bound {length} {p} (node) =
 
 (********************************************************************)
 
-primplement
-lemma_array_mapped_tree_vt_param (tree) =
-  case+ tree of
-  | tree_vt_nil () => ()
-  | tree_vt_node _ => ()
-
-implement
-array_mapped_tree_is_empty (tree) =
-  case+ tree of
-  | tree_vt_nil () => true
-  | tree_vt_node _ => false
-
-implement
-array_mapped_tree_is_nonempty (tree) =
-  case+ tree of
-  | tree_vt_nil () => false
-  | tree_vt_node _ => true
-
-implement
-array_mapped_tree_size (tree) =
-  case+ tree of
-  | tree_vt_nil () => i2sz 0
-  | tree_vt_node @(size, _) => size
-
-(********************************************************************)
-
 typedef node_entry_t =
   @{
     is_leaf = bool,
-    is_stored = bool,
-    value = uintptr
-  }
-
-typedef subtree_entry_t =
-  @{
     is_stored = bool,
     value = uintptr
   }
@@ -266,7 +225,6 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 fun
 get_subtree_entry
           {vt : vt@ype}
-          {length        : int | length <= bitsizeof (uintptr)}
           {node_p        : addr}
           {bits_source_p : addr}
           {index_data_p  : addr}
@@ -274,7 +232,7 @@ get_subtree_entry
            bits_source_p : ptr bits_source_p,
            index_data_p  : ptr index_data_p,
            depth         : uint) :
-    subtree_entry_t =
+    array_mapped_tree_get_entry_t =
   let
     macdef zero = g1int2uint<intknd,uintptrknd> 0
 
@@ -307,7 +265,11 @@ get_subtree_entry
     else
       let
         (* Cast node_p to the node_vt it really is. *)
-        val node = $UNSAFE.castvwtp0{node_vt (length, node_p)} node_p
+        val [length : int] node =
+          $UNSAFE.castvwtp0
+            {[length : int | length <= bitsizeof (uintptr)]
+             node_vt (length, node_p)}
+            node_p
 
         val bits = g1int2uint<intknd,uintknd> bits
         val @{
@@ -336,7 +298,7 @@ get_subtree_entry
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
             val result =
-              get_subtree_entry {vt} {length1} {p1}
+              get_subtree_entry {vt} {p1}
                                 {bits_source_p} {index_data_p}
                                 ($UNSAFE.castvwtp0{ptr p1} next_node,
                                  bits_source_p, index_data_p,
@@ -346,5 +308,11 @@ get_subtree_entry
           end
       end
   end
+
+implement
+array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
+                            (node_p, bits_source_p, index_data_p) =
+  get_subtree_entry {..} {node_p} {bits_source_p} {index_data_p}
+                    (node_p, bits_source_p, index_data_p, 0U)
 
 (********************************************************************)
