@@ -29,7 +29,6 @@
 #else /* not __GNUC__ */
 
 #include <string.h>
-#include <stdint.h>
 #define ats2_hashmap_memcpy memcpy
 #define ats2_hashmap_memset memset
 
