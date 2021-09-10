@@ -35,19 +35,62 @@ absprop POPCOUNT (x : int, popcount : int)
 absprop POPCOUNT_LOW_BITS (x : int, i : int, popcount : int)
 
 praxi
+popcount_isfun :
+  {x : int}
+  {popcount1, popcount2 : int}
+  (POPCOUNT (x, popcount1),
+   POPCOUNT (x, popcount2)) -<prf>
+    [popcount1 == popcount2] void
+
+praxi
+popcount_low_bits_isfun :
+  {x : int}
+  {i : int}
+  {popcount1, popcount2 : int}
+  (POPCOUNT_LOW_BITS (x, i, popcount1),
+   POPCOUNT_LOW_BITS (x, i, popcount2)) -<prf>
+    [popcount1 == popcount2] void
+
+praxi
 popcount_is_nonnegative :
-  {x : int} {popcount : int}
-  POPCOUNT (x, popcount) -<prf> [0 <= popcount] void
+  {x : int}
+  {popcount : int}
+  POPCOUNT (x, popcount) -<prf>
+    [0 <= popcount] void
 
 praxi
 popcount_low_bits_is_nonnegative :
-  {x : int} {i : int} {popcount : int}
-  POPCOUNT_LOW_BITS (x, i, popcount) -<prf> [0 <= popcount] void
+  {x : int}
+  {i : int}
+  {popcount : int}
+  POPCOUNT_LOW_BITS (x, i, popcount) -<prf>
+    [0 <= popcount] void
 
 praxi
 popcount_low_bits_bound :
-  {x : int} {i : int} {popcount : int}
-  POPCOUNT_LOW_BITS (x, i, popcount) -<prf> [popcount <= i] void
+  {x : int}
+  {i : int}
+  {popcount : int}
+  POPCOUNT_LOW_BITS (x, i, popcount) -<prf>
+    [popcount <= i] void
+
+praxi
+popcount_fewer_bits_1 :
+  {x : int}
+  {i : int}
+  {popcount1, popcount2 : int}
+  (POPCOUNT (x, popcount1),
+   POPCOUNT_LOW_BITS (x, i, popcount2)) -<prf>
+    [popcount2 <= popcount1] void
+
+praxi
+popcount_fewer_bits_2 :
+  {x : int}
+  {i1, i2 : int | i2 <= i1}
+  {popcount1, popcount2 : int}
+  (POPCOUNT_LOW_BITS (x, i1, popcount1),
+   POPCOUNT_LOW_BITS (x, i2, popcount2)) -<prf>
+    [popcount2 <= popcount1] void
 
 (********************************************************************)
 (* Compute and return the number of 1-bits set in x. *)

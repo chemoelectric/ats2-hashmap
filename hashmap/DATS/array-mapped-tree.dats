@@ -30,6 +30,9 @@ along with this program. If not, see
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 
+staload "hashmap/SATS/memory.sats"
+staload _ = "hashmap/DATS/memory.dats"
+
 staload "hashmap/SATS/count-one-bits.sats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 
@@ -96,9 +99,13 @@ symintr >>
 infixl ( * ) >>
 overload >> with g0uint_lsr_uintptr
 
-symintr &
-infixl ( * ) &
-overload & with g0uint_land_uintptr
+symintr <*>
+infixl ( * ) <*>
+overload <*> with g0uint_land_uintptr
+
+symintr <+>
+infixl ( * ) <+>
+overload <+> with g0uint_lor_uintptr
 
 extern castfn
 g1int2uint_int_uintpr :
@@ -112,6 +119,45 @@ macdef one = g1int2uint<intknd,uintptrknd> 1
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
+
+(********************************************************************)
+
+fn {}
+get_popcount {population_map : int}
+             (population_map : uintptr population_map) :<>
+    [popcount : int | 0 <= popcount; popcount <= BITSIZEOF_UINTPTR]
+    @(POPCOUNT (population_map, popcount) | size_t popcount) =
+  let
+    val [popcount : int] (pf_popcount | popcount) =
+      popcount<uintptrknd> (population_map)
+
+    prval _ = popcount_is_nonnegative pf_popcount
+    prval _ = prop_verify {0 <= popcount} ()
+
+    val _ = $effmask_exn assertloc (popcount <= BITSIZEOF_UINTPTR)
+  in
+    @(pf_popcount | g1i2u popcount)
+  end
+
+fn {}
+get_popcount_low_bits {population_map : int}
+                      {i              : int | i < BITSIZEOF_UINTPTR}
+                      (population_map : uintptr population_map,
+                       i              : uint i) :<>
+    [popcount : int | 0 <= popcount; popcount <= i]
+    @(POPCOUNT_LOW_BITS (population_map, i, popcount) | int popcount) =
+  let
+    val [popcount : int] (pf_popcount | popcount) =
+      popcount_low_bits<uintptrknd> (population_map, i)
+
+    prval _ = popcount_low_bits_is_nonnegative pf_popcount
+    prval _ = prop_verify {0 <= popcount} ()
+
+    prval _ = popcount_low_bits_bound pf_popcount
+    prval _ = prop_verify {popcount <= i} ()
+  in
+    @(pf_popcount | popcount)
+  end
 
 (********************************************************************)
 
@@ -196,7 +242,7 @@ fun
 skip_unpopulated (population : uintptr,
                   node_kinds : uintptr) :
     @(uintptr, uintptr) =
-  if (population & one) <> zero then
+  if (population <*> one) <> zero then
     @(population, node_kinds)
   else
     skip_unpopulated (population >> 1, node_kinds >> 1)
@@ -228,22 +274,19 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                node_vt (length, node_p)}
               node_p
 
-          val @{view = pf_node,
+          val @{
+                view = pf_node,
                 mfree = pf_mfree |
-                pointer = p_node} = node
+                pointer = p_node
+              } = node
           prval _ = lemma_node_v_param {length} pf_node
           macdef node_array = !p_node
 
           val population_map = node_array[0]
           val node_kind_map = node_array[1]
 
-          val [popcount : int] (pf_length | length) =
-            popcount<uintptrknd> (g1ofg0 population_map)
-          prval _ = popcount_is_nonnegative pf_length
-          val _ = assertloc (length <= BITSIZEOF_UINTPTR)
-          val length = i2sz length
-
-          (* The length of the node equals the popcount. *)
+          val [popcount : int] @(_ | length) =
+            get_popcount (g1ofg0 population_map)
           prval _ = $UNSAFE.prop_assert {length == popcount} ()
 
           fun
@@ -271,7 +314,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
                 val @(population, node_kinds) =
                   skip_unpopulated (population, node_kinds)
-                val is_leaf = ((node_kinds & one) <> zero)
+                val is_leaf = ((node_kinds <*> one) <> zero)
               in
                 if not is_leaf then
                   let
@@ -390,20 +433,17 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 
     val population_map = node_array[0]
     val bit_selection_mask = (one << (u2i i))
-    val is_stored = ((population_map & bit_selection_mask) <> zero)
+    val is_stored = ((population_map <*> bit_selection_mask) <> zero)
 
     val result =
       if is_stored then
         let
           val node_kind_map = node_array[1]
-          val is_leaf = ((node_kind_map & bit_selection_mask) <> zero)
-          val [index : int] (pf_index | index) =
-            popcount_low_bits<uintptrknd> (g1ofg0 population_map, i)
-          prval _ = popcount_low_bits_is_nonnegative pf_index
-          prval _ = popcount_low_bits_bound pf_index
-          prval _ = prop_verify {0 <= index} ()
-          prval _ = prop_verify {index <= i} ()
+          val is_leaf =
+            ((node_kind_map <*> bit_selection_mask) <> zero)
 
+          val [index : int] @(_ | index) =
+            get_popcount_low_bits (g1ofg0 population_map, i)
           prval _ = $UNSAFE.prop_assert {index < length} ()
 
           val entry = node_array[index + 2]
@@ -521,5 +561,90 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                             (node_p, bits_source_p, index_data_p) =
   get_subtree_entry {..} {node_p} {bits_source_p} {index_data_p}
                     (node_p, bits_source_p, index_data_p, 0U)
+
+(********************************************************************)
+
+fn
+insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
+                  {i       : int | i < bitsizeof (uintptr)}
+                  (node    : node_vt (length),
+                   i       : uint i,
+                   is_leaf : bool) :
+    (* Return the new node and the array index for access to
+       the new entry. (This is safer than returning a pointer
+       to the new entry.) *)
+    [entry_index : int | 2 <= entry_index; entry_index < length + 3]
+    @(node_vt (length + 1),
+      size_t entry_index) =
+  let
+    prval _ = lemma_g1uint_param i
+
+    val @{
+          view = pf_node,
+          mfree = pf_mfree |
+          pointer = p_node
+        } = node
+    prval _ = lemma_node_v_param {length} pf_node
+    macdef node_array = !p_node
+
+    val new_bit = (one << (u2i i))
+
+    val population_map = node_array[0]
+    val new_population_map = population_map <+> new_bit
+    val _ = assertloc (new_population_map != population_map)
+
+    val node_kind_map = node_array[1]
+    val new_node_kind_map =
+      if is_leaf then
+        node_kind_map <+> new_bit
+      else
+        node_kind_map
+
+    val [popcount : int] @(_ | length) =
+      get_popcount (g1ofg0 population_map)
+    prval _ = $UNSAFE.prop_assert {length == popcount} ()
+
+    val [index : int] @(_ | index) =
+      get_popcount_low_bits (g1ofg0 population_map, i)
+    prval _ = $UNSAFE.prop_assert {index < length} ()
+
+    val new_node = node_vt_alloc {length + 1} (length + 1)
+    val @{
+          view = pf_new_node,
+          mfree = pf_new_mfree |
+          pointer = p_new_node
+        } = new_node
+    prval _ = lemma_node_v_param {length + 1} pf_new_node
+    macdef new_node_array = !p_new_node
+
+    val _ = new_node_array[0] := new_population_map
+    val _ = new_node_array[1] := new_node_kind_map
+
+    (* Copy data that goes before the new entry. *)
+    val _ =
+      array_copy_elements<uintptr>
+        {length + 3, length + 2} {2, 2} {index}
+        (new_node_array, i2sz 2,
+         node_array, i2sz 2,
+         g1i2u index)
+
+    (* Copy data that goes after the new entry. *)
+    val _ =
+      array_copy_elements<uintptr>
+        {length + 3, length + 2} {3 + index, 2 + index}
+        {length - index}
+        (new_node_array, i2sz 3 + index,
+         node_array, i2sz 2 + index,
+         length - g1i2u index)
+
+    val _ = node_vt_free {length} @{view = pf_node,
+                                    mfree = pf_mfree |
+                                    pointer = p_node}
+  in
+    @(@{view = pf_new_node,
+        mfree = pf_new_mfree |
+        pointer = p_new_node},
+      index + i2sz 2)
+  end
 
 (********************************************************************)

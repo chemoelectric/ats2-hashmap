@@ -55,3 +55,25 @@ array_mapped_tree_get_entry
     array_mapped_tree_get_entry_t
 
 (********************************************************************)
+
+vtypedef array_mapped_tree_create_entry_t (p : addr) =
+  @{
+    view = uintptr @ p |
+    pointer = ptr p,
+    is_new = bool
+  }
+vtypedef array_mapped_tree_create_entry_t =
+  [p : addr]
+  array_mapped_tree_create_entry_t (p)
+
+fun
+array_mapped_tree_create_entry
+        {node_p        : addr}
+        {bits_source_p : addr}
+        {index_data_p  : addr}
+        (node_p        : array_mapped_tree_vt node_p,
+         bits_source_p : ptr bits_source_p,
+         index_data_p  : ptr index_data_p) :
+  array_mapped_tree_get_entry_t
+
+(********************************************************************)
