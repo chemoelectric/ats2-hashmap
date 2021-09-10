@@ -157,11 +157,15 @@ hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array_prf_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array_prf_dats.c
+CLEANFILES += hashmap/SATS/array_prf_sats.c
+CLEANFILES += hashmap/DATS/array_prf_dats.c
 EXTRA_DIST += hashmap/SATS/array_prf.sats
 EXTRA_DIST += hashmap/DATS/array_prf.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
+CLEANFILES += hashmap/SATS/memory_sats.c
+CLEANFILES += hashmap/DATS/memory_dats.c
 EXTRA_DIST += hashmap/SATS/memory.sats
 EXTRA_DIST += hashmap/DATS/memory.dats
 EXTRA_DIST += hashmap/CATS/memory.cats

@@ -772,7 +772,9 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-bits-source-uint64.dats \
 	tests/test-count-one-bits.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-CLEANFILES = hashmap/SATS/hashmap_sats.c \
+CLEANFILES = hashmap/SATS/array_prf_sats.c \
+	hashmap/DATS/array_prf_dats.c hashmap/SATS/memory_sats.c \
+	hashmap/DATS/memory_dats.c hashmap/SATS/hashmap_sats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
 	hashmap/DATS/count-one-bits-microsoft-c_dats.c \
