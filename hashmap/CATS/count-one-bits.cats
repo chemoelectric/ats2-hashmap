@@ -54,7 +54,14 @@ ats2_hashmap_count_one_bits_32 (unsigned int x)
 
 /* Expand to code that computes the number of 1-bits of the local
    variable 'x' of type TYPE (an unsigned integer type) and return it
-   from the current function.  */
+   from the current function.
+
+   FIXME: This can be improved on for 64-bit integers. See, for
+   example,
+   https://en.wikipedia.org/w/index.php?title=Hamming_weight&oldid=1036040796
+   But most people will use GCC or clang and so get the compiler’s
+   built-in function; thus there is no rush to improve the
+   algorithm. */
 # define ATS2_HASHMAP_COUNT_ONE_BITS_GENERIC(TYPE)                      \
     do                                                                  \
       {                                                                 \
