@@ -119,7 +119,11 @@ viewdef node_v (length : int, p : addr) =
   @[uintptr][length + 2] @ p
 
 vtypedef node_vt (length : int, p : addr) =
-  @(node_v (length, p) | ptr p)
+  @{
+    view = node_v (length, p),
+    mfree = mfree_gc_v p |
+    pointer = ptr p
+  }
 vtypedef node_vt (length : int) =
   [p : addr] node_vt (length, p)
 vtypedef node_vt =
@@ -152,6 +156,36 @@ lemma_node_vt_bound :
   {p : addr}
   (!node_vt (length, p) >> _) -<prf>
     [length <= bitsizeof (uintptr)] void
+
+fn {tk : tkind}
+node_vt_alloc {length : int}
+              (length : g1uint (tk, length)) :<!wrt>
+    node_vt (length) =
+  let
+    val size = length + (g1u2u 2U)
+    val @(view, mfree | pointer) =
+      array_ptr_alloc<uintptr> (g1u2u size)
+    val _ = array_initize_elt<uintptr> (!pointer, g1u2u size, zero)
+  in
+    @{
+      view = view,
+      mfree = mfree |
+      pointer = pointer
+    }
+  end
+
+fn
+node_vt_free {length : int}
+             (node   : node_vt (length)) :<!wrt> void =
+  let
+    val @{
+          view = view,
+          mfree = mfree |
+          pointer = pointer
+        } = node
+  in
+    array_ptr_free (view, mfree | pointer)
+  end
 
 (********************************************************************)
 
@@ -194,7 +228,9 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                node_vt (length, node_p)}
               node_p
 
-          val @(pf_node | p_node) = node
+          val @{view = pf_node,
+                mfree = pf_mfree |
+                pointer = p_node} = node
           prval _ = lemma_node_v_param {length} pf_node
           macdef node_array = !p_node
 
@@ -281,8 +317,11 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                                     node_kind_map, length,
                                     i2sz 0, NIL)
 
-          (* The node_v no longer is needed. *)
-          prval _ = $UNSAFE.castview2void{void} pf_node
+          (* Having freed its leaves, and listed its subnodes
+             for later handling, now free the node itself. *)
+          val _ = node_vt_free {length} @{view = pf_node,
+                                          mfree = pf_mfree |
+                                          pointer = p_node}
 
           prval _ = lemma_list_vt_param more_nodes
         in
@@ -319,19 +358,11 @@ free_array_mapped_tree (node_p, free_entry_p) =
 
 primplement
 lemma_node_vt_param {length} {p} (node) =
-  {
-    prval (pf | p) = node
-    prval _ = lemma_node_v_param {length} {p} pf
-    prval _ = node := (pf | p)
-  }
+  lemma_node_v_param {length} {p} node.view
 
 primplement
 lemma_node_vt_bound {length} {p} (node) =
-  {
-    prval (pf | p) = node
-    prval _ = lemma_node_v_bound {length} {p} pf
-    prval _ = node := (pf | p)
-  }
+  lemma_node_v_bound {length} {p} node.view
 
 (********************************************************************)
 
@@ -349,7 +380,11 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
                 i      : uint i) :
     node_entry_t =
   let
-    val @(pf_node | p_node) = node
+    val @{
+          view = pf_node,
+          mfree = mfree |
+          pointer = p_node
+        } = node
     prval _ = lemma_node_v_param {length} pf_node
     macdef node_array = !p_node
 
@@ -386,7 +421,12 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
           value = zero
         }
 
-    prval _ = node := @(pf_node | p_node)
+    prval _ = node :=
+      @{
+        view = pf_node,
+        mfree = mfree |
+        pointer = p_node
+      }
   in
     result
   end
