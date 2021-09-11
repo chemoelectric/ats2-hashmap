@@ -467,7 +467,46 @@ get_entry_value
     entry_value
   end
 
+fn {}
+set_entry_value
+        {length, index : int | index < length}
+        {p      : addr}
+        (node   : !new_node_vt (length, index, p)
+                      >> node_vt (length, p),
+         index  : size_t index,
+         value  : uintptr) :<!wrt>
+    void =
+  {
+    val @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      } = node
+
+    prval _ = lemma_g1uint_param index
+
+    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
+    val () = ptr_set<uintptr> (pf_entry | p_entry, value)
+
+    prval pf_entry_right = array_v_cons (pf_entry, pf_right)
+    prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  }
+
 overload [] with get_entry_value
+overload [] with set_entry_value
 
 (********************************************************************)
 
