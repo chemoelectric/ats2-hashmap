@@ -212,12 +212,48 @@ lemma_new_node_vt_param :
      0 <= index; index < length]
     void
 
+(********************************************************************)
+
+fn
+node_alloc {length : int}
+           (length : size_t length) :<!wrt>
+    [p : addr]
+    @(@[uintptr?][length + 2] @ p, mfree_gc_v p | ptr p) =
+  let
+    val size = length + (g1u2u 2U)
+    val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
+  in
+    @(view, mfree | pointer)
+  end
+
+fn
+node_vt_free {length : int}
+             {p      : addr}
+             (node   : node_vt (length, p)) :<!wrt>
+    void =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval pf = array_v_cons (pf_kind_map, pf_entries)
+    prval pf = array_v_cons (pf_pop_map, pf)
+  in
+    array_ptr_free {uintptr} {p} {length + 2} (pf, pf_mfree | p)
+  end
+
+(********************************************************************)
+
 fn {}
 node_vt_to_new_node_vt
         {length, index : int | index < length}
         {p     : addr}
         (node  : node_vt (length, p),
-         index : size_t index) :
+         index : size_t index) :<!ref>
     (* Returns the original node_vt recast as a new_node_vt,
        and the old value of the "new" entry. *)
     @(new_node_vt (length, index, p),
@@ -257,23 +293,14 @@ node_vt_to_new_node_vt
     @(new_node, old_value)
   end
 
-fn
-node_alloc {length : int}
-           (length : size_t length) :<!wrt>
-    [p : addr]
-    @(@[uintptr?][length + 2] @ p, mfree_gc_v p | ptr p) =
-  let
-    val size = length + (g1u2u 2U)
-    val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
-  in
-    @(view, mfree | pointer)
-  end
+(********************************************************************)
 
-fn
-node_vt_free {length : int}
-             {p      : addr}
-             (node   : node_vt (length, p)) :<!wrt>
-    void =
+fn {}
+get_population_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref>
+    uintptr =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -283,11 +310,168 @@ node_vt_free {length : int}
           pointer = p
         } = node
 
-    prval pf = array_v_cons (pf_kind_map, pf_entries)
-    prval pf = array_v_cons (pf_pop_map, pf)
+    val pop_map = ptr_get<uintptr> (pf_pop_map | p)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
   in
-    array_ptr_free {uintptr} {p} {length + 2} (pf, pf_mfree | p)
+    pop_map
   end
+
+fn {}
+set_population_map
+        {length, index : int}
+        {p       : addr}
+        (node    : !new_node_vt (length, index, p) >> _,
+         pop_map : uintptr) :<!wrt>
+    void =
+  {
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_left_entries = pf_left,
+          view_of_new_entry = pf_entry,
+          view_of_right_entries = pf_right,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    val () = ptr_set<uintptr> (pf_pop_map | p, pop_map)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  }
+
+(********************************************************************)
+
+fn {}
+get_node_kind_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref>
+    uintptr =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    val p_kind_map = ptr_succ<uintptr> (p)
+    val node_kind_map = ptr_get<uintptr> (pf_kind_map | p_kind_map)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  in
+    node_kind_map
+  end
+
+fn {}
+set_node_kind_map
+        {length, index : int}
+        {p        : addr}
+        (node     : !new_node_vt (length, index, p) >> _,
+         kind_map : uintptr) :<!wrt>
+    void =
+  {
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_left_entries = pf_left,
+          view_of_new_entry = pf_entry,
+          view_of_right_entries = pf_right,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    val p_kind_map = ptr_succ<uintptr> (p)
+    val () = ptr_set<uintptr> (pf_kind_map | p_kind_map, kind_map)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  }
+
+(********************************************************************)
+
+fn {}
+get_entry_value
+        {length, index : int | index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : size_t index) :<!ref>
+    uintptr =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval _ = lemma_g1uint_param index
+    
+    prval @(pf_left, pf_entry_right) =
+      array_v_subdivide2 {uintptr} {p + 2 * sizeof (uintptr)}
+                         {index, length - index}
+                         pf_entries
+    prval @(pf_entry, pf_right) = array_v_uncons pf_entry_right
+
+    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
+    val entry_value = ptr_get<uintptr> (pf_entry | p_entry)
+
+    prval _ = pf_entry_right := array_v_cons (pf_entry, pf_right)
+    prval _ = pf_entries :=
+       array_v_join2 {uintptr} {p + 2 * sizeof (uintptr)}
+                     {index, length - index}
+                     (pf_left, pf_entry_right)
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  in
+    entry_value
+  end
+
+overload [] with get_entry_value
+
+(********************************************************************)
+
+
 
 
 
