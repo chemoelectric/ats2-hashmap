@@ -29,6 +29,22 @@ along with this program. If not, see
 staload "hashmap/SATS/array_prf.sats"
 staload "hashmap/SATS/memory.sats"
 
+implement {vt}
+array_move {length} (dst, src, length) =
+  {
+    typedef t = vt?!
+
+    prval _ = lemma_g1uint_param length
+
+    prval pf1bytes = array2bytesqmark<vt?> {length} {..} (view@ dst)
+    prval pf2bytes = array2bytes<vt> {length} {..} (view@ src)
+
+    val _ = memcpy (!(addr@ dst), !(addr@ src), length * sizeof<vt>)
+
+    prval _ = view@ dst := bytes2array<vt> {length} {..} pf1bytes
+    prval _ = view@ src := bytes2array<t> {length} {..} pf2bytes
+  }
+
 implement {t}
 array_copy_elements {n1, n2} {i1, i2} {length}
                     (dst, i1, src, i2, length) =
@@ -47,13 +63,13 @@ array_copy_elements {n1, n2} {i1, i2} {length}
       array_v_subdivide3 {t} {..} {i2, length, n2 - i2 - length}
                          (view@ src)
 
-    prval pf1bytes = array2bytes {length} {..} pf1b
-    prval pf2bytes = array2bytes {length} {..} pf2b
+    prval pf1bytes = array2bytes<t> {length} {..} pf1b
+    prval pf2bytes = array2bytes<t> {length} {..} pf2b
 
     val _ = memcpy (!p_dst, !p_src, length * sizeof<t>)
 
-    prval _ = pf1b := bytes2array {length} {..} pf1bytes
-    prval _ = pf2b := bytes2array {length} {..} pf2bytes
+    prval _ = pf1b := bytes2array<t> {length} {..} pf1bytes
+    prval _ = pf2b := bytes2array<t> {length} {..} pf2bytes
 
     prval _ = view@ dst :=
       array_v_join3 {t} {..} {i1, length, n1 - i1 - length}

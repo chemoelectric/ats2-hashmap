@@ -39,6 +39,17 @@ memset {n     : int}
         value : byte,
         n     : size_t n) :<!refwrt> void = "mac#%"
 
+(* Move the elements of one array to another array.
+   This is equivalent to the prelude's "array_copy"
+   template; for a nonlinear type, it is a copy. For
+   a linear type, it is a "move" that leaves the old
+   array filled with the equivalent nonlinear data. *)
+fun {vt : vt@ype}
+array_move {length : int}
+           (dst    : &(@[vt?][length]) >> @[vt][length],
+            src    : &RD(@[INV(vt)][length]) >> @[vt?!][length],
+            length : size_t length) :<!refwrt> void
+
 (* Copy "length" elements from one initialized nonlinear
    array into another. *)
 fun {t : t@ype}
