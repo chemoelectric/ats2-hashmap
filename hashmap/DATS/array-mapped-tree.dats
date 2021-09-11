@@ -161,12 +161,11 @@ get_popcount_low_bits {population_map : int}
 
 (********************************************************************)
 
-viewdef node_v (length : int, p : addr) =
-  @[uintptr][length + 2] @ p
-
 vtypedef node_vt (length : int, p : addr) =
   @{
-    view = node_v (length, p),
+    view_of_population_map = uintptr @ p,
+    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
+    view_of_entries = @[uintptr][length] @ (p + 2 * sizeof (uintptr)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -175,63 +174,77 @@ vtypedef node_vt (length : int) =
 vtypedef node_vt =
   [length : int] node_vt (length)
 
-extern praxi
-lemma_node_v_param :
-  {length : int}
-  {p : addr}
-  (!node_v (length, p) >> _) -<prf>
-    [0 < length] void
-
-extern praxi
-lemma_node_v_bound :
-  {length : int}
-  {p : addr}
-  (!node_v (length, p) >> _) -<prf>
-    [length <= bitsizeof (uintptr)] void
+vtypedef new_node_vt (length : int, index : int, p : addr) =
+  @{
+    view_of_population_map = uintptr @ p,
+    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
+    view_of_left_entries =
+      @[uintptr][index] @ (p + 2 * sizeof (uintptr)),
+    view_of_new_entry =
+      (uintptr?) @ (p + (2 + index) * sizeof (uintptr)),
+    view_of_right_entries =
+      @[uintptr][length - 1 - index]
+          @ (p + (3 + index) * sizeof (uintptr)),
+    mfree = mfree_gc_v p |
+    pointer = ptr p
+  }
+vtypedef new_node_vt (length : int, index : int) =
+  [p : addr] new_node_vt (length, index, p)
+vtypedef new_node_vt =
+  [length, index : int] new_node_vt (length, index)
 
 extern praxi
 lemma_node_vt_param :
   {length : int}
   {p : addr}
   (!node_vt (length, p) >> _) -<prf>
-    [0 < length] void
+    [0 < length; length <= bitsizeof (uintptr)]
+    void
 
-extern prfn
-lemma_node_vt_bound :
-  {length : int}
+extern praxi
+lemma_new_node_vt_param :
+  {length, index : int}
   {p : addr}
-  (!node_vt (length, p) >> _) -<prf>
-    [length <= bitsizeof (uintptr)] void
+  (!new_node_vt (length, index, p) >> _) -<prf>
+    [0 < length; length <= bitsizeof (uintptr);
+     0 <= index; index < length]
+    void
 
-fn {tk : tkind}
-node_vt_alloc {length : int}
-              (length : g1uint (tk, length)) :<!wrt>
-    node_vt (length) =
+fn
+node_alloc {length : int}
+           (length : size_t length) :<!wrt>
+    [p : addr]
+    @(@[uintptr?][length + 2] @ p, mfree_gc_v p | ptr p) =
   let
     val size = length + (g1u2u 2U)
-    val @(view, mfree | pointer) =
-      array_ptr_alloc<uintptr> (g1u2u size)
-    val _ = array_initize_elt<uintptr> (!pointer, g1u2u size, zero)
+    val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
   in
-    @{
-      view = view,
-      mfree = mfree |
-      pointer = pointer
-    }
+    @(view, mfree | pointer)
   end
 
 fn
 node_vt_free {length : int}
-             (node   : node_vt (length)) :<!wrt> void =
+             {p      : addr}
+             (node   : node_vt (length, p)) :<!wrt>
+    void =
   let
     val @{
-          view = view,
-          mfree = mfree |
-          pointer = pointer
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
         } = node
+
+    prval pf = array_v_cons (pf_kind_map, pf_entries)
+    prval pf = array_v_cons (pf_pop_map, pf)
   in
-    array_ptr_free (view, mfree | pointer)
+    array_ptr_free {uintptr} {p} {length + 2} (pf, pf_mfree | p)
   end
+
+
+
+(*
 
 (********************************************************************)
 
@@ -647,3 +660,5 @@ insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
   end
 
 (********************************************************************)
+
+*)
