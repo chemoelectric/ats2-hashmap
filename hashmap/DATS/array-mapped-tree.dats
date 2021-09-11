@@ -182,8 +182,8 @@ vtypedef node_vt =
 
 vtypedef new_node_vt (length : int, index : int, p : addr) =
   @{
-    view_of_population_map = uintptr @ p,
-    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
+    view_of_population_map = (uintptr?) @ p,
+    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
     view_of_left_entries =
       @[uintptr][index] @ (p + 2 * sizeof (uintptr)),
     view_of_new_entry =
@@ -281,38 +281,6 @@ get_population_map
     pop_map
   end
 
-fn {}
-set_population_map
-        {length, index : int}
-        {p       : addr}
-        (node    : !new_node_vt (length, index, p) >> _,
-         pop_map : uintptr) :<!wrt>
-    void =
-  {
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
-          view_of_left_entries = pf_left,
-          view_of_new_entry = pf_entry,
-          view_of_right_entries = pf_right,
-          mfree = pf_mfree |
-          pointer = p
-        } = node
-
-    val () = ptr_set<uintptr> (pf_pop_map | p, pop_map)
-
-    prval _ = node :=
-      @{
-        view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      }
-  }
-
 (********************************************************************)
 
 fn {}
@@ -344,39 +312,6 @@ get_node_kind_map
   in
     node_kind_map
   end
-
-fn {}
-set_node_kind_map
-        {length, index : int}
-        {p        : addr}
-        (node     : !new_node_vt (length, index, p) >> _,
-         kind_map : uintptr) :<!wrt>
-    void =
-  {
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
-          view_of_left_entries = pf_left,
-          view_of_new_entry = pf_entry,
-          view_of_right_entries = pf_right,
-          mfree = pf_mfree |
-          pointer = p
-        } = node
-
-    val p_kind_map = ptr_succ<uintptr> (p)
-    val () = ptr_set<uintptr> (pf_kind_map | p_kind_map, kind_map)
-
-    prval _ = node :=
-      @{
-        view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      }
-  }
 
 (********************************************************************)
 
@@ -424,46 +359,7 @@ get_entry_value
     entry_value
   end
 
-fn {}
-set_entry_value
-        {length, index : int | index < length}
-        {p      : addr}
-        (node   : !new_node_vt (length, index, p)
-                      >> node_vt (length, p),
-         index  : size_t index,
-         value  : uintptr) :<!wrt>
-    void =
-  {
-    val @{
-        view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      } = node
-
-    prval _ = lemma_g1uint_param index
-
-    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
-    val () = ptr_set<uintptr> (pf_entry | p_entry, value)
-
-    prval pf_entry_right = array_v_cons (pf_entry, pf_right)
-    prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
-
-    prval _ = node :=
-      @{
-        view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
-        view_of_entries = pf_entries,
-        mfree = pf_mfree |
-        pointer = p
-      }
-  }
-
 overload [] with get_entry_value
-overload [] with set_entry_value
 
 (********************************************************************)
 
@@ -473,10 +369,8 @@ node_vt_to_new_node_vt
         {p     : addr}
         (node  : node_vt (length, p),
          index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a new_node_vt,
-       and the old value of the "new" entry. *)
-    @(new_node_vt (length, index, p),
-      uintptr) =
+    (* Returns the original node_vt recast as a new_node_vt. *)
+    new_node_vt (length, index, p) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -495,9 +389,6 @@ node_vt_to_new_node_vt
                          pf_entries
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
 
-    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
-    val old_value = ptr_get<uintptr> (pf_entry | p_entry)
-
     val new_node =
       @{
         view_of_population_map = pf_pop_map,
@@ -509,7 +400,7 @@ node_vt_to_new_node_vt
         pointer = p
       }
   in
-    @(new_node, old_value)
+    new_node
   end
 
 fn {}
@@ -532,13 +423,37 @@ new_node_vt_to_node_vt
       else
         old_kind_map <*> (<~> new_bit)
 
-    val () = set_population_map {length, index} {p}
-                                (node, new_pop_map)
-    val () = set_node_kind_map {length, index} {p}
-                               (node, new_kind_map)
-    val () = node[index] := value
+    val @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      } = node
+
+    val () = ptr_set<uintptr> (pf_pop_map | p, new_pop_map)
+
+    val p_kind_map = ptr_succ<uintptr> (p)
+    val node_kind_map =
+      ptr_set<uintptr> (pf_kind_map | p_kind_map, new_kind_map)
+
+    prval _ = lemma_g1uint_param index
+
+    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
+    val () = ptr_set<uintptr> (pf_entry | p_entry, value)
+
+    prval pf_entry_right = array_v_cons (pf_entry, pf_right)
+    prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
   in
-    node
+    @{
+      view_of_population_map = pf_pop_map,
+      view_of_node_kind_map = pf_kind_map,
+      view_of_entries = pf_entries,
+      mfree = pf_mfree |
+      pointer = p
+    }
   end
 
 (********************************************************************)
