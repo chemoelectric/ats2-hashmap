@@ -570,12 +570,8 @@ insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
                   (node    : node_vt (length),
                    i       : uint i,
                    is_leaf : bool) :
-    (* Return the new node and the array index for access to
-       the new entry. (This is safer than returning a pointer
-       to the new entry.) *)
-    [entry_index : int | 2 <= entry_index; entry_index < length + 3]
-    @(node_vt (length + 1),
-      size_t entry_index) =
+    (* Return the new node and a pointer to the new entry. *)
+    @(node_vt (length + 1), Ptr) =
   let
     prval _ = lemma_g1uint_param i
 
@@ -640,11 +636,14 @@ insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
     val _ = node_vt_free {length} @{view = pf_node,
                                     mfree = pf_mfree |
                                     pointer = p_node}
+
+    val entry_index = index + i2sz 2
+    val entry_p = ptr_add<uintptr> (p_new_node, entry_index)
   in
     @(@{view = pf_new_node,
         mfree = pf_new_mfree |
         pointer = p_new_node},
-      index + i2sz 2)
+      entry_p)
   end
 
 (********************************************************************)
