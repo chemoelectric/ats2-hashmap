@@ -109,6 +109,10 @@ symintr <+>
 infixl ( * ) <+>
 overload <+> with g0uint_lor_uintptr
 
+symintr <~>
+prefix ( * ) <~>
+overload <~> with g0uint_lnot_uintptr
+
 extern castfn
 g1int2uint_int_uintpr :
   {i : int | 0 <= i} int i -<> uintptr i
@@ -244,53 +248,6 @@ node_vt_free {length : int}
     prval pf = array_v_cons (pf_pop_map, pf)
   in
     array_ptr_free {uintptr} {p} {length + 2} (pf, pf_mfree | p)
-  end
-
-(********************************************************************)
-
-fn {}
-node_vt_to_new_node_vt
-        {length, index : int | index < length}
-        {p     : addr}
-        (node  : node_vt (length, p),
-         index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a new_node_vt,
-       and the old value of the "new" entry. *)
-    @(new_node_vt (length, index, p),
-      uintptr) =
-  let
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
-          view_of_entries = pf_entries,
-          mfree = pf_mfree |
-          pointer = p
-        } = node
-
-    prval _ = lemma_g1uint_param index
-
-    prval @(pf_left, pf_right) =
-      array_v_subdivide2 {uintptr}
-                         {p + 2 * sizeof (uintptr)}
-                         {index, length - index}
-                         pf_entries
-    prval @(pf_entry, pf_right) = array_v_uncons pf_right
-
-    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
-    val old_value = ptr_get<uintptr> (pf_entry | p_entry)
-
-    val new_node =
-      @{
-        view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      }
-  in
-    @(new_node, old_value)
   end
 
 (********************************************************************)
@@ -510,6 +467,81 @@ overload [] with set_entry_value
 
 (********************************************************************)
 
+fn {}
+node_vt_to_new_node_vt
+        {length, index : int | index < length}
+        {p     : addr}
+        (node  : node_vt (length, p),
+         index : size_t index) :<!ref>
+    (* Returns the original node_vt recast as a new_node_vt,
+       and the old value of the "new" entry. *)
+    @(new_node_vt (length, index, p),
+      uintptr) =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval _ = lemma_g1uint_param index
+
+    prval @(pf_left, pf_right) =
+      array_v_subdivide2 {uintptr}
+                         {p + 2 * sizeof (uintptr)}
+                         {index, length - index}
+                         pf_entries
+    prval @(pf_entry, pf_right) = array_v_uncons pf_right
+
+    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
+    val old_value = ptr_get<uintptr> (pf_entry | p_entry)
+
+    val new_node =
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  in
+    @(new_node, old_value)
+  end
+
+fn {}
+new_node_vt_to_node_vt
+        {length, index : int | index < length}
+        {p            : addr}
+        (node         : new_node_vt (length, index, p),
+         index        : size_t index,
+         value        : uintptr,
+         old_pop_map  : uintptr,
+         old_kind_map : uintptr,
+         is_leaf      : bool) :<!wrt>
+    node_vt (length, p) =
+  let
+    val new_bit = (one << (sz2i index))
+    val new_pop_map = old_pop_map <+> new_bit
+    val new_kind_map =
+      if is_leaf then
+        old_kind_map <+> new_bit
+      else
+        old_kind_map <*> (<~> new_bit)
+
+    val () = set_population_map {length, index} {p}
+                                (node, new_pop_map)
+    val () = set_node_kind_map {length, index} {p}
+                               (node, new_kind_map)
+    val () = node[index] := value
+  in
+    node
+  end
+
+(********************************************************************)
 
 
 
