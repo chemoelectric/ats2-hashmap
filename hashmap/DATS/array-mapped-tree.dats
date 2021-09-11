@@ -30,6 +30,8 @@ along with this program. If not, see
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 
+staload "hashmap/SATS/array_prf.sats"
+
 staload "hashmap/SATS/memory.sats"
 staload _ = "hashmap/DATS/memory.dats"
 
@@ -209,6 +211,51 @@ lemma_new_node_vt_param :
     [0 < length; length <= bitsizeof (uintptr);
      0 <= index; index < length]
     void
+
+fn {}
+node_vt_to_new_node_vt
+        {length, index : int | index < length}
+        {p     : addr}
+        (node  : node_vt (length, p),
+         index : size_t index) :
+    (* Returns the original node_vt recast as a new_node_vt,
+       and the old value of the "new" entry. *)
+    @(new_node_vt (length, index, p),
+      uintptr) =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_node_kind_map = pf_kind_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval _ = lemma_g1uint_param index
+
+    prval @(pf_left, pf_right) =
+      array_v_subdivide2 {uintptr}
+                         {p + 2 * sizeof (uintptr)}
+                         {index, length - index}
+                         pf_entries
+    prval @(pf_entry, pf_right) = array_v_uncons pf_right
+
+    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
+    val old_value = ptr_get<uintptr> (pf_entry | p_entry)
+
+    val new_node =
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_node_kind_map = pf_kind_map,
+        view_of_left_entries = pf_left,
+        view_of_new_entry = pf_entry,
+        view_of_right_entries = pf_right,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  in
+    @(new_node, old_value)
+  end
 
 fn
 node_alloc {length : int}
