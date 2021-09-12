@@ -505,8 +505,11 @@ new_node_vt_to_node_vt
 
 (********************************************************************)
 
-vtypedef nodes_vt = List_vt (array_mapped_tree_vt)
-vtypedef more_nodes_vt = List_vt (nodes_vt)
+vtypedef node_list_vt (n : int) = list_vt (node_vt, n)
+vtypedef node_list_vt = [n : int] node_list_vt n
+
+vtypedef more_nodes_vt (n : int) = list_vt (node_list_vt, n)
+vtypedef more_nodes_vt = [n : int] more_nodes_vt n
 
 fun
 skip_unpopulated (population : uintptr,
@@ -521,7 +524,7 @@ skip_unpopulated (population : uintptr,
    also building up lists of more nodes to be freed. *)
 fn
 free_nodes {free_entry_p : addr}   (* May be null. *)
-           (nodes        : nodes_vt,
+           (nodes        : node_list_vt,
             free_entry_p : ptr free_entry_p,
             more_nodes   : &more_nodes_vt? >> more_nodes_vt) :
     void =
@@ -529,12 +532,13 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
     fun
     for_each_node
             {n          : int | 0 <= n} .<n>.
-            (nodes      : list_vt (array_mapped_tree_vt, n),
+            (nodes      : node_list_vt n,
              more_nodes : more_nodes_vt) : more_nodes_vt =
       case+ nodes of
       | ~ NIL => more_nodes
-      | ~ node_p :: tail =>
+      | ~ node :: tail =>
         let
+(*
           val [node_p : addr] node_p = g1ofg0 node_p
 
           (* Cast node_p to the node_vt it really is. *)
@@ -543,6 +547,9 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
               {[length : int | length <= bitsizeof (uintptr)]
                node_vt (length, node_p)}
               node_p
+*)
+          val [length : int] node =
+            $UNSAFE.castvwtp0{[length : int] node_vt length} node
 
           val population_map = get_population_map (node)
           val node_kind_map = get_node_kind_map (node)
@@ -565,7 +572,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                    node_kinds : uintptr,
                    length     : size_t length,
                    i          : size_t i,
-                   new_nodes  : nodes_vt) : nodes_vt =
+                   new_nodes  : node_list_vt) : node_list_vt =
             if i = length then
               new_nodes
             else
@@ -582,9 +589,10 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                 if not is_leaf then
                   let
                     val entry = node[i]
-                    val [next_node_p : addr] next_node_p =
-                      $UNSAFE.cast{Ptr} entry
-                    val new_nodes = (next_node_p :: new_nodes)
+                    val next_node_p = $UNSAFE.cast{Ptr} entry
+                    val next_node =
+                      $UNSAFE.castvwtp0{node_vt} next_node_p
+                    val new_nodes = (next_node :: new_nodes)
                   in
                     for_each_bit (node, population, node_kinds,
                                   length, succ i, new_nodes)
@@ -657,11 +665,7 @@ node_vt_free {length : int}
              {free_entry_p : addr} (* May be null. *)
              (node   : node_vt (length, p),
               free_entry_p : ptr free_entry_p) : void =
-  let
-    val node_p = $UNSAFE.castvwtp0{Ptr} node
-  in
-    free_more_nodes (free_entry_p, ((node_p :: NIL) :: NIL))  
-  end
+  free_more_nodes (free_entry_p, ((node :: NIL) :: NIL))  
 
 (********************************************************************)
 
