@@ -600,11 +600,15 @@ free_nodes (nodes      : node_list_vt,
 
                 prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
                 val p_rest = ptr_succ<link_vt> (p_entries)
+
+                (* Render the entry expired. *)
                 prval _ =
                   $UN.castview2void_at {link_t} {link_vt} {p_entries}
                                        pf_entry
               in
                 if not is_leaf then
+                  (* The expired entry is a subnode, and must be
+                     freed. Add it to a list for freeing later. *)
                   let
                     val entry = ptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
@@ -621,6 +625,8 @@ free_nodes (nodes      : node_list_vt,
                     result
                   end
                 else if not (leaf_free_vt_is_null leaf_free) then
+                  (* The expired entry is a leaf that must be
+                     freed. Free it now. *)
                   let
                     val entry = ptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
@@ -637,9 +643,9 @@ free_nodes (nodes      : node_list_vt,
                     result
                   end
                 else
-                  (* The entry need not be freed (and can be
-                     regarded as an integer rather than a
-                     pointer. *)
+                  (* The expired entry is a leaf that need not be
+                     freed (and which can be regarded as an integer
+                     rather than a pointer). *)
                   let
                     val result =
                       for_each_bit<vt>
@@ -666,14 +672,14 @@ free_nodes (nodes      : node_list_vt,
               {..} {length}
               (pf_entries | leaf_free, population_map, node_kind_map,
                             p_entries, length, NIL)
-          val node =
+          val node : expired_node_vt =
             @{
               view_of_population_map = pf_pop_map,
               view_of_node_kind_map = pf_kind_map,
               view_of_entries = pf_entries,
               mfree = pf_mfree |
               pointer = p
-            } : expired_node_vt
+            }
 
           (* Having freed its leaves, and listed its subnodes
              for later handling, now free the node itself. *)
@@ -727,161 +733,6 @@ free_array_mapped_tree (node_p, leaf_free_p) =
 
 
 (*
-
-(********************************************************************)
-
-vtypedef nodes_vt = List_vt (array_mapped_tree_vt)
-vtypedef more_nodes_vt = List_vt (nodes_vt)
-
-(* Rather than recursively deepen the stack, let us free nodes while
-   also building up lists of more nodes to be freed. *)
-fn
-free_nodes {free_entry_p : addr}   (* May be null. *)
-           (nodes        : nodes_vt,
-            free_entry_p : ptr free_entry_p,
-            more_nodes   : &more_nodes_vt? >> more_nodes_vt) :
-    void =
-  let
-    fun
-    for_each_node
-            {n          : int | 0 <= n} .<n>.
-            (nodes      : list_vt (array_mapped_tree_vt, n),
-             more_nodes : more_nodes_vt) : more_nodes_vt =
-      case+ nodes of
-      | ~ NIL => more_nodes
-      | ~ node_p :: tail =>
-        let
-          val [node_p : addr] node_p = g1ofg0 node_p
-
-          (* Cast node_p to the node_vt it really is. *)
-          val [length : int] node =
-            $UN.castvwtp0
-              {[length : int | length <= bitsizeof (uintptr)]
-               node_vt (length, node_p)}
-              node_p
-
-          val @{
-                view = pf_node,
-                mfree = pf_mfree |
-                pointer = p_node
-              } = node
-          prval _ = lemma_node_v_param {length} pf_node
-          macdef node_array = !p_node
-
-          val population_map = node_array[0]
-          val node_kind_map = node_array[1]
-
-          val [popcount : int] @(_ | length) =
-            get_popcount (g1ofg0 population_map)
-          prval _ = $UN.prop_assert {length == popcount} ()
-
-          fun
-          for_each_bit {vt         : vtype}
-                       {node_p     : addr}
-                       {length     : int}
-                       {i          : int | i <= length}
-                       .<length - i>.
-                       (pf_node    : !node_v (length, node_p) >> _ |
-                        p_node     : ptr node_p,
-                        population : uintptr,
-                        node_kinds : uintptr,
-                        length     : size_t length,
-                        i          : size_t i,
-                        new_nodes  : nodes_vt) : nodes_vt =
-            if i = length then
-              new_nodes
-            else
-              let
-                prval _ = lemma_list_vt_param new_nodes
-                prval _ = lemma_g1uint_param i
-
-                prval _ = lemma_node_v_param {length} pf_node
-                macdef node_array = !p_node
-
-                val @(population, node_kinds) =
-                  skip_unpopulated (population, node_kinds)
-                val is_leaf = ((node_kinds <*> one) <> zero)
-              in
-                if not is_leaf then
-                  let
-                    val entry = node_array[i + i2sz 2]
-                    val [next_node_p : addr] next_node_p =
-                      $UN.cast{[p : addr] ptr p} entry
-                    val new_nodes = (next_node_p :: new_nodes)
-                  in
-                    for_each_bit (pf_node | p_node, population,
-                                            node_kinds, length,
-                                            succ i, new_nodes)
-                  end
-                else if ptr_isnot_null free_entry_p then
-                  let
-                    (* Cast free_entry_p to the closure it
-                       actually is. *)
-                    val free_func =
-                      $UN.castvwtp0{vt -<cloptr1> void}
-                        free_entry_p
-
-                    val entry = node_array[i + i2sz 2]
-                    val leaf = $UN.cast{ptr} entry
-                    val _ = free_func ($UN.castvwtp0{vt} leaf)
-
-                    (* The closure no longer is needed. *)
-                    prval _ = $UN.castvwtp0{void} free_func
-                  in
-                    for_each_bit (pf_node | p_node, population,
-                                            node_kinds, length,
-                                            succ i, new_nodes)
-                  end
-                else
-                  (* The entry need not be freed (and can be
-                     regarded as an integer rather than a
-                     pointer. *)
-                  for_each_bit (pf_node | p_node, population,
-                                          node_kinds, length,
-                                          succ i, new_nodes)
-              end
-
-          val new_nodes =
-            for_each_bit (pf_node | p_node, population_map,
-                                    node_kind_map, length,
-                                    i2sz 0, NIL)
-
-          (* Having freed its leaves, and listed its subnodes
-             for later handling, now free the node itself. *)
-          val _ = node_vt_free {length} @{view = pf_node,
-                                          mfree = pf_mfree |
-                                          pointer = p_node}
-
-          prval _ = lemma_list_vt_param more_nodes
-        in
-          for_each_node (tail, new_nodes :: more_nodes)
-        end
-
-    prval _ = lemma_list_vt_param nodes
-  in
-    more_nodes := for_each_node (nodes, NIL)
-  end
-
-fun
-free_more_nodes {free_entry_p : addr} (* May be null. *)
-                (free_entry_p : ptr free_entry_p,
-                 more_nodes   : more_nodes_vt) : void =
-  (* The more_nodes list may temporarily grow, but should
-     eventually shrink to NIL. *)
-  case+ more_nodes of
-  | ~ NIL => ()
-  | ~ nodes :: tail =>
-    let
-      var yet_more_nodes : more_nodes_vt
-    in
-      free_nodes (nodes, free_entry_p, yet_more_nodes);
-      free_more_nodes (free_entry_p,
-                       list_vt_reverse_append (yet_more_nodes, tail))
-    end
-
-implement
-free_array_mapped_tree (node_p, free_entry_p) =
-  free_more_nodes (free_entry_p, ((node_p :: NIL) :: NIL))
 
 (********************************************************************)
 
