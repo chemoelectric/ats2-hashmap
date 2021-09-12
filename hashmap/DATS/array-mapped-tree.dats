@@ -167,11 +167,22 @@ get_popcount_low_bits {population_map : int}
 
 (********************************************************************)
 
+absview link_v
+
+vtypedef link_vt =
+  @(link_v | uintptr)
+
+prval _ = prop_verify {sizeof (link_vt) == sizeof (uintptr)} ()
+prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
+
+extern castfn
+link2uintptr (link : link_vt?!) :<> uintptr
+
 vtypedef node_vt (length : int, p : addr) =
   @{
     view_of_population_map = uintptr @ p,
     view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
-    view_of_entries = @[uintptr][length] @ (p + 2 * sizeof (uintptr)),
+    view_of_entries = @[link_vt][length] @ (p + 2 * sizeof (uintptr)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -180,17 +191,33 @@ vtypedef node_vt (length : int) =
 vtypedef node_vt =
   [length : int] node_vt (length)
 
+vtypedef expired_node_vt (length : int, p : addr) =
+  @{
+    view_of_population_map = uintptr @ p,
+    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
+    view_of_entries =
+      @[link_vt?!][length] @ (p + 2 * sizeof (uintptr)),
+    mfree = mfree_gc_v p |
+    pointer = ptr p
+  }
+vtypedef expired_node_vt (length : int) =
+  [p : addr] expired_node_vt (length, p)
+vtypedef expired_node_vt =
+  [length : int] expired_node_vt (length)
+
 vtypedef new_node_vt (length : int, index : int, p : addr) =
   @{
     view_of_population_map = (uintptr?) @ p,
     view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
     view_of_left_entries =
-      @[uintptr][index] @ (p + 2 * sizeof (uintptr)),
+      @[link_vt][index] @ (p + 2 * sizeof (uintptr)),
     view_of_new_entry =
-      (uintptr?) @ (p + (2 + index) * sizeof (uintptr)),
+      uintptr
+        @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
     view_of_right_entries =
-      @[uintptr][length - 1 - index]
-          @ (p + (3 + index) * sizeof (uintptr)),
+      @[link_vt][length - 1 - index]
+          @ (p + 2 * sizeof (uintptr) +
+              (1 + index) * sizeof (link_vt)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -208,6 +235,14 @@ lemma_node_vt_param :
     void
 
 extern praxi
+lemma_expired_node_vt_param :
+  {length : int}
+  {p : addr}
+  (!expired_node_vt (length, p) >> _) -<prf>
+    [0 < length; length <= bitsizeof (uintptr)]
+    void
+
+extern praxi
 lemma_new_node_vt_param :
   {length, index : int}
   {p : addr}
@@ -218,7 +253,7 @@ lemma_new_node_vt_param :
 
 (********************************************************************)
 
-fn
+fn {}
 node_alloc {length : int}
            (length : size_t length) :<!wrt>
     [p : addr]
@@ -230,10 +265,11 @@ node_alloc {length : int}
     @(view, mfree | pointer)
   end
 
-fn
-node_vt_free {length : int}
-             {p      : addr}
-             (node   : node_vt (length, p)) :<!wrt>
+fn {}
+expired_node_vt_free
+        {length : int}
+        {p      : addr}
+        (node   : expired_node_vt (length, p)) :<!wrt>
     void =
   let
     val @{
@@ -244,6 +280,11 @@ node_vt_free {length : int}
           pointer = p
         } = node
 
+    prval _ =
+      $UNSAFE.castview2void_at
+        {@[uintptr][length]} {@[link_vt?!][length]}
+        {p + 2 * sizeof (uintptr)}
+        pf_entries
     prval pf = array_v_cons (pf_kind_map, pf_entries)
     prval pf = array_v_cons (pf_pop_map, pf)
   in
@@ -332,21 +373,25 @@ get_entry_value
         } = node
 
     prval _ = lemma_g1uint_param index
-    
-    prval @(pf_left, pf_entry_right) =
-      array_v_subdivide2 {uintptr} {p + 2 * sizeof (uintptr)}
-                         {index, length - index}
-                         pf_entries
-    prval @(pf_entry, pf_right) = array_v_uncons pf_entry_right
 
-    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
-    val entry_value = ptr_get<uintptr> (pf_entry | p_entry)
+    stadef p_entries = p + 2 * sizeof (uintptr)
+    val p_entries : ptr p_entries = ptr_add<uintptr> (p, i2sz 2)
+    macdef entries = !p_entries
 
-    prval _ = pf_entry_right := array_v_cons (pf_entry, pf_right)
-    prval _ = pf_entries :=
-       array_v_join2 {uintptr} {p + 2 * sizeof (uintptr)}
-                     {index, length - index}
-                     (pf_left, pf_entry_right)
+    (* Temporarily make the entries uintptr instead of link_vt,
+       so one can copy their data without consuming their views. *)
+    prval _ =
+      $UNSAFE.castview2void_at
+        {@[uintptr][length]} {@[link_vt][length]} {p_entries}
+        pf_entries
+
+    val entry_value = entries[index]
+
+    prval _ =
+      $UNSAFE.castview2void_at
+        {@[link_vt][length]} {@[uintptr][length]} {p_entries}
+        pf_entries
+
     prval _ = node :=
       @{
         view_of_population_map = pf_pop_map,
@@ -383,11 +428,14 @@ node_vt_to_new_node_vt
     prval _ = lemma_g1uint_param index
 
     prval @(pf_left, pf_right) =
-      array_v_subdivide2 {uintptr}
+      array_v_subdivide2 {link_vt}
                          {p + 2 * sizeof (uintptr)}
                          {index, length - index}
                          pf_entries
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
+
+    prval _ =
+      $UNSAFE.castview2void_at {uintptr} {link_vt} pf_entry
 
     val new_node =
       @{
@@ -443,6 +491,8 @@ new_node_vt_to_node_vt
 
     val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
     val () = ptr_set<uintptr> (pf_entry | p_entry, value)
+
+    prval _ = $UNSAFE.castview2void_at {link_vt} {uintptr} pf_entry
 
     prval pf_entry_right = array_v_cons (pf_entry, pf_right)
     prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
