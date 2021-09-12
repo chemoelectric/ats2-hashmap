@@ -248,6 +248,11 @@ lemma_new_node_vt_param :
      0 <= index; index < length]
     void
 
+fn {}
+extract_static_length_of_node (node : node_vt) :<>
+    [length : int] node_vt length =
+  $UNSAFE.castvwtp0 node
+
 (********************************************************************)
 
 fn {}
@@ -538,18 +543,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
       | ~ NIL => more_nodes
       | ~ node :: tail =>
         let
-(*
-          val [node_p : addr] node_p = g1ofg0 node_p
-
-          (* Cast node_p to the node_vt it really is. *)
-          val [length : int] node =
-            $UNSAFE.castvwtp0
-              {[length : int | length <= bitsizeof (uintptr)]
-               node_vt (length, node_p)}
-              node_p
-*)
-          val [length : int] node =
-            $UNSAFE.castvwtp0{[length : int] node_vt length} node
+          val [length : int] node = extract_static_length_of_node node
 
           val population_map = get_population_map (node)
           val node_kind_map = get_node_kind_map (node)
@@ -567,14 +561,19 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                   {p_node     : addr}
                   {i          : int | i <= length}
                   .<length - i>.
-                  (node       : !node_vt (length, p_node) >> _,
+                  (node       : !node_vt (length, p_node)
+                                  >> expired_node_vt (length, p_node),
                    population : uintptr,
                    node_kinds : uintptr,
                    length     : size_t length,
                    i          : size_t i,
                    new_nodes  : node_list_vt) : node_list_vt =
             if i = length then
-              new_nodes
+              let
+                prval _ = node := $UNSAFE.castvwtp0 node
+              in
+                new_nodes
+              end
             else
               let
                 prval _ = lemma_list_vt_param new_nodes
@@ -629,7 +628,6 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
           (* Having freed its leaves, and listed its subnodes
              for later handling, now free the node itself. *)
-          val node = $UNSAFE.castvwtp0{expired_node_vt (length)} node (* FIXME: Get rid of the need for this cast. *)
           val _ = expired_node_vt_free {length} node
 
           prval _ = lemma_list_vt_param more_nodes
