@@ -544,7 +544,9 @@ free_nodes (nodes      : node_list_vt,
             more_nodes : &more_nodes_vt? >> more_nodes_vt) :
     void =
   let
-    fun
+    typedef link_t = link_vt?!
+
+    fun {vt : vtype}
     for_each_node
             {n          : int | 0 <= n} .<n>.
             (nodes      : node_list_vt n,
@@ -565,83 +567,126 @@ free_nodes (nodes      : node_list_vt,
             get_popcount (g1ofg0 population_map)
           prval _ = $UN.prop_assert {length == popcount} ()
 
-          fun
+          fun {vt : vtype}
           for_each_bit
-                  {vt         : vtype}
-                  {length     : int}
-                  {p_node     : addr}
-                  {i          : int | i <= length}
-                  .<length - i>.
-                  (leaf_free  : !leaf_free_vt (vt) >> _,
-                   node       : !node_vt (length, p_node)
-                                  >> expired_node_vt (length, p_node),
+                  {p_entries  : addr}
+                  {restlen    : int | 0 <= restlen; restlen <= length}
+                  .<restlen>.
+                  (pf_entries : !(@[link_vt][restlen] @ p_entries)
+                                  >> @[link_t][restlen] @ p_entries |
+                   leaf_free  : !leaf_free_vt (vt) >> _,
                    population : uintptr,
                    node_kinds : uintptr,
-                   length     : size_t length,
-                   i          : size_t i,
+                   p_entries  : ptr p_entries,
+                   restlen    : size_t restlen,
                    new_nodes  : node_list_vt) : node_list_vt =
-            if i = length then
+            if restlen = i2sz 0 then
               let
-                prval _ = node := $UN.castvwtp0 node
+                prval _ = pf_entries :=
+                  array_v_unnil_nil {link_vt, link_t} pf_entries
               in
                 new_nodes
               end
             else
               let
                 prval _ = lemma_list_vt_param new_nodes
-                prval _ = lemma_g1uint_param i
 
-                prval _ = lemma_node_vt_param {length} node
+                prval _ = lemma_array_v_param pf_entries
+                prval _ = prop_verify {0 <= restlen} ()
 
                 val @(population, node_kinds) =
                   skip_unpopulated (population, node_kinds)
                 val is_leaf = ((node_kinds <*> one) <> zero)
+
+                prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
+                val p_rest = ptr_succ<link_vt> (p_entries)
+                prval _ =
+                  $UN.castview2void_at {link_t} {link_vt} {p_entries}
+                                       pf_entry
               in
                 if not is_leaf then
                   let
-                    val entry = $UN.cast{Ptr} node[i]
-                    val next_node = $UN.castvwtp0{node_vt} entry
-                    val new_nodes = (next_node :: new_nodes)
+                    val entry = ptr_get<link_t> (pf_entry | p_entries)
+                    val entry_p = $UN.cast{Ptr} entry
+                    val next_node = $UN.castvwtp0{node_vt} entry_p
+                    val new_nodes = next_node :: new_nodes
+                    val result =
+                      for_each_bit<vt>
+                        {p_entries + sizeof (link_vt)} {restlen - 1}
+                        (pf_rest | leaf_free, population, node_kinds,
+                                   p_rest, pred restlen, new_nodes)
+                    prval _ = pf_entries :=
+                      array_v_cons (pf_entry, pf_rest)
                   in
-                    for_each_bit (leaf_free, node, population,
-                                  node_kinds, length, succ i,
-                                  new_nodes)
+                    result
                   end
                 else if not (leaf_free_vt_is_null leaf_free) then
                   let
-                    val entry = $UN.cast{Ptr} node[i]
-                    val leaf = $UN.castvwtp0{vt} entry
+                    val entry = ptr_get<link_t> (pf_entry | p_entries)
+                    val entry_p = $UN.cast{Ptr} entry
+                    val leaf = $UN.castvwtp0{vt} entry_p
                     val _ = leaf_free (leaf)
+                    val result =
+                      for_each_bit<vt>
+                        {p_entries + sizeof (link_vt)} {restlen - 1}
+                        (pf_rest | leaf_free, population, node_kinds,
+                                   p_rest, pred restlen, new_nodes)
+                    prval _ = pf_entries :=
+                      array_v_cons (pf_entry, pf_rest)
                   in
-                    for_each_bit (leaf_free, node, population,
-                                  node_kinds, length, succ i,
-                                  new_nodes)
+                    result
                   end
                 else
                   (* The entry need not be freed (and can be
                      regarded as an integer rather than a
                      pointer. *)
-                  for_each_bit (leaf_free, node, population,
-                                node_kinds, length, succ i,
-                                new_nodes)
+                  let
+                    val result =
+                      for_each_bit<vt>
+                        {p_entries + sizeof (link_vt)} {restlen - 1}
+                        (pf_rest | leaf_free, population, node_kinds,
+                                   p_rest, pred restlen, new_nodes)
+                    prval _ = pf_entries :=
+                      array_v_cons (pf_entry, pf_rest)
+                  in
+                    result
+                  end
               end
 
+          val @{
+                view_of_population_map = pf_pop_map,
+                view_of_node_kind_map = pf_kind_map,
+                view_of_entries = pf_entries,
+                mfree = pf_mfree |
+                pointer = p
+              } = node
+          val p_entries = ptr_add<uintptr> (p, i2sz 2)
           val new_nodes =
-            for_each_bit (leaf_free, node, population_map,
-                          node_kind_map, length, i2sz 0, NIL)
+            for_each_bit<vt>
+              {..} {length}
+              (pf_entries | leaf_free, population_map, node_kind_map,
+                            p_entries, length, NIL)
+          val node =
+            @{
+              view_of_population_map = pf_pop_map,
+              view_of_node_kind_map = pf_kind_map,
+              view_of_entries = pf_entries,
+              mfree = pf_mfree |
+              pointer = p
+            } : expired_node_vt
 
           (* Having freed its leaves, and listed its subnodes
              for later handling, now free the node itself. *)
-          val _ = expired_node_vt_free {length} node
+          val _ = expired_node_vt_free node
 
           prval _ = lemma_list_vt_param more_nodes
         in
-          for_each_node (tail, leaf_free, new_nodes :: more_nodes)
+          for_each_node<vt> (tail, leaf_free, new_nodes :: more_nodes)
         end
 
     prval _ = lemma_list_vt_param nodes
   in
-    more_nodes := for_each_node (nodes, leaf_free, NIL)
+    more_nodes := for_each_node<vt> (nodes, leaf_free, NIL)
   end
 
 fun {vt : vtype}
@@ -655,9 +700,9 @@ free_more_nodes (leaf_free  : !leaf_free_vt (vt) >> _,
     let
       var yet_more_nodes : more_nodes_vt
     in
-      free_nodes (nodes, leaf_free, yet_more_nodes);
-      free_more_nodes (leaf_free,
-                       list_vt_reverse_append (yet_more_nodes, tail))
+      free_nodes<vt> (nodes, leaf_free, yet_more_nodes);
+      free_more_nodes<vt>
+        (leaf_free, list_vt_reverse_append (yet_more_nodes, tail))
     end
 
 fn {vt : vtype}
@@ -665,7 +710,7 @@ node_vt_free {length    : int}
              {p         : addr}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void =
-  free_more_nodes (leaf_free, ((node :: NIL) :: NIL))  
+  free_more_nodes<vt> (leaf_free, ((node :: NIL) :: NIL))  
 
 (********************************************************************)
 
