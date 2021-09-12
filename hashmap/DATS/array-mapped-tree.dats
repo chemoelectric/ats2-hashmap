@@ -40,6 +40,8 @@ staload _ = "hashmap/DATS/count-one-bits.dats"
 
 staload "hashmap/SATS/bits-source.sats"
 
+staload UN = "prelude/SATS/unsafe.sats"
+
 (********************************************************************)
 
 (*
@@ -90,7 +92,7 @@ In the implementation below, an internal node is laid out as follows:
 
 stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
 
-prval _ = $UNSAFE.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
+prval _ = $UN.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
 prval _ = prop_verify {bitsizeof (uintptr) == BITSIZEOF_UINTPTR} ()
 
 symintr <<
@@ -251,7 +253,16 @@ lemma_new_node_vt_param :
 fn {}
 extract_static_length_of_node (node : node_vt) :<>
     [length : int] node_vt length =
-  $UNSAFE.castvwtp0 node
+  $UN.castvwtp0 node
+
+(********************************************************************)
+
+vtypedef leaf_free_vt (vt : vtype) = vt -<cloptr1> void
+vtypedef leaf_free_vt = [vt : vtype] leaf_free_vt vt
+
+fn {vt : vtype}
+leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool =
+  ptr_is_null ($UN.castvwtp1{Ptr} closure)
 
 (********************************************************************)
 
@@ -283,7 +294,7 @@ expired_node_vt_free
         } = node
 
     prval _ =
-      $UNSAFE.castview2void_at
+      $UN.castview2void_at
         {@[uintptr][length]} {@[link_vt?!][length]}
         {p + 2 * sizeof (uintptr)}
         pf_entries
@@ -383,14 +394,14 @@ get_entry_value
     (* Temporarily make the entries uintptr instead of link_vt,
        so one can copy their data without consuming their views. *)
     prval _ =
-      $UNSAFE.castview2void_at
+      $UN.castview2void_at
         {@[uintptr][length]} {@[link_vt][length]} {p_entries}
         pf_entries
 
     val entry_value = entries[index]
 
     prval _ =
-      $UNSAFE.castview2void_at
+      $UN.castview2void_at
         {@[link_vt][length]} {@[uintptr][length]} {p_entries}
         pf_entries
 
@@ -437,7 +448,7 @@ node_vt_to_new_node_vt
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
 
     prval _ =
-      $UNSAFE.castview2void_at {uintptr} {link_vt} pf_entry
+      $UN.castview2void_at {uintptr} {link_vt} pf_entry
 
     val new_node =
       @{
@@ -494,7 +505,7 @@ new_node_vt_to_node_vt
     val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
     val () = ptr_set<uintptr> (pf_entry | p_entry, value)
 
-    prval _ = $UNSAFE.castview2void_at {link_vt} {uintptr} pf_entry
+    prval _ = $UN.castview2void_at {link_vt} {uintptr} pf_entry
 
     prval pf_entry_right = array_v_cons (pf_entry, pf_right)
     prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
@@ -527,17 +538,17 @@ skip_unpopulated (population : uintptr,
 
 (* Rather than recursively deepen the stack, let us free nodes while
    also building up lists of more nodes to be freed. *)
-fn
-free_nodes {free_entry_p : addr}   (* May be null. *)
-           (nodes        : node_list_vt,
-            free_entry_p : ptr free_entry_p,
-            more_nodes   : &more_nodes_vt? >> more_nodes_vt) :
+fn {vt : vtype}
+free_nodes (nodes      : node_list_vt,
+            leaf_free  : !leaf_free_vt (vt) >> _,
+            more_nodes : &more_nodes_vt? >> more_nodes_vt) :
     void =
   let
     fun
     for_each_node
             {n          : int | 0 <= n} .<n>.
             (nodes      : node_list_vt n,
+             leaf_free  : !leaf_free_vt (vt) >> _,
              more_nodes : more_nodes_vt) : more_nodes_vt =
       case+ nodes of
       | ~ NIL => more_nodes
@@ -552,7 +563,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
           val [popcount : int] @(_ | length) =
             get_popcount (g1ofg0 population_map)
-          prval _ = $UNSAFE.prop_assert {length == popcount} ()
+          prval _ = $UN.prop_assert {length == popcount} ()
 
           fun
           for_each_bit
@@ -561,7 +572,8 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                   {p_node     : addr}
                   {i          : int | i <= length}
                   .<length - i>.
-                  (node       : !node_vt (length, p_node)
+                  (leaf_free  : !leaf_free_vt (vt) >> _,
+                   node       : !node_vt (length, p_node)
                                   >> expired_node_vt (length, p_node),
                    population : uintptr,
                    node_kinds : uintptr,
@@ -570,7 +582,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                    new_nodes  : node_list_vt) : node_list_vt =
             if i = length then
               let
-                prval _ = node := $UNSAFE.castvwtp0 node
+                prval _ = node := $UN.castvwtp0 node
               in
                 new_nodes
               end
@@ -588,43 +600,36 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                 if not is_leaf then
                   let
                     val entry = node[i]
-                    val next_node_p = $UNSAFE.cast{Ptr} entry
                     val next_node =
-                      $UNSAFE.castvwtp0{node_vt} next_node_p
+                      $UN.castvwtp0{node_vt} ($UN.cast{Ptr} entry)
                     val new_nodes = (next_node :: new_nodes)
                   in
-                    for_each_bit (node, population, node_kinds,
-                                  length, succ i, new_nodes)
+                    for_each_bit (leaf_free, node, population,
+                                  node_kinds, length, succ i,
+                                  new_nodes)
                   end
-                else if ptr_isnot_null free_entry_p then
+                else if not (leaf_free_vt_is_null leaf_free) then
                   let
-                    (* Cast free_entry_p to the closure it
-                       actually is. *)
-                    val free_func =
-                      $UNSAFE.castvwtp0{vt -<cloptr1> void}
-                        free_entry_p
-
                     val entry = node[i]
-                    val leaf = $UNSAFE.cast{ptr} entry
-                    val _ = free_func ($UNSAFE.castvwtp0{vt} leaf)
-
-                    (* The closure no longer is needed. *)
-                    prval _ = $UNSAFE.castvwtp0{void} free_func
+                    val leaf = $UN.castvwtp0{vt} ($UN.cast{ptr} entry)
+                    val _ = leaf_free (leaf)
                   in
-                    for_each_bit (node, population, node_kinds,
-                                  length, succ i, new_nodes)
+                    for_each_bit (leaf_free, node, population,
+                                  node_kinds, length, succ i,
+                                  new_nodes)
                   end
                 else
                   (* The entry need not be freed (and can be
                      regarded as an integer rather than a
                      pointer. *)
-                  for_each_bit (node, population, node_kinds,
-                                length, succ i, new_nodes)
+                  for_each_bit (leaf_free, node, population,
+                                node_kinds, length, succ i,
+                                new_nodes)
               end
 
           val new_nodes =
-            for_each_bit (node, population_map, node_kind_map,
-                          length, i2sz 0, NIL)
+            for_each_bit (leaf_free, node, population_map,
+                          node_kind_map, length, i2sz 0, NIL)
 
           (* Having freed its leaves, and listed its subnodes
              for later handling, now free the node itself. *)
@@ -632,18 +637,17 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
           prval _ = lemma_list_vt_param more_nodes
         in
-          for_each_node (tail, new_nodes :: more_nodes)
+          for_each_node (tail, leaf_free, new_nodes :: more_nodes)
         end
 
     prval _ = lemma_list_vt_param nodes
   in
-    more_nodes := for_each_node (nodes, NIL)
+    more_nodes := for_each_node (nodes, leaf_free, NIL)
   end
 
-fun
-free_more_nodes {free_entry_p : addr} (* May be null. *)
-                (free_entry_p : ptr free_entry_p,
-                 more_nodes   : more_nodes_vt) : void =
+fun {vt : vtype}
+free_more_nodes (leaf_free  : !leaf_free_vt (vt) >> _,
+                 more_nodes : more_nodes_vt) : void =
   (* The more_nodes list may temporarily grow, but should
      eventually shrink to NIL. *)
   case+ more_nodes of
@@ -652,28 +656,28 @@ free_more_nodes {free_entry_p : addr} (* May be null. *)
     let
       var yet_more_nodes : more_nodes_vt
     in
-      free_nodes (nodes, free_entry_p, yet_more_nodes);
-      free_more_nodes (free_entry_p,
+      free_nodes (nodes, leaf_free, yet_more_nodes);
+      free_more_nodes (leaf_free,
                        list_vt_reverse_append (yet_more_nodes, tail))
     end
 
-fn {}
-node_vt_free {length : int}
-             {p      : addr}
-             {free_entry_p : addr} (* May be null. *)
-             (node   : node_vt (length, p),
-              free_entry_p : ptr free_entry_p) : void =
-  free_more_nodes (free_entry_p, ((node :: NIL) :: NIL))  
+fn {vt : vtype}
+node_vt_free {length    : int}
+             {p         : addr}
+             (node      : node_vt (length, p),
+              leaf_free : !leaf_free_vt (vt) >> _) : void =
+  free_more_nodes (leaf_free, ((node :: NIL) :: NIL))  
 
 (********************************************************************)
 
 implement
-free_array_mapped_tree (node_p, free_entry_p) =
-  let
-    val node = $UNSAFE.castvwtp0{node_vt} node_p
-  in
-    node_vt_free (node, free_entry_p)
-  end
+free_array_mapped_tree (node_p, leaf_free_p) =
+  {
+    val node = $UN.castvwtp0{node_vt} node_p
+    val leaf_free = $UN.castvwtp0{leaf_free_vt} leaf_free_p
+    val _ = node_vt_free (node, leaf_free)
+    prval _ = $UN.castvwtp0{Ptr} leaf_free
+  }
 
 (********************************************************************)
 
@@ -707,7 +711,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
           (* Cast node_p to the node_vt it really is. *)
           val [length : int] node =
-            $UNSAFE.castvwtp0
+            $UN.castvwtp0
               {[length : int | length <= bitsizeof (uintptr)]
                node_vt (length, node_p)}
               node_p
@@ -725,7 +729,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
 
           val [popcount : int] @(_ | length) =
             get_popcount (g1ofg0 population_map)
-          prval _ = $UNSAFE.prop_assert {length == popcount} ()
+          prval _ = $UN.prop_assert {length == popcount} ()
 
           fun
           for_each_bit {vt         : vtype}
@@ -758,7 +762,7 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                   let
                     val entry = node_array[i + i2sz 2]
                     val [next_node_p : addr] next_node_p =
-                      $UNSAFE.cast{[p : addr] ptr p} entry
+                      $UN.cast{[p : addr] ptr p} entry
                     val new_nodes = (next_node_p :: new_nodes)
                   in
                     for_each_bit (pf_node | p_node, population,
@@ -770,15 +774,15 @@ free_nodes {free_entry_p : addr}   (* May be null. *)
                     (* Cast free_entry_p to the closure it
                        actually is. *)
                     val free_func =
-                      $UNSAFE.castvwtp0{vt -<cloptr1> void}
+                      $UN.castvwtp0{vt -<cloptr1> void}
                         free_entry_p
 
                     val entry = node_array[i + i2sz 2]
-                    val leaf = $UNSAFE.cast{ptr} entry
-                    val _ = free_func ($UNSAFE.castvwtp0{vt} leaf)
+                    val leaf = $UN.cast{ptr} entry
+                    val _ = free_func ($UN.castvwtp0{vt} leaf)
 
                     (* The closure no longer is needed. *)
-                    prval _ = $UNSAFE.castvwtp0{void} free_func
+                    prval _ = $UN.castvwtp0{void} free_func
                   in
                     for_each_bit (pf_node | p_node, population,
                                             node_kinds, length,
@@ -882,7 +886,7 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 
           val [index : int] @(_ | index) =
             get_popcount_low_bits (g1ofg0 population_map, i)
-          prval _ = $UNSAFE.prop_assert {index < length} ()
+          prval _ = $UN.prop_assert {index < length} ()
 
           val entry = node_array[index + 2]
         in
@@ -923,13 +927,13 @@ get_subtree_entry
   let
     (* Cast bits_source_p to the closure it really is. *)
     val bits_source =
-      $UNSAFE.castvwtp0{bits_source_cloptr (vt, NUM_BITS)}
+      $UN.castvwtp0{bits_source_cloptr (vt, NUM_BITS)}
         bits_source_p
 
     (* Cast index_data_p to a pointer to an object of type vt,
        by creating a view. *)
     val (pf_index_data | index_data) =
-      $UNSAFE.castvwtp0{(vt @ index_data_p | ptr index_data_p)}
+      $UN.castvwtp0{(vt @ index_data_p | ptr index_data_p)}
         index_data_p
 
     val [bits : int] (pf_bits | bits) =
@@ -937,10 +941,10 @@ get_subtree_entry
     prval _ = bits_source_bits_bounds pf_bits
 
     (* The view no longer is needed. *)
-    prval _ = $UNSAFE.castview2void{void} pf_index_data
+    prval _ = $UN.castview2void{void} pf_index_data
 
     (* The closure no longer is needed. *)
-    prval _ = $UNSAFE.castvwtp0{void} bits_source
+    prval _ = $UN.castvwtp0{void} bits_source
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       @{
@@ -951,7 +955,7 @@ get_subtree_entry
       let
         (* Cast node_p to the node_vt it really is. *)
         val [length : int] node =
-          $UNSAFE.castvwtp0
+          $UN.castvwtp0
             {[length : int | length <= bitsizeof (uintptr)]
              node_vt (length, node_p)}
             node_p
@@ -964,7 +968,7 @@ get_subtree_entry
             } = get_node_entry {length} {bits} (node, bits)
 
         (* The node_vt no longer is needed. *)
-        prval _ = $UNSAFE.castvwtp0{void} node
+        prval _ = $UN.castvwtp0{void} node
       in
         if not is_stored then
           @{
@@ -979,13 +983,13 @@ get_subtree_entry
         else
           let
             val [length1 : int] [p1 : addr] next_node =
-              $UNSAFE.castvwtp0{node_vt} value
+              $UN.castvwtp0{node_vt} value
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
             val result =
               get_subtree_entry {vt} {p1}
                                 {bits_source_p} {index_data_p}
-                                ($UNSAFE.castvwtp0{ptr p1} next_node,
+                                ($UN.castvwtp0{ptr p1} next_node,
                                  bits_source_p, index_data_p,
                                  succ depth)
           in
@@ -1036,11 +1040,11 @@ insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
 
     val [popcount : int] @(_ | length) =
       get_popcount (g1ofg0 population_map)
-    prval _ = $UNSAFE.prop_assert {length == popcount} ()
+    prval _ = $UN.prop_assert {length == popcount} ()
 
     val [index : int] @(_ | index) =
       get_popcount_low_bits (g1ofg0 population_map, i)
-    prval _ = $UNSAFE.prop_assert {index < length} ()
+    prval _ = $UN.prop_assert {index < length} ()
 
     val new_node = node_vt_alloc {length + 1} (length + 1)
     val @{
