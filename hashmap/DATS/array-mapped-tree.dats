@@ -177,6 +177,7 @@ vtypedef link_vt =
 prval _ = prop_verify {sizeof (link_vt) == sizeof (uintptr)} ()
 prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
 
+(* node_vt -- an internal node, fully formed. *)
 vtypedef node_vt (length : int, p : addr) =
   @{
     view_of_population_map = uintptr @ p,
@@ -190,6 +191,8 @@ vtypedef node_vt (length : int) =
 vtypedef node_vt =
   [length : int] node_vt (length)
 
+(* expired_node_vt -- what is left of an internal node, after its
+                      contents have been freed. *)
 vtypedef expired_node_vt (length : int, p : addr) =
   @{
     view_of_population_map = uintptr @ p,
@@ -204,6 +207,8 @@ vtypedef expired_node_vt (length : int) =
 vtypedef expired_node_vt =
   [length : int] expired_node_vt (length)
 
+(* new_node_vt -- an internal node, one of whose entries needs
+                  filling in. *)
 vtypedef new_node_vt (length : int, index : int, p : addr) =
   @{
     view_of_population_map = (uintptr?) @ p,
