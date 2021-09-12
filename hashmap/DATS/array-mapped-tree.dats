@@ -599,9 +599,8 @@ free_nodes (nodes      : node_list_vt,
               in
                 if not is_leaf then
                   let
-                    val entry = node[i]
-                    val next_node =
-                      $UN.castvwtp0{node_vt} ($UN.cast{Ptr} entry)
+                    val entry = $UN.cast{Ptr} node[i]
+                    val next_node = $UN.castvwtp0{node_vt} entry
                     val new_nodes = (next_node :: new_nodes)
                   in
                     for_each_bit (leaf_free, node, population,
@@ -610,8 +609,8 @@ free_nodes (nodes      : node_list_vt,
                   end
                 else if not (leaf_free_vt_is_null leaf_free) then
                   let
-                    val entry = node[i]
-                    val leaf = $UN.castvwtp0{vt} ($UN.cast{ptr} entry)
+                    val entry = $UN.cast{Ptr} node[i]
+                    val leaf = $UN.castvwtp0{vt} entry
                     val _ = leaf_free (leaf)
                   in
                     for_each_bit (leaf_free, node, population,
