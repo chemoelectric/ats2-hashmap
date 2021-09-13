@@ -27,6 +27,7 @@ along with this program. If not, see
 #include "share/atspre_staload.hats"
 
 #include "hashmap/HATS/config.hats"
+#include "hashmap/HATS/bits-source-include.hats"
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 
@@ -207,16 +208,16 @@ vtypedef expired_node_vt (length : int) =
 vtypedef expired_node_vt =
   [length : int] expired_node_vt (length)
 
-(* new_node_vt -- an internal node, one of whose entries needs
-                  filling in. *)
-vtypedef new_node_vt (length : int, index : int, p : addr) =
+(* expanded_node_vt -- an internal node, one of whose entries
+                       needs filling in. *)
+vtypedef expanded_node_vt (length : int, index : int, p : addr) =
   @{
     view_of_population_map = (uintptr?) @ p,
     view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
     view_of_left_entries =
       @[link_vt][index] @ (p + 2 * sizeof (uintptr)),
     view_of_new_entry =
-      (uintptr?)
+      (link_vt?)
         @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
     view_of_right_entries =
       @[link_vt][length - 1 - index]
@@ -225,10 +226,10 @@ vtypedef new_node_vt (length : int, index : int, p : addr) =
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
-vtypedef new_node_vt (length : int, index : int) =
-  [p : addr] new_node_vt (length, index, p)
-vtypedef new_node_vt =
-  [length, index : int] new_node_vt (length, index)
+vtypedef expanded_node_vt (length : int, index : int) =
+  [p : addr] expanded_node_vt (length, index, p)
+vtypedef expanded_node_vt =
+  [length, index : int] expanded_node_vt (length, index)
 
 extern praxi
 lemma_node_vt_param :
@@ -247,10 +248,10 @@ lemma_expired_node_vt_param :
     void
 
 extern praxi
-lemma_new_node_vt_param :
+lemma_expanded_node_vt_param :
   {length, index : int}
   {p : addr}
-  (!new_node_vt (length, index, p) >> _) -<prf>
+  (!expanded_node_vt (length, index, p) >> _) -<prf>
     [0 < length; length <= bitsizeof (uintptr);
      0 <= index; index < length]
     void
@@ -427,13 +428,13 @@ overload [] with get_entry_value
 (********************************************************************)
 
 fn {}
-node_vt_to_new_node_vt
+node_vt_to_expanded_node_vt
         {length, index : int | index < length}
         {p     : addr}
         (node  : node_vt (length, p),
          index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a new_node_vt. *)
-    new_node_vt (length, index, p) =
+    (* Returns the original node_vt recast as a expanded_node_vt. *)
+    expanded_node_vt (length, index, p) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -453,9 +454,9 @@ node_vt_to_new_node_vt
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
 
     prval _ =
-      $UN.castview2void_at {uintptr} {link_vt} pf_entry
+      $UN.castview2void_at {link_vt?} {link_vt} pf_entry
 
-    val new_node =
+    val expanded_node =
       @{
         view_of_population_map = pf_pop_map,
         view_of_node_kind_map = pf_kind_map,
@@ -466,14 +467,14 @@ node_vt_to_new_node_vt
         pointer = p
       }
   in
-    new_node
+    expanded_node
   end
 
 fn {}
-new_node_vt_to_node_vt
+expanded_node_vt_to_node_vt
         {length, index : int | index < length}
         {p            : addr}
-        (node         : new_node_vt (length, index, p),
+        (node         : expanded_node_vt (length, index, p),
          index        : size_t index,
          value        : uintptr,
          old_pop_map  : uintptr,
@@ -736,20 +737,7 @@ free_array_mapped_tree (node_p, leaf_free_p) =
 
 (********************************************************************)
 
-
-(*
-
-(********************************************************************)
-
-primplement
-lemma_node_vt_param {length} {p} (node) =
-  lemma_node_v_param {length} {p} node.view
-
-primplement
-lemma_node_vt_bound {length} {p} (node) =
-  lemma_node_v_bound {length} {p} node.view
-
-(********************************************************************)
+typedef get_entry_t = array_mapped_tree_get_entry_t
 
 typedef node_entry_t =
   @{
@@ -765,86 +753,55 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
                 i      : uint i) :
     node_entry_t =
   let
-    val @{
-          view = pf_node,
-          mfree = mfree |
-          pointer = p_node
-        } = node
-    prval _ = lemma_node_v_param {length} pf_node
-    macdef node_array = !p_node
+    prval _ = lemma_node_vt_param {length} node
+    prval _ = prop_verify {0 <= length} ()
 
-    val population_map = node_array[0]
+    prval _ = lemma_g1uint_param i
+    prval _ = prop_verify {0 <= i} ()
+
+    val population_map = get_population_map (node)
     val bit_selection_mask = (one << (u2i i))
     val is_stored = ((population_map <*> bit_selection_mask) <> zero)
-
-    val result =
-      if is_stored then
-        let
-          val node_kind_map = node_array[1]
-          val is_leaf =
-            ((node_kind_map <*> bit_selection_mask) <> zero)
-
-          val [index : int] @(_ | index) =
-            get_popcount_low_bits (g1ofg0 population_map, i)
-          prval _ = $UN.prop_assert {index < length} ()
-
-          val entry = node_array[index + 2]
-        in
-          @{
-            is_leaf = is_leaf,
-            is_stored = true,
-            value = entry
-          }
-        end
-      else
-        @{
-          is_leaf = true,
-          is_stored = false,
-          value = zero
-        }
-
-    prval _ = node :=
-      @{
-        view = pf_node,
-        mfree = mfree |
-        pointer = p_node
-      }
   in
-    result
+    if is_stored then
+      let
+        val node_kind_map = get_node_kind_map (node)
+        val is_leaf =
+          ((node_kind_map <*> bit_selection_mask) <> zero)
+
+        val [index : int] @(_ | index) =
+          get_popcount_low_bits (g1ofg0 population_map, i)
+        prval _ = $UN.prop_assert {index < length} ()
+
+        val entry = node[i2sz index]
+      in
+        @{
+          is_leaf = is_leaf,
+          is_stored = true,
+          value = entry
+        }
+      end
+    else
+      @{
+        is_leaf = true,
+        is_stored = false,
+        value = zero
+      }
   end
 
-fun
+fun {vt : vtype} {hash_vt : vt@ype}
 get_subtree_entry
-          {vt            : vtype}
-          {node_p        : addr}
-          {bits_source_p : addr}
-          {index_data_p  : addr}
-          (node_p        : ptr node_p,
-           bits_source_p : ptr bits_source_p,
-           index_data_p  : ptr index_data_p,
-           depth         : uint) :
-    array_mapped_tree_get_entry_t =
+        {length      : int | length <= bitsizeof (uintptr)}
+        (node        : !node_vt (length) >> _,
+         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         index_data  : &hash_vt >> _,
+         depth       : uint) : get_entry_t =
   let
-    (* Cast bits_source_p to the closure it really is. *)
-    val bits_source =
-      $UN.castvwtp0{bits_source_cloptr (vt, NUM_BITS)}
-        bits_source_p
-
-    (* Cast index_data_p to a pointer to an object of type vt,
-       by creating a view. *)
-    val (pf_index_data | index_data) =
-      $UN.castvwtp0{(vt @ index_data_p | ptr index_data_p)}
-        index_data_p
-
     val [bits : int] (pf_bits | bits) =
-      bits_source (!index_data, depth)
+      bits_source (index_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
-
-    (* The view no longer is needed. *)
-    prval _ = $UN.castview2void{void} pf_index_data
-
-    (* The closure no longer is needed. *)
-    prval _ = $UN.castvwtp0{void} bits_source
+    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
+    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       @{
@@ -853,22 +810,11 @@ get_subtree_entry
       }
     else
       let
-        (* Cast node_p to the node_vt it really is. *)
-        val [length : int] node =
-          $UN.castvwtp0
-            {[length : int | length <= bitsizeof (uintptr)]
-             node_vt (length, node_p)}
-            node_p
-
-        val bits = g1int2uint<intknd,uintknd> bits
         val @{
               is_leaf = is_leaf,
               is_stored = is_stored,
               value = value
-            } = get_node_entry {length} {bits} (node, bits)
-
-        (* The node_vt no longer is needed. *)
-        prval _ = $UN.castvwtp0{void} node
+            } = get_node_entry<> {length} {bits} (node, g1i2u bits)
       in
         if not is_stored then
           @{
@@ -883,15 +829,12 @@ get_subtree_entry
         else
           let
             val [length1 : int] [p1 : addr] next_node =
-              $UN.castvwtp0{node_vt} value
+              $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
-            prval _ = lemma_node_vt_bound {length1} {p1} (next_node)
             val result =
-              get_subtree_entry {vt} {p1}
-                                {bits_source_p} {index_data_p}
-                                ($UN.castvwtp0{ptr p1} next_node,
-                                 bits_source_p, index_data_p,
-                                 succ depth)
+              get_subtree_entry<vt><hash_vt>
+                (next_node, bits_source, index_data, succ depth)
+            prval _ = $UN.castvwtp0{Ptr} next_node
           in
             result
           end
@@ -901,9 +844,44 @@ get_subtree_entry
 implement
 array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                             (node_p, bits_source_p, index_data_p) =
-  get_subtree_entry {..} {node_p} {bits_source_p} {index_data_p}
-                    (node_p, bits_source_p, index_data_p, 0U)
+  let
+    fn {}
+    get_result {node_p        : addr}
+               {bits_source_p : addr}
+               {index_data_p  : addr}
+               {vt            : vtype}
+               {hash_vt       : vt@ype}
+               (node_p        : ptr node_p,
+                bits_source_p : ptr bits_source_p,
+                index_data_p  : ptr index_data_p) : get_entry_t =
+      let
+        val node = $UN.castvwtp0{node_vt} node_p
+        val bits_source =
+          $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
+                         bits_source_p
+        val index_data =
+          $UN.castvwtp0 {@(hash_vt @ index_data_p | ptr index_data_p)}
+                        index_data_p
 
+        prval _ = lemma_node_vt_param node
+        val result =
+          get_subtree_entry<vt><hash_vt> (node, bits_source,
+                                          !(index_data.1), 0U)
+
+        prval _ = $UN.castvwtp0{Ptr} node
+        prval _ = $UN.castvwtp0{Ptr} bits_source
+        prval _ = $UN.castvwtp0{Ptr} index_data
+      in
+        result
+      end
+  in
+    get_result<> {node_p} {bits_source_p} {index_data_p}
+                 (node_p, bits_source_p, index_data_p)
+  end
+
+
+
+(*
 (********************************************************************)
 
 fn
