@@ -841,6 +841,8 @@ get_subtree_entry
       end
   end
 
+(********************************************************************)
+
 implement
 array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                             (node_p, bits_source_p, index_data_p) =
@@ -882,6 +884,7 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                  (node_p, bits_source_p, index_data_p)
   end
 
+(********************************************************************)
 
 
 (*
