@@ -208,9 +208,9 @@ vtypedef expired_node_vt (length : int) =
 vtypedef expired_node_vt =
   [length : int] expired_node_vt (length)
 
-(* expanded_node_vt -- an internal node, one of whose entries
-                       needs filling in. *)
-vtypedef expanded_node_vt (length : int, index : int, p : addr) =
+(* slotted_node_vt -- an internal node, one of whose entries
+                      needs filling in. *)
+vtypedef slotted_node_vt (length : int, index : int, p : addr) =
   @{
     view_of_population_map = (uintptr?) @ p,
     view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
@@ -226,10 +226,10 @@ vtypedef expanded_node_vt (length : int, index : int, p : addr) =
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
-vtypedef expanded_node_vt (length : int, index : int) =
-  [p : addr] expanded_node_vt (length, index, p)
-vtypedef expanded_node_vt =
-  [length, index : int] expanded_node_vt (length, index)
+vtypedef slotted_node_vt (length : int, index : int) =
+  [p : addr] slotted_node_vt (length, index, p)
+vtypedef slotted_node_vt =
+  [length, index : int] slotted_node_vt (length, index)
 
 extern praxi
 lemma_node_vt_param :
@@ -248,10 +248,10 @@ lemma_expired_node_vt_param :
     void
 
 extern praxi
-lemma_expanded_node_vt_param :
+lemma_slotted_node_vt_param :
   {length, index : int}
   {p : addr}
-  (!expanded_node_vt (length, index, p) >> _) -<prf>
+  (!slotted_node_vt (length, index, p) >> _) -<prf>
     [0 < length; length <= bitsizeof (uintptr);
      0 <= index; index < length]
     void
@@ -428,13 +428,13 @@ overload [] with get_entry_value
 (********************************************************************)
 
 fn {}
-node_vt_to_expanded_node_vt
+node_vt_to_slotted_node_vt
         {length, index : int | index < length}
         {p     : addr}
         (node  : node_vt (length, p),
          index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a expanded_node_vt. *)
-    expanded_node_vt (length, index, p) =
+    (* Returns the original node_vt recast as a slotted_node_vt. *)
+    slotted_node_vt (length, index, p) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -456,7 +456,7 @@ node_vt_to_expanded_node_vt
     prval _ =
       $UN.castview2void_at {link_vt?} {link_vt} pf_entry
 
-    val expanded_node =
+    val slotted_node =
       @{
         view_of_population_map = pf_pop_map,
         view_of_node_kind_map = pf_kind_map,
@@ -467,14 +467,14 @@ node_vt_to_expanded_node_vt
         pointer = p
       }
   in
-    expanded_node
+    slotted_node
   end
 
 fn {}
-expanded_node_vt_to_node_vt
+slotted_node_vt_to_node_vt
         {length, index : int | index < length}
         {p            : addr}
-        (node         : expanded_node_vt (length, index, p),
+        (node         : slotted_node_vt (length, index, p),
          index        : size_t index,
          value        : uintptr,
          old_pop_map  : uintptr,
