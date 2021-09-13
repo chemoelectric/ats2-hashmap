@@ -855,6 +855,7 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                 bits_source_p : ptr bits_source_p,
                 index_data_p  : ptr index_data_p) : get_entry_t =
       let
+        (* Create linear types from the pointers. *)
         val node = $UN.castvwtp0{node_vt} node_p
         val bits_source =
           $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
@@ -863,11 +864,13 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
           $UN.castvwtp0 {@(hash_vt @ index_data_p | ptr index_data_p)}
                         index_data_p
 
+        (* Search in the tree. *)
         prval _ = lemma_node_vt_param node
         val result =
           get_subtree_entry<vt><hash_vt> (node, bits_source,
                                           !(index_data.1), 0U)
 
+        (* Consume the linear types. *)
         prval _ = $UN.castvwtp0{Ptr} node
         prval _ = $UN.castvwtp0{Ptr} bits_source
         prval _ = $UN.castvwtp0{Ptr} index_data
