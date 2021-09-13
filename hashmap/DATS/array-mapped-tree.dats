@@ -216,7 +216,7 @@ vtypedef new_node_vt (length : int, index : int, p : addr) =
     view_of_left_entries =
       @[link_vt][index] @ (p + 2 * sizeof (uintptr)),
     view_of_new_entry =
-      uintptr
+      (uintptr?)
         @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
     view_of_right_entries =
       @[link_vt][length - 1 - index]
