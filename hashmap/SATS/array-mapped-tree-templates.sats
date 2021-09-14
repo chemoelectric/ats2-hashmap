@@ -243,6 +243,7 @@ node_vt_free {length    : int}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
 
+// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 fun {vt : vtype} {hash_vt : vt@ype} // FIXME -- deal with key equality, chaining, etc. // FIXME // FIXME // FIXME // FIXME
 get_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
@@ -250,5 +251,6 @@ get_subtree_entry
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          index_data  : &hash_vt >> _,
          depth       : uint) : array_mapped_tree_get_entry_t
+// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 
 (********************************************************************)

@@ -821,6 +821,8 @@ node_vt_free (node, leaf_free) =
 
 (********************************************************************)
 
+// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
+
 typedef node_entry_t =
   @{
     is_leaf = bool,
@@ -927,5 +929,7 @@ implement {vt} {hash_vt}
 get_subtree_entry {length} (node, bits_source, index_data, depth) =
   get_subtree_entry__loop<vt><hash_vt>
     {length} (node, bits_source, index_data, depth)
+
+// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 
 (********************************************************************)
