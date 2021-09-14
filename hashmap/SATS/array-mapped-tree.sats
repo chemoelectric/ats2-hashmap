@@ -29,7 +29,7 @@ typedef array_mapped_tree_vt =
   [node_p : addr] array_mapped_tree_vt node_p
 
 fun
-free_array_mapped_tree
+array_mapped_tree_free
         {node_p       : addr}
         {free_entry_p : addr}   (* May be null. *)
         (node_p       : array_mapped_tree_vt node_p,

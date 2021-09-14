@@ -30,6 +30,7 @@ along with this program. If not, see
 #include "hashmap/HATS/bits-source-include.hats"
 
 staload "hashmap/SATS/array-mapped-tree.sats"
+staload "hashmap/SATS/array-mapped-tree-templates.sats"
 
 staload "hashmap/SATS/array_prf.sats"
 
@@ -89,12 +90,17 @@ In the implementation below, an internal node is laid out as follows:
 
 (********************************************************************)
 
+(*
 #define NUM_BITS SIZEOF_BITINDEXOF_UINTPTR
 
 stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
+*)
 
 prval _ = $UN.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
 prval _ = prop_verify {bitsizeof (uintptr) == BITSIZEOF_UINTPTR} ()
+
+prval _ = prop_verify {sizeof (link_vt) == sizeof (uintptr)} ()
+prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
 
 symintr <<
 infixl ( * ) <<
@@ -169,14 +175,6 @@ get_popcount_low_bits {population_map : int}
   end
 
 (********************************************************************)
-
-absview link_v
-
-vtypedef link_vt =
-  @(link_v | uintptr)
-
-prval _ = prop_verify {sizeof (link_vt) == sizeof (uintptr)} ()
-prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
 
 (* node_vt -- an internal node, fully formed. *)
 vtypedef node_vt (length : int, p : addr) =
@@ -276,43 +274,14 @@ vtypedef new_length2_node_vt (p : addr) =
     pointer = ptr p
   }
 
-extern praxi
-lemma_node_vt_param :
-  {length : int}
-  {p : addr}
-  (!node_vt (length, p) >> _) -<prf>
-    [0 < length; length <= bitsizeof (uintptr)]
-    void
-
-extern praxi
-lemma_expired_node_vt_param :
-  {length : int}
-  {p : addr}
-  (!expired_node_vt (length, p) >> _) -<prf>
-    [0 < length; length <= bitsizeof (uintptr)]
-    void
-
-extern praxi
-lemma_slotted_node_vt_param :
-  {length, index : int}
-  {p : addr}
-  (!slotted_node_vt (length, index, p) >> _) -<prf>
-    [0 < length; length <= bitsizeof (uintptr);
-     0 <= index; index < length]
-    void
-
-fn {}
-extract_static_length_of_node (node : node_vt) :<>
-    [length : int] node_vt length =
+implement {}
+extract_static_length_of_node (node) =
   $UN.castvwtp0 node
 
 (********************************************************************)
 
-vtypedef leaf_free_vt (vt : vtype) = vt -<cloptr1> void
-vtypedef leaf_free_vt = [vt : vtype] leaf_free_vt vt
-
-fn {vt : vtype}
-leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool =
+implement {vt}
+leaf_free_vt_is_null (closure) =
   ptr_is_null ($UN.castvwtp1{Ptr} closure)
 
 (********************************************************************)
@@ -669,14 +638,14 @@ vtypedef node_list_vt = [n : int] node_list_vt n
 vtypedef more_nodes_vt (n : int) = list_vt (node_list_vt, n)
 vtypedef more_nodes_vt = [n : int] more_nodes_vt n
 
-fun
+fun {}
 skip_unpopulated (population : uintptr,
                   node_kinds : uintptr) :
     @(uintptr, uintptr) =
   if (population <*> one) <> zero then
     @(population, node_kinds)
   else
-    skip_unpopulated (population >> 1, node_kinds >> 1)
+    skip_unpopulated<> (population >> 1, node_kinds >> 1)
 
 (* Rather than recursively deepen the stack, let us free nodes while
    also building up lists of more nodes to be freed. *)
@@ -737,7 +706,7 @@ free_nodes (nodes      : node_list_vt,
                 prval _ = prop_verify {0 <= restlen} ()
 
                 val @(population, node_kinds) =
-                  skip_unpopulated (population, node_kinds)
+                  skip_unpopulated<> (population, node_kinds)
                 val is_leaf = ((node_kinds <*> one) <> zero)
 
                 prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
@@ -853,27 +822,11 @@ free_more_nodes (leaf_free  : !leaf_free_vt (vt) >> _,
         (leaf_free, list_vt_reverse_append (yet_more_nodes, tail))
     end
 
-fn {vt : vtype}
-node_vt_free {length    : int}
-             {p         : addr}
-             (node      : node_vt (length, p),
-              leaf_free : !leaf_free_vt (vt) >> _) : void =
+implement {vt}
+node_vt_free (node, leaf_free) =
   free_more_nodes<vt> (leaf_free, ((node :: NIL) :: NIL))  
 
 (********************************************************************)
-
-implement
-free_array_mapped_tree (node_p, leaf_free_p) =
-  {
-    val node = $UN.castvwtp0{node_vt} node_p
-    val leaf_free = $UN.castvwtp0{leaf_free_vt} leaf_free_p
-    val _ = node_vt_free (node, leaf_free)
-    prval _ = $UN.castvwtp0{Ptr} leaf_free
-  }
-
-(********************************************************************)
-
-typedef get_entry_t = array_mapped_tree_get_entry_t
 
 typedef node_entry_t =
   @{
@@ -926,12 +879,12 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
   end
 
 fun {vt : vtype} {hash_vt : vt@ype}
-get_subtree_entry
+get_subtree_entry__loop
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          index_data  : &hash_vt >> _,
-         depth       : uint) : get_entry_t =
+         depth       : uint) : array_mapped_tree_get_entry_t =
   let
     val [bits : int] (pf_bits | bits) =
       bits_source (index_data, depth)
@@ -968,7 +921,7 @@ get_subtree_entry
               $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             val result =
-              get_subtree_entry<vt><hash_vt>
+              get_subtree_entry__loop<vt><hash_vt>
                 (next_node, bits_source, index_data, succ depth)
             prval _ = $UN.castvwtp0{Ptr} next_node
           in
@@ -977,137 +930,9 @@ get_subtree_entry
       end
   end
 
-(********************************************************************)
-
-implement
-array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
-                            (node_p, bits_source_p, index_data_p) =
-  let
-    fn {}
-    get_result {node_p        : addr}
-               {bits_source_p : addr}
-               {index_data_p  : addr}
-               {vt            : vtype}
-               {hash_vt       : vt@ype}
-               (node_p        : ptr node_p,
-                bits_source_p : ptr bits_source_p,
-                index_data_p  : ptr index_data_p) : get_entry_t =
-      let
-        (* Create linear types from the pointers. *)
-        val node = $UN.castvwtp0{node_vt} node_p
-        val bits_source =
-          $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
-                         bits_source_p
-        val index_data =
-          $UN.castvwtp0 {@(hash_vt @ index_data_p | ptr index_data_p)}
-                        index_data_p
-
-        (* Search in the tree. *)
-        prval _ = lemma_node_vt_param node
-        val result =
-          get_subtree_entry<vt><hash_vt> (node, bits_source,
-                                          !(index_data.1), 0U)
-
-        (* Consume the linear types. *)
-        prval _ = $UN.castvwtp0{Ptr} node
-        prval _ = $UN.castvwtp0{Ptr} bits_source
-        prval _ = $UN.castvwtp0{Ptr} index_data
-      in
-        result
-      end
-  in
-    get_result<> {node_p} {bits_source_p} {index_data_p}
-                 (node_p, bits_source_p, index_data_p)
-  end
+implement {vt} {hash_vt}
+get_subtree_entry {length} (node, bits_source, index_data, depth) =
+  get_subtree_entry__loop<vt><hash_vt>
+    {length} (node, bits_source, index_data, depth)
 
 (********************************************************************)
-
-
-(*
-(********************************************************************)
-
-fn
-insert_node_entry {length  : int | length <= bitsizeof (uintptr)}
-                  {i       : int | i < bitsizeof (uintptr)}
-                  (node    : node_vt (length),
-                   i       : uint i,
-                   is_leaf : bool) :
-    (* Return the new node and a pointer to the new entry. *)
-    @(node_vt (length + 1), Ptr) =
-  let
-    prval _ = lemma_g1uint_param i
-
-    val @{
-          view = pf_node,
-          mfree = pf_mfree |
-          pointer = p_node
-        } = node
-    prval _ = lemma_node_v_param {length} pf_node
-    macdef node_array = !p_node
-
-    val new_bit = (one << (u2i i))
-
-    val population_map = node_array[0]
-    val new_population_map = population_map <+> new_bit
-    val _ = assertloc (new_population_map != population_map)
-
-    val node_kind_map = node_array[1]
-    val new_node_kind_map =
-      if is_leaf then
-        node_kind_map <+> new_bit
-      else
-        node_kind_map
-
-    val [popcount : int] @(_ | length) =
-      get_popcount (g1ofg0 population_map)
-    prval _ = $UN.prop_assert {length == popcount} ()
-
-    val [index : int] @(_ | index) =
-      get_popcount_low_bits (g1ofg0 population_map, i)
-    prval _ = $UN.prop_assert {index < length} ()
-
-    val new_node = node_vt_alloc {length + 1} (length + 1)
-    val @{
-          view = pf_new_node,
-          mfree = pf_new_mfree |
-          pointer = p_new_node
-        } = new_node
-    prval _ = lemma_node_v_param {length + 1} pf_new_node
-    macdef new_node_array = !p_new_node
-
-    val _ = new_node_array[0] := new_population_map
-    val _ = new_node_array[1] := new_node_kind_map
-
-    (* Copy data that goes before the new entry. *)
-    val _ =
-      array_copy_elements<uintptr>
-        {length + 3, length + 2} {2, 2} {index}
-        (new_node_array, i2sz 2,
-         node_array, i2sz 2,
-         g1i2u index)
-
-    (* Copy data that goes after the new entry. *)
-    val _ =
-      array_copy_elements<uintptr>
-        {length + 3, length + 2} {3 + index, 2 + index}
-        {length - index}
-        (new_node_array, i2sz 3 + index,
-         node_array, i2sz 2 + index,
-         length - g1i2u index)
-
-    val _ = node_vt_free {length} @{view = pf_node,
-                                    mfree = pf_mfree |
-                                    pointer = p_node}
-
-    val entry_index = index + i2sz 2
-    val entry_p = ptr_add<uintptr> (p_new_node, entry_index)
-  in
-    @(@{view = pf_new_node,
-        mfree = pf_new_mfree |
-        pointer = p_new_node},
-      entry_p)
-  end
-
-(********************************************************************)
-
-*)
