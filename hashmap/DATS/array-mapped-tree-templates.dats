@@ -561,6 +561,23 @@ slotted_node_vt_to_node_vt
 
 (********************************************************************)
 
+fn {vt : vtype}
+apply_leaf_free (leaf_free : !leaf_free_vt (vt) >> _,
+                 leaf      : vt) : void =
+  if not (leaf_free_vt_is_null leaf_free) then
+    (* The leaf is of a linear type, and must be freed.
+       Free it now. *)
+    leaf_free (leaf)
+  else
+    (* The leaf_free closure is actually a null pointer.
+       Assume the leaf is of a nonlinear type that needs
+       no freeing. (This way we avoid calling a closure.) *)
+    {
+      prval _ = $UN.castvwtp0{vt?!} leaf
+    }
+
+(********************************************************************)
+
 vtypedef node_list_vt (n : int) = list_vt (node_vt, n)
 vtypedef node_list_vt = [n : int] node_list_vt n
 
@@ -569,12 +586,13 @@ vtypedef more_nodes_vt = [n : int] more_nodes_vt n
 
 fun {}
 skip_unpopulated (population : uintptr,
-                  leaves     : uintptr) :
-    @(uintptr, uintptr) =
+                  leaves     : uintptr,
+                  chains     : uintptr) :
+    @(uintptr, uintptr, uintptr) =
   if (population <*> one) <> zero then
-    @(population, leaves)
+    @(population, leaves, chains)
   else
-    skip_unpopulated<> (population >> 1, leaves >> 1)
+    skip_unpopulated<> (population >> 1, leaves >> 1, chains >> 1)
 
 (* Rather than recursively deepen the stack, let us free nodes while
    also building up lists of more nodes to be freed. *)
@@ -600,6 +618,7 @@ free_nodes (nodes      : node_list_vt,
 
           val population_map = get_population_map (node)
           val leaf_map = get_leaf_map (node)
+          val chaining_map = get_chaining_map (node)
 
           prval _ = lemma_node_vt_param {length} node
 
@@ -617,6 +636,7 @@ free_nodes (nodes      : node_list_vt,
                    leaf_free  : !leaf_free_vt (vt) >> _,
                    population : uintptr,
                    leaves     : uintptr,
+                   chains     : uintptr,
                    p_entries  : ptr p_entries,
                    restlen    : size_t restlen,
                    new_nodes  : node_list_vt) : node_list_vt =
@@ -634,18 +654,66 @@ free_nodes (nodes      : node_list_vt,
                 prval _ = lemma_array_v_param pf_entries
                 prval _ = prop_verify {0 <= restlen} ()
 
-                val @(population, leaves) =
-                  skip_unpopulated<> (population, leaves)
+                val @(population, leaves, chains) =
+                  skip_unpopulated<> (population, leaves, chains)
                 val is_leaf = ((leaves <*> one) <> zero)
+                val is_chain = is_leaf && ((leaves <*> one) <> zero)
 
+                (* Separate the entries into the first entry and
+                   and array of the remaining entries. *)
                 prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
                 val p_rest = ptr_succ<link_vt> (p_entries)
 
-                (* Render the entry expired. *)
+                (* Render that first entry "expired". *)
                 prval _ =
                   $UN.castview2void_at {link_t} {link_vt} {p_entries}
                                        pf_entry
-              in
+
+                fn {}
+                free_one_leaf
+                        (pf_entry  : !(link_t @ p_entries) >> _ |
+                         leaf_free : !leaf_free_vt (vt) >> _) :
+                    void =
+                  if not (leaf_free_vt_is_null leaf_free) then
+                    (* The leaf is of a linear type, and must be
+                       freed. Free it now. *)
+                    let
+                      val entry =
+                        ptr_get<link_t> (pf_entry | p_entries)
+                    in
+                      leaf_free
+                        ($UN.castvwtp0{vt} ($UN.cast{Ptr} entry))
+                    end
+
+                fn {}
+                free_leaf_list
+                        (pf_entry  : !(link_t @ p_entries) >> _ |
+                         leaf_free : !leaf_free_vt (vt) >> _) :
+                    void =
+                  {
+                    fun
+                    loop {n : int | 0 <= n} .<n>.
+                         (pf_entry  : !(link_t @ p_entries) >> _ |
+                          leaf_free : !leaf_free_vt (vt) >> _,
+                          lst       : list_vt (vt, n)) : void =
+                      case+ lst of
+                      | ~ NIL => ()
+                      | ~ head :: tail =>
+                        begin
+                          apply_leaf_free (leaf_free, head);
+                          loop (pf_entry | leaf_free, tail)
+                        end
+                    val entry = ptr_get<link_t> (pf_entry | p_entries)
+                    val entry_p = $UN.cast{Ptr} entry
+                    val lst = $UN.castvwtp0{List1_vt vt} entry_p
+                    val () = loop (pf_entry | leaf_free, lst)
+                  }
+
+                fn {}
+                free_one_entry
+                        (pf_entry  : !(link_t @ p_entries) >> _ |
+                         leaf_free : !leaf_free_vt (vt) >> _,
+                         new_nodes  : node_list_vt) : node_list_vt =
                 if not is_leaf then
                   (* The expired entry is a subnode, and must be
                      freed. Add it to a list for freeing later. *)
@@ -653,50 +721,45 @@ free_nodes (nodes      : node_list_vt,
                     val entry = ptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
                     val next_node = $UN.castvwtp0{node_vt} entry_p
-                    val new_nodes = next_node :: new_nodes
-                    val result =
-                      for_each_bit<vt>
-                        {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, leaves,
-                                   p_rest, pred restlen, new_nodes)
-                    prval _ = pf_entries :=
-                      array_v_cons (pf_entry, pf_rest)
+                    prval _ = lemma_list_vt_param new_nodes
                   in
-                    result
+                    next_node :: new_nodes
                   end
-                else if not (leaf_free_vt_is_null leaf_free) then
-                  (* The expired entry is a leaf that must be
-                     freed. Free it now. *)
-                  let
-                    val entry = ptr_get<link_t> (pf_entry | p_entries)
-                    val entry_p = $UN.cast{Ptr} entry
-                    val leaf = $UN.castvwtp0{vt} entry_p
-                    val _ = leaf_free (leaf)
-                    val result =
-                      for_each_bit<vt>
-                        {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, leaves,
-                                   p_rest, pred restlen, new_nodes)
-                    prval _ = pf_entries :=
-                      array_v_cons (pf_entry, pf_rest)
-                  in
-                    result
+                else if is_chain then
+                  (* The expired entry is a separate chain of leaves:
+                     a linked list. *)
+                  begin
+                    if not (leaf_free_vt_is_null leaf_free) then
+                      free_leaf_list<> (pf_entry | leaf_free);
+                    new_nodes
                   end
                 else
-                  (* The expired entry is a leaf that need not be
-                     freed (and which can be regarded as an integer
-                     rather than a pointer). *)
-                  let
-                    val result =
-                      for_each_bit<vt>
-                        {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, leaves,
-                                   p_rest, pred restlen, new_nodes)
-                    prval _ = pf_entries :=
-                      array_v_cons (pf_entry, pf_rest)
-                  in
-                    result
+                  begin
+                    (* The expired entry is a leaf without
+                       chaining. *)
+                    free_one_leaf<> (pf_entry | leaf_free);
+                    new_nodes
                   end
+
+                (* Free the first entry, or list it to be freed
+                   later. *)
+                val new_nodes =
+                  free_one_entry (pf_entry | leaf_free, new_nodes)
+
+                (* For each of the remaining entries, either free
+                   it now or list it to be freed later. *)
+                val result =
+                  for_each_bit<vt>
+                    {p_entries + sizeof (link_vt)} {restlen - 1}
+                    (pf_rest | leaf_free, population, leaves,
+                               chains, p_rest, pred restlen,
+                               new_nodes)
+
+                (* Recombine the views. *)
+                prval _ = pf_entries :=
+                  array_v_cons (pf_entry, pf_rest)
+              in
+                result
               end
 
           val @{
@@ -711,7 +774,7 @@ free_nodes (nodes      : node_list_vt,
             for_each_bit<vt>
               {..} {length}
               (pf_entries | leaf_free, population_map, leaf_map,
-                            entries_ptr p, length, NIL)
+                            chaining_map, entries_ptr p, length, NIL)
           val node : expired_node_vt =
             @{
               view_of_population_map = pf_pop_map,
