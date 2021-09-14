@@ -46,56 +46,6 @@ staload UN = "prelude/SATS/unsafe.sats"
 
 (********************************************************************)
 
-(*
-
-References:
-  [1] Phil Bagwell, "Fast and space efficient trie searches", 2000.
-  [2] Phil Bagwell, "Ideal hash trees", 2001.
-
-
-The implementation below structures the nodes differently from how
-Bagwell [2] does.
-
-Of the following reasons for doing this, the first is by far the more
-important:
-
-  * Bagwell's toggling of the LSB of a pointer is incompatible with
-    Boehm GC. The collector might (and surely often would) collect
-    nodes that were pointed to by pointers that had their LSB set.
-
-  * Furthermore, Bagwell's scheme would not work if, for any reason,
-    an object might be placed at an odd address. (This is not
-    typical of how things are done, but it COULD be done, for
-    instance, on AMD64.)
-
-  * The structures implemented here have obvious uses as integer maps,
-    integer sets, hash sets, etc.
-
-In the implementation below, an internal node is laid out as follows:
-
-    population_map (uintptr)   -- used to compute indices into the
-                                  array of *this* node.
-    node_kind_map  (uintptr)   -- if a bit is set, the corresponding
-                                  array entry is or points to a
-                                  leaf node.
-    entry 0        (uintptr)
-    entry 1        (uintptr)
-    entry 2        (uintptr)
-       .
-       .
-       .
-    entry N        (uintptr)   -- where N < sizeof (uintptr)
-
-*)
-
-(********************************************************************)
-
-(*
-#define NUM_BITS SIZEOF_BITINDEXOF_UINTPTR
-
-stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
-*)
-
 prval _ = $UN.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
 prval _ = prop_verify {bitsizeof (uintptr) == BITSIZEOF_UINTPTR} ()
 
@@ -138,6 +88,32 @@ macdef one = g1int2uint<intknd,uintptrknd> 1
 (********************************************************************)
 
 fn {}
+population_map_ptr {p : addr}
+                   (p : ptr p) :<>
+    ptr (population_map_addr p) =
+  p
+
+fn {}
+leaf_map_ptr {p : addr}
+             (p : ptr p) :<>
+    ptr (leaf_map_addr p) =
+  ptr_succ<uintptr> (p)
+
+fn {}
+chaining_map_ptr {p : addr}
+                 (p : ptr p) :<>
+    ptr (chaining_map_addr p) =
+  ptr_add<uintptr> (p, 2)
+
+fn {}
+entries_ptr {p : addr}
+            (p : ptr p) :<>
+    ptr (entries_addr p) =
+  ptr_add<uintptr> (p, 3)
+
+(********************************************************************)
+
+fn {}
 get_popcount {population_map : int}
              (population_map : uintptr population_map) :<>
     [popcount : int | 0 <= popcount; popcount <= BITSIZEOF_UINTPTR]
@@ -176,104 +152,6 @@ get_popcount_low_bits {population_map : int}
 
 (********************************************************************)
 
-(* node_vt -- an internal node, fully formed. *)
-vtypedef node_vt (length : int, p : addr) =
-  @{
-    view_of_population_map = uintptr @ p,
-    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt][length] @ (p + 2 * sizeof (uintptr)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-vtypedef node_vt (length : int) =
-  [p : addr] node_vt (length, p)
-vtypedef node_vt =
-  [length : int] node_vt (length)
-
-(* expired_node_vt -- what is left of an internal node, after its
-                      contents have been freed. *)
-vtypedef expired_node_vt (length : int, p : addr) =
-  @{
-    view_of_population_map = uintptr @ p,
-    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
-    view_of_entries =
-      @[link_vt?!][length] @ (p + 2 * sizeof (uintptr)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-vtypedef expired_node_vt (length : int) =
-  [p : addr] expired_node_vt (length, p)
-vtypedef expired_node_vt =
-  [length : int] expired_node_vt (length)
-
-(* slotted_node_vt -- an internal node, one of whose entries
-                      needs filling in (as do its maps). *)
-vtypedef slotted_node_vt (length : int, index : int, p : addr) =
-  @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_left_entries =
-      @[link_vt][index] @ (p + 2 * sizeof (uintptr)),
-    view_of_new_entry =
-      (link_vt?)
-        @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
-    view_of_right_entries =
-      @[link_vt][length - 1 - index]
-          @ (p + 2 * sizeof (uintptr) +
-              (1 + index) * sizeof (link_vt)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-vtypedef slotted_node_vt (length : int, index : int) =
-  [p : addr] slotted_node_vt (length, index, p)
-vtypedef slotted_node_vt =
-  [length, index : int] slotted_node_vt (length, index)
-
-(* new_slotted_node_vt -- like a slotted_node_vt, but all the
-                          fields need filling in. *)
-vtypedef new_slotted_node_vt (length : int, index : int, p : addr) =
-  @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_left_entries =
-      @[link_vt?][index] @ (p + 2 * sizeof (uintptr)),
-    view_of_new_entry =
-      (link_vt?)
-        @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
-    view_of_right_entries =
-      @[link_vt?][length - 1 - index]
-          @ (p + 2 * sizeof (uintptr) +
-              (1 + index) * sizeof (link_vt)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-vtypedef new_slotted_node_vt (length : int, index : int) =
-  [p : addr] new_slotted_node_vt (length, index, p)
-vtypedef new_slotted_node_vt =
-  [length, index : int] new_slotted_node_vt (length, index)
-
-(* new_length1_node_vt -- A node of length one that needs
-                          filling in. *)
-vtypedef new_length1_node_vt (p : addr) =
-  @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt?][1] @ (p + 2 * sizeof (uintptr)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-
-(* new_length2_node_vt -- A node of length two that needs
-                          filling in. *)
-vtypedef new_length2_node_vt (p : addr) =
-  @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt?][2] @ (p + 2 * sizeof (uintptr)),
-    mfree = mfree_gc_v p |
-    pointer = ptr p
-  }
-
 implement {}
 extract_static_length_of_node (node) =
   $UN.castvwtp0 node
@@ -290,9 +168,9 @@ fn {}
 node_alloc {length : int}
            (length : size_t length) :<!wrt>
     [p : addr]
-    @(@[uintptr?][length + 2] @ p, mfree_gc_v p | ptr p) =
+    @(@[uintptr?][length + 3] @ p, mfree_gc_v p | ptr p) =
   let
-    val size = length + (g1u2u 2U)
+    val size = length + (g1u2u 3U)
     val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
   in
     @(view, mfree | pointer)
@@ -312,29 +190,30 @@ new_slotted_node_alloc
     prval _ = prop_verify {0 <= length} ()
 
     prval @(pf_pop_map, pf_view) =
-      array_v_uncons {uintptr?} {p} {2 + length}
-                     pf_view
-    prval @(pf_kind_map, pf_entries) =
-      array_v_uncons {uintptr?} {p + sizeof (uintptr)} {1 + length}
-                     pf_view
+      array_v_uncons {uintptr?} {population_map_addr p} pf_view
+    prval @(pf_leaf_map, pf_view) =
+      array_v_uncons {uintptr?} {leaf_map_addr p} pf_view
+    prval @(pf_chain_map, pf_entries) =
+      array_v_uncons {uintptr?} {chaining_map_addr p} pf_view
     prval _ =
       $UN.castview2void_at {@[link_vt?][length]}
                            {@[uintptr?][length]}
-                           {p + 2 * sizeof (uintptr)}
+                           {entries_addr p}
                            pf_entries
 
     prval _ = lemma_g1uint_param index
     prval _ = prop_verify {0 <= index} ()
 
     prval @(pf_left, pf_right) =
-      array_v_subdivide2 {link_vt?} {p + 2 * sizeof (uintptr)}
+      array_v_subdivide2 {link_vt?} {entries_addr p}
                          {index, length - index}
                          pf_entries
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
   in
     @{
       view_of_population_map = pf_pop_map,
-      view_of_node_kind_map = pf_kind_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
       view_of_left_entries = pf_left,
       view_of_new_entry = pf_entry,
       view_of_right_entries = pf_right,
@@ -350,15 +229,17 @@ new_length1_node_alloc () :<!wrt>
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {1} (i2sz 1)
     prval @(pf_pop_map, pf_view) = array_v_uncons pf_view
-    prval @(pf_kind_map, pf_entries) = array_v_uncons pf_view
+    prval @(pf_leaf_map, pf_view) = array_v_uncons pf_view
+    prval @(pf_chain_map, pf_entries) = array_v_uncons pf_view
     prval _ =
       $UN.castview2void_at {@[link_vt?][1]} {@[uintptr?][1]}
-                           {p + 2 * sizeof (uintptr)}
+                           {entries_addr p}
                            pf_entries
   in
     @{
       view_of_population_map = pf_pop_map,
-      view_of_node_kind_map = pf_kind_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
       view_of_entries = pf_entries,
       mfree = pf_mfree |
       pointer = p
@@ -372,15 +253,17 @@ new_length2_node_alloc () :<!wrt>
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {2} (i2sz 2)
     prval @(pf_pop_map, pf_view) = array_v_uncons pf_view
-    prval @(pf_kind_map, pf_entries) = array_v_uncons pf_view
+    prval @(pf_leaf_map, pf_view) = array_v_uncons pf_view
+    prval @(pf_chain_map, pf_entries) = array_v_uncons pf_view
     prval _ =
       $UN.castview2void_at {@[link_vt?][2]} {@[uintptr?][2]}
-                           {p + 2 * sizeof (uintptr)}
+                           {entries_addr p}
                            pf_entries
   in
     @{
       view_of_population_map = pf_pop_map,
-      view_of_node_kind_map = pf_kind_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
       view_of_entries = pf_entries,
       mfree = pf_mfree |
       pointer = p
@@ -398,7 +281,8 @@ expired_node_vt_free
   let
     val @{
           view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
           view_of_entries = pf_entries,
           mfree = pf_mfree |
           pointer = p
@@ -406,13 +290,13 @@ expired_node_vt_free
 
     prval _ =
       $UN.castview2void_at
-        {@[uintptr][length]} {@[link_vt?!][length]}
-        {p + 2 * sizeof (uintptr)}
+        {@[uintptr][length]} {@[link_vt?!][length]} {entries_addr p}
         pf_entries
-    prval pf = array_v_cons (pf_kind_map, pf_entries)
+    prval pf = array_v_cons (pf_chain_map, pf_entries)
+    prval pf = array_v_cons (pf_leaf_map, pf)
     prval pf = array_v_cons (pf_pop_map, pf)
   in
-    array_ptr_free {uintptr} {p} {length + 2} (pf, pf_mfree | p)
+    array_ptr_free {uintptr} {p} {length + 3} (pf, pf_mfree | p)
   end
 
 (********************************************************************)
@@ -426,18 +310,20 @@ get_population_map
   let
     val @{
           view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
           view_of_entries = pf_entries,
           mfree = pf_mfree |
           pointer = p
         } = node
 
-    val pop_map = ptr_get<uintptr> (pf_pop_map | p)
+    val pop_map = ptr_get<uintptr> (pf_pop_map | population_map_ptr p)
 
     prval _ = node :=
       @{
         view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
         view_of_entries = pf_entries,
         mfree = pf_mfree |
         pointer = p
@@ -449,7 +335,7 @@ get_population_map
 (********************************************************************)
 
 fn {}
-get_node_kind_map
+get_leaf_map
         {length : int}
         {p      : addr}
         (node   : !node_vt (length, p) >> _) :<!ref>
@@ -457,25 +343,60 @@ get_node_kind_map
   let
     val @{
           view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
           view_of_entries = pf_entries,
           mfree = pf_mfree |
           pointer = p
         } = node
 
-    val p_kind_map = ptr_succ<uintptr> (p)
-    val node_kind_map = ptr_get<uintptr> (pf_kind_map | p_kind_map)
+    val leaf_map = ptr_get<uintptr> (pf_leaf_map | leaf_map_ptr p)
 
     prval _ = node :=
       @{
         view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
         view_of_entries = pf_entries,
         mfree = pf_mfree |
         pointer = p
       }
   in
-    node_kind_map
+    leaf_map
+  end
+
+(********************************************************************)
+
+fn {}
+get_chaining_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref>
+    uintptr =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    val chaining_map =
+      ptr_get<uintptr> (pf_chain_map | chaining_map_ptr p)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  in
+    chaining_map
   end
 
 (********************************************************************)
@@ -490,7 +411,8 @@ get_entry_value
   let
     val @{
           view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
           view_of_entries = pf_entries,
           mfree = pf_mfree |
           pointer = p
@@ -498,8 +420,8 @@ get_entry_value
 
     prval _ = lemma_g1uint_param index
 
-    stadef p_entries = p + 2 * sizeof (uintptr)
-    val p_entries : ptr p_entries = ptr_add<uintptr> (p, i2sz 2)
+    stadef p_entries = entries_addr p
+    val p_entries : ptr p_entries = entries_ptr p
     macdef entries = !p_entries
 
     (* Temporarily make the entries uintptr instead of link_vt,
@@ -519,7 +441,8 @@ get_entry_value
     prval _ = node :=
       @{
         view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
         view_of_entries = pf_entries,
         mfree = pf_mfree |
         pointer = p
@@ -543,7 +466,8 @@ node_vt_to_slotted_node_vt
   let
     val @{
           view_of_population_map = pf_pop_map,
-          view_of_node_kind_map = pf_kind_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
           view_of_entries = pf_entries,
           mfree = pf_mfree |
           pointer = p
@@ -552,8 +476,7 @@ node_vt_to_slotted_node_vt
     prval _ = lemma_g1uint_param index
 
     prval @(pf_left, pf_right) =
-      array_v_subdivide2 {link_vt}
-                         {p + 2 * sizeof (uintptr)}
+      array_v_subdivide2 {link_vt} {entries_addr p}
                          {index, length - index}
                          pf_entries
     prval @(pf_entry, pf_right) = array_v_uncons pf_right
@@ -564,7 +487,8 @@ node_vt_to_slotted_node_vt
     val slotted_node =
       @{
         view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
         view_of_left_entries = pf_left,
         view_of_new_entry = pf_entry,
         view_of_right_entries = pf_right,
@@ -575,29 +499,32 @@ node_vt_to_slotted_node_vt
     slotted_node
   end
 
+(*
 fn {}
 slotted_node_vt_to_node_vt
         {length, index : int | index < length}
-        {p            : addr}
-        (node         : slotted_node_vt (length, index, p),
-         index        : size_t index,
-         value        : uintptr,
-         old_pop_map  : uintptr,
-         old_kind_map : uintptr,
-         is_leaf      : bool) :<!wrt>
+        {p             : addr}
+        (node          : slotted_node_vt (length, index, p),
+         index         : size_t index,
+         value         : uintptr,
+         old_pop_map   : uintptr,
+         old_leaf_map  : uintptr,
+         old_chain_map : uintptr,
+         is_leaf       : bool) :<!wrt>
     node_vt (length, p) =
   let
     val new_bit = (one << (sz2i index))
     val new_pop_map = old_pop_map <+> new_bit
-    val new_kind_map =
+    val new_leaf_map =
       if is_leaf then
-        old_kind_map <+> new_bit
+        old_leaf_map <+> new_bit
       else
-        old_kind_map <*> (<~> new_bit)
+        old_leaf_map <*> (<~> new_bit)
 
     val @{
         view_of_population_map = pf_pop_map,
-        view_of_node_kind_map = pf_kind_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
         view_of_left_entries = pf_left,
         view_of_new_entry = pf_entry,
         view_of_right_entries = pf_right,
@@ -607,9 +534,9 @@ slotted_node_vt_to_node_vt
 
     val () = ptr_set<uintptr> (pf_pop_map | p, new_pop_map)
 
-    val p_kind_map = ptr_succ<uintptr> (p)
-    val node_kind_map =
-      ptr_set<uintptr> (pf_kind_map | p_kind_map, new_kind_map)
+    val p_leaf_map = ptr_succ<uintptr> (p)
+    val leaf_map =
+      ptr_set<uintptr> (pf_leaf_map | p_leaf_map, new_leaf_map)
 
     prval _ = lemma_g1uint_param index
 
@@ -623,12 +550,14 @@ slotted_node_vt_to_node_vt
   in
     @{
       view_of_population_map = pf_pop_map,
-      view_of_node_kind_map = pf_kind_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
       view_of_entries = pf_entries,
       mfree = pf_mfree |
       pointer = p
     }
   end
+*)
 
 (********************************************************************)
 
@@ -640,12 +569,12 @@ vtypedef more_nodes_vt = [n : int] more_nodes_vt n
 
 fun {}
 skip_unpopulated (population : uintptr,
-                  node_kinds : uintptr) :
+                  leaves     : uintptr) :
     @(uintptr, uintptr) =
   if (population <*> one) <> zero then
-    @(population, node_kinds)
+    @(population, leaves)
   else
-    skip_unpopulated<> (population >> 1, node_kinds >> 1)
+    skip_unpopulated<> (population >> 1, leaves >> 1)
 
 (* Rather than recursively deepen the stack, let us free nodes while
    also building up lists of more nodes to be freed. *)
@@ -670,7 +599,7 @@ free_nodes (nodes      : node_list_vt,
           val [length : int] node = extract_static_length_of_node node
 
           val population_map = get_population_map (node)
-          val node_kind_map = get_node_kind_map (node)
+          val leaf_map = get_leaf_map (node)
 
           prval _ = lemma_node_vt_param {length} node
 
@@ -687,7 +616,7 @@ free_nodes (nodes      : node_list_vt,
                                   >> @[link_t][restlen] @ p_entries |
                    leaf_free  : !leaf_free_vt (vt) >> _,
                    population : uintptr,
-                   node_kinds : uintptr,
+                   leaves     : uintptr,
                    p_entries  : ptr p_entries,
                    restlen    : size_t restlen,
                    new_nodes  : node_list_vt) : node_list_vt =
@@ -705,9 +634,9 @@ free_nodes (nodes      : node_list_vt,
                 prval _ = lemma_array_v_param pf_entries
                 prval _ = prop_verify {0 <= restlen} ()
 
-                val @(population, node_kinds) =
-                  skip_unpopulated<> (population, node_kinds)
-                val is_leaf = ((node_kinds <*> one) <> zero)
+                val @(population, leaves) =
+                  skip_unpopulated<> (population, leaves)
+                val is_leaf = ((leaves <*> one) <> zero)
 
                 prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
                 val p_rest = ptr_succ<link_vt> (p_entries)
@@ -728,7 +657,7 @@ free_nodes (nodes      : node_list_vt,
                     val result =
                       for_each_bit<vt>
                         {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, node_kinds,
+                        (pf_rest | leaf_free, population, leaves,
                                    p_rest, pred restlen, new_nodes)
                     prval _ = pf_entries :=
                       array_v_cons (pf_entry, pf_rest)
@@ -746,7 +675,7 @@ free_nodes (nodes      : node_list_vt,
                     val result =
                       for_each_bit<vt>
                         {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, node_kinds,
+                        (pf_rest | leaf_free, population, leaves,
                                    p_rest, pred restlen, new_nodes)
                     prval _ = pf_entries :=
                       array_v_cons (pf_entry, pf_rest)
@@ -761,7 +690,7 @@ free_nodes (nodes      : node_list_vt,
                     val result =
                       for_each_bit<vt>
                         {p_entries + sizeof (link_vt)} {restlen - 1}
-                        (pf_rest | leaf_free, population, node_kinds,
+                        (pf_rest | leaf_free, population, leaves,
                                    p_rest, pred restlen, new_nodes)
                     prval _ = pf_entries :=
                       array_v_cons (pf_entry, pf_rest)
@@ -772,21 +701,22 @@ free_nodes (nodes      : node_list_vt,
 
           val @{
                 view_of_population_map = pf_pop_map,
-                view_of_node_kind_map = pf_kind_map,
+                view_of_leaf_map = pf_leaf_map,
+                view_of_chaining_map = pf_chain_map,
                 view_of_entries = pf_entries,
                 mfree = pf_mfree |
                 pointer = p
               } = node
-          val p_entries = ptr_add<uintptr> (p, i2sz 2)
           val new_nodes =
             for_each_bit<vt>
               {..} {length}
-              (pf_entries | leaf_free, population_map, node_kind_map,
-                            p_entries, length, NIL)
+              (pf_entries | leaf_free, population_map, leaf_map,
+                            entries_ptr p, length, NIL)
           val node : expired_node_vt =
             @{
               view_of_population_map = pf_pop_map,
-              view_of_node_kind_map = pf_kind_map,
+              view_of_leaf_map = pf_leaf_map,
+              view_of_chaining_map = pf_chain_map,
               view_of_entries = pf_entries,
               mfree = pf_mfree |
               pointer = p
@@ -854,9 +784,9 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
   in
     if is_stored then
       let
-        val node_kind_map = get_node_kind_map (node)
+        val leaf_map = get_leaf_map (node)
         val is_leaf =
-          ((node_kind_map <*> bit_selection_mask) <> zero)
+          ((leaf_map <*> bit_selection_mask) <> zero)
 
         val [index : int] @(_ | index) =
           get_popcount_low_bits (g1ofg0 population_map, i)

@@ -58,9 +58,13 @@ In the implementation below, an internal node is laid out as follows:
 
     population_map (uintptr)   -- used to compute indices into the
                                   array of *this* node.
-    node_kind_map  (uintptr)   -- if a bit is set, the corresponding
+    leaf_map  (uintptr)        -- if a bit is set, the corresponding
                                   array entry is or points to a
                                   leaf node.
+    chaining_map   (uintptr)   -- if a bit is set, and the
+                                  corresponding leaf_map bit is
+                                  set, the array entry is a linked
+                                  list of leaves (separate chaining).
     entry 0        (uintptr)
     entry 1        (uintptr)
     entry 2        (uintptr)
@@ -68,6 +72,13 @@ In the implementation below, an internal node is laid out as follows:
        .
        .
     entry N        (uintptr)   -- where N < sizeof (uintptr)
+
+
+POSSIBLE TO DO:
+
+  * Support for separate chaining even if the hash's bits have not
+    been exhausted. No doubt clever use of such chainging can improve
+    efficiency.
 
 *)
 
@@ -84,12 +95,18 @@ absview link_v
 vtypedef link_vt =
   @(link_v | uintptr)
 
+stadef population_map_addr (p : addr) : addr = p
+stadef leaf_map_addr (p : addr) : addr = p + sizeof (uintptr)
+stadef chaining_map_addr (p : addr) : addr = p + 2 * sizeof (uintptr)
+stadef entries_addr (p : addr) : addr = p + 3 * sizeof (uintptr)
+
 (* node_vt -- an internal node, fully formed. *)
 vtypedef node_vt (length : int, p : addr) =
   @{
-    view_of_population_map = uintptr @ p,
-    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt][length] @ (p + 2 * sizeof (uintptr)),
+    view_of_population_map = uintptr @ population_map_addr (p),
+    view_of_leaf_map = uintptr @ leaf_map_addr (p),
+    view_of_chaining_map = uintptr @ chaining_map_addr (p),
+    view_of_entries = @[link_vt][length] @ entries_addr (p),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -102,10 +119,10 @@ vtypedef node_vt =
                       contents have been freed. *)
 vtypedef expired_node_vt (length : int, p : addr) =
   @{
-    view_of_population_map = uintptr @ p,
-    view_of_node_kind_map = uintptr @ (p + sizeof (uintptr)),
-    view_of_entries =
-      @[link_vt?!][length] @ (p + 2 * sizeof (uintptr)),
+    view_of_population_map = uintptr @ population_map_addr (p),
+    view_of_leaf_map = uintptr @ leaf_map_addr (p),
+    view_of_chaining_map = uintptr @ chaining_map_addr (p),
+    view_of_entries = @[link_vt?!][length] @ entries_addr (p),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -118,17 +135,15 @@ vtypedef expired_node_vt =
                       needs filling in (as do its maps). *)
 vtypedef slotted_node_vt (length : int, index : int, p : addr) =
   @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_left_entries =
-      @[link_vt][index] @ (p + 2 * sizeof (uintptr)),
+    view_of_population_map = (uintptr?) @ population_map_addr (p),
+    view_of_leaf_map = (uintptr?) @ leaf_map_addr (p),
+    view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
+    view_of_left_entries = @[link_vt][index] @ entries_addr (p),
     view_of_new_entry =
-      (link_vt?)
-        @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
+      (link_vt?) @ (entries_addr (p) + index * sizeof (link_vt)),
     view_of_right_entries =
       @[link_vt][length - 1 - index]
-          @ (p + 2 * sizeof (uintptr) +
-              (1 + index) * sizeof (link_vt)),
+          @ (entries_addr (p) + (1 + index) * sizeof (link_vt)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -141,17 +156,16 @@ vtypedef slotted_node_vt =
                           fields need filling in. *)
 vtypedef new_slotted_node_vt (length : int, index : int, p : addr) =
   @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
+    view_of_population_map = (uintptr?) @ population_map_addr (p),
+    view_of_leaf_map = (uintptr?) @ leaf_map_addr (p),
+    view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
     view_of_left_entries =
-      @[link_vt?][index] @ (p + 2 * sizeof (uintptr)),
+      @[link_vt?][index] @ entries_addr (p),
     view_of_new_entry =
-      (link_vt?)
-        @ (p + 2 * sizeof (uintptr) + index * sizeof (link_vt)),
+      (link_vt?) @ (entries_addr (p) + index * sizeof (link_vt)),
     view_of_right_entries =
       @[link_vt?][length - 1 - index]
-          @ (p + 2 * sizeof (uintptr) +
-              (1 + index) * sizeof (link_vt)),
+          @ (entries_addr (p) + (1 + index) * sizeof (link_vt)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -164,9 +178,10 @@ vtypedef new_slotted_node_vt =
                           filling in. *)
 vtypedef new_length1_node_vt (p : addr) =
   @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt?][1] @ (p + 2 * sizeof (uintptr)),
+    view_of_population_map = (uintptr?) @ population_map_addr (p),
+    view_of_leaf_map = (uintptr?) @ leaf_map_addr (p),
+    view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
+    view_of_entries = @[link_vt?][1] @ entries_addr (p),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -175,9 +190,10 @@ vtypedef new_length1_node_vt (p : addr) =
                           filling in. *)
 vtypedef new_length2_node_vt (p : addr) =
   @{
-    view_of_population_map = (uintptr?) @ p,
-    view_of_node_kind_map = (uintptr?) @ (p + sizeof (uintptr)),
-    view_of_entries = @[link_vt?][2] @ (p + 2 * sizeof (uintptr)),
+    view_of_population_map = (uintptr?) @ population_map_addr (p),
+    view_of_leaf_map = (uintptr?) @ leaf_map_addr (p),
+    view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
+    view_of_entries = @[link_vt?][2] @ entries_addr (p),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -227,7 +243,7 @@ node_vt_free {length    : int}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
 
-fun {vt : vtype} {hash_vt : vt@ype}
+fun {vt : vtype} {hash_vt : vt@ype} // FIXME -- deal with key equality, chaining, etc. // FIXME // FIXME // FIXME // FIXME
 get_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
