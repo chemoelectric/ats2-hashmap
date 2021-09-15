@@ -877,7 +877,7 @@ get_subtree_entry__loop
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         index_data  : &hash_vt >> _,
+         hash_data   : &hash_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,
          value       : &uintptr? >>
@@ -886,7 +886,7 @@ get_subtree_entry__loop
     #[is_stored : bool] void =
   let
     val [bits : int] (pf_bits | bits) =
-      bits_source (index_data, depth)
+      bits_source (hash_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
     prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
     prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
@@ -909,7 +909,7 @@ get_subtree_entry__loop
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             val () =
               get_subtree_entry__loop<vt><hash_vt>
-                (next_node, bits_source, index_data, succ depth,
+                (next_node, bits_source, hash_data, succ depth,
                  is_stored, value)
             prval _ = $UN.castvwtp0{Ptr} next_node
           }
@@ -917,10 +917,10 @@ get_subtree_entry__loop
   end
 
 implement {vt} {hash_vt}
-get_subtree_entry {length} (node, bits_source, index_data, depth,
+get_subtree_entry {length} (node, bits_source, hash_data, depth,
                             is_stored, value) =
   get_subtree_entry__loop<vt><hash_vt>
-    {length} (node, bits_source, index_data, depth, is_stored, value)
+    {length} (node, bits_source, hash_data, depth, is_stored, value)
 
 // FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 

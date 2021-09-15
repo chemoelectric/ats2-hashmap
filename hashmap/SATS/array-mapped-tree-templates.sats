@@ -249,7 +249,7 @@ get_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         index_data  : &hash_vt >> _,
+         hash_data   : &hash_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,
          value       : &uintptr? >>
