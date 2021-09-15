@@ -43,9 +43,13 @@ array_mapped_tree_get_entry
         {node_p        : addr}
         {bits_source_p : addr}
         {hash_data_p   : addr}
+        {key_test_p    : addr}
+        {key_data_p    : addr}
         (node_p        : array_mapped_tree_vt node_p,
          bits_source_p : ptr bits_source_p,
          hash_data_p   : ptr hash_data_p,
+         key_test_p    : ptr key_test_p,
+         key_data_p    : ptr key_data_p,
          is_stored     : &bool? >> bool is_stored,
          value         : &uintptr? >>
                             [u : int | is_stored || u == 0]

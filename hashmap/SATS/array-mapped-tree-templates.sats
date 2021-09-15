@@ -243,19 +243,21 @@ node_vt_free {length    : int}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
 
-// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
-fun {vt : vtype} {hash_vt : vt@ype} // FIXME -- deal with key equality, chaining, etc. // FIXME // FIXME // FIXME // FIXME
+fun {vt      : vtype}
+    {hash_vt : vt@ype}
+    {key_vt  : vt@ype}
 get_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data   : &hash_vt >> _,
+         key_test    : !((&key_vt, &vt) -<cloptr1> bool) >> _,
+         key_data    : &key_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,
          value       : &uintptr? >>
                           [u : int | is_stored || u == 0]
                           uintptr u) :
     #[is_stored : bool] void
-// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 
 (********************************************************************)
