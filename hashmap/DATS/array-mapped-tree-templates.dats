@@ -695,17 +695,19 @@ free_nodes (nodes      : node_list_vt,
                     loop {n : int | 0 <= n} .<n>.
                          (pf_entry  : !(link_t @ p_entries) >> _ |
                           leaf_free : !leaf_free_vt (vt) >> _,
-                          lst       : list_vt (vt, n)) : void =
+                          lst       : list_vt (uintptr, n)) : void =
                       case+ lst of
                       | ~ NIL => ()
                       | ~ head :: tail =>
-                        begin
-                          apply_leaf_free (leaf_free, head);
+                        let
+                          val leaf = $UN.castvwtp0{vt} head
+                        in
+                          apply_leaf_free (leaf_free, leaf);
                           loop (pf_entry | leaf_free, tail)
                         end
                     val entry = ptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
-                    val lst = $UN.castvwtp0{List1_vt vt} entry_p
+                    val lst = $UN.castvwtp0{List1_vt uintptr} entry_p
                     val () = loop (pf_entry | leaf_free, lst)
                   }
 
@@ -876,17 +878,19 @@ get_leaf_value
                 search {n : int | 0 <= n} .<n>.
                        (key_test : !key_test_vt >> _,
                         key_data : &key_vt >> _,
-                        lst      : !list_vt (vt, n) >> _) :
-                    @(bool, Ptr) =
+                        lst      : !list_vt (uintptr, n) >> _) :
+                    @(bool, uintptr) =
                   case+ lst of
-                  | NIL => @(false, the_null_ptr)
+                  | NIL => @(false, zero)
                   | @ head :: tail =>
                     let
-                      val key_matches = key_test (key_data, head)
+                      var leaf = $UN.castvwtp0{vt} head
+                      val key_matches = key_test (key_data, leaf)
+                      val _ = leaf := $UN.castvwtp0{Ptr} leaf
                     in
                       if key_matches then
                         let
-                          val value = $UN.castvwtp1{Ptr} head
+                          val value = head
                           prval _ = fold@ lst
                         in
                           @(true, value)
@@ -901,7 +905,7 @@ get_leaf_value
                         end
                     end
                 val lst =
-                  $UN.castvwtp0{List_vt (vt)} ($UN.cast{Ptr} entry)
+                  $UN.castvwtp0{List_vt uintptr} ($UN.cast{Ptr} entry)
                 prval _ = lemma_list_vt_param lst
                 val @(is_found, pointer) =
                   search (key_test, key_data, lst)
