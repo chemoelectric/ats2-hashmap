@@ -36,7 +36,8 @@ staload _ = "hashmap/DATS/count-one-bits.dats"
 
 implement
 array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
-                            (node_p, bits_source_p, index_data_p) =
+                            (node_p, bits_source_p, index_data_p,
+                             is_stored, value) =
   let
     fn {}
     get_result {node_p        : addr}
@@ -46,9 +47,13 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
                {hash_vt       : vt@ype}
                (node_p        : ptr node_p,
                 bits_source_p : ptr bits_source_p,
-                index_data_p  : ptr index_data_p) :
-        array_mapped_tree_get_entry_t =
-      let
+                index_data_p  : ptr index_data_p,
+                is_stored     : &bool? >> bool is_stored,
+                value         : &uintptr? >>
+                                    [u : int | is_stored || u == 0]
+                                    uintptr u) :
+        #[is_stored : bool] void =
+      {
         (* Create linear types from the pointers. *)
         val node = $UN.castvwtp0{node_vt} node_p
         val bits_source =
@@ -60,18 +65,18 @@ array_mapped_tree_get_entry {node_p} {bits_source_p} {index_data_p}
 
         (* Search in the tree. *)
         prval _ = lemma_node_vt_param node
-        val result =
+        val () =
           get_subtree_entry<vt><hash_vt> (node, bits_source,
-                                          !(index_data.1), 0U)
+                                          !(index_data.1), 0U,
+                                          is_stored, value)
 
         (* Consume the linear types. *)
         prval _ = $UN.castvwtp0{Ptr} node
         prval _ = $UN.castvwtp0{Ptr} bits_source
         prval _ = $UN.castvwtp0{Ptr} index_data
-      in
-        result
-      end
+      }
   in
     get_result<> {node_p} {bits_source_p} {index_data_p}
-                 (node_p, bits_source_p, index_data_p)
+                 (node_p, bits_source_p, index_data_p,
+                 is_stored, value)
   end

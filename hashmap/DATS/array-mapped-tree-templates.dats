@@ -823,19 +823,19 @@ node_vt_free (node, leaf_free) =
 
 // FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 
-typedef node_entry_t =
-  @{
-    is_leaf = bool,
-    is_stored = bool,
-    value = uintptr
-  }
-
 fn {}
-get_node_entry {length : int | length <= bitsizeof (uintptr)}
-               {i      : int | i < bitsizeof (uintptr)}
-               (node   : !node_vt (length) >> _,
-                i      : uint i) :
-    node_entry_t =
+get_node_entry {length    : int | length <= bitsizeof (uintptr)}
+               {i         : int | i < bitsizeof (uintptr)}
+               (node      : !node_vt (length) >> _,
+                i         : uint i,
+                is_last   : &bool? >>
+                              [is_last : bool | is_stored || is_last]
+                              bool is_last,
+                is_stored : &bool? >> bool is_stored,
+                value     : &uintptr? >>
+                              [u : int | is_stored || u == 0]
+                              uintptr u) :
+    #[is_stored : bool] void =
   let
     prval _ = lemma_node_vt_param {length} node
     prval _ = prop_verify {0 < length} ()
@@ -845,12 +845,13 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 
     val population_map = get_population_map (node)
     val bit_selection_mask = (one << (u2i i))
-    val is_stored = ((population_map <*> bit_selection_mask) <> zero)
+    val entry_is_stored =
+      ((population_map <*> bit_selection_mask) <> zero)
   in
-    if is_stored then
+    if entry_is_stored then
       let
         val leaf_map = get_leaf_map (node)
-        val is_leaf =
+        val entry_is_leaf =
           ((leaf_map <*> bit_selection_mask) <> zero)
 
         val [index : int] @(_ | index) =
@@ -859,18 +860,16 @@ get_node_entry {length : int | length <= bitsizeof (uintptr)}
 
         val entry = node[i2sz index]
       in
-        @{
-          is_leaf = is_leaf,
-          is_stored = true,
-          value = entry
-        }
+        is_last := g1ofg0 entry_is_leaf;
+        is_stored := true;
+        value := g1ofg0 entry
       end
     else
-      @{
-        is_leaf = true,
-        is_stored = false,
-        value = zero
-      }
+      begin
+        is_last := true;
+        is_stored := false;
+        value := zero
+      end
   end
 
 fun {vt : vtype} {hash_vt : vt@ype}
@@ -879,7 +878,12 @@ get_subtree_entry__loop
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          index_data  : &hash_vt >> _,
-         depth       : uint) : array_mapped_tree_get_entry_t =
+         depth       : uint,
+         is_stored   : &bool? >> bool is_stored,
+         value       : &uintptr? >>
+                          [u : int | is_stored || u == 0]
+                          uintptr u) :
+    #[is_stored : bool] void =
   let
     val [bits : int] (pf_bits | bits) =
       bits_source (index_data, depth)
@@ -888,47 +892,35 @@ get_subtree_entry__loop
     prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
   in
     if bits = BITS_SOURCE_EXHAUSTED then
-      @{
-        is_stored = false,
-        value = zero
-      }
+      begin
+        is_stored := false;
+        value := zero
+      end
     else
       let
-        val @{
-              is_leaf = is_leaf,
-              is_stored = is_stored,
-              value = value
-            } = get_node_entry<> {length} {bits} (node, g1i2u bits)
+        var is_last : bool
       in
-        if not is_stored then
-          @{
-            is_stored = false,
-            value = value
-          }
-        else if is_leaf then
-          @{
-            is_stored = true,
-            value = value
-          }
-        else
-          let
+        get_node_entry<> {length} {bits} (node, g1i2u bits,
+                                          is_last, is_stored, value);
+        if not is_last then
+          {
             val [length1 : int] [p1 : addr] next_node =
               $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
-            val result =
+            val () =
               get_subtree_entry__loop<vt><hash_vt>
-                (next_node, bits_source, index_data, succ depth)
+                (next_node, bits_source, index_data, succ depth,
+                 is_stored, value)
             prval _ = $UN.castvwtp0{Ptr} next_node
-          in
-            result
-          end
+          }
       end
   end
 
 implement {vt} {hash_vt}
-get_subtree_entry {length} (node, bits_source, index_data, depth) =
+get_subtree_entry {length} (node, bits_source, index_data, depth,
+                            is_stored, value) =
   get_subtree_entry__loop<vt><hash_vt>
-    {length} (node, bits_source, index_data, depth)
+    {length} (node, bits_source, index_data, depth, is_stored, value)
 
 // FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 

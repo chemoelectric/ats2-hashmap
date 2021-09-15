@@ -250,7 +250,12 @@ get_subtree_entry
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          index_data  : &hash_vt >> _,
-         depth       : uint) : array_mapped_tree_get_entry_t
+         depth       : uint,
+         is_stored   : &bool? >> bool is_stored,
+         value       : &uintptr? >>
+                          [u : int | is_stored || u == 0]
+                          uintptr u) :
+    #[is_stored : bool] void
 // FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME// FIXME
 
 (********************************************************************)
