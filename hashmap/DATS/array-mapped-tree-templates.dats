@@ -158,12 +158,6 @@ extract_static_length_of_node (node) =
 
 (********************************************************************)
 
-implement {vt}
-leaf_free_vt_is_null (closure) =
-  ptr_is_null ($UN.castvwtp1{Ptr} closure)
-
-(********************************************************************)
-
 fn {}
 node_alloc {length : int}
            (length : size_t length) :<!wrt>
@@ -561,6 +555,10 @@ slotted_node_vt_to_node_vt
 
 (********************************************************************)
 
+implement {vt}
+leaf_free_vt_is_null (closure) =
+  ptr_is_null ($UN.castvwtp1{Ptr} closure)
+
 fn {vt : vtype}
 apply_leaf_free (leaf_free : !leaf_free_vt (vt) >> _,
                  leaf      : vt) : void =
@@ -575,6 +573,35 @@ apply_leaf_free (leaf_free : !leaf_free_vt (vt) >> _,
     {
       prval _ = $UN.castvwtp0{vt?!} leaf
     }
+
+(********************************************************************)
+
+implement {vt} {key_vt}
+key_test_vt_is_null (key_test) =
+  ptr_is_null ($UN.castvwtp1{Ptr} key_test)
+
+fn {vt     : vtype}
+   {key_vt : vt@ype}
+apply_key_test (key_test : !key_test_vt (vt, key_vt) >> _,
+                key_data : &key_vt >> _,
+                entry    : uintptr) : bool =
+  if not (key_test_vt_is_null key_test) then
+    let
+      var linear_entry = $UN.castvwtp0{vt} ($UN.cast{Ptr} entry)
+      val result = key_test (key_data, linear_entry)
+      val _ = linear_entry := $UN.castvwtp0{Ptr} linear_entry
+    in
+      result
+    end
+  else
+    (* Test equality of the key data to the stored uintptr.
+       It is (UNSAFELY) assumed that the key_data is a uintptr. *)
+    let
+      val _ = assertloc (ptr_isnot_null (addr@ key_data))
+      val u_key = $UN.ptr1_get<uintptr> (addr@ key_data)
+    in
+      u_key = entry
+    end
 
 (********************************************************************)
 
@@ -830,7 +857,7 @@ get_leaf_value
         {i         : int | i < bitsizeof (uintptr)}
         (node      : !node_vt (length) >> _,
          i         : uint i,
-         key_test  : !((&key_vt, &vt) -<cloptr1> bool) >> _,
+         key_test  : !key_test_vt (vt, key_vt) >> _,
          key_data  : &key_vt >> _,
          is_last   : &bool? >>
                        [is_last : bool | is_stored || is_last]
@@ -841,8 +868,6 @@ get_leaf_value
                        uintptr u) :
     #[is_stored : bool] void =
   let
-    vtypedef key_test_vt = (&key_vt, &vt) -<cloptr1> bool
-
     prval _ = lemma_node_vt_param {length} node
     prval _ = prop_verify {0 < length} ()
 
@@ -876,7 +901,7 @@ get_leaf_value
               let
                 fun
                 search {n : int | 0 <= n} .<n>.
-                       (key_test : !key_test_vt >> _,
+                       (key_test : !key_test_vt (vt, key_vt) >> _,
                         key_data : &key_vt >> _,
                         lst      : !list_vt (uintptr, n) >> _) :
                     @(bool, uintptr) =
@@ -884,9 +909,8 @@ get_leaf_value
                   | NIL => @(false, zero)
                   | @ head :: tail =>
                     let
-                      var leaf = $UN.castvwtp0{vt} head
-                      val key_matches = key_test (key_data, leaf)
-                      val _ = leaf := $UN.castvwtp0{Ptr} leaf
+                      val key_matches =
+                        apply_key_test (key_test, key_data, head)
                     in
                       if key_matches then
                         let
@@ -929,10 +953,8 @@ get_leaf_value
               end
             else
               let
-                var entry_value =
-                  $UN.castvwtp0{vt} ($UN.cast{Ptr} entry)
-                val key_matches = key_test (key_data, entry_value)
-                val _ = entry_value := $UN.castvwtp0{Ptr} entry_value
+                val key_matches =
+                  apply_key_test (key_test, key_data, entry)
               in
                 if key_matches then
                   (* Success. *)
@@ -975,7 +997,7 @@ get_subtree_entry__loop
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data   : &hash_vt >> _,
-         key_test    : !((&key_vt, &vt) -<cloptr1> bool) >> _,
+         key_test    : !key_test_vt (vt, key_vt) >> _,
          key_data    : &key_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,

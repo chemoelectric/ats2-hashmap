@@ -237,6 +237,15 @@ leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool
 
 (********************************************************************)
 
+vtypedef key_test_vt (vt : vtype, key_vt : vt@ype) =
+  (&key_vt, &vt) -<cloptr1> bool
+
+fn {vt : vtype} {key_vt : vt@ype}
+key_test_vt_is_null (key_test : !key_test_vt (vt, key_vt) >> _) :<>
+    bool
+
+(********************************************************************)
+
 fn {vt : vtype}
 node_vt_free {length    : int}
              {p         : addr}

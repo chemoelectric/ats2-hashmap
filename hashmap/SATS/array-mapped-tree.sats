@@ -28,6 +28,8 @@ typedef array_mapped_tree_vt (node_p : addr) =
 typedef array_mapped_tree_vt =
   [node_p : addr] array_mapped_tree_vt node_p
 
+(* If free_entry_p is NULL, then the stored entries are not freed
+   and should be of a nonlinear type. *)
 fun
 array_mapped_tree_free
         {node_p       : addr}
@@ -38,7 +40,9 @@ array_mapped_tree_free
 
 (********************************************************************)
 
-fun // FIXME -- deal with key equality, chaining, etc. // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+(* If key_test_p is null, then key_data_p is assumed to point to
+   a uintptr. *)
+fun
 array_mapped_tree_get_entry
         {node_p        : addr}
         {bits_source_p : addr}
@@ -48,7 +52,7 @@ array_mapped_tree_get_entry
         (node_p        : array_mapped_tree_vt node_p,
          bits_source_p : ptr bits_source_p,
          hash_data_p   : ptr hash_data_p,
-         key_test_p    : ptr key_test_p,
+         key_test_p    : ptr key_test_p, (* May be null. *)
          key_data_p    : ptr key_data_p,
          is_stored     : &bool? >> bool is_stored,
          value         : &uintptr? >>
