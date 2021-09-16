@@ -235,22 +235,38 @@ vtypedef leaf_free_vt = [vt : vtype] leaf_free_vt vt
 fn {vt : vtype}
 leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool
 
-(********************************************************************)
+(*
+  node_vt_free --
 
-vtypedef key_test_vt (vt : vtype, key_vt : vt@ype) =
-  (&key_vt, &vt) -<cloptr1> bool
+  The leaf_free argument may be a null pointer, in which case
+  the stored entries should be of a nonlinear type that does
+  not need freeing.
 
-fn {vt : vtype} {key_vt : vt@ype}
-key_test_vt_is_null (key_test : !key_test_vt (vt, key_vt) >> _) :<>
-    bool
-
-(********************************************************************)
-
+  FIXME: Say more.
+*)
 fn {vt : vtype}
 node_vt_free {length    : int}
              {p         : addr}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
+
+(********************************************************************)
+
+vtypedef key_test_vt (vt : vtype, key_vt : vt@ype) =
+  (&key_vt, &vt) -<cloptr1> bool
+
+(*
+  key_test_vt_is_null --
+
+  A key_test_vt closure may actually be a null pointer, in which
+  case it is assumed (UNSAFELY) that the key data is a uintptr,
+  and that the test to be done is uintptr equality.
+
+  FIXME: Say more.
+*)
+fn {vt : vtype} {key_vt : vt@ype}
+key_test_vt_is_null (key_test : !key_test_vt (vt, key_vt) >> _) :<>
+    bool
 
 fun {vt      : vtype}
     {hash_vt : vt@ype}
@@ -260,7 +276,7 @@ get_subtree_entry
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data   : &hash_vt >> _,
-         key_test    : !((&key_vt, &vt) -<cloptr1> bool) >> _,
+         key_test    : !key_test_vt (vt, key_vt) >> _,
          key_data    : &key_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,
@@ -268,5 +284,21 @@ get_subtree_entry
                           [u : int | is_stored || u == 0]
                           uintptr u) :
     #[is_stored : bool] void
+
+fun {vt      : vtype}
+    {hash_vt : vt@ype}
+    {key_vt  : vt@ype}
+set_subtree_entry
+        {length      : int | length <= bitsizeof (uintptr)}
+        (node        : !node_vt (length) >> _,
+         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_data   : &hash_vt >> _,
+         key_test    : !key_test_vt (vt, key_vt) >> _,
+         key_data    : &key_vt >> _,
+         depth       : uint,
+         value       : uintptr,
+         is_new_entry : &bool? >> [is_new_entry : bool]
+                                  bool is_new_entry) :
+    void
 
 (********************************************************************)
