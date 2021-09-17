@@ -38,12 +38,12 @@ array_mapped_tree_create {bits_source_p} {hash_data_p}
                          (bits_source_p, hash_data_p, value) =
   let
     fn {}
-    get_result {bits_source_p : addr}
-               {hash_data_p   : addr}
-               {hash_vt       : vt@ype}
-               (bits_source_p : ptr bits_source_p,
-                hash_data_p   : ptr hash_data_p,
-                value         : uintptr) :
+    make_node {bits_source_p : addr}
+              {hash_data_p   : addr}
+              {hash_vt       : vt@ype}
+              (bits_source_p : ptr bits_source_p,
+               hash_data_p   : ptr hash_data_p,
+               value         : uintptr) :
         [node_p : addr | null < node_p]
         ptr node_p =
       let
@@ -64,6 +64,6 @@ array_mapped_tree_create {bits_source_p} {hash_data_p}
         $UN.castvwtp0 node
       end
   in
-    get_result<> {bits_source_p} {hash_data_p} {..}
-                 (bits_source_p, hash_data_p, value)
+    make_node<> {bits_source_p} {hash_data_p} {..}
+                (bits_source_p, hash_data_p, value)
   end
