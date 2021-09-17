@@ -111,7 +111,7 @@ vtypedef node_vt (length : int, p : addr) =
     pointer = ptr p
   }
 vtypedef node_vt (length : int) =
-  [p : addr] node_vt (length, p)
+  [p : addr | null < p] node_vt (length, p)
 vtypedef node_vt =
   [length : int] node_vt (length)
 
@@ -246,7 +246,7 @@ leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool
 *)
 fn {vt : vtype}
 node_vt_free {length    : int}
-             {p         : addr}
+             {p         : addr | null < p}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
 
@@ -254,6 +254,34 @@ node_vt_free {length    : int}
 
 vtypedef key_test_vt (key_vt : vt@ype) =
   (&key_vt, uintptr) -<cloptr1> bool
+
+(* start_new_tree -- this assumes the bits_source returns at least
+                     one bit. Otherwise an assertion will fail.
+   FIXME: Assure this through typechecking, instead. *)
+fun {hash_vt : vt@ype}
+start_new_tree
+        (bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_data   : &hash_vt >> _,
+         value       : uintptr) :
+    node_vt (1)
+
+fun {hash_vt, key_vt  : vt@ype}
+set_subtree_entry
+        {length       : int | length <= bitsizeof (uintptr)}
+        (node         : !node_vt (length) >> _,
+         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_data    : &hash_vt >> _,
+         key_test     : !key_test_vt (key_vt) >> _,
+         key_data     : &key_vt >> _,
+         depth        : uint,
+         value        : uintptr,
+         is_new_entry : &bool? >> [is_new_entry : bool]
+                                  bool is_new_entry) :
+    void
+
+(*
+FIXME: Add delete_subtree_entry.
+*)
 
 fun {hash_vt, key_vt : vt@ype}
 get_subtree_entry
@@ -269,19 +297,5 @@ get_subtree_entry
                           [u : int | is_stored || u == 0]
                           uintptr u) :
     #[is_stored : bool] void
-
-fun {hash_vt, key_vt : vt@ype}
-set_subtree_entry
-        {length      : int | length <= bitsizeof (uintptr)}
-        (node        : !node_vt (length) >> _,
-         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data   : &hash_vt >> _,
-         key_test    : !key_test_vt (key_vt) >> _,
-         key_data    : &key_vt >> _,
-         depth       : uint,
-         value       : uintptr,
-         is_new_entry : &bool? >> [is_new_entry : bool]
-                                  bool is_new_entry) :
-    void
 
 (********************************************************************)

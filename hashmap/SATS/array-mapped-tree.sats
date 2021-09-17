@@ -40,8 +40,16 @@ array_mapped_tree_free
 
 (********************************************************************)
 
-(* If key_test_p is null, then key_data_p is assumed to point to
-   a uintptr. *)
+fun
+array_mapped_tree_create
+        {bits_source_p : addr}
+        {hash_data_p   : addr}
+        (bits_source_p : ptr bits_source_p,
+         hash_data_p   : ptr hash_data_p,
+         value         : uintptr) :
+    [node_p : addr | null < node_p]
+    ptr node_p
+
 fun
 array_mapped_tree_get_entry
         {node_p        : addr}
@@ -52,36 +60,12 @@ array_mapped_tree_get_entry
         (node_p        : array_mapped_tree_vt node_p,
          bits_source_p : ptr bits_source_p,
          hash_data_p   : ptr hash_data_p,
-         key_test_p    : ptr key_test_p, (* May be null. *)
+         key_test_p    : ptr key_test_p,
          key_data_p    : ptr key_data_p,
          is_stored     : &bool? >> bool is_stored,
          value         : &uintptr? >>
                             [u : int | is_stored || u == 0]
                             uintptr u) :
     #[is_stored : bool] void
-
-(********************************************************************)
-
-(*
-vtypedef array_mapped_tree_create_entry_t (p : addr) =
-  @{
-    view = uintptr @ p |
-    pointer = ptr p,
-    is_new = bool
-  }
-vtypedef array_mapped_tree_create_entry_t =
-  [p : addr]
-  array_mapped_tree_create_entry_t (p)
-
-fun
-array_mapped_tree_create_entry
-        {node_p        : addr}
-        {bits_source_p : addr}
-        {hash_data_p  : addr}
-        (node_p        : array_mapped_tree_vt node_p,
-         bits_source_p : ptr bits_source_p,
-         hash_data_p  : ptr hash_data_p) :
-  array_mapped_tree_get_entry_t
-*)
 
 (********************************************************************)

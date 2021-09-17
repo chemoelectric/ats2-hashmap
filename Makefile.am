@@ -227,16 +227,19 @@ hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uintNN.dats.m4
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-free_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-create_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-get-entry_dats.c
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree-templates_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-templates_dats.c
 CLEANFILES += hashmap/SATS/array-mapped-tree_sats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-free_dats.c
+CLEANFILES += hashmap/DATS/array-mapped-tree-create_dats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-get-entry_dats.c
 CLEANFILES += hashmap/SATS/array-mapped-tree-templates_sats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-templates_dats.c
 EXTRA_DIST += hashmap/SATS/array-mapped-tree.sats
 EXTRA_DIST += hashmap/DATS/array-mapped-tree-free.dats
+EXTRA_DIST += hashmap/DATS/array-mapped-tree-create.dats
 EXTRA_DIST += hashmap/DATS/array-mapped-tree-get-entry.dats
 EXTRA_DIST += hashmap/SATS/array-mapped-tree-templates.sats
 EXTRA_DIST += hashmap/DATS/array-mapped-tree-templates.dats

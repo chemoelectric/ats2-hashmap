@@ -161,7 +161,7 @@ extract_static_length_of_node (node) =
 fn {}
 node_alloc {length : int}
            (length : size_t length) :<!wrt>
-    [p : addr]
+    [p : addr | null < p]
     @(@[uintptr?][length + 3] @ p, mfree_gc_v p | ptr p) =
   let
     val size = length + (g1u2u 3U)
@@ -175,7 +175,8 @@ new_slotted_node_alloc
         {length, index : int | index < length}
         (length : size_t length,
          index  : size_t index) :<!wrt>
-    [p : addr] new_slotted_node_vt (length, index, p) =
+    [p : addr | null < p]
+    new_slotted_node_vt (length, index, p) =
   let
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {length} (length)
@@ -218,7 +219,8 @@ new_slotted_node_alloc
 
 fn {}
 new_length1_node_alloc () :<!wrt>
-    [p : addr] new_length1_node_vt p =
+    [p : addr | null < p]
+    new_length1_node_vt p =
   let
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {1} (i2sz 1)
@@ -242,7 +244,8 @@ new_length1_node_alloc () :<!wrt>
 
 fn {}
 new_length2_node_alloc () :<!wrt>
-    [p : addr] new_length2_node_vt p =
+    [p : addr | null < p]
+    new_length2_node_vt p =
   let
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {2} (i2sz 2)
@@ -821,6 +824,57 @@ node_vt_free (node, leaf_free) =
 
 (********************************************************************)
 
+implement {hash_vt}
+start_new_tree (bits_source, hash_data, value) =
+  let
+    val [bits : int] (pf_bits | bits) = bits_source (hash_data, 0U)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
+    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+
+    (* FIXME: The following is really a precondition of
+              start_new_tree that we have not yet managed
+              to enforce through typechecking. *)
+    prval _ = $effmask_exn assertloc (0 <= bits)
+
+    val population_map = (one << bits)
+    val leaf_map = population_map
+    val chaining_map = zero
+
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = new_length1_node_alloc ()
+
+    val _ = ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                           population_map)
+    val _ = ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                            leaf_map)
+    val _ = ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                             chaining_map)
+
+    prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
+    val _ = ptr_set<link_vt> (pf_entry | entries_ptr p,
+                                         $UN.castvwtp0{link_vt} value)
+    prval pf_rest = array_v_unnil_nil pf_rest
+    prval pf_entries = array_v_cons (pf_entry, pf_rest)
+  in
+    @{
+      view_of_population_map = pf_pop_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
+      view_of_entries = pf_entries,
+      mfree = pf_mfree |
+      pointer = p
+    }
+  end
+
+(********************************************************************)
+
 fn {key_vt : vt@ype}
 get_leaf_value
         {length    : int | length <= bitsizeof (uintptr)}
@@ -972,8 +1026,7 @@ get_subtree_entry__loop
                           uintptr u) :
     #[is_stored : bool] void =
   let
-    val [bits : int] (pf_bits | bits) =
-      bits_source (hash_data, depth)
+    val [bits : int] (pf_bits | bits) = bits_source (hash_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
     prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
     prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
@@ -1012,9 +1065,5 @@ get_subtree_entry {length} (node, bits_source, hash_data, key_test,
   get_subtree_entry__loop<hash_vt,key_vt>
     {length} (node, bits_source, hash_data, key_test, key_data,
               depth, is_stored, value)
-
-(********************************************************************)
-
-
 
 (********************************************************************)
