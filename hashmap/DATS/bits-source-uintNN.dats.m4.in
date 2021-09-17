@@ -121,11 +121,11 @@ make_bits_source_uint`'NN {num_bits} (num_bits) =
             prval _ = prop_verify {0 <= bits} ()
             prval _ = prop_verify {bits_maxval (num_bits, bits)} ()
           in
-            (bits_source_bits_make {num_bits} {bits} () |
-             int_of_uint (bits))
+            @(bits_source_bits_make {num_bits} {bits} () |
+              int_of_uint (bits))
           end
         else
-          (bits_source_bits_make {num_bits} {~1} () | (~1))
+          @(bits_source_bits_make {num_bits} {~1} () | (~1))
       end
   end
 
