@@ -48,7 +48,6 @@ array_mapped_tree_get_entry {node_p}
                {hash_data_p   : addr}
                {key_test_p    : addr}
                {key_data_p    : addr}
-               {vt            : vtype}
                {hash_vt       : vt@ype}
                {key_vt        : vt@ype}
                (node_p        : ptr node_p,
@@ -71,7 +70,7 @@ array_mapped_tree_get_entry {node_p}
           $UN.castvwtp0 {@(hash_vt @ hash_data_p | ptr hash_data_p)}
                         hash_data_p
         val key_test =
-          $UN.castvwtp0 {(&key_vt, &vt) -<cloptr1> bool}
+          $UN.castvwtp0 {(&key_vt, uintptr) -<cloptr1> bool}
                         key_test_p
         val key_data =
           $UN.castvwtp0 {@(key_vt @ key_data_p | ptr key_data_p)}
@@ -80,7 +79,7 @@ array_mapped_tree_get_entry {node_p}
         (* Search in the tree. *)
         prval _ = lemma_node_vt_param node
         val () =
-          get_subtree_entry<vt><hash_vt>
+          get_subtree_entry<hash_vt>
             (node, bits_source, !(hash_data.1), key_test,
              !(key_data.1), 0U, is_stored, value)
 

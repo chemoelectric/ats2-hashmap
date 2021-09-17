@@ -576,35 +576,6 @@ apply_leaf_free (leaf_free : !leaf_free_vt (vt) >> _,
 
 (********************************************************************)
 
-implement {vt} {key_vt}
-key_test_vt_is_null (key_test) =
-  ptr_is_null ($UN.castvwtp1{Ptr} key_test)
-
-fn {vt     : vtype}
-   {key_vt : vt@ype}
-apply_key_test (key_test : !key_test_vt (vt, key_vt) >> _,
-                key_data : &key_vt >> _,
-                entry    : uintptr) : bool =
-  if not (key_test_vt_is_null key_test) then
-    let
-      var linear_entry = $UN.castvwtp0{vt} ($UN.cast{Ptr} entry)
-      val result = key_test (key_data, linear_entry)
-      val _ = linear_entry := $UN.castvwtp0{Ptr} linear_entry
-    in
-      result
-    end
-  else
-    (* Test equality of the key data to the stored uintptr.
-       It is (UNSAFELY) assumed that the key_data is a uintptr. *)
-    let
-      val _ = assertloc (ptr_isnot_null (addr@ key_data))
-      val u_key = $UN.ptr1_get<uintptr> (addr@ key_data)
-    in
-      u_key = entry
-    end
-
-(********************************************************************)
-
 vtypedef node_list_vt (n : int) = list_vt (node_vt, n)
 vtypedef node_list_vt = [n : int] node_list_vt n
 
@@ -850,14 +821,13 @@ node_vt_free (node, leaf_free) =
 
 (********************************************************************)
 
-fn {vt     : vtype}
-   {key_vt : vt@ype}
+fn {key_vt : vt@ype}
 get_leaf_value
         {length    : int | length <= bitsizeof (uintptr)}
         {i         : int | i < bitsizeof (uintptr)}
         (node      : !node_vt (length) >> _,
          i         : uint i,
-         key_test  : !key_test_vt (vt, key_vt) >> _,
+         key_test  : !key_test_vt (key_vt) >> _,
          key_data  : &key_vt >> _,
          is_last   : &bool? >>
                        [is_last : bool | is_stored || is_last]
@@ -901,7 +871,7 @@ get_leaf_value
               let
                 fun
                 search {n : int | 0 <= n} .<n>.
-                       (key_test : !key_test_vt (vt, key_vt) >> _,
+                       (key_test : !key_test_vt (key_vt) >> _,
                         key_data : &key_vt >> _,
                         lst      : !list_vt (uintptr, n) >> _) :
                     @(bool, uintptr) =
@@ -909,8 +879,7 @@ get_leaf_value
                   | NIL => @(false, zero)
                   | @ head :: tail =>
                     let
-                      val key_matches =
-                        apply_key_test (key_test, key_data, head)
+                      val key_matches = key_test (key_data, head)
                     in
                       if key_matches then
                         let
@@ -953,8 +922,7 @@ get_leaf_value
               end
             else
               let
-                val key_matches =
-                  apply_key_test (key_test, key_data, entry)
+                val key_matches = key_test (key_data, entry)
               in
                 if key_matches then
                   (* Success. *)
@@ -989,15 +957,14 @@ get_leaf_value
       end
   end
 
-fun {vt      : vtype}
-    {hash_vt : vt@ype}
+fun {hash_vt : vt@ype}
     {key_vt  : vt@ype}
 get_subtree_entry__loop
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data   : &hash_vt >> _,
-         key_test    : !key_test_vt (vt, key_vt) >> _,
+         key_test    : !key_test_vt (key_vt) >> _,
          key_data    : &key_vt >> _,
          depth       : uint,
          is_stored   : &bool? >> bool is_stored,
@@ -1021,7 +988,7 @@ get_subtree_entry__loop
       let
         var is_last : bool
       in
-        get_leaf_value<vt><key_vt>
+        get_leaf_value<key_vt>
           {length} {bits}
           (node, g1i2u bits, key_test, key_data,
            is_last, is_stored, value);
@@ -1031,7 +998,7 @@ get_subtree_entry__loop
               $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             val () =
-              get_subtree_entry__loop<vt><hash_vt><key_vt>
+              get_subtree_entry__loop<hash_vt><key_vt>
                 (next_node, bits_source, hash_data,
                  key_test, key_data, succ depth,
                  is_stored, value)
@@ -1040,10 +1007,10 @@ get_subtree_entry__loop
       end
   end
 
-implement {vt} {hash_vt} {key_vt}
+implement {hash_vt} {key_vt}
 get_subtree_entry {length} (node, bits_source, hash_data, key_test,
                             key_data, depth, is_stored, value) =
-  get_subtree_entry__loop<vt><hash_vt><key_vt>
+  get_subtree_entry__loop<hash_vt><key_vt>
     {length} (node, bits_source, hash_data, key_test, key_data,
               depth, is_stored, value)
 
