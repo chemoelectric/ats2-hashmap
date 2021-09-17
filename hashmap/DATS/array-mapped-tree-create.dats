@@ -55,7 +55,8 @@ array_mapped_tree_create {bits_source_p} {hash_data_p}
           $UN.castvwtp0 {@(hash_vt @ hash_data_p | ptr hash_data_p)}
                         hash_data_p
 
-        val node = start_new_tree (bits_source, !(hash_data.1), value)
+        val node =
+          start_new_tree<hash_vt> (bits_source, !(hash_data.1), value)
 
         (* Consume the linear types. *)
         prval _ = $UN.castvwtp0{Ptr} bits_source
