@@ -27,9 +27,12 @@ local
 
 in
   (******************************************************************)
-  (* A bits source returns ~1 if the index is past the last
-     available bit.
-     FIXME: Say more about what a bits source does. *)
+  (*
+    A bits source returns ~1 if the index is past the last
+    available bit.
+
+    FIXME: Say more about what a bits source does.
+  *)
 
   #define BITS_SOURCE_EXHAUSTED (~1)
 
@@ -51,7 +54,7 @@ in
   vtypedef bits_source_cloptr (data_vt : vt@ype, num_bits : int) =
     (&data_vt >> _, uint) -<cloptr1>
       [bits : int]
-      (BITS_SOURCE_BITS (num_bits, bits) | int bits)
+      @(BITS_SOURCE_BITS (num_bits, bits) | int bits)
 
   (******************************************************************)
   (* Make a bits source of a uint16. *)
