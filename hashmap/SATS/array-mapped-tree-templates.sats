@@ -255,8 +255,7 @@ node_vt_free {length    : int}
 vtypedef key_test_vt (key_vt : vt@ype) =
   (&key_vt, uintptr) -<cloptr1> bool
 
-fun {hash_vt : vt@ype}
-    {key_vt  : vt@ype}
+fun {hash_vt, key_vt : vt@ype}
 get_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
@@ -271,8 +270,7 @@ get_subtree_entry
                           uintptr u) :
     #[is_stored : bool] void
 
-fun {hash_vt : vt@ype}
-    {key_vt  : vt@ype}
+fun {hash_vt, key_vt : vt@ype}
 set_subtree_entry
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,

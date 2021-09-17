@@ -957,8 +957,7 @@ get_leaf_value
       end
   end
 
-fun {hash_vt : vt@ype}
-    {key_vt  : vt@ype}
+fun {hash_vt, key_vt : vt@ype}
 get_subtree_entry__loop
         {length      : int | length <= bitsizeof (uintptr)}
         (node        : !node_vt (length) >> _,
@@ -998,7 +997,7 @@ get_subtree_entry__loop
               $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             val () =
-              get_subtree_entry__loop<hash_vt><key_vt>
+              get_subtree_entry__loop<hash_vt,key_vt>
                 (next_node, bits_source, hash_data,
                  key_test, key_data, succ depth,
                  is_stored, value)
@@ -1007,10 +1006,10 @@ get_subtree_entry__loop
       end
   end
 
-implement {hash_vt} {key_vt}
+implement {hash_vt, key_vt}
 get_subtree_entry {length} (node, bits_source, hash_data, key_test,
                             key_data, depth, is_stored, value) =
-  get_subtree_entry__loop<hash_vt><key_vt>
+  get_subtree_entry__loop<hash_vt,key_vt>
     {length} (node, bits_source, hash_data, key_test, key_data,
               depth, is_stored, value)
 
