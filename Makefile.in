@@ -203,9 +203,13 @@ am__uninstall_files_from_dir = { \
   }
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array_prf_sats.lo \
-	hashmap/DATS/array_prf_dats.lo hashmap/SATS/memory_sats.lo \
-	hashmap/DATS/memory_dats.lo hashmap/SATS/hashmap_sats.lo \
+am_libats2_hashmap_la_OBJECTS = hashmap/SATS/atomic_sats.lo \
+	hashmap/DATS/atomic_dats.lo hashmap/SATS/spinlock_sats.lo \
+	hashmap/DATS/spinlock_dats.lo \
+	hashmap/SATS/initialize-once_sats.lo \
+	hashmap/DATS/initialize-once_dats.lo \
+	hashmap/SATS/array_prf_sats.lo hashmap/DATS/array_prf_dats.lo \
+	hashmap/SATS/memory_sats.lo hashmap/DATS/memory_dats.lo \
 	hashmap/SATS/count-one-bits_sats.lo \
 	hashmap/DATS/count-one-bits_dats.lo \
 	hashmap/DATS/count-one-bits-microsoft-c_dats.lo \
@@ -214,12 +218,15 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array_prf_sats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
 	hashmap/DATS/bits-source-uint64_dats.lo \
 	hashmap/DATS/bits-source-uint64-uint64_dats.lo \
+	hashmap/DATS/bits-source-uintptr_dats.lo \
 	hashmap/SATS/array-mapped-tree_sats.lo \
 	hashmap/DATS/array-mapped-tree-free_dats.lo \
 	hashmap/DATS/array-mapped-tree-create_dats.lo \
 	hashmap/DATS/array-mapped-tree-get-entry_dats.lo \
 	hashmap/SATS/array-mapped-tree-templates_sats.lo \
-	hashmap/DATS/array-mapped-tree-templates_dats.lo
+	hashmap/DATS/array-mapped-tree-templates_dats.lo \
+	hashmap/SATS/uintptr-set_sats.lo \
+	hashmap/DATS/uintptr-set_dats.lo hashmap/SATS/hashmap_sats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -274,20 +281,29 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-templates_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/atomic_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits-source-uintptr_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/memory_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/array_prf_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/atomic_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/memory_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo \
 	tests/$(DEPDIR)/test-bits-source-uint16_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint32_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po \
@@ -762,38 +778,40 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
-#BUILT_SOURCES += hashmap/DATS/bits-source-uintNN.dats.m4
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint16.dats.m4
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats.m4
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats.m4
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
-	ats-nodeptracking-rules.mk hashmap/SATS/array_prf.sats \
+	ats-nodeptracking-rules.mk hashmap/SATS/atomic.sats \
+	hashmap/DATS/atomic.dats hashmap/CATS/atomic.cats \
+	hashmap/SATS/spinlock.sats hashmap/DATS/spinlock.dats \
+	hashmap/CATS/spinlock.cats hashmap/SATS/initialize-once.sats \
+	hashmap/DATS/initialize-once.dats hashmap/SATS/array_prf.sats \
 	hashmap/DATS/array_prf.dats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/memory.cats \
-	hashmap/SATS/hashmap.sats hashmap/SATS/count-one-bits.sats \
+	hashmap/SATS/count-one-bits.sats \
 	hashmap/CATS/count-one-bits.cats \
 	hashmap/DATS/count-one-bits.dats \
 	hashmap/DATS/count-one-bits-microsoft-c.dats \
 	hashmap/SATS/bits-source.sats \
 	hashmap/DATS/bits-source-uint64-uint64.dats \
+	hashmap/DATS/bits-source-uintptr.dats \
 	hashmap/SATS/array-mapped-tree.sats \
 	hashmap/DATS/array-mapped-tree-free.dats \
 	hashmap/DATS/array-mapped-tree-create.dats \
 	hashmap/DATS/array-mapped-tree-get-entry.dats \
 	hashmap/SATS/array-mapped-tree-templates.sats \
 	hashmap/DATS/array-mapped-tree-templates.dats \
-	tests/test-bits-source-uint16.dats \
+	hashmap/SATS/uintptr-set.sats hashmap/DATS/uintptr-set.dats \
+	hashmap/SATS/hashmap.sats tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
 	tests/test-bits-source-uint64.dats \
 	tests/test-count-one-bits.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint16.dats
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint32.dats
-#BUILT_SOURCES += hashmap/DATS/bits-source-uint64.dats
-CLEANFILES = hashmap/SATS/array_prf_sats.c \
-	hashmap/DATS/array_prf_dats.c hashmap/SATS/memory_sats.c \
-	hashmap/DATS/memory_dats.c hashmap/SATS/hashmap_sats.c \
+CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
+	hashmap/SATS/spinlock_sats.c hashmap/DATS/spinlock_dats.c \
+	hashmap/SATS/initialize-once_sats.c \
+	hashmap/DATS/initialize-once_dats.c \
+	hashmap/SATS/array_prf_sats.c hashmap/DATS/array_prf_dats.c \
+	hashmap/SATS/memory_sats.c hashmap/DATS/memory_dats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
 	hashmap/DATS/count-one-bits-microsoft-c_dats.c \
@@ -803,6 +821,7 @@ CLEANFILES = hashmap/SATS/array_prf_sats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
 	hashmap/DATS/bits-source-uint64-uint64_dats.c \
+	hashmap/DATS/bits-source-uintptr_dats.c \
 	hashmap/DATS/bits-source-uint16.dats \
 	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/DATS/bits-source-uint64.dats \
@@ -816,6 +835,8 @@ CLEANFILES = hashmap/SATS/array_prf_sats.c \
 	hashmap/DATS/array-mapped-tree-get-entry_dats.c \
 	hashmap/SATS/array-mapped-tree-templates_sats.c \
 	hashmap/DATS/array-mapped-tree-templates_dats.c \
+	hashmap/SATS/uintptr-set_sats.c \
+	hashmap/DATS/uintptr-set_dats.c hashmap/SATS/hashmap_sats.c \
 	tests/test-bits-source-uint16 \
 	tests/test-bits-source-uint16_dats.c \
 	tests/test-bits-source-uint32 \
@@ -828,7 +849,7 @@ CLEANFILES = hashmap/SATS/array_prf_sats.c \
 	tests/test-count-one-bits tests/test-count-one-bits_dats.c \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
-#BUILT_SOURCES =
+BUILT_SOURCES = 
 AM_M4FLAGS = 
 
 # We will not be using exceptions.
@@ -850,9 +871,9 @@ LDADD = $(CODE_COVERAGE_LIBS)
 # The ATS2 library.
 #
 lib_LTLIBRARIES = libats2-hashmap.la
-nobase_nodist_pkginclude_HEADERS = hashmap/SATS/hashmap.sats \
-	hashmap/SATS/bits-source.sats \
-	hashmap/HATS/bits-source-include.hats
+nobase_nodist_pkginclude_HEADERS = hashmap/SATS/bits-source.sats \
+	hashmap/HATS/bits-source-include.hats \
+	hashmap/SATS/uintptr-set.sats hashmap/SATS/hashmap.sats
 pkgconfigdir = ${libdir}/pkgconfig
 nodist_pkgconfig_DATA = 
 CODE_COVERAGE_IGNORE_PATTERN = /usr/include/* /usr/include/*/* \
@@ -879,9 +900,13 @@ AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
-libats2_hashmap_la_SOURCES = hashmap/SATS/array_prf_sats.c \
-	hashmap/DATS/array_prf_dats.c hashmap/SATS/memory_sats.c \
-	hashmap/DATS/memory_dats.c hashmap/SATS/hashmap_sats.c \
+libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
+	hashmap/DATS/atomic_dats.c hashmap/SATS/spinlock_sats.c \
+	hashmap/DATS/spinlock_dats.c \
+	hashmap/SATS/initialize-once_sats.c \
+	hashmap/DATS/initialize-once_dats.c \
+	hashmap/SATS/array_prf_sats.c hashmap/DATS/array_prf_dats.c \
+	hashmap/SATS/memory_sats.c hashmap/DATS/memory_dats.c \
 	hashmap/SATS/count-one-bits_sats.c \
 	hashmap/DATS/count-one-bits_dats.c \
 	hashmap/DATS/count-one-bits-microsoft-c_dats.c \
@@ -890,12 +915,15 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/array_prf_sats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
 	hashmap/DATS/bits-source-uint64-uint64_dats.c \
+	hashmap/DATS/bits-source-uintptr_dats.c \
 	hashmap/SATS/array-mapped-tree_sats.c \
 	hashmap/DATS/array-mapped-tree-free_dats.c \
 	hashmap/DATS/array-mapped-tree-create_dats.c \
 	hashmap/DATS/array-mapped-tree-get-entry_dats.c \
 	hashmap/SATS/array-mapped-tree-templates_sats.c \
-	hashmap/DATS/array-mapped-tree-templates_dats.c
+	hashmap/DATS/array-mapped-tree-templates_dats.c \
+	hashmap/SATS/uintptr-set_sats.c \
+	hashmap/DATS/uintptr-set_dats.c hashmap/SATS/hashmap_sats.c
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = 
 tests_test_bits_source_uint16_SOURCES = tests/test-bits-source-uint16_dats.c
@@ -913,7 +941,8 @@ list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
 list_ats_dependencies_LDADD = -L'$(PATSHOME)/ccomp/atslib/lib' \
 	-latslib
-all: all-am
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .log .o .obj .test .test$(EXEEXT) .trs
@@ -1068,7 +1097,7 @@ hashmap/SATS/$(am__dirstamp):
 hashmap/SATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/SATS/$(DEPDIR)
 	@: > hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/array_prf_sats.lo: hashmap/SATS/$(am__dirstamp) \
+hashmap/SATS/atomic_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS
@@ -1076,14 +1105,24 @@ hashmap/DATS/$(am__dirstamp):
 hashmap/DATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS/$(DEPDIR)
 	@: > hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/atomic_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/spinlock_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/spinlock_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/initialize-once_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/initialize-once_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/array_prf_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/array_prf_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/memory_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/memory_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/hashmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
-	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/count-one-bits_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/count-one-bits_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1100,6 +1139,9 @@ hashmap/DATS/bits-source-uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
 hashmap/DATS/bits-source-uint64_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint64-uint64_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits-source-uintptr_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/array-mapped-tree_sats.lo: hashmap/SATS/$(am__dirstamp) \
@@ -1119,6 +1161,12 @@ hashmap/SATS/array-mapped-tree-templates_sats.lo:  \
 hashmap/DATS/array-mapped-tree-templates_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/uintptr-set_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr-set_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/hashmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 
 libats2-hashmap.la: $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_DEPENDENCIES) $(EXTRA_libats2_hashmap_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) -rpath $(libdir) $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_LIBADD) $(LIBS)
@@ -1180,20 +1228,29 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-templates_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/atomic_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uintptr_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/memory_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array_prf_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/atomic_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/memory_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint16_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po@am__quote@ # am--include-marker
@@ -1725,7 +1782,8 @@ distcleancheck: distclean
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: GNUmakefile $(PROGRAMS) $(LTLIBRARIES) $(DATA) $(HEADERS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
@@ -1733,8 +1791,10 @@ installdirs:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
+install-exec: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
 
@@ -1775,6 +1835,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
@@ -1788,20 +1849,29 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-templates_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uintptr_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array_prf_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
@@ -1861,20 +1931,29 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-templates_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uintptr_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits-microsoft-c_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/count-one-bits_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array_prf_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/count-one-bits_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
@@ -1900,7 +1979,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-nobase_nodist_pkgincludeHEADERS \
 	uninstall-nodist_pkgconfigDATA
 
-.MAKE: check-am install-am install-strip
+.MAKE: all check check-am install install-am install-exec \
+	install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-TESTS check-am clean clean-binPROGRAMS \

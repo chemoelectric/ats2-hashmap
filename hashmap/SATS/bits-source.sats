@@ -118,4 +118,20 @@ in
   overload free with free_bits_source_uint64_uint64
 
   (******************************************************************)
+  (* Make a bits source of a uintptr. (One possible use is addresses
+     of objects as their hashes.) *)
+
+  fun
+  make_bits_source_uintptr :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (uintptr, num_bits)
+
+  fun
+  free_bits_source_uintptr :
+    {num_bits : int}
+    bits_source_cloptr (uintptr, num_bits) -> void
+
+  overload free with free_bits_source_uintptr
+
+  (******************************************************************)
 end
