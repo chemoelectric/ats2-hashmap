@@ -205,30 +205,58 @@ EXTRA_DIST += hashmap/DATS/count-one-bits.dats
 EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint8_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uintptr_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-size_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-usint_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ulint_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ullint_dats.c
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
+CLEANFILES += hashmap/DATS/bits-source-uint8_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uintptr_dats.c
+CLEANFILES += hashmap/DATS/bits-source-size_dats.c
+CLEANFILES += hashmap/DATS/bits-source-usint_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint_dats.c
+CLEANFILES += hashmap/DATS/bits-source-ulint_dats.c
+CLEANFILES += hashmap/DATS/bits-source-ullint_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint8.dats
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
+CLEANFILES += hashmap/DATS/bits-source-uintptr.dats
+CLEANFILES += hashmap/DATS/bits-source-size.dats
+CLEANFILES += hashmap/DATS/bits-source-usint.dats
+CLEANFILES += hashmap/DATS/bits-source-uint.dats
+CLEANFILES += hashmap/DATS/bits-source-ulint.dats
+CLEANFILES += hashmap/DATS/bits-source-ullint.dats
 CLEANFILES += hashmap/DATS/bits-source-UINTTYPE.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint8.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uintptr.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-size.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-usint.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-ulint.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-ullint.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-uint64-uint64.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
+
+hashmap/DATS/bits-source-uint8.dats: hashmap/DATS/bits-source-uint8.dats.m4
+hashmap/DATS/bits-source-uint8.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-uint16.dats.m4
 hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
@@ -241,6 +269,21 @@ hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-uintptr.dats.m4
 hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-size.dats: hashmap/DATS/bits-source-size.dats.m4
+hashmap/DATS/bits-source-size.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-usint.dats: hashmap/DATS/bits-source-usint.dats.m4
+hashmap/DATS/bits-source-usint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-uint.dats: hashmap/DATS/bits-source-uint.dats.m4
+hashmap/DATS/bits-source-uint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-ulint.dats: hashmap/DATS/bits-source-ulint.dats.m4
+hashmap/DATS/bits-source-ulint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-ullint.dats: hashmap/DATS/bits-source-ullint.dats.m4
+hashmap/DATS/bits-source-ullint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-free_dats.c

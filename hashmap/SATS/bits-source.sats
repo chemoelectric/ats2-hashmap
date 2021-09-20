@@ -57,6 +57,21 @@ in
       @(BITS_SOURCE_BITS (num_bits, bits) | int bits)
 
   (******************************************************************)
+  (* Make a bits source of a uint8. *)
+
+  fun
+  make_bits_source_uint8 :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (uint8, num_bits)
+
+  fun
+  free_bits_source_uint8 :
+    {num_bits : int}
+    bits_source_cloptr (uint8, num_bits) -> void
+
+  overload free with free_bits_source_uint8
+
+  (******************************************************************)
   (* Make a bits source of a uint16. *)
 
   fun
@@ -132,6 +147,81 @@ in
     bits_source_cloptr (uintptr, num_bits) -> void
 
   overload free with free_bits_source_uintptr
+
+  (******************************************************************)
+  (* Make a bits source of a size_t. *)
+
+  fun
+  make_bits_source_size :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (size_t, num_bits)
+
+  fun
+  free_bits_source_size :
+    {num_bits : int}
+    bits_source_cloptr (size_t, num_bits) -> void
+
+  overload free with free_bits_source_size
+
+  (******************************************************************)
+  (* Make a bits source of a usint. *)
+
+  fun
+  make_bits_source_usint :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (usint, num_bits)
+
+  fun
+  free_bits_source_usint :
+    {num_bits : int}
+    bits_source_cloptr (usint, num_bits) -> void
+
+  overload free with free_bits_source_usint
+
+  (******************************************************************)
+  (* Make a bits source of a uint. *)
+
+  fun
+  make_bits_source_uint :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (uint, num_bits)
+
+  fun
+  free_bits_source_uint :
+    {num_bits : int}
+    bits_source_cloptr (uint, num_bits) -> void
+
+  overload free with free_bits_source_uint
+
+  (******************************************************************)
+  (* Make a bits source of a ulint. *)
+
+  fun
+  make_bits_source_ulint :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (ulint, num_bits)
+
+  fun
+  free_bits_source_ulint :
+    {num_bits : int}
+    bits_source_cloptr (ulint, num_bits) -> void
+
+  overload free with free_bits_source_ulint
+
+  (******************************************************************)
+  (* Make a bits source of a ullint. *)
+
+  fun
+  make_bits_source_ullint :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) -> bits_source_cloptr (ullint, num_bits)
+
+  fun
+  free_bits_source_ullint :
+    {num_bits : int}
+    bits_source_cloptr (ullint, num_bits) -> void
+
+  overload free with free_bits_source_ullint
 
   (******************************************************************)
 end

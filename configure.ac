@@ -179,11 +179,17 @@ AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
 
 AC_CONFIG_FILES([common-macros.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-size.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-usint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint.dats.m4])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 
