@@ -78,15 +78,6 @@ overload ~ with lnot_uint of 1000
 infix &
 overload & with land_uint of 1000
 
-extern castfn
-int_of_uint : {u : int} uint u -<> int u
-
-extern castfn
-UINTTYPE`'_of_uint : {u : int} uint u -<> UINTTYPE u
-
-extern castfn
-uint_of_`'UINTTYPE : {u : int} UINTTYPE u -<> uint u
-
 fn
 make_mask {num_bits : int | valid_num_bits (num_bits)}
           (num_bits : uint num_bits) :<>
@@ -116,13 +107,13 @@ make_bits_source_`'UINTTYPE {num_bits} (num_bits) =
           let
             val shift = num_bits * i
             val u_shifted = (g1ofg0 u) >> shift
-            val [bits : int] bits = (uint_of_`'UINTTYPE u_shifted) & mask
+            val [bits : int] bits =
+              ($UNSAFE.cast{[u : int] uint u} u_shifted) & mask
             prval _ = lemma_g1uint_param bits
             prval _ = prop_verify {0 <= bits} ()
             prval _ = prop_verify {bits_maxval (num_bits, bits)} ()
           in
-            @(bits_source_bits_make {num_bits} {bits} () |
-              int_of_uint (bits))
+            @(bits_source_bits_make {num_bits} {bits} () | u2i bits)
           end
         else
           @(bits_source_bits_make {num_bits} {~1} () | (~1))
@@ -132,3 +123,4 @@ make_bits_source_`'UINTTYPE {num_bits} (num_bits) =
 implement
 free_bits_source_`'UINTTYPE bits_source =
   cloptr_free ($UNSAFE.castvwtp0{cloptr0} bits_source)
+

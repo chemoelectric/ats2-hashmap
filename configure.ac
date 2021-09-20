@@ -97,6 +97,7 @@ AC_CHECK_SIZEOF([uint64_t])
 AC_CHECK_TYPE([unsigned __int128])
 if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
   HAVE_UINT128=1
+  AC_CHECK_SIZEOF([unsigned __int128])
 else
   HAVE_UINT128=0
 fi
@@ -183,6 +184,7 @@ AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128.dats.m4])
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-size.dats.m4])

@@ -224,4 +224,22 @@ in
   overload free with free_bits_source_ullint
 
   (******************************************************************)
+  (* Make a bits source of a GCC "unsigned __int128" type. *)
+
+  typedef ats2_hashmap_uint128 = $extype"unsigned __int128"
+
+  fun
+  make_bits_source_uint128 :
+    {num_bits : int | valid_num_bits (num_bits)}
+    (uint num_bits) ->
+      bits_source_cloptr (ats2_hashmap_uint128, num_bits)
+
+  fun
+  free_bits_source_uint128 :
+    {num_bits : int}
+    bits_source_cloptr (ats2_hashmap_uint128, num_bits) -> void
+
+  overload free with free_bits_source_uint128
+
+  (******************************************************************)
 end

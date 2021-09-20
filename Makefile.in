@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Mon Sep 20 11:16:09 CDT 2021
+# from AX_AM_MACROS_STATIC on Mon Sep 20 12:29:16 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -173,6 +173,7 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/bits-source-uint16.dats.m4 \
 	hashmap/DATS/bits-source-uint32.dats.m4 \
 	hashmap/DATS/bits-source-uint64.dats.m4 \
+	hashmap/DATS/bits-source-uint128.dats.m4 \
 	tests/test-bits-source-uint64-uint64.dats \
 	hashmap/DATS/bits-source-uintptr.dats.m4 \
 	hashmap/DATS/bits-source-size.dats.m4 \
@@ -230,6 +231,7 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/atomic_sats.lo \
 	hashmap/DATS/bits-source-uint16_dats.lo \
 	hashmap/DATS/bits-source-uint32_dats.lo \
 	hashmap/DATS/bits-source-uint64_dats.lo \
+	hashmap/DATS/bits-source-uint128_dats.lo \
 	hashmap/DATS/bits-source-uint64-uint64_dats.lo \
 	hashmap/DATS/bits-source-uintptr_dats.lo \
 	hashmap/DATS/bits-source-size_dats.lo \
@@ -308,6 +310,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/atomic_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-size_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits-source-uint128_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo \
@@ -593,6 +596,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-size.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits-source-uint128.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint16.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in \
@@ -814,6 +818,7 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint16.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits-source-uint128.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uintptr.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-size.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in \
@@ -867,6 +872,7 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
+	hashmap/DATS/bits-source-uint128_dats.c \
 	hashmap/DATS/bits-source-uint64-uint64_dats.c \
 	hashmap/DATS/bits-source-uintptr_dats.c \
 	hashmap/DATS/bits-source-size_dats.c \
@@ -878,6 +884,7 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/DATS/bits-source-uint16.dats \
 	hashmap/DATS/bits-source-uint32.dats \
 	hashmap/DATS/bits-source-uint64.dats \
+	hashmap/DATS/bits-source-uint128.dats \
 	hashmap/DATS/bits-source-uintptr.dats \
 	hashmap/DATS/bits-source-size.dats \
 	hashmap/DATS/bits-source-usint.dats \
@@ -889,6 +896,7 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/DATS/bits-source-uint16.dats.m4 \
 	hashmap/DATS/bits-source-uint32.dats.m4 \
 	hashmap/DATS/bits-source-uint64.dats.m4 \
+	hashmap/DATS/bits-source-uint128.dats.m4 \
 	hashmap/DATS/bits-source-uintptr.dats.m4 \
 	hashmap/DATS/bits-source-size.dats.m4 \
 	hashmap/DATS/bits-source-usint.dats.m4 \
@@ -981,6 +989,7 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
 	hashmap/DATS/bits-source-uint16_dats.c \
 	hashmap/DATS/bits-source-uint32_dats.c \
 	hashmap/DATS/bits-source-uint64_dats.c \
+	hashmap/DATS/bits-source-uint128_dats.c \
 	hashmap/DATS/bits-source-uint64-uint64_dats.c \
 	hashmap/DATS/bits-source-uintptr_dats.c \
 	hashmap/DATS/bits-source-size_dats.c \
@@ -1069,6 +1078,8 @@ hashmap/DATS/bits-source-uint16.dats.m4: $(top_builddir)/config.status $(top_src
 hashmap/DATS/bits-source-uint32.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/bits-source-uint64.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/bits-source-uint128.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint128.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -1228,6 +1239,9 @@ hashmap/DATS/bits-source-uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint64_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits-source-uint128_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits-source-uint64-uint64_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
@@ -1336,6 +1350,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/atomic_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-size_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint128_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo@am__quote@ # am--include-marker
@@ -1971,6 +1986,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint128_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
@@ -2060,6 +2076,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array_prf_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint128_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint16_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint32_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-uint64-uint64_dats.Plo
@@ -2284,6 +2301,9 @@ hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4
 hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-uint128.dats: hashmap/DATS/bits-source-uint128.dats.m4
+hashmap/DATS/bits-source-uint128.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-uintptr.dats.m4
 hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4

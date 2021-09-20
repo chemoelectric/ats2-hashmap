@@ -1,0 +1,23 @@
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_DYNLOADFLAG 0
+
+#if @HAVE_UINT128@ #then
+
+include(`common-macros.m4')
+m4_define(`UINTTYPE',`uint128')
+m4_define(`BITSIZEU', `128U')
+
+staload BITS_SOURCE = "hashmap/SATS/bits-source.sats"
+
+typedef uint128 = $BITS_SOURCE.ats2_hashmap_uint128
+typedef uint128 (u : int) = $extype"unsigned __int128"
+
+extern castfn
+g1ofg0_uint128 :
+  uint128 -<> [u : int | 0 <= u] uint128 u
+
+overload g1ofg0 with g1ofg0_uint128 of 10000
+
+m4_include(`hashmap/DATS/bits-source-UINTTYPE.dats.m4')
+
+#endif (* HAVE_UINT128 *)
