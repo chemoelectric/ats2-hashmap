@@ -96,12 +96,6 @@ overload & with land_uint of 1000
 overload + with add_uint64 of 1000
 
 extern castfn
-int_of_uint : {u : int} uint u -<> int u
-
-extern castfn
-uint64_of_uint : {u : int} uint u -<> uint64 u
-
-extern castfn
 uint_of_uint64 : {u : int} uint64 u -<> uint u
 
 fn {}
@@ -176,8 +170,7 @@ make_bits_source_uint64_uint64 {num_bits} (num_bits) =
               rshift_and_mask<> (uu, i, num_bits, mask)
             prval _ = lemma_g1uint_param bits
           in
-            (bits_source_bits_make {num_bits} {bits} () |
-             int_of_uint (bits))
+            (bits_source_bits_make {num_bits} {bits} () | u2i bits)
           end
         else
           (bits_source_bits_make {num_bits} {~1} () | (~1))
