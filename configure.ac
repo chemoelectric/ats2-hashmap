@@ -102,6 +102,9 @@ else
 fi
 AC_SUBST([HAVE_UINT128])
 
+AM_CONDITIONAL([UINTPTR_IS_UINT64],
+  [test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}])
+
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
@@ -175,11 +178,12 @@ AC_CONFIG_FILES([hashmap/HATS/config.hats])
 AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
 
 AC_CONFIG_FILES([common-macros.m4])
-AC_CONFIG_FILES([hashmap/DATS/bits-source-uintNN.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

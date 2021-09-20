@@ -1,3 +1,4 @@
 include(`common-macros.m4')
-m4_define(`NN',`64')
-m4_include(`hashmap/DATS/bits-source-uintNN.dats.m4')
+m4_define(`UINTTYPE',`uint64')
+m4_define(`BITSIZEU', `64U')
+m4_include(`hashmap/DATS/bits-source-UINTTYPE.dats.m4')

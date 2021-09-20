@@ -690,6 +690,8 @@ SIZEOF_UINT
 SIZEOF_USINT
 GNU_MAKE
 GNU
+UINTPTR_IS_UINT64_FALSE
+UINTPTR_IS_UINT64_TRUE
 HAVE_UINT128
 CODE_COVERAGE_LIBS
 CODE_COVERAGE_CXXFLAGS
@@ -15072,6 +15074,15 @@ else
 fi
 
 
+ if test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}; then
+  UINTPTR_IS_UINT64_TRUE=
+  UINTPTR_IS_UINT64_FALSE='#'
+else
+  UINTPTR_IS_UINT64_TRUE='#'
+  UINTPTR_IS_UINT64_FALSE=
+fi
+
+
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
@@ -15300,7 +15311,7 @@ ac_config_files="$ac_config_files hashmap/HATS/bits-source-include.hats"
 
 ac_config_files="$ac_config_files common-macros.m4"
 
-ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintNN.dats.m4"
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-UINTTYPE.dats.m4"
 
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint16.dats.m4"
 
@@ -15309,6 +15320,8 @@ ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint32.dats.m4"
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64.dats.m4"
 
 ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintptr.dats.m4"
 
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
@@ -15501,6 +15514,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE}"; then
   as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${UINTPTR_IS_UINT64_TRUE}" && test -z "${UINTPTR_IS_UINT64_FALSE}"; then
+  as_fn_error $? "conditional \"UINTPTR_IS_UINT64\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -16363,11 +16380,12 @@ do
     "hashmap/HATS/config.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/config.hats" ;;
     "hashmap/HATS/bits-source-include.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/bits-source-include.hats" ;;
     "common-macros.m4") CONFIG_FILES="$CONFIG_FILES common-macros.m4" ;;
-    "hashmap/DATS/bits-source-uintNN.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintNN.dats.m4" ;;
+    "hashmap/DATS/bits-source-UINTTYPE.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-UINTTYPE.dats.m4" ;;
     "hashmap/DATS/bits-source-uint16.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint16.dats.m4" ;;
     "hashmap/DATS/bits-source-uint32.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32.dats.m4" ;;
     "hashmap/DATS/bits-source-uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64.dats.m4" ;;
     "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
+    "hashmap/DATS/bits-source-uintptr.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintptr.dats.m4" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

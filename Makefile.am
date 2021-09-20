@@ -220,24 +220,27 @@ CLEANFILES += hashmap/DATS/bits-source-uintptr_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats
-CLEANFILES += hashmap/DATS/bits-source-uintNN.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-UINTTYPE.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint64.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uintptr.dats.m4
 EXTRA_DIST += hashmap/SATS/bits-source.sats
 EXTRA_DIST += hashmap/DATS/bits-source-uint64-uint64.dats
-EXTRA_DIST += hashmap/DATS/bits-source-uintptr.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
 
 hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-uint16.dats.m4
-hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-uintNN.dats.m4
+hashmap/DATS/bits-source-uint16.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uint32.dats.m4
-hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-uintNN.dats.m4
+hashmap/DATS/bits-source-uint32.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uint64.dats.m4
-hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-uintNN.dats.m4
+hashmap/DATS/bits-source-uint64.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-uintptr.dats.m4
+hashmap/DATS/bits-source-uintptr.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-free_dats.c
@@ -307,6 +310,15 @@ tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits-source-uint64-uint64.dats
 CLEANFILES += tests/test-bits-source-uint64-uint64
 CLEANFILES += tests/test-bits-source-uint64-uint64_dats.c
+
+if UINTPTR_IS_UINT64
+check_PROGRAMS += tests/test-bits-source-uintptr
+tests_test_bits_source_uintptr_SOURCES = tests/test-bits-source-uintptr_dats.c
+tests_test_bits_source_uintptr_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits-source-uintptr.dats
+CLEANFILES += tests/test-bits-source-uintptr
+CLEANFILES += tests/test-bits-source-uintptr_dats.c
+endif UINTPTR_IS_UINT64
 
 check_PROGRAMS += tests/test-count-one-bits
 tests_test_count_one_bits_SOURCES = tests/test-count-one-bits_dats.c
