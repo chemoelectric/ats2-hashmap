@@ -9,7 +9,7 @@ m4_define(`BITSIZEU', `128U')
 
 staload BITS_SOURCE = "hashmap/SATS/bits-source.sats"
 
-typedef uint128 = $BITS_SOURCE.ats2_hashmap_uint128
+typedef uint128 = $BITS_SOURCE.hashmap_uint128
 typedef uint128 (u : int) = $extype"unsigned __int128"
 
 extern castfn
