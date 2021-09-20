@@ -15344,6 +15344,7 @@ ac_config_files="$ac_config_files hashmap/HATS/bits-source-include.hats"
 
 ac_config_files="$ac_config_files common-macros.m4"
 
+
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-UINTTYPE.dats.m4"
 
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint8.dats.m4"
@@ -15356,8 +15357,6 @@ ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64.dats.m4"
 
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint128.dats.m4"
 
-ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
-
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintptr.dats.m4"
 
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-size.dats.m4"
@@ -15369,6 +15368,36 @@ ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint.dats.m4"
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-ulint.dats.m4"
 
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-ullint.dats.m4"
+
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-TYPE-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint8-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint16-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint32-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint128-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintptr-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-size-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-usint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ulint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ullint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4"
+
+
+ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
 
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
@@ -16433,13 +16462,26 @@ do
     "hashmap/DATS/bits-source-uint32.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32.dats.m4" ;;
     "hashmap/DATS/bits-source-uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64.dats.m4" ;;
     "hashmap/DATS/bits-source-uint128.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint128.dats.m4" ;;
-    "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
     "hashmap/DATS/bits-source-uintptr.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintptr.dats.m4" ;;
     "hashmap/DATS/bits-source-size.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-size.dats.m4" ;;
     "hashmap/DATS/bits-source-usint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-usint.dats.m4" ;;
     "hashmap/DATS/bits-source-uint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint.dats.m4" ;;
     "hashmap/DATS/bits-source-ulint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ulint.dats.m4" ;;
     "hashmap/DATS/bits-source-ullint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ullint.dats.m4" ;;
+    "hashmap/DATS/bits-source-TYPE-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-TYPE-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint8-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint8-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint16-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint16-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint32-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint128-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint128-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uintptr-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintptr-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-size-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-size-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-usint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-usint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-ulint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ulint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-ullint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ullint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4" ;;
+    "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

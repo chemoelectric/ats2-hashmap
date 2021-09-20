@@ -21,6 +21,10 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
+%{#
+#include "hashmap/CATS/bits-source.cats"
+%}
+
 local
 
   #include "hashmap/HATS/bits-source-include.hats"
@@ -56,6 +60,11 @@ in
       [bits : int]
       @(BITS_SOURCE_BITS (num_bits, bits) | int bits)
 
+  typedef bits_source_cloref (data_t : t@ype, num_bits : int) =
+    (&data_t >> _, uint) -<cloref1>
+      [bits : int]
+      @(BITS_SOURCE_BITS (num_bits, bits) | int bits)
+
   (******************************************************************)
   (* Make a bits source of a uint8. *)
 
@@ -70,6 +79,14 @@ in
     bits_source_cloptr (uint8, num_bits) -> void
 
   overload free with free_bits_source_uint8
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint8 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uint8, num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a uint16. *)
@@ -86,6 +103,14 @@ in
 
   overload free with free_bits_source_uint16
 
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint16 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uint16, num_bits) = "mac#%"
+
   (******************************************************************)
   (* Make a bits source of a uint32. *)
 
@@ -100,6 +125,14 @@ in
     bits_source_cloptr (uint32, num_bits) -> void
 
   overload free with free_bits_source_uint32
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint32 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uint32, num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a uint64. *)
@@ -116,6 +149,14 @@ in
 
   overload free with free_bits_source_uint64
 
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint64 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uint64, num_bits) = "mac#%"
+
   (******************************************************************)
   (* Make a bits source of a pair of uint64. *)
 
@@ -131,6 +172,14 @@ in
     bits_source_cloptr (@(uint64, uint64), num_bits) -> void
 
   overload free with free_bits_source_uint64_uint64
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint64_uint64 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (@(uint64, uint64), num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a uintptr. (One possible use is addresses

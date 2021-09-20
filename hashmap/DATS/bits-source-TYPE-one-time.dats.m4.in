@@ -1,0 +1,91 @@
+(* --*- mode: ATS -*--
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+#include "hashmap/HATS/config.hats"
+#include "hashmap/HATS/bits-source-include.hats"
+
+staload "hashmap/SATS/bits-source.sats"
+
+staload "hashmap/SATS/atomic.sats"
+staload "hashmap/SATS/spinlock.sats"
+staload "hashmap/SATS/initialize-once.sats"
+staload _ = "hashmap/DATS/atomic.dats"
+staload _ = "hashmap/DATS/spinlock.dats"
+staload _ = "hashmap/DATS/initialize-once.dats"
+
+local
+  #define NUM_BITS SIZEOF_BITINDEXOF_UINTPTR
+
+  typedef bits_t =
+    [bits : int]
+    @(BITS_SOURCE_BITS (NUM_BITS, bits) | int bits)
+
+  vtypedef my_cloptr_vt = bits_source_cloptr (TYPE, NUM_BITS)
+
+  var init = initialize_once_nil ()
+  var storage : ptr
+in
+  (*
+    Perhaps it will work simply to cast the cloptr to a cloref,
+    but the following implementation lets cloptr and cloref be
+    implemented differently.
+
+    FIXME: Simply cast the cloptr to a cloref, if this is truly
+           an adequate technique.
+  *)
+  fn
+  make_closure (storage : &ptr? >> ptr) : void =
+    {
+      val bits_source_linear =
+        make_bits_source_`'NAME (i2u NUM_BITS)
+      val bits_source_ptr =
+        $UNSAFE.castvwtp0{ptr} bits_source_linear
+
+      val bits_source_nonlinear : bits_source_cloref (TYPE, NUM_BITS) =
+        lam (hash  : &(TYPE) >> _,
+             index : uint) : bits_t =<cloref1>
+          let
+            val bits_source_linear =
+              $UNSAFE.castvwtp1{my_cloptr_vt} bits_source_ptr
+            val bits = bits_source_linear (hash, index)
+            prval _ = bits_source_linear :=
+              $UNSAFE.castvwtp0{ptr} bits_source_linear
+          in
+            bits
+          end
+
+      val _ = storage := $UNSAFE.cast{ptr} bits_source_nonlinear
+    }
+
+  extern fun
+  ats2_hashmap_get_bits_source_cloref_`'NAME () : ptr = "ext#"
+
+  implement
+  ats2_hashmap_get_bits_source_cloref_`'NAME () =
+    initialize_once<ptr> (addr@ init, addr@ storage, make_closure)
+end

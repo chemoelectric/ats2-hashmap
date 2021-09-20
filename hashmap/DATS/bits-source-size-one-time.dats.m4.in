@@ -1,0 +1,6 @@
+include(`common-macros.m4')
+typedef size = size_t
+typedef size (i : int) = size_t i
+m4_define(`TYPE',`size')
+m4_define(`NAME',`TYPE')
+m4_include(`hashmap/DATS/bits-source-TYPE-one-time.dats.m4')

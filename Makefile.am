@@ -210,13 +210,27 @@ libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint128_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uintptr_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-size_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-usint_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ulint_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ullint_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64_dats.c
+
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint8-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint32-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint128-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uintptr-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-size-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-usint-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ulint-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-ullint-one-time_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint64-uint64-one-time_dats.c
+
 CLEANFILES += hashmap/HATS/bits-source-include.hats
 CLEANFILES += hashmap/SATS/bits-source_sats.c
 CLEANFILES += hashmap/DATS/bits-source-uint8_dats.c
@@ -224,13 +238,27 @@ CLEANFILES += hashmap/DATS/bits-source-uint16_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint32_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint128_dats.c
-CLEANFILES += hashmap/DATS/bits-source-uint64-uint64_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uintptr_dats.c
 CLEANFILES += hashmap/DATS/bits-source-size_dats.c
 CLEANFILES += hashmap/DATS/bits-source-usint_dats.c
 CLEANFILES += hashmap/DATS/bits-source-uint_dats.c
 CLEANFILES += hashmap/DATS/bits-source-ulint_dats.c
 CLEANFILES += hashmap/DATS/bits-source-ullint_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint64-uint64_dats.c
+
+CLEANFILES += hashmap/DATS/bits-source-uint8-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint16-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint32-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint64-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint128-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uintptr-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-size-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-usint-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-ulint-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-ullint-one-time_dats.c
+CLEANFILES += hashmap/DATS/bits-source-uint64-uint64-one-time_dats.c
+
 CLEANFILES += hashmap/DATS/bits-source-uint8.dats
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats
 CLEANFILES += hashmap/DATS/bits-source-uint32.dats
@@ -242,6 +270,20 @@ CLEANFILES += hashmap/DATS/bits-source-usint.dats
 CLEANFILES += hashmap/DATS/bits-source-uint.dats
 CLEANFILES += hashmap/DATS/bits-source-ulint.dats
 CLEANFILES += hashmap/DATS/bits-source-ullint.dats
+
+CLEANFILES += hashmap/DATS/bits-source-uint8-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint16-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint32-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint64-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint128-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uintptr-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-size-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-usint-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-ulint-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-ullint-one-time.dats
+CLEANFILES += hashmap/DATS/bits-source-uint64-uint64-one-time.dats
+
 CLEANFILES += hashmap/DATS/bits-source-UINTTYPE.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint8.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint16.dats.m4
@@ -254,8 +296,24 @@ CLEANFILES += hashmap/DATS/bits-source-usint.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-uint.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-ulint.dats.m4
 CLEANFILES += hashmap/DATS/bits-source-ullint.dats.m4
+
+CLEANFILES += hashmap/DATS/bits-source-uint8-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint16-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint32-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint64-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint128-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uintptr-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-size-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-usint-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-ulint-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-ullint-one-time.dats.m4
+CLEANFILES += hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4
+
 EXTRA_DIST += hashmap/SATS/bits-source.sats
+EXTRA_DIST += hashmap/CATS/bits-source.cats
 EXTRA_DIST += hashmap/DATS/bits-source-uint64-uint64.dats
+
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits-source.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/bits-source-include.hats
 
@@ -291,6 +349,42 @@ hashmap/DATS/bits-source-ulint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
 
 hashmap/DATS/bits-source-ullint.dats: hashmap/DATS/bits-source-ullint.dats.m4
 hashmap/DATS/bits-source-ullint.dats: hashmap/DATS/bits-source-UINTTYPE.dats.m4
+
+hashmap/DATS/bits-source-uint8-one-time.dats: hashmap/DATS/bits-source-uint8-one-time.dats.m4
+hashmap/DATS/bits-source-uint8-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint16-one-time.dats: hashmap/DATS/bits-source-uint16-one-time.dats.m4
+hashmap/DATS/bits-source-uint16-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint32-one-time.dats: hashmap/DATS/bits-source-uint32-one-time.dats.m4
+hashmap/DATS/bits-source-uint32-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint64-one-time.dats: hashmap/DATS/bits-source-uint64-one-time.dats.m4
+hashmap/DATS/bits-source-uint64-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint128-one-time.dats: hashmap/DATS/bits-source-uint128-one-time.dats.m4
+hashmap/DATS/bits-source-uint128-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uintptr-one-time.dats: hashmap/DATS/bits-source-uintptr-one-time.dats.m4
+hashmap/DATS/bits-source-uintptr-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-size-one-time.dats: hashmap/DATS/bits-source-size-one-time.dats.m4
+hashmap/DATS/bits-source-size-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-usint-one-time.dats: hashmap/DATS/bits-source-usint-one-time.dats.m4
+hashmap/DATS/bits-source-usint-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint-one-time.dats: hashmap/DATS/bits-source-uint-one-time.dats.m4
+hashmap/DATS/bits-source-uint-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-ulint-one-time.dats: hashmap/DATS/bits-source-ulint-one-time.dats.m4
+hashmap/DATS/bits-source-ulint-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-ullint-one-time.dats: hashmap/DATS/bits-source-ullint-one-time.dats.m4
+hashmap/DATS/bits-source-ullint-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4
+hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-free_dats.c
