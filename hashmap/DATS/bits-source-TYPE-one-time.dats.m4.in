@@ -41,45 +41,14 @@ staload _ = "hashmap/DATS/initialize-once.dats"
 local
   #define NUM_BITS SIZEOF_BITINDEXOF_UINTPTR
 
-  typedef bits_t =
-    [bits : int]
-    @(BITS_SOURCE_BITS (NUM_BITS, bits) | int bits)
-
-  vtypedef my_cloptr_vt = bits_source_cloptr (TYPE, NUM_BITS)
-
   var init = initialize_once_nil ()
   var storage : ptr
 in
-  (*
-    Perhaps it will work simply to cast the cloptr to a cloref,
-    but the following implementation lets cloptr and cloref be
-    implemented differently.
-
-    FIXME: Simply cast the cloptr to a cloref, if this is truly
-           an adequate technique.
-  *)
   fn
   make_closure (storage : &ptr? >> ptr) : void =
     {
-      val bits_source_linear =
-        make_bits_source_`'NAME (i2u NUM_BITS)
-      val bits_source_ptr =
-        $UNSAFE.castvwtp0{ptr} bits_source_linear
-
-      val bits_source_nonlinear : bits_source_cloref (TYPE, NUM_BITS) =
-        lam (hash  : &(TYPE) >> _,
-             index : uint) : bits_t =<cloref1>
-          let
-            val bits_source_linear =
-              $UNSAFE.castvwtp1{my_cloptr_vt} bits_source_ptr
-            val bits = bits_source_linear (hash, index)
-            prval _ = bits_source_linear :=
-              $UNSAFE.castvwtp0{ptr} bits_source_linear
-          in
-            bits
-          end
-
-      val _ = storage := $UNSAFE.cast{ptr} bits_source_nonlinear
+      val bits_source = make_bits_source_`'NAME (i2u NUM_BITS)
+      val _ = storage := $UNSAFE.castvwtp0{ptr} bits_source
     }
 
   extern fun
