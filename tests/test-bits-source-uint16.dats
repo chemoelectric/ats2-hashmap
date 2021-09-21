@@ -533,9 +533,6 @@ test_num_bits_eq_8 () : void =
 fn
 test_one_time () : void =
   {
-    val hash = cast16 0x1234U
-    val bits_source = bits_source_uint16 ()
-
     fn
     source_func {num_bits    : int}
                 (bits_source : bits_source_cloref (uint16, num_bits),
@@ -548,14 +545,17 @@ test_one_time () : void =
       in
         bits_source (h, depth)
       end
+
     macdef source (hash, depth) =
-      source_func (bits_source, ,(hash), ,(depth))
+      source_func (bits_source_uint16 (), ,(hash), ,(depth))
 
     (* FIXME: Currently testing is done only if sizeof(uintptr) = 8,
               as for instance on AMD64. *)
     val _ =
       if sizeof<uintptr> = i2sz 8 then
         {
+          val hash = cast16 0x1234U
+
           val _ =
             let
               var i : [i : nat] uint i
@@ -587,22 +587,6 @@ test_one_time () : void =
           val _ = assertloc ((source (hash, 100U)).1 = BITS_SOURCE_EXHAUSTED)
 
           val hash = cast16 0xDEADU
-          val bits_source = bits_source_uint16 ()
-
-          fn
-          source_func {num_bits    : int}
-                      (bits_source : bits_source_cloref (uint16, num_bits),
-                       hash        : uint16,
-                       depth       : uint) :
-              [bits : int]
-              (BITS_SOURCE_BITS (num_bits, bits) | int bits) =
-            let
-              var h = hash
-            in
-              bits_source (h, depth)
-            end
-          macdef source (hash, depth) =
-            source_func (bits_source, ,(hash), ,(depth))
 
           val _ =
             let
