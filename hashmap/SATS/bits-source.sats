@@ -197,6 +197,14 @@ in
 
   overload free with free_bits_source_uintptr
 
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uintptr :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uintptr, num_bits) = "mac#%"
+
   (******************************************************************)
   (* Make a bits source of a size_t. *)
 
@@ -211,6 +219,14 @@ in
     bits_source_cloptr (size_t, num_bits) -> void
 
   overload free with free_bits_source_size
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_size :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (size_t, num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a usint. *)
@@ -227,6 +243,14 @@ in
 
   overload free with free_bits_source_usint
 
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_usint :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (usint, num_bits) = "mac#%"
+
   (******************************************************************)
   (* Make a bits source of a uint. *)
 
@@ -241,6 +265,14 @@ in
     bits_source_cloptr (uint, num_bits) -> void
 
   overload free with free_bits_source_uint
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (uint, num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a ulint. *)
@@ -257,6 +289,14 @@ in
 
   overload free with free_bits_source_ulint
 
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_ulint :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (ulint, num_bits) = "mac#%"
+
   (******************************************************************)
   (* Make a bits source of a ullint. *)
 
@@ -271,6 +311,14 @@ in
     bits_source_cloptr (ullint, num_bits) -> void
 
   overload free with free_bits_source_ullint
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_ullint :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (ullint, num_bits) = "mac#%"
 
   (******************************************************************)
   (* Make a bits source of a GCC "unsigned __int128" type. *)
@@ -289,6 +337,14 @@ in
     bits_source_cloptr (hashmap_uint128, num_bits) -> void
 
   overload free with free_bits_source_uint128
+
+  (* Make a one-time-initialized bits source that returns the
+     correct number of bits for a hashmap (log2 of the bitsize
+     of uintptr). *)
+  fun
+  bits_source_uint128 :
+    () -> [num_bits : int | valid_num_bits (num_bits)]
+          bits_source_cloref (hashmap_uint128, num_bits) = "mac#%"
 
   (******************************************************************)
 end

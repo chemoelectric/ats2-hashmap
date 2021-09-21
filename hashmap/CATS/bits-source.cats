@@ -43,19 +43,26 @@ along with this program. If not, see
 
 #endif /* !ats2_hashmap_attribute_const_inline */
 
-extern atstype_ptr ats2_hashmap_get_bits_source_cloref_uint8 (void);
-extern atstype_ptr ats2_hashmap_get_bits_source_cloref_uint16 (void);
+#define ATS2_HASHMAP_BITS_SOURCE_FUNCTION(TYPE)             \
+  ats2_hashmap_attribute_const_inline atstype_ptr           \
+  ats2_hashmap_bits_source_##TYPE (void)                    \
+  {                                                         \
+    extern atstype_ptr                                      \
+      ats2_hashmap_get_bits_source_cloref_##TYPE (void);    \
+    return ats2_hashmap_get_bits_source_cloref_##TYPE ();   \
+  }
 
-ats2_hashmap_attribute_const_inline atstype_ptr
-ats2_hashmap_bits_source_uint8 (void)
-{
-  return ats2_hashmap_get_bits_source_cloref_uint8 ();
-}
-
-ats2_hashmap_attribute_const_inline atstype_ptr
-ats2_hashmap_bits_source_uint16 (void)
-{
-  return ats2_hashmap_get_bits_source_cloref_uint16 ();
-}
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint8)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint16)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint32)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint64)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint128)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uintptr)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (size)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (usint)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (ulint)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (ullint)
+ATS2_HASHMAP_BITS_SOURCE_FUNCTION (uint64_uint64)
 
 #endif /* ATS2_HASHMAP_CATS_BITS_SOURCE_CATS_HEADER_GUARD__ */
