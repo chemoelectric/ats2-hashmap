@@ -411,7 +411,10 @@ CLEANFILES += hashmap/SATS/uintptr-set_sats.c
 CLEANFILES += hashmap/DATS/uintptr-set_dats.c
 EXTRA_DIST += hashmap/SATS/uintptr-set.sats
 EXTRA_DIST += hashmap/DATS/uintptr-set.dats
+EXTRA_DIST += hashmap/CATS/uintptr-set-implementation.cats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/uintptr-set.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/uintptr-set.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/CATS/uintptr-set-implementation.cats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
@@ -470,6 +473,13 @@ tests_test_count_one_bits_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-count-one-bits.dats
 CLEANFILES += tests/test-count-one-bits
 CLEANFILES += tests/test-count-one-bits_dats.c
+
+check_PROGRAMS += tests/test-uintptr-set
+tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
+tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-uintptr-set.dats
+CLEANFILES += tests/test-uintptr-set
+CLEANFILES += tests/test-uintptr-set_dats.c
 
 #--------------------------------------------------------------------------
 #

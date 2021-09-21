@@ -57,7 +57,7 @@ array_mapped_tree_get_entry
         {hash_data_p   : addr}
         {key_test_p    : addr}
         {key_data_p    : addr}
-        (node_p        : array_mapped_tree_vt node_p,
+        (node_p        : ptr node_p,
          bits_source_p : ptr bits_source_p,
          hash_data_p   : ptr hash_data_p,
          key_test_p    : ptr key_test_p,
