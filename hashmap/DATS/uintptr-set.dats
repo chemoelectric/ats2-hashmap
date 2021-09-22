@@ -133,6 +133,13 @@ uintptr_set_add_element (set, element) =
     end
 
 implement
+uintptr_set_remove_element (set, element) =
+  case+ set of
+  | set_vt_nil () => set
+  | set_vt_tree (size, tree) =>
+    set // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+
+implement
 uintptr_set_has_element (set, element) =
   case+ set of
   | set_vt_nil () => false

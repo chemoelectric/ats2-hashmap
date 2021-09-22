@@ -34,14 +34,16 @@ uintptr_set () :
     uintptr_set_vt 0
 
 fun
-uintptr_set_free {size : int}
-                 (set  : uintptr_set_vt size) :
+uintptr_set_free
+        {size : int}
+        (set  : uintptr_set_vt size) :
     void
 overload free with uintptr_set_free
 
 fun {}
-uintptr_set_size {size : int}
-                 (set  : !(uintptr_set_vt size) >> _) :
+uintptr_set_size
+        {size : int}
+        (set  : !(uintptr_set_vt size) >> _) :
     size_t size
 overload size with uintptr_set_size
 
@@ -52,8 +54,9 @@ uintptr_set_is_empty {size : int}
 overload iseqz with uintptr_set_is_empty
 
 fun {}
-uintptr_set_isnot_empty {size : int}
-                        (set  : !(uintptr_set_vt size) >> _) :
+uintptr_set_isnot_empty
+        {size : int}
+        (set  : !(uintptr_set_vt size) >> _) :
     bool (size <> 0)
 overload isneqz with uintptr_set_isnot_empty
 
@@ -68,6 +71,16 @@ overload add_element with uintptr_set_add_element
 overload + with uintptr_set_add_element
 
 fun
+uintptr_set_remove_element
+        {size    : int}
+        (set     : uintptr_set_vt size,
+         element : uintptr) :
+    [new_size : int | new_size == size || new_size == size - 1]
+    uintptr_set_vt (new_size)
+overload remove_element with uintptr_set_remove_element
+overload - with uintptr_set_remove_element
+
+fun
 uintptr_set_has_element
         {size    : int}
         (set     : !(uintptr_set_vt size) >> _,
@@ -75,3 +88,9 @@ uintptr_set_has_element
     bool
 overload has_element with uintptr_set_has_element
 overload contains with uintptr_set_has_element
+
+fun
+uintptr_elements
+        {size : int}
+        (set  : !(uintptr_set_vt size) >> _) :
+    list_vt (uintptr, size)
