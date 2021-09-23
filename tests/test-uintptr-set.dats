@@ -26,8 +26,35 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
+staload UN = "prelude/SATS/unsafe.sats"
+
 staload "hashmap/SATS/uintptr-set.sats"
 staload _ = "hashmap/DATS/uintptr-set.dats"
+
+macdef zero = $UN.cast{[i : int] uintptr i} 0
+prval _ = lemma_g1uint_param zero
+
+macdef reasonably_big_number =
+  $UN.cast{[i : int] uintptr i} 0x1000000U
+prval _ = lemma_g1uint_param reasonably_big_number
+
+implement
+g1uint_succ<uintptrknd> (x) =
+  $UN.cast (succ ($UN.cast{uintptr} x))
+
+implement
+g1uint_eq<uintptrknd> (x, y) =
+  $UN.cast (($UN.cast{uintptr} x) = ($UN.cast{uintptr} y))
+
+implement
+g1uint_lte<uintptrknd> (x, y) =
+  $UN.cast (($UN.cast{uintptr} x) <= ($UN.cast{uintptr} y))
+
+fn
+println_uintptr (x : uintptr) : void =
+  {
+    val _ = $extfcall (int, "printf", "%08llX\n", $UN.cast{ullint} x)
+  }
 
 fn
 test_empty () : void =
@@ -36,30 +63,60 @@ test_empty () : void =
     val _ = assertloc (size set = i2sz 0)
     val _ = assertloc (iseqz set)
     val _ = assertloc (not (isneqz set))
-    val _ = assertloc (not (has_element (set, $UNSAFE.cast 1234)))
-    val _ = assertloc (not (has_element (set, $UNSAFE.cast 12345)))
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          assertloc (not (has_element (set, $UN.cast i)))
+      end
     val _ = free set
   }
 
 fn
 test_size_one () : void =
   {
+    val entry_value = $UN.cast{[i : int] uintptr i} 0x10U
+
     val set = uintptr_set ()
-    val set = add_element (set, $UNSAFE.cast 1234)
+    val set = add_element (set, entry_value)
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
-    val _ = assertloc (has_element (set, $UNSAFE.cast 1234))
-    val _ = assertloc (not (has_element (set, $UNSAFE.cast 12345)))
+    val _ = assertloc (has_element (set, entry_value))
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = entry_value then
+              assertloc (has_element (set, i))
+            else
+              assertloc (not (has_element (set, i)))
+          end
+      end
     val _ = free set
 
     val set = uintptr_set ()
-    val set = set + ($UNSAFE.cast 1234)
+    val set = set + ($UN.cast entry_value)
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
-    val _ = assertloc (set \contains ($UNSAFE.cast 1234))
-    val _ = assertloc (not (set \contains ($UNSAFE.cast 12345)))
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = entry_value then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
     val _ = free set
   }
 

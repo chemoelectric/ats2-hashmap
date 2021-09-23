@@ -280,8 +280,8 @@ set_subtree_entry
          key_data     : &key_vt >> _,
          depth        : uint,
          value        : uintptr,
-         is_new_entry : &bool? >> [is_new_entry : bool]
-                                  bool is_new_entry) :
+         is_new_slot  : &bool? >> [is_new_slot : bool]
+                                  bool is_new_slot) :
     void
 
 (*

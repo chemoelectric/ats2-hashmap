@@ -458,6 +458,58 @@ overload [] with get_entry_value
 (********************************************************************)
 
 fn {}
+set_entry_value
+        {length, index : int | index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : size_t index,
+         value  : uintptr) :<!refwrt> void =
+  {
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval _ = lemma_g1uint_param index
+
+    stadef p_entries = entries_addr p
+    val p_entries : ptr p_entries = entries_ptr p
+    macdef entries = !p_entries
+
+    (* Temporarily make the entries uintptr instead of link_vt.
+       It seems convenient to do so. *)
+    prval _ =
+      $UN.castview2void_at
+        {@[uintptr][length]} {@[link_vt][length]} {p_entries}
+        pf_entries
+
+    val _ = entries[index] := value
+
+    prval _ =
+      $UN.castview2void_at
+        {@[link_vt][length]} {@[uintptr][length]} {p_entries}
+        pf_entries
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  }
+
+overload [] with set_entry_value
+
+(********************************************************************)
+
+fn {}
 node_vt_to_slotted_node_vt
         {length, index : int | index < length}
         {p     : addr}
@@ -892,8 +944,8 @@ set_subtree_entry__loop
          key_data     : &key_vt >> _,
          depth        : uint,
          value        : uintptr,
-         is_new_entry : &bool? >> [is_new_entry : bool]
-                                  bool is_new_entry) :
+         is_new_slot  : &bool? >> [is_new_slot : bool]
+                                  bool is_new_slot) :
     void =
   let
     prval _ = lemma_node_vt_param {length} node
@@ -912,6 +964,12 @@ set_subtree_entry__loop
         val leaf_map = get_leaf_map (node)
         val entry_is_leaf =
           bit_is_set<> (leaf_map, bit_selection_mask)
+
+        val [index : int] @(_ | index) =
+          get_popcount_low_bits (g1ofg0 population_map, bits)
+        prval _ = $UN.prop_assert {index < length} ()
+
+        val entry = node[i2sz index]
       in
         if entry_is_leaf then
           let
@@ -919,15 +977,32 @@ set_subtree_entry__loop
             val entry_is_chain =
               bit_is_set<> (chaining_map, bit_selection_mask)
           in
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            if entry_is_chain then
+              let
+              in
+                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
+            else if key_test (key_data, entry) then
+              (* Replace the old entry. *)
+              begin
+                node[i2sz index] := value;
+                is_new_slot := false
+              end
+            else
+              let
+              in
+                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
           end
         else
           let
           in
             // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
             // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
           end
       end
@@ -935,14 +1010,14 @@ set_subtree_entry__loop
       let
       in
         // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
         // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
       end
   end
 
 implement {hash_vt, key_vt}
 set_subtree_entry {length} (node, bits_source, hash_data, key_test,
-                            key_data, depth, value, is_new_entry) =
+                            key_data, depth, value, is_new_slot) =
   {
     val [bits : int] (pf_bits | bits) = bits_source (hash_data, depth)
     prval _ = bits_source_bits_bounds pf_bits
@@ -957,7 +1032,7 @@ set_subtree_entry {length} (node, bits_source, hash_data, key_test,
       set_subtree_entry__loop
         {length} {bits}
         (node, i2u bits, bits_source, hash_data, key_test, key_data,
-         depth, value, is_new_entry)
+         depth, value, is_new_slot)
   }
 
 (********************************************************************)
@@ -1076,7 +1151,7 @@ get_leaf_value
                   (* The entry does not match the key. *)
                   begin
                     is_last := true;
-                    is_stored := true;
+                    is_stored := false;
                     value := zero
                   end
               end
