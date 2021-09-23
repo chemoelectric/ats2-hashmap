@@ -82,6 +82,11 @@ g1int2uint<intknd,uintptrknd> = g1int2uint_int_uintptr
 macdef zero = g1int2uint<intknd,uintptrknd> 0
 macdef one = g1int2uint<intknd,uintptrknd> 1
 
+fn {}
+bit_is_set (bits               : uintptr,
+            bit_selection_mask : uintptr) :<> bool =
+  (bits <*> bit_selection_mask) <> zero
+
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
 
@@ -590,7 +595,7 @@ skip_unpopulated (population : uintptr,
                   leaves     : uintptr,
                   chains     : uintptr) :
     @(uintptr, uintptr, uintptr) =
-  if (population <*> one) <> zero then
+  if bit_is_set<> (population, one) then
     @(population, leaves, chains)
   else
     skip_unpopulated<> (population >> 1, leaves >> 1, chains >> 1)
@@ -657,8 +662,8 @@ free_nodes (nodes      : node_list_vt,
 
                 val @(population, leaves, chains) =
                   skip_unpopulated<> (population, leaves, chains)
-                val is_leaf = ((leaves <*> one) <> zero)
-                val is_chain = is_leaf && ((leaves <*> one) <> zero)
+                val is_leaf = bit_is_set<> (leaves, one)
+                val is_chain = (is_leaf && bit_is_set<> (leaves, one))
 
                 (* Separate the entries into the first entry and
                    and array of the remaining entries. *)
@@ -900,15 +905,31 @@ set_subtree_entry__loop
     val population_map = get_population_map (node)
     val bit_selection_mask = (one << (u2i bits))
     val entry_is_stored =
-      ((population_map <*> bit_selection_mask) <> zero)
+      bit_is_set<> (population_map, bit_selection_mask)
   in
     if entry_is_stored then
       let
-        
+        val leaf_map = get_leaf_map (node)
+        val entry_is_leaf =
+          bit_is_set<> (leaf_map, bit_selection_mask)
       in
-        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        if entry_is_leaf then
+          let
+            val chaining_map = get_chaining_map (node)
+            val entry_is_chain =
+              bit_is_set<> (chaining_map, bit_selection_mask)
+          in
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
+        else
+          let
+          in
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
       end
     else
       let
@@ -967,13 +988,13 @@ get_leaf_value
     val population_map = get_population_map (node)
     val bit_selection_mask = (one << (u2i bits))
     val entry_is_stored =
-      ((population_map <*> bit_selection_mask) <> zero)
+      bit_is_set<> (population_map, bit_selection_mask)
   in
     if entry_is_stored then
       let
         val leaf_map = get_leaf_map (node)
         val entry_is_leaf =
-          ((leaf_map <*> bit_selection_mask) <> zero)
+          bit_is_set<> (leaf_map, bit_selection_mask)
 
         val [index : int] @(_ | index) =
           get_popcount_low_bits (g1ofg0 population_map, bits)
@@ -985,7 +1006,7 @@ get_leaf_value
           let
             val chaining_map = get_chaining_map (node)
             val entry_is_chain =
-              ((chaining_map <*> bit_selection_mask) <> zero)
+              bit_is_set<> (chaining_map, bit_selection_mask)
           in
             if entry_is_chain then
               let
