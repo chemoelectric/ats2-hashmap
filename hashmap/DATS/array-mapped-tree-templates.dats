@@ -403,12 +403,12 @@ get_chaining_map
 
 (********************************************************************)
 
-fn {}
-get_entry_value
+fn {tk : tkind}
+get_entry_value_g1uint
         {length, index : int | index < length}
         {p      : addr}
         (node   : !node_vt (length, p) >> _,
-         index  : size_t index) :<!ref>
+         index  : g1uint (tk, index)) :<!ref>
     uintptr =
   let
     val @{
@@ -419,8 +419,6 @@ get_entry_value
           mfree = pf_mfree |
           pointer = p
         } = node
-
-    prval _ = lemma_g1uint_param index
 
     stadef p_entries = entries_addr p
     val p_entries : ptr p_entries = entries_ptr p
@@ -433,6 +431,7 @@ get_entry_value
         {@[uintptr][length]} {@[link_vt][length]} {p_entries}
         pf_entries
 
+    prval _ = lemma_g1uint_param index
     val entry_value = entries[index]
 
     prval _ =
@@ -453,16 +452,27 @@ get_entry_value
     entry_value
   end
 
+fn {tk : tkind}
+get_entry_value_g1int
+        {length, index : int | 0 <= index; index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1int (tk, index)) :<!ref>
+    uintptr =
+  get_entry_value_g1uint (node, g1int2uint<tk,sizeknd> index)
+
+overload get_entry_value with get_entry_value_g1uint
+overload get_entry_value with get_entry_value_g1int
 overload [] with get_entry_value
 
 (********************************************************************)
 
-fn {}
-set_entry_value
+fn {tk : tkind}
+set_entry_value_g1uint
         {length, index : int | index < length}
         {p      : addr}
         (node   : !node_vt (length, p) >> _,
-         index  : size_t index,
+         index  : g1uint (tk, index),
          value  : uintptr) :<!refwrt> void =
   {
     val @{
@@ -473,8 +483,6 @@ set_entry_value
           mfree = pf_mfree |
           pointer = p
         } = node
-
-    prval _ = lemma_g1uint_param index
 
     stadef p_entries = entries_addr p
     val p_entries : ptr p_entries = entries_ptr p
@@ -487,6 +495,7 @@ set_entry_value
         {@[uintptr][length]} {@[link_vt][length]} {p_entries}
         pf_entries
 
+    prval _ = lemma_g1uint_param index
     val _ = entries[index] := value
 
     prval _ =
@@ -505,6 +514,17 @@ set_entry_value
       }
   }
 
+fn {tk : tkind}
+set_entry_value_g1int
+        {length, index : int | 0 <= index; index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1int (tk, index),
+         value  : uintptr) :<!refwrt> void =
+  set_entry_value_g1uint (node, g1int2uint<tk,sizeknd> index, value)
+
+overload set_entry_value with set_entry_value_g1uint
+overload set_entry_value with set_entry_value_g1int
 overload [] with set_entry_value
 
 (********************************************************************)
@@ -936,7 +956,7 @@ fun {hash_vt, key_vt : vt@ype}
 set_subtree_entry__loop
         {length       : int | length <= bitsizeof (uintptr)}
         {bits         : int | bits_maxval (NUM_BITS, bits)}
-        (node         : !node_vt (length) >> _,
+        (node         : &node_vt (length) >> _,
          bits         : uint bits,
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data    : &hash_vt >> _,
@@ -969,7 +989,7 @@ set_subtree_entry__loop
           get_popcount_low_bits (g1ofg0 population_map, bits)
         prval _ = $UN.prop_assert {index < length} ()
 
-        val entry = node[i2sz index]
+        val entry = node[index]
       in
         if entry_is_leaf then
           let
@@ -987,15 +1007,31 @@ set_subtree_entry__loop
             else if key_test (key_data, entry) then
               (* Replace the old entry. *)
               begin
-                node[i2sz index] := value;
+                node[index] := value;
                 is_new_slot := false
               end
             else
               let
+                val [bits : int] (pf_bits | bits) =
+                  bits_source (hash_data, depth)
+                prval _ = bits_source_bits_bounds pf_bits
               in
-                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                if bits = BITS_SOURCE_EXHAUSTED then
+                  (* Separate chaining is required. *)
+                  let
+                  in
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                  end
+                else
+                  (* A new two-leaf node is needed. *)
+                  let
+                  in
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                  end
               end
           end
         else
@@ -1008,10 +1044,26 @@ set_subtree_entry__loop
       end
     else
       let
+        val [popcount : int] @(_ | length) =
+          get_popcount (g1ofg0 population_map)
       in
-        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        if length = sizeof<uintptr> then
+          (* A new node is needed. *)
+          let
+          in
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
+        else
+          (* The node needs expanding to make space for
+             the new leaf. *)
+          let
+          in
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
       end
   end
 
@@ -1031,8 +1083,8 @@ set_subtree_entry {length} (node, bits_source, hash_data, key_test,
     val _ =
       set_subtree_entry__loop
         {length} {bits}
-        (node, i2u bits, bits_source, hash_data, key_test, key_data,
-         depth, value, is_new_slot)
+        (node, i2u bits, bits_source, hash_data,
+         key_test, key_data, depth, value, is_new_slot)
   }
 
 (********************************************************************)
@@ -1075,7 +1127,7 @@ get_leaf_value
           get_popcount_low_bits (g1ofg0 population_map, bits)
         prval _ = $UN.prop_assert {index < length} ()
 
-        val entry = node[i2sz index]
+        val entry = node[index]
       in
         if entry_is_leaf then
           let

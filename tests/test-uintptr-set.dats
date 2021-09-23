@@ -79,6 +79,7 @@ test_size_one () : void =
     val entry_value = $UN.cast{[i : int] uintptr i} 0x10U
 
     val set = uintptr_set ()
+
     val set = add_element (set, entry_value)
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
@@ -97,10 +98,10 @@ test_size_one () : void =
               assertloc (not (has_element (set, i)))
           end
       end
-    val _ = free set
 
-    val set = uintptr_set ()
-    val set = set + ($UN.cast entry_value)
+    (* Add the same entry. Also, use different notations for
+       the same operations. *)
+    val set = set + entry_value
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
@@ -117,6 +118,7 @@ test_size_one () : void =
               assertloc (not (set \contains i))
           end
       end
+
     val _ = free set
   }
 

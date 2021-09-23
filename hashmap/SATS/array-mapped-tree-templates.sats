@@ -273,7 +273,7 @@ start_new_tree
 fun {hash_vt, key_vt  : vt@ype}
 set_subtree_entry
         {length       : int | length <= bitsizeof (uintptr)}
-        (node         : !node_vt (length) >> _,
+        (node         : &node_vt (length) >> _,
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data    : &hash_vt >> _,
          key_test     : !key_test_vt (key_vt) >> _,
