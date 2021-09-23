@@ -143,7 +143,8 @@ vtypedef slotted_node_vt (length : int, index : int, p : addr) =
       (link_vt?) @ (entries_addr (p) + index * sizeof (link_vt)),
     view_of_right_entries =
       @[link_vt][length - 1 - index]
-          @ (entries_addr (p) + (1 + index) * sizeof (link_vt)),
+          @ (entries_addr (p) + index * sizeof (link_vt)
+                + sizeof (link_vt?)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -162,10 +163,11 @@ vtypedef new_slotted_node_vt (length : int, index : int, p : addr) =
     view_of_left_entries =
       @[link_vt?][index] @ entries_addr (p),
     view_of_new_entry =
-      (link_vt?) @ (entries_addr (p) + index * sizeof (link_vt)),
+      (link_vt?) @ (entries_addr (p) + index * sizeof (link_vt?)),
     view_of_right_entries =
       @[link_vt?][length - 1 - index]
-          @ (entries_addr (p) + (1 + index) * sizeof (link_vt)),
+          @ (entries_addr (p) + index * sizeof (link_vt?)
+                + sizeof (link_vt?)),
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
@@ -273,7 +275,7 @@ start_new_tree
 fun {hash_vt, key_vt  : vt@ype}
 set_subtree_entry
         {length       : int | length <= bitsizeof (uintptr)}
-        (node         : &node_vt (length) >> _,
+        (node         : &node_vt (length) >> node_vt (new_length),
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data    : &hash_vt >> _,
          key_test     : !key_test_vt (key_vt) >> _,
@@ -282,6 +284,8 @@ set_subtree_entry
          value        : uintptr,
          is_new_slot  : &bool? >> [is_new_slot : bool]
                                   bool is_new_slot) :
+    #[new_length : int | new_length == length
+                            || new_length == length + 1]
     void
 
 (*
@@ -301,6 +305,7 @@ get_subtree_entry
          value       : &uintptr? >>
                           [u : int | is_stored || u == 0]
                           uintptr u) :
-    #[is_stored : bool] void
+    #[is_stored : bool]
+    void
 
 (********************************************************************)

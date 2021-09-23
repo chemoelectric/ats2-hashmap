@@ -87,6 +87,11 @@ bit_is_set (bits               : uintptr,
             bit_selection_mask : uintptr) :<> bool =
   (bits <*> bit_selection_mask) <> zero
 
+fn {}
+set_bit (bits               : uintptr,
+         bit_selection_mask : uintptr) :<> uintptr =
+  (bits <+> bit_selection_mask)
+
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
 
@@ -530,6 +535,102 @@ overload [] with set_entry_value
 (********************************************************************)
 
 fn {}
+expand_node {length, index : int | 0 <= index; index < length}
+            {p      : addr}
+            (node   : node_vt (length, p),
+             length : size_t length,
+             index  : size_t index) :
+    [q : addr | null < q]
+    slotted_node_vt (length + 1, index, q) =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    stadef p0 = entries_addr p
+
+    prval @(pf_left, pf_right) =
+      array_v_subdivide2 {link_vt} {p0} {index, length - index}
+                         pf_entries
+
+    stadef new_length = length + 1
+    val _ = prop_verify {length - index == new_length - 1 - index} ()
+
+    val new_length : size_t new_length = succ length
+
+    val [q : addr]
+        @{
+          view_of_population_map = qf_pop_map,
+          view_of_leaf_map = qf_leaf_map,
+          view_of_chaining_map = qf_chain_map,
+          view_of_left_entries = qf_left,
+          view_of_new_entry = qf_entry,
+          view_of_right_entries = qf_right,
+          mfree = qf_mfree |
+          pointer = q
+        } = new_slotted_node_alloc<> {new_length, index}
+                                     (new_length, index)
+    prval _ = prop_verify {null < q} ()
+
+    stadef q0 = entries_addr q
+
+    val p0 : ptr p0 = entries_ptr p
+    val q0 : ptr q0 = entries_ptr q
+
+    val _ =
+      array_move<link_vt>
+        {index} {q0} {p0}
+        (qf_left, pf_left | q0, p0, index)
+
+    stadef p1 = entries_addr (p) + index * sizeof (link_vt)
+    stadef q1 = entries_addr (q) + index * sizeof (link_vt)
+                    + sizeof (link_vt?)
+
+    val p1 : ptr p1 = ptr_add<link_vt> (p0, index)
+    val q1 : ptr q1 =
+      ptr_succ<link_vt?> (ptr_add<link_vt> (q0, index))
+
+    val _ =
+      array_move<link_vt>
+        {length - index} {q1} {p1}
+        (qf_right, pf_right | q1, p1, length - index)
+
+    prval pf_entries = 
+      array_v_join2 {link_vt?!} {p0} {index, length - index}
+                    (pf_left, pf_right)
+    val _ =
+      expired_node_vt_free
+        @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        }
+  in
+    @{
+      view_of_population_map = qf_pop_map,
+      view_of_leaf_map = qf_leaf_map,
+      view_of_chaining_map = qf_chain_map,
+      view_of_left_entries = qf_left,
+      view_of_new_entry = qf_entry,
+      view_of_right_entries = qf_right,
+      mfree = qf_mfree |
+      pointer = q
+    }
+  end
+
+(********************************************************************)
+
+(* // We probably do not want this, because we wrote set_entry_value
+   // instead, and it is "safe enough".
+fn {}
 node_vt_to_slotted_node_vt
         {length, index : int | index < length}
         {p     : addr}
@@ -572,6 +673,7 @@ node_vt_to_slotted_node_vt
   in
     slotted_node
   end
+*)
 
 (*
 fn {}
@@ -702,7 +804,7 @@ free_nodes (nodes      : node_list_vt,
 
           val [popcount : int] @(_ | length) =
             get_popcount (g1ofg0 population_map)
-          prval _ = $UN.prop_assert {length == popcount} ()
+          prval _ = $UN.prop_assert {popcount == length} ()
 
           fun {vt : vtype}
           for_each_bit
@@ -956,7 +1058,7 @@ fun {hash_vt, key_vt : vt@ype}
 set_subtree_entry__loop
         {length       : int | length <= bitsizeof (uintptr)}
         {bits         : int | bits_maxval (NUM_BITS, bits)}
-        (node         : &node_vt (length) >> _,
+        (node         : &node_vt (length) >> node_vt (new_length),
          bits         : uint bits,
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data    : &hash_vt >> _,
@@ -966,6 +1068,8 @@ set_subtree_entry__loop
          value        : uintptr,
          is_new_slot  : &bool? >> [is_new_slot : bool]
                                   bool is_new_slot) :
+    #[new_length : int | new_length == length
+                            || new_length == length + 1]
     void =
   let
     prval _ = lemma_node_vt_param {length} node
@@ -1025,7 +1129,7 @@ set_subtree_entry__loop
                     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                   end
                 else
-                  (* A new two-leaf node is needed. *)
+                  (* A new node is needed. *)
                   let
                   in
                     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
@@ -1046,6 +1150,7 @@ set_subtree_entry__loop
       let
         val [popcount : int] @(_ | length) =
           get_popcount (g1ofg0 population_map)
+        prval _ = $UN.prop_assert {popcount == length} ()
       in
         if length = sizeof<uintptr> then
           (* A new node is needed. *)
@@ -1059,10 +1164,57 @@ set_subtree_entry__loop
           (* The node needs expanding to make space for
              the new leaf. *)
           let
+            val new_population_map =
+              set_bit<> (population_map, bit_selection_mask)
+            val new_leaf_map =
+              set_bit<> (get_leaf_map (node), bit_selection_mask)
+            val new_chaining_map = get_chaining_map (node)
+
+            val [new_index : int] @(_ | new_index) =
+              get_popcount_low_bits (g1ofg0 new_population_map, bits)
+            val new_index = g1i2u new_index
+            val _ = assertloc (new_index < length)
+
+            val @{
+                  view_of_population_map = pf_pop_map,
+                  view_of_leaf_map = pf_leaf_map,
+                  view_of_chaining_map = pf_chain_map,
+                  view_of_left_entries = pf_left,
+                  view_of_new_entry = pf_entry,
+                  view_of_right_entries = pf_right,
+                  mfree = pf_mfree |
+                  pointer = p
+                } = expand_node<> {length, new_index}
+                                  (node, length, new_index)
+            val _ =
+              ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                             new_population_map)
+            val _ =
+              ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                              new_leaf_map)
+            val _ =
+              ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                               new_chaining_map)
+
+            val p_entry =
+              ptr_add<link_vt> (entries_ptr (p), new_index)
+            val _ =
+              ptr_set<link_vt>
+                (pf_entry | p_entry, $UN.castvwtp0{link_vt} value)
+
+            prval pf_right = array_v_cons (pf_entry, pf_right)
+            prval pf_entries = array_v_join2 (pf_left, pf_right)
           in
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            node :=
+              @{
+                view_of_population_map = pf_pop_map,
+                view_of_leaf_map = pf_leaf_map,
+                view_of_chaining_map = pf_chain_map,
+                view_of_entries = pf_entries,
+                mfree = pf_mfree |
+                pointer = p
+              };
+            is_new_slot := true
           end
       end
   end
