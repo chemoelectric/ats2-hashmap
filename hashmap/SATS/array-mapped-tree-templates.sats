@@ -265,6 +265,11 @@ start_new_tree
          value       : uintptr) :
     node_vt (1)
 
+(* set_subtree_entry -- this assumes bits_source will return at
+                        least one bit. Otherwise an assertion will
+                        fail. (Note that, if depth = 0U, then
+                        no useful bits_source will fail to return
+                        at least one bit.) *)
 fun {hash_vt, key_vt  : vt@ype}
 set_subtree_entry
         {length       : int | length <= bitsizeof (uintptr)}

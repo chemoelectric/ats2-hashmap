@@ -875,12 +875,78 @@ start_new_tree (bits_source, hash_data, value) =
 
 (********************************************************************)
 
+fun {hash_vt, key_vt : vt@ype}
+set_subtree_entry__loop
+        {length       : int | length <= bitsizeof (uintptr)}
+        {bits         : int | bits_maxval (NUM_BITS, bits)}
+        (node         : !node_vt (length) >> _,
+         bits         : uint bits,
+         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_data    : &hash_vt >> _,
+         key_test     : !key_test_vt (key_vt) >> _,
+         key_data     : &key_vt >> _,
+         depth        : uint,
+         value        : uintptr,
+         is_new_entry : &bool? >> [is_new_entry : bool]
+                                  bool is_new_entry) :
+    void =
+  let
+    prval _ = lemma_node_vt_param {length} node
+    prval _ = prop_verify {0 < length} ()
+
+    prval _ = lemma_g1uint_param bits
+    prval _ = prop_verify {0 <= bits} ()
+
+    val population_map = get_population_map (node)
+    val bit_selection_mask = (one << (u2i bits))
+    val entry_is_stored =
+      ((population_map <*> bit_selection_mask) <> zero)
+  in
+    if entry_is_stored then
+      let
+        
+      in
+        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      end
+    else
+      let
+      in
+        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        is_new_entry := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      end
+  end
+
+implement {hash_vt, key_vt}
+set_subtree_entry {length} (node, bits_source, hash_data, key_test,
+                            key_data, depth, value, is_new_entry) =
+  {
+    val [bits : int] (pf_bits | bits) = bits_source (hash_data, depth)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
+    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+
+    (* FIXME: This is really a precondition of the routine, and
+              ideally should be enforced by typechecking. *)
+    val _ = assertloc (bits <> BITS_SOURCE_EXHAUSTED)
+
+    val _ =
+      set_subtree_entry__loop
+        {length} {bits}
+        (node, i2u bits, bits_source, hash_data, key_test, key_data,
+         depth, value, is_new_entry)
+  }
+
+(********************************************************************)
+
 fn {key_vt : vt@ype}
 get_leaf_value
         {length    : int | length <= bitsizeof (uintptr)}
-        {i         : int | i < bitsizeof (uintptr)}
+        {bits      : int | bits_maxval (NUM_BITS, bits)}
         (node      : !node_vt (length) >> _,
-         i         : uint i,
+         bits      : uint bits,
          key_test  : !key_test_vt (key_vt) >> _,
          key_data  : &key_vt >> _,
          is_last   : &bool? >>
@@ -895,11 +961,11 @@ get_leaf_value
     prval _ = lemma_node_vt_param {length} node
     prval _ = prop_verify {0 < length} ()
 
-    prval _ = lemma_g1uint_param i
-    prval _ = prop_verify {0 <= i} ()
+    prval _ = lemma_g1uint_param bits
+    prval _ = prop_verify {0 <= bits} ()
 
     val population_map = get_population_map (node)
-    val bit_selection_mask = (one << (u2i i))
+    val bit_selection_mask = (one << (u2i bits))
     val entry_is_stored =
       ((population_map <*> bit_selection_mask) <> zero)
   in
@@ -909,18 +975,18 @@ get_leaf_value
         val entry_is_leaf =
           ((leaf_map <*> bit_selection_mask) <> zero)
 
-        val chaining_map = get_chaining_map (node)
-        val entry_is_chain =
-          ((chaining_map <*> bit_selection_mask) <> zero)
-
         val [index : int] @(_ | index) =
-          get_popcount_low_bits (g1ofg0 population_map, i)
+          get_popcount_low_bits (g1ofg0 population_map, bits)
         prval _ = $UN.prop_assert {index < length} ()
 
         val entry = node[i2sz index]
       in
         if entry_is_leaf then
-          begin
+          let
+            val chaining_map = get_chaining_map (node)
+            val entry_is_chain =
+              ((chaining_map <*> bit_selection_mask) <> zero)
+          in
             if entry_is_chain then
               let
                 fun
@@ -1042,7 +1108,7 @@ get_subtree_entry__loop
       in
         get_leaf_value<key_vt>
           {length} {bits}
-          (node, g1i2u bits, key_test, key_data,
+          (node, i2u bits, key_test, key_data,
            is_last, is_stored, value);
         if not is_last then
           {
