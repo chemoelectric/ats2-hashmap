@@ -51,6 +51,24 @@ array_mapped_tree_create
     ptr node_p
 
 fun
+array_mapped_tree_set_entry
+        {node_p        : addr}
+        {bits_source_p : addr}
+        {hash_data_p   : addr}
+        {key_test_p    : addr}
+        {key_data_p    : addr}
+        (node_p        : &(ptr node_p) >> ptr new_node_p,
+         bits_source_p : ptr bits_source_p,
+         hash_data_p   : ptr hash_data_p,
+         key_test_p    : ptr key_test_p,
+         key_data_p    : ptr key_data_p,
+         value         : uintptr,
+         is_new_slot   : &bool? >> bool is_new_slot) :
+    #[new_node_p  : addr]
+    #[is_new_slot : bool]
+    void
+
+fun
 array_mapped_tree_get_entry
         {node_p        : addr}
         {bits_source_p : addr}
@@ -66,6 +84,7 @@ array_mapped_tree_get_entry
          value         : &uintptr? >>
                             [u : int | is_stored || u == 0]
                             uintptr u) :
-    #[is_stored : bool] void
+    #[is_stored : bool]
+    void
 
 (********************************************************************)

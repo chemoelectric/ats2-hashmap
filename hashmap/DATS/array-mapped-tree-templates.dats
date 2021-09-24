@@ -559,7 +559,8 @@ expand_node {length, index : int | 0 <= index; index < length}
                          pf_entries
 
     stadef new_length = length + 1
-    val _ = prop_verify {length - index == new_length - 1 - index} ()
+    prval _ =
+      prop_verify {length - index == new_length - 1 - index} ()
 
     val new_length : size_t new_length = succ length
 

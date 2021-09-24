@@ -111,26 +111,45 @@ uintptr_set_isnot_empty (set) =
 
 implement
 uintptr_set_add_element (set, element) =
-  case+ set of
-  | ~ set_vt_nil () =>
-    let
-      val bits_source = bits_source_uintptr ()
-      val bits_source_p = $UNSAFE.cast{Ptr} bits_source
+  let
+    val bits_source = bits_source_uintptr ()
+    val bits_source_p = $UNSAFE.cast{Ptr} bits_source
 
-      var hash_data = element
-      val hash_data_p = addr@ hash_data
+    var hash_data = element
+    val hash_data_p = addr@ hash_data
+  in
+    case+ set of
+    | ~ set_vt_nil () =>
+      let
+        val tree =
+          array_mapped_tree_create
+            (bits_source_p, hash_data_p, element)
+      in
+        set_vt_tree (i2sz 1, tree)
+      end
+    | ~ set_vt_tree (size, tree) =>
+      let
+        var node_p = $UNSAFE.castvwtp0{Ptr} tree
 
-      val tree =
-        array_mapped_tree_create (bits_source_p, hash_data_p, element)
-    in
-      set_vt_tree (i2sz 1, tree)
-    end
-  | ~ set_vt_tree (size, tree) =>
-    let
-    in
-      // FIXME: At the moment, this does not add anything to the tree.
-      set_vt_tree (size, tree) // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-    end
+        val key_test = uintptr_set_key_test ()
+        val key_test_p = $UNSAFE.castvwtp1{Ptr} key_test
+
+        var key_data = element
+        val key_data_p = addr@ key_data
+
+        var is_new_slot : bool
+
+        val () =
+          array_mapped_tree_set_entry
+            (node_p, bits_source_p, hash_data_p,
+             key_test_p, key_data_p, element, is_new_slot)
+      in
+        if is_new_slot then
+          set_vt_tree (succ size, $UNSAFE.castvwtp0 node_p)
+        else
+          set_vt_tree (size, $UNSAFE.castvwtp0 node_p)
+      end
+  end
 
 implement
 uintptr_set_remove_element (set, element) =
