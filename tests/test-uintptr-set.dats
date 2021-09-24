@@ -130,6 +130,10 @@ test_root_node_expansion () : void =
 
     val set = uintptr_set () + entry1 + entry2
 
+    val _ = assertloc (size set = i2sz 2)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+
     val _ =
       let
         var i : [i : int] uintptr i
