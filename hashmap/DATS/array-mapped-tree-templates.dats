@@ -535,7 +535,7 @@ overload [] with set_entry_value
 (********************************************************************)
 
 fn {}
-expand_node {length, index : int | 0 <= index; index < length}
+expand_node {length, index : int | 0 <= index; index <= length}
             {p      : addr}
             (node   : node_vt (length, p),
              length : size_t length,
@@ -1174,7 +1174,7 @@ set_subtree_entry__loop
             val [new_index : int] @(_ | new_index) =
               get_popcount_low_bits (g1ofg0 new_population_map, bits)
             val new_index = g1i2u new_index
-            val _ = assertloc (new_index < length)
+            val _ = assertloc (new_index <= length)
 
             val @{
                   view_of_population_map = pf_pop_map,

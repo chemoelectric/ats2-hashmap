@@ -122,9 +122,35 @@ test_size_one () : void =
     val _ = free set
   }
 
+fn
+test_root_node_expansion () : void =
+  {
+    val entry1 = $UN.cast{[i : int] uintptr i} 0x01U
+    val entry2 = $UN.cast{[i : int] uintptr i} 0x02U
+
+    val set = uintptr_set () + entry1 + entry2
+
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = entry1 || i = entry2 then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
+
+    val _ = free set
+  }
+
 implement
 main0 () =
   {
     val _ = test_empty ()
     val _ = test_size_one ()
+    val _ = test_root_node_expansion ()
   }
