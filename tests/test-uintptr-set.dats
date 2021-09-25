@@ -31,11 +31,16 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/uintptr-set.sats"
 staload _ = "hashmap/DATS/uintptr-set.dats"
 
-macdef zero = $UN.cast{[i : int] uintptr i} 0
+extern castfn
+i2up : {i : int | 0 <= i} int i -<> uintptr i
+
+extern castfn
+u2up : {i : int} uint i -<> uintptr i
+
+macdef zero = i2up 0
 prval _ = lemma_g1uint_param zero
 
-macdef reasonably_big_number =
-  $UN.cast{[i : int] uintptr i} 0x1000000U
+macdef reasonably_big_number = u2up 0x1000000U
 prval _ = lemma_g1uint_param reasonably_big_number
 
 implement
@@ -76,7 +81,7 @@ test_empty () : void =
 fn
 test_size_one () : void =
   {
-    val entry_value = $UN.cast{[i : int] uintptr i} 0x10U
+    val entry_value = u2up 0x10U
 
     val set = uintptr_set ()
 
@@ -125,11 +130,7 @@ test_size_one () : void =
 fn
 test_root_node_expansion () : void =
   {
-    val entry1 = $UN.cast{[i : int] uintptr i} 0x01U
-    val entry2 = $UN.cast{[i : int] uintptr i} 0x02U
-
-    val set = uintptr_set () + entry1 + entry2
-
+    val set = uintptr_set () + (u2up 0x01U) + (u2up 0x02U)
     val _ = assertloc (size set = i2sz 2)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
@@ -141,13 +142,65 @@ test_root_node_expansion () : void =
         for (i := zero; i <= reasonably_big_number; i := succ i)
           begin
             //println_uintptr (i);
-            if i = entry1 || i = entry2 then
+            if i = (u2up 0x01U) || i = (u2up 0x02U) then
               assertloc (set \contains i)
             else
               assertloc (not (set \contains i))
           end
       end
+    val _ = free set
 
+    val set = uintptr_set () + (u2up 0x02U) + (u2up 0x01U)
+    val _ = assertloc (size set = i2sz 2)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = (u2up 0x01U) || i = (u2up 0x02U) then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
+    val _ = free set
+
+    val set =
+      uintptr_set () +
+        (u2up 0x0FU) +
+        (u2up 0x02U) +
+        (u2up 0x05U) +
+        (u2up 0x04U) +
+        (u2up 0x09U) +
+        (u2up 0x11U) +
+        (u2up 0x01U)
+    val _ = assertloc (size set = i2sz 7)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = (u2up 0x0FU) ||
+               i = (u2up 0x02U) ||
+               i = (u2up 0x05U) ||
+               i = (u2up 0x04U) ||
+               i = (u2up 0x09U) ||
+               i = (u2up 0x11U) ||
+               i = (u2up 0x01U) then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
     val _ = free set
   }
 
