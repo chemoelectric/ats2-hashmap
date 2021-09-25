@@ -1073,7 +1073,7 @@ replace_old_entry
 
 fun {}
 expand_node_to_make_space_for_new_leaf
-        {length             : int | length <= bitsizeof (uintptr)}
+        {length             : int | length < bitsizeof (uintptr)}
         {bits               : int | bits_maxval (NUM_BITS, bits)}
         (node               : &node_vt (length) >>
                                   node_vt (new_length),
@@ -1235,25 +1235,18 @@ set_subtree_entry__loop
         val [popcount : int] @(_ | length) =
           get_popcount (g1ofg0 population_map)
         prval _ = $UN.prop_assert {popcount == length} ()
+
+        (* If the node were full, then entry_is_stored would
+           have been true. *)
+        val _ = assertloc (length < i2sz BITSIZEOF_UINTPTR)
+
+        val leaf_map = get_leaf_map<> (node)
+        val chaining_map = get_chaining_map<> (node)
       in
-        if length = sizeof<uintptr> then
-          (* A new node is needed. *)
-          let
-          in
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-          end
-        else
-          let
-            val leaf_map = get_leaf_map<> (node)
-            val chaining_map = get_chaining_map<> (node)
-          in
-            expand_node_to_make_space_for_new_leaf<>
-              (node, length, bits,
-               population_map, leaf_map, chaining_map,
-               bit_selection_mask, value, is_new_slot)
-          end             
+        expand_node_to_make_space_for_new_leaf<>
+          (node, length, bits,
+           population_map, leaf_map, chaining_map,
+           bit_selection_mask, value, is_new_slot)
       end
   end
 
