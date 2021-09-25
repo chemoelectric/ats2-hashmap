@@ -1064,7 +1064,7 @@ replace_old_entry
          value       : uintptr,
          is_new_slot : &bool? >> bool is_new_slot) :
     #[new_length : int | new_length == length]
-    #[is_new_slot : bool | ~is_new_slot]
+    #[is_new_slot : bool | is_new_slot == false]
     void =
   begin
     node[index] := value;
@@ -1086,7 +1086,7 @@ expand_node_to_make_space_for_new_leaf
          value              : uintptr,
          is_new_slot        : &bool? >> bool is_new_slot) :
     #[new_length : int | new_length == length + 1]
-    #[is_new_slot : bool | is_new_slot]
+    #[is_new_slot : bool | is_new_slot == true]
     void =
   let
     val new_population_map = set_bit<> (population_map,
