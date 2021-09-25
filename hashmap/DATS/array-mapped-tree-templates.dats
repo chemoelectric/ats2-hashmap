@@ -1056,6 +1056,22 @@ start_new_tree (bits_source, hash_data, value) =
 (********************************************************************)
 
 fun {}
+replace_old_entry
+        {length      : int | length <= bitsizeof (uintptr)}
+        {index       : int | index < length}
+        (node        : &node_vt (length) >> node_vt (new_length),
+         index       : uint index,
+         value       : uintptr,
+         is_new_slot : &bool? >> bool is_new_slot) :
+    #[new_length : int | new_length == length]
+    #[is_new_slot : bool | ~is_new_slot]
+    void =
+  begin
+    node[index] := value;
+    is_new_slot := false
+  end
+
+fun {}
 expand_node_to_make_space_for_new_leaf
         {length             : int | length <= bitsizeof (uintptr)}
         {bits               : int | bits_maxval (NUM_BITS, bits)}
@@ -1180,11 +1196,8 @@ set_subtree_entry__loop
                 // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
             else if key_test (key_data, entry) then
-              (* Replace the old entry. *)
-              begin
-                node[index] := value;
-                is_new_slot := false
-              end
+              replace_old_entry<>
+                (node, i2u index, value, is_new_slot)
             else
               let
                 val [bits : int] (pf_bits | bits) =
