@@ -797,9 +797,9 @@ free_nodes (nodes      : node_list_vt,
         let
           val [length : int] node = extract_static_length_of_node node
 
-          val population_map = get_population_map (node)
-          val leaf_map = get_leaf_map (node)
-          val chaining_map = get_chaining_map (node)
+          val population_map = get_population_map<> (node)
+          val leaf_map = get_leaf_map<> (node)
+          val chaining_map = get_chaining_map<> (node)
 
           prval _ = lemma_node_vt_param {length} node
 
@@ -1055,6 +1055,76 @@ start_new_tree (bits_source, hash_data, value) =
 
 (********************************************************************)
 
+fun {}
+expand_node_to_make_space_for_new_leaf
+        {length             : int | length <= bitsizeof (uintptr)}
+        {bits               : int | bits_maxval (NUM_BITS, bits)}
+        (node               : &node_vt (length) >>
+                                  node_vt (new_length),
+         length             : size_t length,
+         bits               : uint bits,
+         population_map     : uintptr,
+         leaf_map           : uintptr,
+         chaining_map       : uintptr,
+         bit_selection_mask : uintptr,
+         value              : uintptr,
+         is_new_slot        : &bool? >> bool is_new_slot) :
+    #[new_length : int | new_length == length + 1]
+    #[is_new_slot : bool | is_new_slot]
+    void =
+  let
+    val new_population_map = set_bit<> (population_map,
+                                        bit_selection_mask)
+    val new_leaf_map = set_bit<> (leaf_map, bit_selection_mask)
+    val new_chaining_map = chaining_map
+
+    val [new_index : int] @(_ | new_index) =
+      get_popcount_low_bits (g1ofg0 new_population_map, bits)
+    val new_index = g1i2u new_index
+    val _ = assertloc (new_index <= length)
+
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_left_entries = pf_left,
+          view_of_new_entry = pf_entry,
+          view_of_right_entries = pf_right,
+          mfree = pf_mfree |
+          pointer = p
+        } = expand_node<> {length, new_index}
+                          (node, length, new_index)
+    val _ =
+      ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                     new_population_map)
+    val _ =
+      ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                      new_leaf_map)
+    val _ =
+      ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                       new_chaining_map)
+
+    val p_entry =
+      ptr_add<link_vt> (entries_ptr (p), new_index)
+    val _ =
+      ptr_set<link_vt>
+        (pf_entry | p_entry, $UN.castvwtp0{link_vt} value)
+
+    prval pf_right = array_v_cons (pf_entry, pf_right)
+    prval pf_entries = array_v_join2 (pf_left, pf_right)
+  in
+    node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      };
+    is_new_slot := true
+  end
+
 fun {hash_vt, key_vt : vt@ype}
 set_subtree_entry__loop
         {length       : int | length <= bitsizeof (uintptr)}
@@ -1079,14 +1149,14 @@ set_subtree_entry__loop
     prval _ = lemma_g1uint_param bits
     prval _ = prop_verify {0 <= bits} ()
 
-    val population_map = get_population_map (node)
+    val population_map = get_population_map<> (node)
     val bit_selection_mask = (one << (u2i bits))
     val entry_is_stored =
       bit_is_set<> (population_map, bit_selection_mask)
   in
     if entry_is_stored then
       let
-        val leaf_map = get_leaf_map (node)
+        val leaf_map = get_leaf_map<> (node)
         val entry_is_leaf =
           bit_is_set<> (leaf_map, bit_selection_mask)
 
@@ -1098,7 +1168,7 @@ set_subtree_entry__loop
       in
         if entry_is_leaf then
           let
-            val chaining_map = get_chaining_map (node)
+            val chaining_map = get_chaining_map<> (node)
             val entry_is_chain =
               bit_is_set<> (chaining_map, bit_selection_mask)
           in
@@ -1162,61 +1232,15 @@ set_subtree_entry__loop
             // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
           end
         else
-          (* The node needs expanding to make space for
-             the new leaf. *)
           let
-            val new_population_map =
-              set_bit<> (population_map, bit_selection_mask)
-            val new_leaf_map =
-              set_bit<> (get_leaf_map (node), bit_selection_mask)
-            val new_chaining_map = get_chaining_map (node)
-
-            val [new_index : int] @(_ | new_index) =
-              get_popcount_low_bits (g1ofg0 new_population_map, bits)
-            val new_index = g1i2u new_index
-            val _ = assertloc (new_index <= length)
-
-            val @{
-                  view_of_population_map = pf_pop_map,
-                  view_of_leaf_map = pf_leaf_map,
-                  view_of_chaining_map = pf_chain_map,
-                  view_of_left_entries = pf_left,
-                  view_of_new_entry = pf_entry,
-                  view_of_right_entries = pf_right,
-                  mfree = pf_mfree |
-                  pointer = p
-                } = expand_node<> {length, new_index}
-                                  (node, length, new_index)
-            val _ =
-              ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
-                                             new_population_map)
-            val _ =
-              ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
-                                              new_leaf_map)
-            val _ =
-              ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
-                                               new_chaining_map)
-
-            val p_entry =
-              ptr_add<link_vt> (entries_ptr (p), new_index)
-            val _ =
-              ptr_set<link_vt>
-                (pf_entry | p_entry, $UN.castvwtp0{link_vt} value)
-
-            prval pf_right = array_v_cons (pf_entry, pf_right)
-            prval pf_entries = array_v_join2 (pf_left, pf_right)
+            val leaf_map = get_leaf_map<> (node)
+            val chaining_map = get_chaining_map<> (node)
           in
-            node :=
-              @{
-                view_of_population_map = pf_pop_map,
-                view_of_leaf_map = pf_leaf_map,
-                view_of_chaining_map = pf_chain_map,
-                view_of_entries = pf_entries,
-                mfree = pf_mfree |
-                pointer = p
-              };
-            is_new_slot := true
-          end
+            expand_node_to_make_space_for_new_leaf<>
+              (node, length, bits,
+               population_map, leaf_map, chaining_map,
+               bit_selection_mask, value, is_new_slot)
+          end             
       end
   end
 
@@ -1265,14 +1289,14 @@ get_leaf_value
     prval _ = lemma_g1uint_param bits
     prval _ = prop_verify {0 <= bits} ()
 
-    val population_map = get_population_map (node)
+    val population_map = get_population_map<> (node)
     val bit_selection_mask = (one << (u2i bits))
     val entry_is_stored =
       bit_is_set<> (population_map, bit_selection_mask)
   in
     if entry_is_stored then
       let
-        val leaf_map = get_leaf_map (node)
+        val leaf_map = get_leaf_map<> (node)
         val entry_is_leaf =
           bit_is_set<> (leaf_map, bit_selection_mask)
 
@@ -1284,7 +1308,7 @@ get_leaf_value
       in
         if entry_is_leaf then
           let
-            val chaining_map = get_chaining_map (node)
+            val chaining_map = get_chaining_map<> (node)
             val entry_is_chain =
               bit_is_set<> (chaining_map, bit_selection_mask)
           in
