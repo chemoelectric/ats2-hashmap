@@ -188,6 +188,7 @@ vtypedef new_length1_node_vt (p : addr) =
     pointer = ptr p
   }
 
+// FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 (* new_length2_node_vt -- A node of length two that needs
                           filling in. *)
 vtypedef new_length2_node_vt (p : addr) =
@@ -199,6 +200,7 @@ vtypedef new_length2_node_vt (p : addr) =
     mfree = mfree_gc_v p |
     pointer = ptr p
   }
+// FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 praxi
 lemma_node_vt_param :
@@ -282,10 +284,10 @@ set_subtree_entry
          key_data     : &key_vt >> _,
          depth        : uint,
          value        : uintptr,
-         is_new_slot  : &bool? >> [is_new_slot : bool]
-                                  bool is_new_slot) :
-    #[new_length : int | new_length == length
-                            || new_length == length + 1]
+         is_new_slot  : &bool? >> bool is_new_slot) :
+    #[new_length : int | (new_length == length ||
+                            new_length == length + 1)]
+    #[is_new_slot : bool]
     void
 
 (*
