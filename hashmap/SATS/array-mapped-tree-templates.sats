@@ -130,6 +130,17 @@ uptr2node :
   {p : addr}
   uptr p -<> [length : int] node_vt (length, p)
 
+fn {}
+uintptr2node :
+  uintptr -<>
+    [length : int]
+    [p : addr | null < p]
+    node_vt (length, p)
+
+fn {}
+node2uintptr2 :
+  {length : int} {p : addr} node_vt (length, p) -<> uintptr
+
 (* expired_node_vt -- what is left of an internal node, after its
                       contents have been freed. *)
 vtypedef expired_node_vt (length : int, p : addr) =

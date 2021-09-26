@@ -43,6 +43,22 @@ ptr2uptr : {p : addr} ptr p -<> uptr p = "mac#%"
 fn
 uptr2ptr : {p : addr} uptr p -<> ptr p = "mac#%"
 
+prfn
+uptr_is_gtez {p : addr}
+             (p : uptr p) :<prf>
+    [null <= p]
+    void
+
+fun
+uptr_is_null {p : addr}
+             (p : uptr p) :<>
+    bool (p == null)
+
+fun
+uptr_isnot_null {p : addr}
+                (p : uptr p) :<>
+    bool (null < p)
+
 fun {t : vt@ype}
 uptr_succ {p : addr} (p : uptr p) :<>
     uptr (p + sizeof (t))
@@ -105,5 +121,14 @@ uptr_exch {p : addr}
           (pf: !INV(t) @ p |
            p : uptr p,
            x : &t >> t) :<!wrt> void
+
+(********************************************************************)
+(* Some derived functions. *)
+
+fn {}
+uintptr2ptr : uintptr -<> Ptr
+
+fn {}
+ptr2uintptr : {p : addr} ptr p -<> uintptr
 
 (********************************************************************)

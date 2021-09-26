@@ -100,6 +100,21 @@ set_bit (bits               : uintptr,
 
 (********************************************************************)
 
+implement {}
+uintptr2node (i) =
+  let
+    val p = uintptr2uptr i
+    val _ = $effmask_exn (assertloc (uptr_isnot_null p))
+  in
+    uptr2node p
+  end
+
+implement {}
+node2uintptr2 (node) =
+  uptr2uintptr (node2uptr node)
+
+(********************************************************************)
+
 fn {}
 population_map_ptr {p : addr}
                    (p : uptr p) :<>
@@ -168,20 +183,6 @@ get_popcount_low_bits {population_map : int}
 implement {}
 extract_static_length_of_node (node) =
   $UN.castvwtp0 node
-
-(********************************************************************)
-
-fn {} // FIXME: Won’t be needed // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-uintptr_to_node
-        {length : int | 0 <= length; length <= bitsizeof (uintptr)}
-        (node_uintp : uintptr) :<>
-    node_vt (length) =
-  $UN.castvwtp0{node_vt (length)} ($UN.cast{Ptr} node_uintp)
-
-fn {} // FIXME: Won’t be needed // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-node_to_uintptr (node : node_vt) :<>
-    uintptr =
-  $UN.cast{uintptr} ($UN.castvwtp0{Ptr} node)
 
 (********************************************************************)
 
@@ -805,6 +806,9 @@ free_nodes (nodes      : node_list_vt,
   let
     typedef link_t = link_vt?!
 
+    extern castfn
+    link2uintptr : link_t -<> uintptr
+
     fun {vt : vtype}
     for_each_node
             {n          : int | 0 <= n} .<n>.
@@ -883,7 +887,9 @@ free_nodes (nodes      : node_list_vt,
                         uptr_get<link_t> (pf_entry | p_entries)
                     in
                       leaf_free
-                        ($UN.castvwtp0{vt} ($UN.cast{Ptr} entry))
+                        ($UN.castvwtp0{vt}
+                          (uptr2ptr
+                            (uintptr2uptr (link2uintptr entry))))
                     end
 
                 fn {}
@@ -907,7 +913,7 @@ free_nodes (nodes      : node_list_vt,
                           loop (pf_entry | leaf_free, tail)
                         end
                     val entry = uptr_get<link_t> (pf_entry | p_entries)
-                    val entry_p = $UN.cast{Ptr} entry
+                    val entry_p = uintptr2ptr (link2uintptr entry)
                     val lst = $UN.castvwtp0{List1_vt uintptr} entry_p
                     val () = loop (pf_entry | leaf_free, lst)
                   }
@@ -917,32 +923,34 @@ free_nodes (nodes      : node_list_vt,
                         (pf_entry  : !(link_t @ p_entries) >> _ |
                          leaf_free : !leaf_free_vt (vt) >> _,
                          new_nodes  : node_list_vt) : node_list_vt =
-                if not is_leaf then
-                  (* The expired entry is a subnode, and must be
-                     freed. Add it to a list for freeing later. *)
-                  let
-                    val entry = uptr_get<link_t> (pf_entry | p_entries)
-                    val entry_p = $UN.cast{Ptr} entry
-                    val next_node = $UN.castvwtp0{node_vt} entry_p
-                    prval _ = lemma_list_vt_param new_nodes
-                  in
-                    next_node :: new_nodes
-                  end
-                else if is_chain then
-                  (* The expired entry is a separate chain of leaves:
-                     a linked list. *)
-                  begin
-                    if not (leaf_free_vt_is_null leaf_free) then
-                      free_leaf_list<> (pf_entry | leaf_free);
-                    new_nodes
-                  end
-                else
-                  begin
-                    (* The expired entry is a leaf without
-                       chaining. *)
-                    free_one_leaf<> (pf_entry | leaf_free);
-                    new_nodes
-                  end
+                  if not is_leaf then
+                    (* The expired entry is a subnode, and must be
+                       freed. Add it to a list for freeing later. *)
+                    let
+                      val entry =
+                        uptr_get<link_t> (pf_entry | p_entries)
+                      val entry_p = uintptr2uptr (link2uintptr entry)
+                      val _ = assertloc (uptr_isnot_null entry_p)
+                      val next_node = uptr2node entry_p
+                      prval _ = lemma_list_vt_param new_nodes
+                    in
+                      next_node :: new_nodes
+                    end
+                  else if is_chain then
+                    (* The expired entry is a separate chain of
+                       leaves: a linked list. *)
+                    begin
+                      if not (leaf_free_vt_is_null leaf_free) then
+                        free_leaf_list<> (pf_entry | leaf_free);
+                      new_nodes
+                    end
+                  else
+                    begin
+                      (* The expired entry is a leaf without
+                         chaining. *)
+                      free_one_leaf<> (pf_entry | leaf_free);
+                      new_nodes
+                    end
 
                 (* Free the first entry, or list it to be freed
                    later. *)
@@ -1425,7 +1433,7 @@ get_leaf_value
                         end
                     end
                 val lst =
-                  $UN.castvwtp0{List_vt uintptr} ($UN.cast{Ptr} entry)
+                  $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
                 prval _ = lemma_list_vt_param lst
                 val @(is_found, pointer) =
                   search (key_test, key_data, lst)
@@ -1436,8 +1444,7 @@ get_leaf_value
                   begin
                     is_last := true;
                     is_stored := true;
-                    value :=
-                      $UN.castvwtp0{[u : int] uintptr u} pointer
+                    value := g1ofg0 pointer
                   end
                 else
                   (* No match for the key is found. *)
@@ -1520,14 +1527,14 @@ get_subtree_entry__loop
         if not is_last then
           {
             val [length1 : int] [p1 : addr] next_node =
-              $UN.castvwtp0{node_vt} ($UN.cast{Ptr} value)
+              uintptr2node value
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
             val () =
               get_subtree_entry__loop<hash_vt,key_vt>
                 (next_node, bits_source, hash_data,
                  key_test, key_data, succ depth,
                  is_stored, value)
-            prval _ = $UN.castvwtp0{Ptr} next_node
+            prval _ = $UN.castvwtp0{uptr} next_node
           }
       end
   end

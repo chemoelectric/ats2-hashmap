@@ -28,6 +28,18 @@ along with this program. If not, see
 
 staload "hashmap/SATS/uptr.sats"
 
+primplement
+uptr_is_gtez {p} (p) =
+  ptr1_is_gtez {p} (uptr2ptr {p} p)
+
+implement
+uptr_is_null {p} (p) =
+  ptr_is_null {p} (uptr2ptr {p} p)
+
+implement
+uptr_isnot_null {p} (p) =
+  ptr_isnot_null {p} (uptr2ptr {p} p)
+
 implement {t}
 uptr_succ {p} (p) =
   ptr2uptr (ptr_succ<t> {p} (uptr2ptr p))
@@ -63,3 +75,11 @@ uptr_set {p} (pf | p, x) =
 implement {t}
 uptr_exch {p} (pf | p, x) =
   ptr_exch<t> {p} (pf | uptr2ptr p, x)
+
+implement {}
+uintptr2ptr (i) =
+  uptr2ptr (uintptr2uptr i)
+
+implement {}
+ptr2uintptr {p} (p) =
+  (uptr2uintptr (ptr2uptr {p} p))
