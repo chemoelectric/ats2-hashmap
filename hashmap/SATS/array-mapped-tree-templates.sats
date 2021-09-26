@@ -138,8 +138,9 @@ uintptr2node :
     node_vt (length, p)
 
 fn {}
-node2uintptr2 :
-  {length : int} {p : addr} node_vt (length, p) -<> uintptr
+node2uintptr :
+  {length : int} {p : addr}
+  node_vt (length, p) -<> uintptr
 
 (* expired_node_vt -- what is left of an internal node, after its
                       contents have been freed. *)

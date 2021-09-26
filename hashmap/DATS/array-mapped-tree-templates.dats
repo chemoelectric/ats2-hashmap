@@ -110,7 +110,7 @@ uintptr2node (i) =
   end
 
 implement {}
-node2uintptr2 (node) =
+node2uintptr (node) =
   uptr2uintptr (node2uptr node)
 
 (********************************************************************)
@@ -1175,7 +1175,9 @@ fn {}
 start_new_subtree
         {bits      : int | 0 <= bits; bits_maxval (NUM_BITS, bits)}
         (bits      : int bits,
-         old_value : uintptr) : node_vt (1) =
+         old_value : uintptr) :
+    [length : int | length == 1]
+    node_vt (length) =
   let
     val population_map = (one << bits)
     val leaf_map = population_map
@@ -1217,9 +1219,11 @@ start_new_subtree
 fun {hash_vt, key_vt : vt@ype}
 set_subtree_entry__loop
         {length      : int | length <= bitsizeof (uintptr)}
+        {node_p      : addr | null < node_p}
         {bits        : int | 0 <= bits;
                              bits_maxval (NUM_BITS, bits)}
-        (node        : &node_vt (length) >> node_vt (new_length),
+        (node        : &node_vt (length, node_p) >>
+                          node_vt (new_length),
          bits        : int bits,
          bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data   : &hash_vt >> _,
@@ -1240,6 +1244,33 @@ set_subtree_entry__loop
     val bit_selection_mask = (one << bits)
     val entry_is_stored =
       bit_is_set<> (population_map, bit_selection_mask)
+
+    fun {hash_vt, key_vt : vt@ype}
+    set_subtree_entry__loop2
+            {length      : int | length <= bitsizeof (uintptr)}
+            {node_p      : addr | null < node_p}
+            {bits        : int | 0 <= bits;
+                                 bits_maxval (NUM_BITS, bits)}
+            {slot_p      : addr}
+            (pf_slot     : !(node_vt (length, node_p) @ slot_p) >>
+                              node_vt (new_length) @ slot_p |
+             slot_p      : ptr slot_p,
+             bits        : int bits,
+             bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+             hash_data   : &hash_vt >> _,
+             key_test    : !key_test_vt (key_vt) >> _,
+             key_data    : &key_vt >> _,
+             depth       : uint,
+             value       : uintptr,
+             is_new_slot : &bool? >> bool is_new_slot) :
+        #[new_length : int | (new_length == length ||
+                                  new_length == length + 1)]
+        #[is_new_slot : bool]
+        void =
+      set_subtree_entry__loop<hash_vt,key_vt>
+        {length} {node_p} {bits}
+        (!slot_p, bits, bits_source, hash_data,
+                      key_test, key_data, depth, value, is_new_slot)
   in
     if entry_is_stored then
       let
@@ -1286,22 +1317,59 @@ set_subtree_entry__loop
                 else
                   (* Create a new node, which will contain only the
                      old entry, and then do a loop. *)
-                  let
-(*
-                    val new_node = start_new_subtree<> (bits, entry)
-*)
-                  in
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                    is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-(*
-                    set_subtree_entry__loop2
-                      {1} {length} {index} {bits}
-                      (node, index, new_node, bits, bits_source,
-                       hash_data, key_test, key_data, succ depth,
-                       value, is_new_slot)
-*)
-                  end
+                  {
+                    prval @(pf_left, pf_right) =
+                      array_v_subdivide2 {link_vt}
+                                         {entries_addr node_p}
+                                         {index, length - index}
+                                         (node.view_of_entries)
+                    prval @(pf_entry, pf_right) =
+                      array_v_uncons pf_right
+
+                    stadef p_entry =
+                      (entries_addr node_p) + index * sizeof (link_vt)
+                    val up_entry : uptr p_entry =
+                      uptr_add<link_vt>
+                        (entries_ptr (node.pointer), index)
+                    val p_entry : ptr p_entry =
+                      uptr2ptr {p_entry} up_entry
+
+                    val _ = assertloc (ptr_isnot_null p_entry)
+
+                    prval _ =
+                      $UN.castview2void_at
+                        {uintptr} {link_vt} {p_entry}
+                        pf_entry
+
+                    val [new_length : int] new_node =
+                      start_new_subtree<> (bits, entry)
+                    prval _ = prop_verify {new_length == 1} ()
+                    val _ =
+                      ptr_set<uintptr>
+                        (pf_entry | p_entry, node2uintptr new_node)
+
+                    prval _ =
+                      $UN.castview2void_at
+                        {node_vt (new_length)} {uintptr} {p_entry}
+                        pf_entry
+
+                    val _ =
+                      set_subtree_entry__loop2
+                        (pf_entry | p_entry, bits, bits_source,
+                         hash_data, key_test, key_data, succ depth,
+                         value, is_new_slot)
+
+                    prval _ =
+                      $UN.castview2void_at
+                        {link_vt} {node_vt} {p_entry}
+                        pf_entry
+
+                    prval pf_right = array_v_cons (pf_entry, pf_right)
+                    prval _ = node.view_of_entries :=
+                      array_v_join2 {link_vt} {entries_addr node_p}
+                                    {index, length - index}
+                                    (pf_left, pf_right)
+                  }
               end
           end
         else
@@ -1349,7 +1417,7 @@ set_subtree_entry {length}
 
     val _ =
       set_subtree_entry__loop
-        {length} {bits}
+        {length} {..} {bits}
         (node, bits, bits_source, hash_data,
          key_test, key_data, depth, value, is_new_slot)
   }
