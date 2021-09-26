@@ -23,6 +23,8 @@ along with this program. If not, see
 
 #define ATS_DYNLOADFLAG 0
 
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
 #include "share/atspre_staload.hats"
 
 staload UN = "prelude/SATS/unsafe.sats"
@@ -30,9 +32,11 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/bits-source.sats"
+staload "hashmap/SATS/uptr.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/uptr.dats"
 
 implement
 array_mapped_tree_get_entry {node_p}
@@ -60,8 +64,11 @@ array_mapped_tree_get_entry {node_p}
                                     uintptr u) :
         #[is_stored : bool] void =
       {
+        val _ = assertloc (ptr_isnot_null node_p)
+        
         (* Create linear types from the pointers. *)
-        val node = $UN.castvwtp0{node_vt} node_p
+        val node : node_vt node_p =
+          uptr2node {node_p} (ptr2uptr {node_p} node_p)
         val bits_source =
           $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
                          bits_source_p
@@ -83,7 +90,7 @@ array_mapped_tree_get_entry {node_p}
              !(key_data.1), 0U, is_stored, value)
 
         (* Consume the linear types. *)
-        prval _ = $UN.castvwtp0{Ptr} node
+        prval _ = $UN.castvwtp0{uptr} node
         prval _ = $UN.castvwtp0{Ptr} bits_source
         prval _ = $UN.castvwtp0{Ptr} hash_data
         prval _ = $UN.castvwtp0{Ptr} key_test

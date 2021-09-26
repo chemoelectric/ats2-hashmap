@@ -193,6 +193,14 @@ EXTRA_DIST += hashmap/SATS/memory.sats
 EXTRA_DIST += hashmap/DATS/memory.dats
 EXTRA_DIST += hashmap/CATS/memory.cats
 
+libats2_hashmap_la_SOURCES += hashmap/SATS/uptr_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/uptr_dats.c
+CLEANFILES += hashmap/SATS/uptr_sats.c
+CLEANFILES += hashmap/DATS/uptr_dats.c
+EXTRA_DIST += hashmap/SATS/uptr.sats
+EXTRA_DIST += hashmap/DATS/uptr.dats
+EXTRA_DIST += hashmap/CATS/uptr.cats
+
 libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c

@@ -32,6 +32,7 @@ staload "hashmap/SATS/array-mapped-tree-templates.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/uptr.dats"
 
 implement
 array_mapped_tree_free (node_p, leaf_free_p) =

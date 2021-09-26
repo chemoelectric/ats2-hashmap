@@ -32,6 +32,7 @@ staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/bits-source.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
+staload _ = "hashmap/DATS/uptr.dats"
 
 implement
 array_mapped_tree_create {bits_source_p} {hash_data_p}

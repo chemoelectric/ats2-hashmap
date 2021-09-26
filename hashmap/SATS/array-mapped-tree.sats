@@ -52,7 +52,7 @@ array_mapped_tree_create
 
 fun
 array_mapped_tree_set_entry
-        {node_p        : addr}
+        {node_p        : addr | null < node_p}
         {bits_source_p : addr}
         {hash_data_p   : addr}
         {key_test_p    : addr}

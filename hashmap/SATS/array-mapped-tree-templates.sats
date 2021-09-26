@@ -26,6 +26,7 @@ along with this program. If not, see
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/bits-source.sats"
+staload "hashmap/SATS/uptr.sats"
 
 (********************************************************************)
 
@@ -92,8 +93,10 @@ stadef bitsizeof (t : vt@ype) = 8 * sizeof (t)
 
 absview link_v
 
+vtypedef link_vt (p : addr) =
+  @(link_v | uptr p)
 vtypedef link_vt =
-  @(link_v | uintptr)
+  [p : addr] link_vt p
 
 stadef population_map_addr (p : addr) : addr = p
 stadef leaf_map_addr (p : addr) : addr = p + sizeof (uintptr)
@@ -108,12 +111,24 @@ vtypedef node_vt (length : int, p : addr) =
     view_of_chaining_map = uintptr @ chaining_map_addr (p),
     view_of_entries = @[link_vt][length] @ entries_addr (p),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 vtypedef node_vt (length : int) =
   [p : addr | null < p] node_vt (length, p)
+vtypedef node_vt (p : addr) =
+  [length : int] node_vt (length, p)
 vtypedef node_vt =
-  [length : int] node_vt (length)
+  [length : int] [p : addr | null < p] node_vt (length, p)
+
+castfn
+node2uptr :
+  {length : int} {p : addr}
+  node_vt (length, p) -<> uptr p
+
+castfn
+uptr2node :
+  {p : addr}
+  uptr p -<> [length : int] node_vt (length, p)
 
 (* expired_node_vt -- what is left of an internal node, after its
                       contents have been freed. *)
@@ -124,7 +139,7 @@ vtypedef expired_node_vt (length : int, p : addr) =
     view_of_chaining_map = uintptr @ chaining_map_addr (p),
     view_of_entries = @[link_vt?!][length] @ entries_addr (p),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 vtypedef expired_node_vt (length : int) =
   [p : addr] expired_node_vt (length, p)
@@ -146,7 +161,7 @@ vtypedef slotted_node_vt (length : int, index : int, p : addr) =
           @ (entries_addr (p) + index * sizeof (link_vt)
                 + sizeof (link_vt?)),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 vtypedef slotted_node_vt (length : int, index : int) =
   [p : addr] slotted_node_vt (length, index, p)
@@ -169,7 +184,7 @@ vtypedef new_slotted_node_vt (length : int, index : int, p : addr) =
           @ (entries_addr (p) + index * sizeof (link_vt?)
                 + sizeof (link_vt?)),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 vtypedef new_slotted_node_vt (length : int, index : int) =
   [p : addr] new_slotted_node_vt (length, index, p)
@@ -185,7 +200,7 @@ vtypedef new_length1_node_vt (p : addr) =
     view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
     view_of_entries = @[link_vt?][1] @ entries_addr (p),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 
 // FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
@@ -198,7 +213,7 @@ vtypedef new_length2_node_vt (p : addr) =
     view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
     view_of_entries = @[link_vt?][2] @ entries_addr (p),
     mfree = mfree_gc_v p |
-    pointer = ptr p
+    pointer = uptr p
   }
 // FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
@@ -277,7 +292,9 @@ start_new_tree
 fun {hash_vt, key_vt  : vt@ype}
 set_subtree_entry
         {length       : int | length <= bitsizeof (uintptr)}
-        (node         : &node_vt (length) >> node_vt (new_length),
+        {node_p       : addr | null < node_p}
+        (node         : &node_vt (length, node_p) >>
+                            node_vt (new_length),
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_data    : &hash_vt >> _,
          key_test     : !key_test_vt (key_vt) >> _,

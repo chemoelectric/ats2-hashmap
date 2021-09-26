@@ -42,6 +42,9 @@ staload _ = "hashmap/DATS/count-one-bits.dats"
 
 staload "hashmap/SATS/bits-source.sats"
 
+staload "hashmap/SATS/uptr.sats"
+staload _ = "hashmap/DATS/uptr.dats"
+
 staload UN = "prelude/SATS/unsafe.sats"
 
 (********************************************************************)
@@ -99,27 +102,27 @@ set_bit (bits               : uintptr,
 
 fn {}
 population_map_ptr {p : addr}
-                   (p : ptr p) :<>
-    ptr (population_map_addr p) =
+                   (p : uptr p) :<>
+    uptr (population_map_addr p) =
   p
 
 fn {}
 leaf_map_ptr {p : addr}
-             (p : ptr p) :<>
-    ptr (leaf_map_addr p) =
-  ptr_succ<uintptr> (p)
+             (p : uptr p) :<>
+    uptr (leaf_map_addr p) =
+  uptr_succ<uintptr> (p)
 
 fn {}
 chaining_map_ptr {p : addr}
-                 (p : ptr p) :<>
-    ptr (chaining_map_addr p) =
-  ptr_add<uintptr> (p, 2)
+                 (p : uptr p) :<>
+    uptr (chaining_map_addr p) =
+  uptr_add<uintptr> (p, 2)
 
 fn {}
 entries_ptr {p : addr}
-            (p : ptr p) :<>
-    ptr (entries_addr p) =
-  ptr_add<uintptr> (p, 3)
+            (p : uptr p) :<>
+    uptr (entries_addr p) =
+  uptr_add<uintptr> (p, 3)
 
 (********************************************************************)
 
@@ -168,14 +171,14 @@ extract_static_length_of_node (node) =
 
 (********************************************************************)
 
-fn {}
+fn {} // FIXME: Won’t be needed // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 uintptr_to_node
         {length : int | 0 <= length; length <= bitsizeof (uintptr)}
         (node_uintp : uintptr) :<>
     node_vt (length) =
   $UN.castvwtp0{node_vt (length)} ($UN.cast{Ptr} node_uintp)
 
-fn {}
+fn {} // FIXME: Won’t be needed // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 node_to_uintptr (node : node_vt) :<>
     uintptr =
   $UN.cast{uintptr} ($UN.castvwtp0{Ptr} node)
@@ -186,12 +189,12 @@ fn {}
 node_alloc {length : int}
            (length : size_t length) :<!wrt>
     [p : addr | null < p]
-    @(@[uintptr?][length + 3] @ p, mfree_gc_v p | ptr p) =
+    @(@[uintptr?][length + 3] @ p, mfree_gc_v p | uptr p) =
   let
     val size = length + (g1u2u 3U)
     val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
   in
-    @(view, mfree | pointer)
+    @(view, mfree | ptr2uptr pointer)
   end
 
 fn {}
@@ -317,7 +320,8 @@ expired_node_vt_free
     prval pf = array_v_cons (pf_leaf_map, pf)
     prval pf = array_v_cons (pf_pop_map, pf)
   in
-    array_ptr_free {uintptr} {p} {length + 3} (pf, pf_mfree | p)
+    array_ptr_free {uintptr} {p} {length + 3}
+                   (pf, pf_mfree | uptr2ptr p)
   end
 
 (********************************************************************)
@@ -338,7 +342,8 @@ get_population_map
           pointer = p
         } = node
 
-    val pop_map = ptr_get<uintptr> (pf_pop_map | population_map_ptr p)
+    val pop_map =
+      uptr_get<uintptr> (pf_pop_map | population_map_ptr p)
 
     prval _ = node :=
       @{
@@ -371,7 +376,7 @@ get_leaf_map
           pointer = p
         } = node
 
-    val leaf_map = ptr_get<uintptr> (pf_leaf_map | leaf_map_ptr p)
+    val leaf_map = uptr_get<uintptr> (pf_leaf_map | leaf_map_ptr p)
 
     prval _ = node :=
       @{
@@ -405,7 +410,7 @@ get_chaining_map
         } = node
 
     val chaining_map =
-      ptr_get<uintptr> (pf_chain_map | chaining_map_ptr p)
+      uptr_get<uintptr> (pf_chain_map | chaining_map_ptr p)
 
     prval _ = node :=
       @{
@@ -440,7 +445,7 @@ get_entry_value_g1uint
         } = node
 
     stadef p_entries = entries_addr p
-    val p_entries : ptr p_entries = entries_ptr p
+    val p_entries : ptr p_entries = uptr2ptr (entries_ptr p)
     macdef entries = !p_entries
 
     (* Temporarily make the entries uintptr instead of link_vt,
@@ -504,7 +509,7 @@ set_entry_value_g1uint
         } = node
 
     stadef p_entries = entries_addr p
-    val p_entries : ptr p_entries = entries_ptr p
+    val p_entries : ptr p_entries = uptr2ptr (entries_ptr p)
     macdef entries = !p_entries
 
     (* Temporarily make the entries uintptr instead of link_vt.
@@ -594,26 +599,27 @@ expand_node {length, index : int | 0 <= index; index <= length}
 
     stadef q0 = entries_addr q
 
-    val p0 : ptr p0 = entries_ptr p
-    val q0 : ptr q0 = entries_ptr q
+    val p0 : uptr p0 = entries_ptr p
+    val q0 : uptr q0 = entries_ptr q
 
     val _ =
       array_move<link_vt>
         {index} {q0} {p0}
-        (qf_left, pf_left | q0, p0, index)
+        (qf_left, pf_left | uptr2ptr q0, uptr2ptr p0, index)
 
     stadef p1 = entries_addr (p) + index * sizeof (link_vt)
     stadef q1 = entries_addr (q) + index * sizeof (link_vt)
                     + sizeof (link_vt?)
 
-    val p1 : ptr p1 = ptr_add<link_vt> (p0, index)
-    val q1 : ptr q1 =
-      ptr_succ<link_vt?> (ptr_add<link_vt> (q0, index))
+    val p1 : uptr p1 = uptr_add<link_vt> (p0, index)
+    val q1 : uptr q1 =
+      uptr_succ<link_vt?> (uptr_add<link_vt> (q0, index))
 
     val _ =
       array_move<link_vt>
         {length - index} {q1} {p1}
-        (qf_right, pf_right | q1, p1, length - index)
+        (qf_right, pf_right | uptr2ptr q1, uptr2ptr p1,
+                              length - index)
 
     prval pf_entries = 
       array_v_join2 {link_vt?!} {p0} {index, length - index}
@@ -832,7 +838,7 @@ free_nodes (nodes      : node_list_vt,
                    population : uintptr,
                    leaves     : uintptr,
                    chains     : uintptr,
-                   p_entries  : ptr p_entries,
+                   p_entries  : uptr p_entries,
                    restlen    : size_t restlen,
                    new_nodes  : node_list_vt) : node_list_vt =
             if restlen = i2sz 0 then
@@ -857,7 +863,7 @@ free_nodes (nodes      : node_list_vt,
                 (* Separate the entries into the first entry and
                    and array of the remaining entries. *)
                 prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
-                val p_rest = ptr_succ<link_vt> (p_entries)
+                val p_rest = uptr_succ<link_vt> (p_entries)
 
                 (* Render that first entry "expired". *)
                 prval _ =
@@ -874,7 +880,7 @@ free_nodes (nodes      : node_list_vt,
                        freed. Free it now. *)
                     let
                       val entry =
-                        ptr_get<link_t> (pf_entry | p_entries)
+                        uptr_get<link_t> (pf_entry | p_entries)
                     in
                       leaf_free
                         ($UN.castvwtp0{vt} ($UN.cast{Ptr} entry))
@@ -900,7 +906,7 @@ free_nodes (nodes      : node_list_vt,
                           apply_leaf_free (leaf_free, leaf);
                           loop (pf_entry | leaf_free, tail)
                         end
-                    val entry = ptr_get<link_t> (pf_entry | p_entries)
+                    val entry = uptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
                     val lst = $UN.castvwtp0{List1_vt uintptr} entry_p
                     val () = loop (pf_entry | leaf_free, lst)
@@ -915,7 +921,7 @@ free_nodes (nodes      : node_list_vt,
                   (* The expired entry is a subnode, and must be
                      freed. Add it to a list for freeing later. *)
                   let
-                    val entry = ptr_get<link_t> (pf_entry | p_entries)
+                    val entry = uptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = $UN.cast{Ptr} entry
                     val next_node = $UN.castvwtp0{node_vt} entry_p
                     prval _ = lemma_list_vt_param new_nodes
@@ -1044,16 +1050,17 @@ start_new_tree (bits_source, hash_data, value) =
           pointer = p
         } = new_length1_node_alloc ()
 
-    val _ = ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
-                                           population_map)
-    val _ = ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
-                                            leaf_map)
-    val _ = ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
-                                             chaining_map)
+    val _ = uptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                            population_map)
+    val _ = uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                             leaf_map)
+    val _ = uptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                              chaining_map)
 
     prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
-    val _ = ptr_set<link_vt> (pf_entry | entries_ptr p,
-                                         $UN.castvwtp0{link_vt} value)
+    val _ =
+      uptr_set<link_vt>
+        (pf_entry | entries_ptr p, $UN.castvwtp0{link_vt} value)
     prval pf_rest = array_v_unnil_nil pf_rest
     prval pf_entries = array_v_cons (pf_entry, pf_rest)
   in
@@ -1126,19 +1133,19 @@ expand_node_to_make_space_for_new_leaf
         } = expand_node<> {length, new_index}
                           (node, length, new_index)
     val _ =
-      ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
-                                     new_population_map)
+      uptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                      new_population_map)
     val _ =
-      ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
-                                      new_leaf_map)
+      uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                       new_leaf_map)
     val _ =
-      ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
-                                       new_chaining_map)
+      uptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                        new_chaining_map)
 
     val p_entry =
-      ptr_add<link_vt> (entries_ptr (p), new_index)
+      uptr_add<link_vt> (entries_ptr (p), new_index)
     val _ =
-      ptr_set<link_vt>
+      uptr_set<link_vt>
         (pf_entry | p_entry, $UN.castvwtp0{link_vt} value)
 
     prval pf_right = array_v_cons (pf_entry, pf_right)
@@ -1175,16 +1182,16 @@ start_new_subtree
           pointer = p
         } = new_length1_node_alloc ()
 
-    val _ = ptr_set<uintptr> (pf_pop_map | population_map_ptr p,
-                                           population_map)
-    val _ = ptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
-                                            leaf_map)
-    val _ = ptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
-                                             chaining_map)
+    val _ = uptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                            population_map)
+    val _ = uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                             leaf_map)
+    val _ = uptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                              chaining_map)
 
     prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
     val _ =
-      ptr_set<link_vt>
+      uptr_set<link_vt>
         (pf_entry | entries_ptr p, $UN.castvwtp0{link_vt} old_value)
     prval pf_rest = array_v_unnil_nil pf_rest
     prval pf_entries = array_v_cons (pf_entry, pf_rest)

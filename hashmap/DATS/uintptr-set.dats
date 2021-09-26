@@ -130,6 +130,7 @@ uintptr_set_add_element (set, element) =
     | ~ set_vt_tree (size, tree) =>
       let
         var node_p = $UNSAFE.castvwtp0{Ptr} tree
+        val _ = assertloc (ptr_isnot_null node_p)
 
         val key_test = uintptr_set_key_test ()
         val key_test_p = $UNSAFE.castvwtp1{Ptr} key_test

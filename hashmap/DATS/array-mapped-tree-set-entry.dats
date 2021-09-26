@@ -30,10 +30,12 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/bits-source.sats"
+staload "hashmap/SATS/uptr.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 staload _ = "hashmap/DATS/memory.dats"
+staload _ = "hashmap/DATS/uptr.dats"
 
 implement
 array_mapped_tree_set_entry {node_p}
@@ -44,7 +46,7 @@ array_mapped_tree_set_entry {node_p}
                              value, is_new_slot) =
   let
     fn {}
-    set_entry {node_p          : addr}
+    set_entry {node_p          : addr | null < node_p}
               {bits_source_p   : addr}
               {hash_data_p     : addr}
               {key_test_p      : addr}
@@ -59,7 +61,8 @@ array_mapped_tree_set_entry {node_p}
                is_new_slot     : &bool? >> Bool) : void =
       {
         (* The node to be replaced. *)
-        var node = $UN.castvwtp0{node_vt} node_p
+        val node_up : uptr node_p = ptr2uptr {node_p} node_p
+        var node : node_vt node_p = uptr2node {node_p} node_up
 
         (* Create linear types from the pointers. *)
         val bits_source =
@@ -80,11 +83,13 @@ array_mapped_tree_set_entry {node_p}
         prval () = lemma_node_vt_param node
         val () =
           set_subtree_entry<hash_vt, key_vt>
+            {..} {node_p}
             (node, bits_source, !(hash_data.1), key_test,
              !(key_data.1), 0U, value, is_new_slot)
 
         (* Convert the new node to a pointer. *)
-        val _ = node_p := $UN.castvwtp0{Ptr} node
+        val node_up = node2uptr node
+        val _ = node_p := uptr2ptr node_up
 
         (* Consume linear types. *)
         prval _ = $UN.castvwtp0{Ptr} bits_source
