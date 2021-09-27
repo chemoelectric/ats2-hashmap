@@ -299,8 +299,17 @@ node_vt_free {length    : int}
 
 (********************************************************************)
 
-(* A hash function stores the hash into space that was allocated
-   for it ahead of time. *)
+(*
+  Notes on hash_function_vt:
+
+      * If the first argument of a hash function is to be treated
+        as a pointer, then it has to be able to point to either a
+        key or a key-value pair; in the latter case, the pair must
+        start with the key. There must be no padding before the key.
+
+      * A hash function stores the hash into space that was allocated
+        for it ahead of time.
+*)
 vtypedef hash_function_vt (hash_vt : vt@ype) =
   (uintptr, &hash_vt? >> hash_vt) -<cloptr1> void
 
@@ -309,8 +318,7 @@ vtypedef key_test_vt = (uintptr, uintptr) -<cloptr1> bool
 (********************************************************************)
 
 (* start_new_tree -- this assumes the bits_source returns at least
-                     one bit. Otherwise an assertion will fail.
-   FIXME: Assure this through typechecking, instead. *)
+                     one bit. Any useful bits_source will do so. *)
 fun {hash_vt : vt@ype}
 start_new_tree
         {key_value    : int}
@@ -338,49 +346,31 @@ get_subtree_entry
     #[key_value : int | is_stored || key_value == 0]
     void
 
-(*
 (* set_subtree_entry -- this assumes bits_source will return at
-                        least one bit. Otherwise an assertion will
-                        fail. (Note that, if depth = 0U, then
-                        no useful bits_source will fail to return
-                        at least one bit.) *)
-fun {hash_vt, key_vt  : vt@ype}
+                        least one bit. (Note that, if depth = 0U,
+                        then any *useful* bits_source has to
+                        return at least one bit.) *)
+fun {hash_vt : vt@ype}
 set_subtree_entry
-        {length       : int | length <= bitsizeof (uintptr)}
-        {node_p       : addr}
-        (node         : &node_vt (length, node_p) >>
-                            node_vt (new_length),
-         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data    : &hash_vt >> _,
-         key_test     : !key_test_vt (key_vt) >> _,
-         key_data     : &key_vt >> _,
-         depth        : uint,
-         value        : uintptr,
-         is_new_slot  : &bool? >> bool is_new_slot) :
+        {length        : int | length <= bitsizeof (uintptr)}
+        {key_value     : int}
+        {depth         : int}
+        (node          : &node_vt (length) >> node_vt (new_length),
+         bits_source   : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_func     : !hash_function_vt (hash_vt) >> _,
+         hash_storage1 : &hash_vt? >> hash_vt?,
+         hash_storage2 : &hash_vt? >> hash_vt?,
+         key_test      : !key_test_vt >> _,
+         key_value     : uintptr key_value,
+         depth         : uint depth,
+         is_new_slot   : &bool? >> bool is_new_slot) :
     #[new_length : int | (new_length == length ||
-                            new_length == length + 1)]
+                          new_length == length + 1)]
     #[is_new_slot : bool]
     void
 
 (*
 FIXME: Add delete_subtree_entry.
-*)
-
-fun {hash_vt, key_vt : vt@ype}
-get_subtree_entry
-        {length      : int | length <= bitsizeof (uintptr)}
-        (node        : !node_vt (length) >> _,
-         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data   : &hash_vt >> _,
-         key_test    : !key_test_vt (key_vt) >> _,
-         key_data    : &key_vt >> _,
-         depth       : uint,
-         is_stored   : &bool? >> bool is_stored,
-         value       : &uintptr? >>
-                          [u : int | is_stored || u == 0]
-                          uintptr u) :
-    #[is_stored : bool]
-    void
 *)
 
 (********************************************************************)

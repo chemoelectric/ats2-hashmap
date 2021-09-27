@@ -915,7 +915,7 @@ free_nodes (nodes      : node_list_vt,
                     val entry = uptr_get<link_t> (pf_entry | p_entries)
                     val entry_p = uintptr2ptr (link2uintptr entry)
                     val lst = $UN.castvwtp0{List1_vt uintptr} entry_p
-                    val () = loop (pf_entry | leaf_free, lst)
+                    val _ = loop (pf_entry | leaf_free, lst)
                   }
 
                 fn {}
@@ -1035,19 +1035,16 @@ node_vt_free (node, leaf_free) =
 implement {hash_vt}
 start_new_tree (bits_source, hash_func, hash_storage, key_value) =
   let
-    val () = hash_func (key_value, hash_storage)
+    val _ = hash_func (key_value, hash_storage)
 
     val [bits : int] (pf_bits | bits) = bits_source (hash_storage, 0U)
     prval _ = bits_source_bits_bounds pf_bits
-    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
-    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+    prval _ = prop_verify {valid_bits (NUM_BITS, bits)} ()
 
     (* Throw away the hash that was computed. *)
     prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage)
 
-    (* FIXME: The following is really a precondition of
-              start_new_tree that we have not yet managed
-              to enforce through typechecking. *)
+    (* This is a precondition of the routine. *)
     prval _ = $effmask_exn assertloc (0 <= bits)
 
     val population_map = (one << bits)
@@ -1240,8 +1237,7 @@ get_subtree_entry__loop
     val [bits : int] (pf_bits | bits) =
       bits_source (hash_storage, depth)
     prval _ = bits_source_bits_bounds pf_bits
-    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
-    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+    prval _ = prop_verify {valid_bits (NUM_BITS, bits)} ()
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       begin
@@ -1260,7 +1256,7 @@ get_subtree_entry__loop
             val [length1 : int] [p1 : addr] next_node =
               uintptr2node key_value
             prval _ = lemma_node_vt_param {length1} {p1} (next_node)
-            val () =
+            val _ =
               get_subtree_entry__loop<hash_vt>
                 (next_node, bits_source, hash_storage, key_test, key,
                  succ depth, is_stored, key_value)
@@ -1273,7 +1269,7 @@ implement {hash_vt}
 get_subtree_entry (node, bits_source, hash_func, hash_storage,
                    key_test, key, depth, is_stored, key_value) =
   {
-    val () = hash_func (key, hash_storage)
+    val _ = hash_func (key, hash_storage)
 
     val _ =
       get_subtree_entry__loop<hash_vt>
@@ -1286,90 +1282,28 @@ get_subtree_entry (node, bits_source, hash_func, hash_storage,
 
 (********************************************************************)
 
-
-
-
-
-
-
-
-
-(*
-implement {hash_vt}
-start_new_tree (bits_source, hash_data, value) =
-  let
-    val [bits : int] (pf_bits | bits) = bits_source (hash_data, 0U)
-    prval _ = bits_source_bits_bounds pf_bits
-    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
-    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
-
-    (* FIXME: The following is really a precondition of
-              start_new_tree that we have not yet managed
-              to enforce through typechecking. *)
-    prval _ = $effmask_exn assertloc (0 <= bits)
-
-    val population_map = (one << bits)
-    val leaf_map = population_map
-    val chaining_map = zero
-
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_leaf_map = pf_leaf_map,
-          view_of_chaining_map = pf_chain_map,
-          view_of_entries = pf_entries,
-          mfree = pf_mfree |
-          pointer = p
-        } = new_length1_node_alloc ()
-
-    val _ = uptr_set<uintptr> (pf_pop_map | population_map_ptr p,
-                                            population_map)
-    val _ = uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
-                                             leaf_map)
-    val _ = uptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
-                                              chaining_map)
-
-    prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
-    val _ =
-      uptr_set<link_vt>
-        (pf_entry | entries_ptr p, $UN.castvwtp0{link_vt} value)
-    prval pf_rest = array_v_unnil_nil pf_rest
-    prval pf_entries = array_v_cons (pf_entry, pf_rest)
-  in
-    @{
-      view_of_population_map = pf_pop_map,
-      view_of_leaf_map = pf_leaf_map,
-      view_of_chaining_map = pf_chain_map,
-      view_of_entries = pf_entries,
-      mfree = pf_mfree |
-      pointer = p
-    }
-  end
-*)
-
-(*
-(********************************************************************)
-
 fun {}
 replace_old_entry
         {length      : int | length <= bitsizeof (uintptr)}
         {index       : int | index < length}
+        {key_value   : int}
         (node        : &node_vt (length) >> node_vt (new_length),
          index       : uint index,
-         value       : uintptr,
+         key_value   : uintptr key_value,
          is_new_slot : &bool? >> bool is_new_slot) :
     #[new_length : int | new_length == length]
     #[is_new_slot : bool | is_new_slot == false]
     void =
   begin
-    node[index] := value;
+    node[index] := key_value;
     is_new_slot := false
   end
 
 fun {}
 expand_node_to_make_space_for_new_leaf
-        {length             : int | length < bitsizeof (uintptr)}
-        {bits               : int | 0 <= bits;
-                                    bits_maxval (NUM_BITS, bits)}
+        {length    : int | length < bitsizeof (uintptr)}
+        {bits      : int | valid_unexhausted_bits (NUM_BITS, bits)}
+        {key_value : int}
         (node               : &node_vt (length) >>
                                   node_vt (new_length),
          length             : size_t length,
@@ -1378,7 +1312,7 @@ expand_node_to_make_space_for_new_leaf
          leaf_map           : uintptr,
          chaining_map       : uintptr,
          bit_selection_mask : uintptr,
-         value              : uintptr,
+         key_value          : uintptr key_value,
          is_new_slot        : &bool? >> bool is_new_slot) :
     #[new_length : int | new_length == length + 1]
     #[is_new_slot : bool | is_new_slot == true]
@@ -1419,7 +1353,7 @@ expand_node_to_make_space_for_new_leaf
       uptr_add<link_vt> (entries_ptr (p), new_index)
     val _ =
       uptr_set<link_vt>
-        (pf_entry | p_entry, $UN.castvwtp0{link_vt} value)
+        (pf_entry | p_entry, uintptr2link key_value)
 
     prval pf_right = array_v_cons (pf_entry, pf_right)
     prval pf_entries = array_v_join2 (pf_left, pf_right)
@@ -1438,9 +1372,10 @@ expand_node_to_make_space_for_new_leaf
 
 fn {}
 start_new_subtree
-        {bits      : int | 0 <= bits; bits_maxval (NUM_BITS, bits)}
-        (bits      : int bits,
-         old_value : uintptr) :
+        {bits : int | valid_unexhausted_bits (NUM_BITS, bits)}
+        {old_key_value : int}
+        (bits          : int bits,
+         old_key_value : uintptr old_key_value) :
     [length : int | length == 1]
     node_vt (length) =
   let
@@ -1467,7 +1402,7 @@ start_new_subtree
     prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
     val _ =
       uptr_set<link_vt>
-        (pf_entry | entries_ptr p, $UN.castvwtp0{link_vt} old_value)
+        (pf_entry | entries_ptr p, uintptr2link old_key_value)
     prval pf_rest = array_v_unnil_nil pf_rest
     prval pf_entries = array_v_cons (pf_entry, pf_rest)
   in
@@ -1481,61 +1416,41 @@ start_new_subtree
     }
   end
 
-fun {hash_vt, key_vt : vt@ype}
+fun {hash_vt : vt@ype}
 set_subtree_entry__loop
-        {length      : int | length <= bitsizeof (uintptr)}
-        {node_p      : addr | null < node_p}
-        {bits        : int | 0 <= bits;
-                             bits_maxval (NUM_BITS, bits)}
-        (node        : &node_vt (length, node_p) >>
-                          node_vt (new_length),
-         bits        : int bits,
-         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data   : &hash_vt >> _,
-         key_test    : !key_test_vt (key_vt) >> _,
-         key_data    : &key_vt >> _,
-         depth       : uint,
-         value       : uintptr,
-         is_new_slot : &bool? >> bool is_new_slot) :
+        {length : int | length <= bitsizeof (uintptr)}
+        {slot_p : addr}
+        {bits   : int | valid_unexhausted_bits (NUM_BITS, bits)}
+        {hash2_is_set  : bool}
+        {key_value     : int}
+        {depth         : int}
+        (pf_slot       : !(node_vt (length) @ slot_p) >>
+                              node_vt (new_length) @ slot_p |
+         slot_p        : ptr slot_p,
+         bits          : int bits,
+         bits_source   : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_func     : !hash_function_vt (hash_vt),
+         hash_storage1 : &hash_vt >> _,
+         hash_storage2 : &hash_vt >> _,
+         hash2_is_set  : bool hash2_is_set,
+         key_test      : !key_test_vt >> _,
+         key_value     : uintptr key_value,
+         depth         : uint depth,
+         is_new_slot   : &bool? >> bool is_new_slot) :
     #[new_length : int | (new_length == length ||
-                              new_length == length + 1)]
+                          new_length == length + 1)]
     #[is_new_slot : bool]
     void =
   let
-    prval _ = lemma_node_vt_param {length} node
+    macdef node = !slot_p
+
+    prval _ = lemma_node_vt_param {length} (node)
     prval _ = prop_verify {0 < length} ()
 
     val population_map = get_population_map<> (node)
     val bit_selection_mask = (one << bits)
     val entry_is_stored =
       bit_is_set<> (population_map, bit_selection_mask)
-
-    fun {hash_vt, key_vt : vt@ype}
-    set_subtree_entry__loop2
-            {length      : int | length <= bitsizeof (uintptr)}
-            {node_p      : addr | null < node_p}
-            {bits        : int | 0 <= bits;
-                                 bits_maxval (NUM_BITS, bits)}
-            {slot_p      : addr}
-            (pf_slot     : !(node_vt (length, node_p) @ slot_p) >>
-                              node_vt (new_length) @ slot_p |
-             slot_p      : ptr slot_p,
-             bits        : int bits,
-             bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-             hash_data   : &hash_vt >> _,
-             key_test    : !key_test_vt (key_vt) >> _,
-             key_data    : &key_vt >> _,
-             depth       : uint,
-             value       : uintptr,
-             is_new_slot : &bool? >> bool is_new_slot) :
-        #[new_length : int | (new_length == length ||
-                                  new_length == length + 1)]
-        #[is_new_slot : bool]
-        void =
-      set_subtree_entry__loop<hash_vt,key_vt>
-        {length} {node_p} {bits}
-        (!slot_p, bits, bits_source, hash_data,
-                      key_test, key_data, depth, value, is_new_slot)
   in
     if entry_is_stored then
       let
@@ -1562,13 +1477,13 @@ set_subtree_entry__loop
                 is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                 // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
-            else if key_test (key_data, entry) then
+            else if key_test (key_value, entry) then
               replace_old_entry<>
-                (node, i2u index, value, is_new_slot)
+                (node, i2u index, key_value, is_new_slot)
             else
               let
                 val [bits : int] (pf_bits | bits) =
-                  bits_source (hash_data, depth)
+                  bits_source (hash_storage1, depth)
                 prval _ = bits_source_bits_bounds pf_bits
               in
                 if bits = BITS_SOURCE_EXHAUSTED then
@@ -1580,6 +1495,10 @@ set_subtree_entry__loop
                     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                   end
                 else
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+(*
                   (* Create a new node, which will contain only the
                      old entry, and then do a loop. *)
                   {
@@ -1635,6 +1554,7 @@ set_subtree_entry__loop
                                     {index, length - index}
                                     (pf_left, pf_right)
                   }
+*)
               end
           end
         else
@@ -1662,222 +1582,39 @@ set_subtree_entry__loop
         expand_node_to_make_space_for_new_leaf<>
           (node, length, bits,
            population_map, leaf_map, chaining_map,
-           bit_selection_mask, value, is_new_slot)
+           bit_selection_mask, key_value, is_new_slot)
       end
   end
 
-implement {hash_vt, key_vt}
-set_subtree_entry {length}
-                  (node, bits_source, hash_data, key_test,
-                   key_data, depth, value, is_new_slot) =
+implement {hash_vt}
+set_subtree_entry (node, bits_source, hash_func,
+                   hash_storage1, hash_storage2,
+                   key_test, key_value, depth, is_new_slot) =
   {
-    val [bits : int] (pf_bits | bits) = bits_source (hash_data, depth)
-    prval _ = bits_source_bits_bounds pf_bits
-    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
-    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+    val _ = hash_func (key_value, hash_storage1)
 
-    (* FIXME: This is really a precondition of the routine, and
-              ideally should be enforced by typechecking. *)
+    (* For mere typechecking reasons, hash_storage2 needs to
+       be treated as "initialized". *)
+    prval _ = $UN.castview2void_at{hash_vt} (view@ hash_storage2)
+
+    val [bits : int] (pf_bits | bits) =
+      bits_source (hash_storage1, depth)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {valid_bits (NUM_BITS, bits)} ()
+
+    (* This is a precondition of the routine: the bits source
+       must return at least one bit. *)
     val _ = assertloc (bits <> BITS_SOURCE_EXHAUSTED)
 
     val _ =
-      set_subtree_entry__loop
-        {length} {..} {bits}
-        (node, bits, bits_source, hash_data,
-         key_test, key_data, depth, value, is_new_slot)
+      set_subtree_entry__loop<hash_vt>
+        (view@ node | addr@ node, bits, bits_source, hash_func,
+                      hash_storage1, hash_storage2, false,
+                      key_test, key_value, depth, is_new_slot)
+
+    (* Throw away the hashes. *)
+    prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage1)
+    prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage2)
   }
 
 (********************************************************************)
-
-fn {key_vt : vt@ype}
-get_leaf_value
-        {length    : int | length <= bitsizeof (uintptr)}
-        {bits      : int | bits_maxval (NUM_BITS, bits)}
-        (node      : !node_vt (length) >> _,
-         bits      : uint bits,
-         key_test  : !key_test_vt (key_vt) >> _,
-         key_data  : &key_vt >> _,
-         is_last   : &bool? >>
-                       [is_last : bool | is_stored || is_last]
-                       bool is_last,
-         is_stored : &bool? >> bool is_stored,
-         value     : &uintptr? >>
-                       [u : int | is_stored || u == 0]
-                       uintptr u) :
-    #[is_stored : bool] void =
-  let
-    prval _ = lemma_node_vt_param {length} node
-    prval _ = prop_verify {0 < length} ()
-
-    prval _ = lemma_g1uint_param bits
-    prval _ = prop_verify {0 <= bits} ()
-
-    val population_map = get_population_map<> (node)
-    val bit_selection_mask = (one << (u2i bits))
-    val entry_is_stored =
-      bit_is_set<> (population_map, bit_selection_mask)
-  in
-    if entry_is_stored then
-      let
-        val leaf_map = get_leaf_map<> (node)
-        val entry_is_leaf =
-          bit_is_set<> (leaf_map, bit_selection_mask)
-
-        val [index : int] @(_ | index) =
-          get_popcount_low_bits (g1ofg0 population_map, bits)
-        prval _ = $UN.prop_assert {index < length} ()
-
-        val entry = node[index]
-      in
-        if entry_is_leaf then
-          let
-            val chaining_map = get_chaining_map<> (node)
-            val entry_is_chain =
-              bit_is_set<> (chaining_map, bit_selection_mask)
-          in
-            if entry_is_chain then
-              let
-                fun
-                search {n : int | 0 <= n} .<n>.
-                       (key_test : !key_test_vt (key_vt) >> _,
-                        key_data : &key_vt >> _,
-                        lst      : !list_vt (uintptr, n) >> _) :
-                    @(bool, uintptr) =
-                  case+ lst of
-                  | NIL => @(false, zero)
-                  | @ head :: tail =>
-                    let
-                      val key_matches = key_test (key_data, head)
-                    in
-                      if key_matches then
-                        let
-                          val value = head
-                          prval _ = fold@ lst
-                        in
-                          @(true, value)
-                        end
-                      else
-                        let
-                          val result =
-                            search {n - 1} (key_test, key_data, tail)
-                          prval _ = fold@ lst
-                        in
-                          result
-                        end
-                    end
-                val lst =
-                  $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
-                prval _ = lemma_list_vt_param lst
-                val @(is_found, pointer) =
-                  search (key_test, key_data, lst)
-                prval _ = $UN.castvwtp0{Ptr} lst
-              in
-                if is_found then
-                  (* Success. *)
-                  begin
-                    is_last := true;
-                    is_stored := true;
-                    value := g1ofg0 pointer
-                  end
-                else
-                  (* No match for the key is found. *)
-                  begin
-                    is_last := true;
-                    is_stored := false;
-                    value := zero
-                  end
-              end
-            else
-              let
-                val key_matches = key_test (key_data, entry)
-              in
-                if key_matches then
-                  (* Success. *)
-                  begin
-                    is_last := true;
-                    is_stored := true;
-                    value := g1ofg0 entry
-                  end
-                else
-                  (* The entry does not match the key. *)
-                  begin
-                    is_last := true;
-                    is_stored := false;
-                    value := zero
-                  end
-              end
-          end
-        else
-          (* The entry is a link to a subnode. *)
-          begin
-            is_last := false;
-            is_stored := true;
-            value := g1ofg0 entry
-          end
-      end
-    else
-      (* There is no such entry. *)
-      begin
-        is_last := true;
-        is_stored := false;
-        value := zero
-      end
-  end
-
-fun {hash_vt, key_vt : vt@ype}
-get_subtree_entry__loop
-        {length      : int | length <= bitsizeof (uintptr)}
-        (node        : !node_vt (length) >> _,
-         bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data   : &hash_vt >> _,
-         key_test    : !key_test_vt (key_vt) >> _,
-         key_data    : &key_vt >> _,
-         depth       : uint,
-         is_stored   : &bool? >> bool is_stored,
-         value       : &uintptr? >>
-                          [u : int | is_stored || u == 0]
-                          uintptr u) :
-    #[is_stored : bool] void =
-  let
-    val [bits : int] (pf_bits | bits) = bits_source (hash_data, depth)
-    prval _ = bits_source_bits_bounds pf_bits
-    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
-    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
-  in
-    if bits = BITS_SOURCE_EXHAUSTED then
-      begin
-        is_stored := false;
-        value := zero
-      end
-    else
-      let
-        var is_last : bool
-      in
-        get_leaf_value<key_vt>
-          {length} {bits}
-          (node, i2u bits, key_test, key_data,
-           is_last, is_stored, value);
-        if not is_last then
-          {
-            val [length1 : int] [p1 : addr] next_node =
-              uintptr2node value
-            prval _ = lemma_node_vt_param {length1} {p1} (next_node)
-            val () =
-              get_subtree_entry__loop<hash_vt,key_vt>
-                (next_node, bits_source, hash_data,
-                 key_test, key_data, succ depth,
-                 is_stored, value)
-            prval _ = $UN.castvwtp0{uptr} next_node
-          }
-      end
-  end
-
-implement {hash_vt, key_vt}
-get_subtree_entry {length} (node, bits_source, hash_data, key_test,
-                            key_data, depth, is_stored, value) =
-  get_subtree_entry__loop<hash_vt,key_vt>
-    {length} (node, bits_source, hash_data, key_test, key_data,
-              depth, is_stored, value)
-
-(********************************************************************)
-*)

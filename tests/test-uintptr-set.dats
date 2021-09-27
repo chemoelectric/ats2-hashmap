@@ -206,5 +206,5 @@ main0 () =
   {
     val _ = test_empty ()
     val _ = test_size_one ()
-//    val _ = test_root_node_expansion () // FIXME // FIXME // FIXME // FIXME // FIXME
+    val _ = test_root_node_expansion ()
   }

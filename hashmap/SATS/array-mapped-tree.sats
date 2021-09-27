@@ -22,6 +22,16 @@ along with this program. If not, see
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
 (********************************************************************)
+(*
+
+  This is the interface to array mapped trees. It is very "unsafe".
+
+  That is so it will be made of functions rather than templates,
+  and so can be compiled into a library, optimized as desired (for
+  instance, to use POPCOUNT machine instructions).
+
+*)
+(********************************************************************)
 
 typedef array_mapped_tree_vt (node_p : addr) =
   ptr node_p
@@ -63,43 +73,19 @@ array_mapped_tree_get_entry
     #[key_value : int | is_stored || key_value == 0]
     void
 
-(*
 fun
 array_mapped_tree_set_entry
-        {node_p        : addr | null < node_p}
-        {bits_source_p : addr}
-        {hash_data_p   : addr}
-        {key_test_p    : addr}
-        {key_data_p    : addr}
-        (node_p        : &(ptr node_p) >> ptr new_node_p,
-         bits_source_p : ptr bits_source_p,
-         hash_data_p   : ptr hash_data_p,
-         key_test_p    : ptr key_test_p,
-         key_data_p    : ptr key_data_p,
-         value         : uintptr,
-         is_new_slot   : &bool? >> bool is_new_slot) :
+        {node_p          : addr}
+        (node_p_ref      : &(ptr node_p) >> ptr new_node_p,
+         bits_source_p   : ptr,
+         hash_func_p     : ptr,
+         hash_storage1_p : ptr,
+         hash_storage2_p : ptr,
+         key_test_p      : ptr,
+         key_value       : uintptr,
+         is_new_slot     : &bool? >> bool is_new_slot) :
     #[new_node_p  : addr]
     #[is_new_slot : bool]
     void
-
-fun
-array_mapped_tree_get_entry
-        {node_p        : addr}
-        {bits_source_p : addr}
-        {hash_data_p   : addr}
-        {key_test_p    : addr}
-        {key_data_p    : addr}
-        (node_p        : ptr node_p,
-         bits_source_p : ptr bits_source_p,
-         hash_data_p   : ptr hash_data_p,
-         key_test_p    : ptr key_test_p,
-         key_data_p    : ptr key_data_p,
-         is_stored     : &bool? >> bool is_stored,
-         value         : &uintptr? >>
-                            [u : int | is_stored || u == 0]
-                            uintptr u) :
-    #[is_stored : bool]
-    void
-*)
 
 (********************************************************************)

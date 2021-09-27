@@ -143,44 +143,44 @@ uintptr_set_add_element (set, element) =
     val hash_func = uintptr_set_hash_func ()
     val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
 
-    var hash_storage : uintptr
-    val hash_storage_p = addr@ hash_storage
+    var hash_storage1 : uintptr
+    val hash_storage1_p = addr@ hash_storage1
   in
     case+ set of
     | ~ set_vt_nil () =>
       let
         val tree =
           array_mapped_tree_create
-            (bits_source_p, hash_func_p, hash_storage_p, element)
+            (bits_source_p, hash_func_p, hash_storage1_p, element)
       in
         set_vt_tree (i2sz 1, tree)
       end
     | ~ set_vt_tree (size, tree) =>
-      set_vt_tree (size, tree) // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-(* FIXME FIXME FIXME FIXME FIXME
       let
-        var node_p = $UNSAFE.castvwtp0{Ptr} tree
-        val _ = assertloc (ptr_isnot_null node_p)
+        var node_p_ref = $UNSAFE.castvwtp0{Ptr} tree
+
+        var hash_storage2 : uintptr
+        val hash_storage2_p = addr@ hash_storage2
 
         val key_test = uintptr_set_key_test ()
-        val key_test_p = $UNSAFE.castvwtp1{Ptr} key_test
-
-        var key_data = element
-        val key_data_p = addr@ key_data
+        val key_test_p = $UNSAFE.castvwtp1{ptr} key_test
 
         var is_new_slot : bool
 
         val () =
           array_mapped_tree_set_entry
-            (node_p, bits_source_p, hash_data_p,
-             key_test_p, key_data_p, element, is_new_slot)
+            (node_p_ref, bits_source_p, hash_func_p,
+             hash_storage1_p, hash_storage2_p,
+             key_test_p, element, is_new_slot)
+
+        (* Dereference the result. *)
+        val node_p = node_p_ref
       in
         if is_new_slot then
           set_vt_tree (succ size, $UNSAFE.castvwtp0 node_p)
         else
           set_vt_tree (size, $UNSAFE.castvwtp0 node_p)
       end
-*)
   end
 
 implement
