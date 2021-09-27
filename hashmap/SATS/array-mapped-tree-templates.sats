@@ -302,7 +302,7 @@ node_vt_free {length    : int}
 (* A hash function stores the hash into space that was allocated
    for it ahead of time. *)
 vtypedef hash_function_vt (hash_vt : vt@ype) =
-  (uintptr, &hash_vt? >> hash_vt) -<cloptr> void
+  (uintptr, &hash_vt? >> hash_vt) -<cloptr1> void
 
 vtypedef key_test_vt = (uintptr, uintptr) -<cloptr1> bool
 

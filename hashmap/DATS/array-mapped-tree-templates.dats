@@ -1109,8 +1109,6 @@ get_leaf_value
     prval _ = lemma_node_vt_param {length} node
     prval _ = prop_verify {0 < length} ()
 
-    prval _ = prop_verify {0 <= bits} ()
-
     val population_map = get_population_map<> (node)
     val bit_selection_mask = (one << bits)
     val entry_is_stored =

@@ -81,15 +81,12 @@ test_empty () : void =
 fn
 test_size_one () : void =
   {
-    val entry_value = u2up 0x10U
-
     val set = uintptr_set ()
 
-    val set = add_element (set, entry_value)
+    val set = add_element (set, u2up 0x10U)
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
-    val _ = assertloc (has_element (set, entry_value))
     val _ =
       let
         var i : [i : int] uintptr i
@@ -97,7 +94,7 @@ test_size_one () : void =
         for (i := zero; i <= reasonably_big_number; i := succ i)
           begin
             //println_uintptr (i);
-            if i = entry_value then
+            if i = u2up 0x10U then
               assertloc (has_element (set, i))
             else
               assertloc (not (has_element (set, i)))
@@ -106,7 +103,7 @@ test_size_one () : void =
 
     (* Add the same entry. Also, use different notations for
        the same operations. *)
-    val set = set + entry_value
+    val set = set + u2up 0x10U
     val _ = assertloc (size set = i2sz 1)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
@@ -117,7 +114,7 @@ test_size_one () : void =
         for (i := zero; i <= reasonably_big_number; i := succ i)
           begin
             //println_uintptr (i);
-            if i = entry_value then
+            if i = u2up 0x10U then
               assertloc (set \contains i)
             else
               assertloc (not (set \contains i))

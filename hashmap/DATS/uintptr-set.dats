@@ -44,7 +44,7 @@ staload _ = "hashmap/DATS/initialize-once.dats"
 %}
 
 extern fun
-uintptr_set_key_test () :
+uintptr_set_hash_func () :
     (uintptr, &uintptr? >> uintptr) -<cloref> void = "mac#%"
 
 extern fun
@@ -140,7 +140,7 @@ uintptr_set_add_element (set, element) =
     val bits_source = bits_source_uintptr ()
     val bits_source_p = $UNSAFE.castvwtp0{ptr} bits_source
 
-    val hash_func = uintptr_set_key_test ()
+    val hash_func = uintptr_set_hash_func ()
     val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
 
     var hash_storage : uintptr
@@ -201,7 +201,7 @@ uintptr_set_has_element (set, element) =
       val bits_source = bits_source_uintptr ()
       val bits_source_p = $UNSAFE.cast{Ptr} bits_source
 
-      val hash_func = uintptr_set_key_test ()
+      val hash_func = uintptr_set_hash_func ()
       val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
 
       var hash_storage : uintptr
