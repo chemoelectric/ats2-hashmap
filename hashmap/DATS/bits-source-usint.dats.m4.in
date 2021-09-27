@@ -1,4 +1,4 @@
 include(`common-macros.m4')
-m4_define(`UINTTYPE',`uint64')
-m4_define(`BITSIZEU', `64U')
+m4_define(`UINTTYPE',`usint')
+m4_define(`BITSIZEU', `8U * (sz2u sizeof<UINTTYPE>)')
 m4_include(`hashmap/DATS/bits-source-UINTTYPE.dats.m4')

@@ -28,6 +28,8 @@ typedef array_mapped_tree_vt (node_p : addr) =
 typedef array_mapped_tree_vt =
   [node_p : addr] array_mapped_tree_vt node_p
 
+(* If free_entry_p is NULL, then the stored entries are not freed
+   and should be of a nonlinear type. *)
 fun
 array_mapped_tree_free
         {node_p       : addr}
@@ -38,42 +40,51 @@ array_mapped_tree_free
 
 (********************************************************************)
 
-typedef array_mapped_tree_get_entry_t =
-  @{
-    is_stored = bool,
-    value = uintptr
-  }
+fun
+array_mapped_tree_create
+        {bits_source_p : addr}
+        {hash_data_p   : addr}
+        (bits_source_p : ptr bits_source_p,
+         hash_data_p   : ptr hash_data_p,
+         value         : uintptr) :
+    [node_p : addr | null < node_p]
+    ptr node_p
+
+fun
+array_mapped_tree_set_entry
+        {node_p        : addr | null < node_p}
+        {bits_source_p : addr}
+        {hash_data_p   : addr}
+        {key_test_p    : addr}
+        {key_data_p    : addr}
+        (node_p        : &(ptr node_p) >> ptr new_node_p,
+         bits_source_p : ptr bits_source_p,
+         hash_data_p   : ptr hash_data_p,
+         key_test_p    : ptr key_test_p,
+         key_data_p    : ptr key_data_p,
+         value         : uintptr,
+         is_new_slot   : &bool? >> bool is_new_slot) :
+    #[new_node_p  : addr]
+    #[is_new_slot : bool]
+    void
 
 fun
 array_mapped_tree_get_entry
         {node_p        : addr}
         {bits_source_p : addr}
-        {index_data_p  : addr}
-        (node_p        : array_mapped_tree_vt node_p,
+        {hash_data_p   : addr}
+        {key_test_p    : addr}
+        {key_data_p    : addr}
+        (node_p        : ptr node_p,
          bits_source_p : ptr bits_source_p,
-         index_data_p  : ptr index_data_p) :
-    array_mapped_tree_get_entry_t
-
-(********************************************************************)
-
-vtypedef array_mapped_tree_create_entry_t (p : addr) =
-  @{
-    view = uintptr @ p |
-    pointer = ptr p,
-    is_new = bool
-  }
-vtypedef array_mapped_tree_create_entry_t =
-  [p : addr]
-  array_mapped_tree_create_entry_t (p)
-
-fun
-array_mapped_tree_create_entry
-        {node_p        : addr}
-        {bits_source_p : addr}
-        {index_data_p  : addr}
-        (node_p        : array_mapped_tree_vt node_p,
-         bits_source_p : ptr bits_source_p,
-         index_data_p  : ptr index_data_p) :
-  array_mapped_tree_get_entry_t
+         hash_data_p   : ptr hash_data_p,
+         key_test_p    : ptr key_test_p,
+         key_data_p    : ptr key_data_p,
+         is_stored     : &bool? >> bool is_stored,
+         value         : &uintptr? >>
+                            [u : int | is_stored || u == 0]
+                            uintptr u) :
+    #[is_stored : bool]
+    void
 
 (********************************************************************)

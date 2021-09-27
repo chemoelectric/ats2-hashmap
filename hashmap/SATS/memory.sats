@@ -45,10 +45,25 @@ memset {n     : int}
    a linear type, it is a "move" that leaves the old
    array filled with the equivalent nonlinear data. *)
 fun {vt : vt@ype}
-array_move {length : int}
-           (dst    : &(@[vt?][length]) >> @[vt][length],
-            src    : &RD(@[INV(vt)][length]) >> @[vt?!][length],
-            length : size_t length) :<!refwrt> void
+array_move1 {length : int}
+            (dst    : &(@[vt?][length]) >> @[vt][length],
+             src    : &RD(@[INV(vt)][length]) >> @[vt?!][length],
+             length : size_t length) :<!refwrt> void
+overload array_move with array_move1
+
+(* Move the elements of one array to another array. *)
+fun {vt : vt@ype}
+array_move2 {length : int}
+            {p_dst  : addr}
+            {p_src  : addr}
+            (pf_dst : !(@[vt?][length] @ p_dst) >>
+                          @[vt][length] @ p_dst,
+             pf_src : !(@[INV(vt)][length] @ p_src) >>
+                          @[vt?!][length] @ p_src |
+             p_dst  : ptr p_dst,
+             p_src  : ptr p_src,
+             length : size_t length) :<!refwrt> void
+overload array_move with array_move2
 
 (* Copy "length" elements from one initialized nonlinear
    array into another. *)

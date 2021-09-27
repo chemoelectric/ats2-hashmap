@@ -97,10 +97,14 @@ AC_CHECK_SIZEOF([uint64_t])
 AC_CHECK_TYPE([unsigned __int128])
 if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
   HAVE_UINT128=1
+  AC_CHECK_SIZEOF([unsigned __int128])
 else
   HAVE_UINT128=0
 fi
 AC_SUBST([HAVE_UINT128])
+
+AM_CONDITIONAL([UINTPTR_IS_UINT64],
+  [test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}])
 
 #--------------------------------------------------------------------------
 #
@@ -175,10 +179,34 @@ AC_CONFIG_FILES([hashmap/HATS/config.hats])
 AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
 
 AC_CONFIG_FILES([common-macros.m4])
-AC_CONFIG_FILES([hashmap/DATS/bits-source-uintNN.dats.m4])
+
+AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-size.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-usint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint.dats.m4])
+
+AC_CONFIG_FILES([hashmap/DATS/bits-source-TYPE-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-size-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-usint-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
+
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])

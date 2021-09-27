@@ -1,4 +1,4 @@
-(*
+(* --*- mode: ATS -*--
 
 Copyright © 2021 Barry Schwartz
 
@@ -19,26 +19,42 @@ along with this program. If not, see
 *)
 
 #define ATS_PACKNAME "ats2-hashmap"
+#define ATS_DYNLOADFLAG 0
+
+#if @HAVE_UINT128@ #then
+
+include(`common-macros.m4')
+m4_define(`TYPE',`uint128')
+m4_define(`NAME',`TYPE')
+
+staload BITS_SOURCE = "hashmap/SATS/bits-source.sats"
+
+typedef uint128 = $BITS_SOURCE.hashmap_uint128
+typedef uint128 (u : int) = $extype"unsigned __int128"
+
+m4_include(`hashmap/DATS/bits-source-TYPE-one-time.dats.m4')
+
+#else (* not HAVE_UINT128 *)
+
+#define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_staload.hats"
 
-staload UN = "prelude/SATS/unsafe.sats"
+staload "hashmap/SATS/bits-source.sats"
 
-staload "hashmap/SATS/array-mapped-tree.sats"
-staload "hashmap/SATS/array-mapped-tree-templates.sats"
-
-staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
-staload _ = "hashmap/DATS/uptr.dats"
+extern fun
+ats2_hashmap_get_bits_source_cloref_uint128 () : ptr = "ext#"
 
 implement
-array_mapped_tree_free (node_p, leaf_free_p) =
-  {
-    val node = $UN.castvwtp0{node_vt} node_p
-    val leaf_free = $UN.castvwtp0{leaf_free_vt} leaf_free_p
-    val _ = node_vt_free (node, leaf_free)
-    prval _ = $UN.castvwtp0{Ptr} leaf_free
-  }
+ats2_hashmap_get_bits_source_cloref_uint128 () =
+  begin
+    assertlocmsg
+      (false,
+       ": hashmap_uint128 is not supported by this installation");
+    $UNSAFE.cast (the_null_ptr)
+  end
+
+#endif (* not HAVE_UINT128 *)

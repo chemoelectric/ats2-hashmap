@@ -1,0 +1,4 @@
+include(`common-macros.m4')
+m4_define(`TYPE',`@(uint64, uint64)')
+m4_define(`NAME',`uint64_uint64')
+m4_include(`hashmap/DATS/bits-source-TYPE-one-time.dats.m4')

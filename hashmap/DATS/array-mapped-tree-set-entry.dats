@@ -23,8 +23,6 @@ along with this program. If not, see
 
 #define ATS_DYNLOADFLAG 0
 
-#include "share/atspre_define.hats"
-#include "share/atspre_staload.hats"
 #include "share/atspre_staload.hats"
 
 staload UN = "prelude/SATS/unsafe.sats"
@@ -36,39 +34,37 @@ staload "hashmap/SATS/uptr.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/memory.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 
 implement
-array_mapped_tree_get_entry {node_p}
+array_mapped_tree_set_entry {node_p}
                             {bits_source_p} {hash_data_p}
                             {key_test_p} {key_data_p}
                             (node_p, bits_source_p, hash_data_p,
                              key_test_p, key_data_p,
-                             is_stored, value) =
+                             value, is_new_slot) =
   let
     fn {}
-    get_result {node_p          : addr}
-               {bits_source_p   : addr}
-               {hash_data_p     : addr}
-               {key_test_p      : addr}
-               {key_data_p      : addr}
-               {hash_vt, key_vt : vt@ype}
-               (node_p          : ptr node_p,
-                bits_source_p   : ptr bits_source_p,
-                hash_data_p     : ptr hash_data_p,
-                key_test_p      : ptr key_test_p,
-                key_data_p      : ptr key_data_p,
-                is_stored       : &bool? >> bool is_stored,
-                value           : &uintptr? >>
-                                    [u : int | is_stored || u == 0]
-                                    uintptr u) :
-        #[is_stored : bool] void =
+    set_entry {node_p          : addr | null < node_p}
+              {bits_source_p   : addr}
+              {hash_data_p     : addr}
+              {key_test_p      : addr}
+              {key_data_p      : addr}
+              {hash_vt, key_vt : vt@ype}
+              (node_p          : &(ptr node_p) >> Ptr,
+               bits_source_p   : ptr bits_source_p,
+               hash_data_p     : ptr hash_data_p,
+               key_test_p      : ptr key_test_p,
+               key_data_p      : ptr key_data_p,
+               value           : uintptr,
+               is_new_slot     : &bool? >> Bool) : void =
       {
-        val _ = assertloc (ptr_isnot_null node_p)
-        
+        (* The node to be replaced. *)
+        val node_up : uptr node_p = ptr2uptr {node_p} node_p
+        var node : node_vt node_p = uptr2node {node_p} node_up
+
         (* Create linear types from the pointers. *)
-        val node : node_vt node_p =
-          uptr2node {node_p} (ptr2uptr {node_p} node_p)
         val bits_source =
           $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
                          bits_source_p
@@ -82,22 +78,27 @@ array_mapped_tree_get_entry {node_p}
           $UN.castvwtp0 {@(key_vt @ key_data_p | ptr key_data_p)}
                         key_data_p
 
-        (* Search in the tree. *)
-        prval _ = lemma_node_vt_param node
+        (* Update the tree, setting a new value of node, and also
+           setting the value of is_new_slot. *)
+        prval () = lemma_node_vt_param node
         val () =
-          get_subtree_entry<hash_vt, key_vt>
+          set_subtree_entry<hash_vt, key_vt>
+            {..} {node_p}
             (node, bits_source, !(hash_data.1), key_test,
-             !(key_data.1), 0U, is_stored, value)
+             !(key_data.1), 0U, value, is_new_slot)
 
-        (* Consume the linear types. *)
-        prval _ = $UN.castvwtp0{uptr} node
+        (* Convert the new node to a pointer. *)
+        val node_up = node2uptr node
+        val _ = node_p := uptr2ptr node_up
+
+        (* Consume linear types. *)
         prval _ = $UN.castvwtp0{Ptr} bits_source
         prval _ = $UN.castvwtp0{Ptr} hash_data
         prval _ = $UN.castvwtp0{Ptr} key_test
         prval _ = $UN.castvwtp0{Ptr} key_data
       }
   in
-    get_result<> {node_p} {bits_source_p} {hash_data_p}
-                 (node_p, bits_source_p, hash_data_p,
-                  key_test_p, key_data_p, is_stored, value)
+    set_entry<> {node_p} {bits_source_p} {hash_data_p}
+                (node_p, bits_source_p, hash_data_p,
+                 key_test_p, key_data_p, value, is_new_slot)
   end

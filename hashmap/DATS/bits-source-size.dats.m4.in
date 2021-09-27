@@ -1,0 +1,6 @@
+include(`common-macros.m4')
+typedef size = size_t
+typedef size (i : int) = size_t i
+m4_define(`UINTTYPE',`size')
+m4_define(`BITSIZEU', `8U * (sz2u sizeof<UINTTYPE>)')
+m4_include(`hashmap/DATS/bits-source-UINTTYPE.dats.m4')

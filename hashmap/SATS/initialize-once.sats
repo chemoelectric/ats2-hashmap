@@ -21,24 +21,23 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
-#define ATS_DYNLOADFLAG 0
+staload "hashmap/SATS/atomic.sats"
+staload "hashmap/SATS/spinlock.sats"
 
-#include "share/atspre_staload.hats"
+(*------------------------------------------------------------------*)
 
-staload UN = "prelude/SATS/unsafe.sats"
-
-staload "hashmap/SATS/array-mapped-tree.sats"
-staload "hashmap/SATS/array-mapped-tree-templates.sats"
-
-staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
-staload _ = "hashmap/DATS/uptr.dats"
-
-implement
-array_mapped_tree_free (node_p, leaf_free_p) =
-  {
-    val node = $UN.castvwtp0{node_vt} node_p
-    val leaf_free = $UN.castvwtp0{leaf_free_vt} leaf_free_p
-    val _ = node_vt_free (node, leaf_free)
-    prval _ = $UN.castvwtp0{Ptr} leaf_free
+typedef initialize_once_t =
+  @{
+    initialize_once_initialized = atomic_int,
+    initialize_once_lock_data = spinlock_data_t
   }
+
+fn
+initialize_once_nil () :<> initialize_once_t
+
+fn {t : t@ype}
+initialize_once (init_once_p   : ptr,
+                 storage_p     : ptr,
+                 compute_value : (&t? >> t) -> void) : t
+
+(*------------------------------------------------------------------*)

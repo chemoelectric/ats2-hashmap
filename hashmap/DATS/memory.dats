@@ -30,7 +30,7 @@ staload "hashmap/SATS/array_prf.sats"
 staload "hashmap/SATS/memory.sats"
 
 implement {vt}
-array_move {length} (dst, src, length) =
+array_move1 {length} (dst, src, length) =
   {
     typedef t = vt?!
 
@@ -44,6 +44,10 @@ array_move {length} (dst, src, length) =
     prval _ = view@ dst := bytes2array<vt> {length} {..} pf1bytes
     prval _ = view@ src := bytes2array<t> {length} {..} pf2bytes
   }
+
+implement {vt}
+array_move2 {length} (pf_dst, pf_src | p_dst, p_src, length) =
+  array_move1 {length} (!p_dst, !p_src, length)
 
 implement {t}
 array_copy_elements {n1, n2} {i1, i2} {length}

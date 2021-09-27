@@ -28,17 +28,17 @@ along with this program. If not, see
 
 staload "hashmap/SATS/bits-source.sats"
 
-macdef cast64 = $UNSAFE.cast{uint64}
+macdef castup = $UNSAFE.cast{uintptr}
 
 fn
 test_num_bits_eq_4 () : void =
   {
-    val hash = cast64 0xBA5EBA11FACEF00DU
-    val bits_source = make_bits_source_uint64 (4U)
+    val hash = castup 0xBA5EBA11FACEF00DU
+    val bits_source = make_bits_source_uintptr (4U)
 
     fn
-    source_func (bits_source : !bits_source_cloptr (uint64, 4) >> _,
-                 hash        : uint64,
+    source_func (bits_source : !bits_source_cloptr (uintptr, 4) >> _,
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (4, bits) | int bits) =
@@ -53,15 +53,15 @@ test_num_bits_eq_4 () : void =
     val _ =
       let
         var i : [i : nat] uint i
-        var u : uint64 = cast64 0
-        var factor : uint64 = cast64 1
+        var u : uintptr = castup 0
+        var factor : uintptr = castup 1
       in
         for (i := 0U; i < 35U; i := succ i)
           let
-            val bits = cast64 (source (hash, i)).1
+            val bits = castup (source (hash, i)).1
           in
             u := u + (bits * factor);
-            factor := factor * (cast64 16U)
+            factor := factor * (castup 16U)
           end;
         assertloc (u = hash)
       end
@@ -97,12 +97,12 @@ test_num_bits_eq_4 () : void =
 fn
 test_num_bits_eq_5 () : void =
   {
-    val hash = cast64 0xBA5EBA11FACEF00DU
-    val bits_source = make_bits_source_uint64 (5U)
+    val hash = castup 0xBA5EBA11FACEF00DU
+    val bits_source = make_bits_source_uintptr (5U)
 
     fn
-    source_func (bits_source : !bits_source_cloptr (uint64, 5) >> _,
-                 hash        : uint64,
+    source_func (bits_source : !bits_source_cloptr (uintptr, 5) >> _,
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (5, bits) | int bits) =
@@ -117,15 +117,15 @@ test_num_bits_eq_5 () : void =
     val _ =
       let
         var i : [i : nat] uint i
-        var u : uint64 = cast64 0
-        var factor : uint64 = cast64 1
+        var u : uintptr = castup 0
+        var factor : uintptr = castup 1
       in
         for (i := 0U; i < 35U; i := succ i)
           let
-            val bits = cast64 (source (hash, i)).1
+            val bits = castup (source (hash, i)).1
           in
             u := u + (bits * factor);
-            factor := factor * (cast64 32U)
+            factor := factor * (castup 32U)
           end;
         assertloc (u = hash)
       end
@@ -154,12 +154,12 @@ test_num_bits_eq_5 () : void =
 fn
 test_num_bits_eq_6 () : void =
   {
-    val hash = cast64 0xBA5EBA11FACEF00DU
-    val bits_source = make_bits_source_uint64 (6U)
+    val hash = castup 0xBA5EBA11FACEF00DU
+    val bits_source = make_bits_source_uintptr (6U)
 
     fn
-    source_func (bits_source : !bits_source_cloptr (uint64, 6) >> _,
-                 hash        : uint64,
+    source_func (bits_source : !bits_source_cloptr (uintptr, 6) >> _,
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (6, bits) | int bits) =
@@ -174,15 +174,15 @@ test_num_bits_eq_6 () : void =
     val _ =
       let
         var i : [i : nat] uint i
-        var u : uint64 = cast64 0
-        var factor : uint64 = cast64 1
+        var u : uintptr = castup 0
+        var factor : uintptr = castup 1
       in
         for (i := 0U; i < 35U; i := succ i)
           let
-            val bits = cast64 (source (hash, i)).1
+            val bits = castup (source (hash, i)).1
           in
             u := u + (bits * factor);
-            factor := factor * (cast64 64U)
+            factor := factor * (castup 64U)
           end;
         assertloc (u = hash)
       end
@@ -210,12 +210,12 @@ test_num_bits_eq_6 () : void =
 fn
 test_num_bits_eq_7 () : void =
   {
-    val hash = cast64 0xBA5EBA11FACEF00DU
-    val bits_source = make_bits_source_uint64 (7U)
+    val hash = castup 0xBA5EBA11FACEF00DU
+    val bits_source = make_bits_source_uintptr (7U)
 
     fn
-    source_func (bits_source : !bits_source_cloptr (uint64, 7) >> _,
-                 hash        : uint64,
+    source_func (bits_source : !bits_source_cloptr (uintptr, 7) >> _,
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (7, bits) | int bits) =
@@ -230,15 +230,15 @@ test_num_bits_eq_7 () : void =
     val _ =
       let
         var i : [i : nat] uint i
-        var u : uint64 = cast64 0
-        var factor : uint64 = cast64 1
+        var u : uintptr = castup 0
+        var factor : uintptr = castup 1
       in
         for (i := 0U; i < 35U; i := succ i)
           let
-            val bits = cast64 (source (hash, i)).1
+            val bits = castup (source (hash, i)).1
           in
             u := u + (bits * factor);
-            factor := factor * (cast64 128U)
+            factor := factor * (castup 128U)
           end;
         assertloc (u = hash)
       end
@@ -266,12 +266,12 @@ test_num_bits_eq_7 () : void =
 fn
 test_num_bits_eq_8 () : void =
   {
-    val hash = cast64 0xBA5EBA11FACEF00DU
-    val bits_source = make_bits_source_uint64 (8U)
+    val hash = castup 0xBA5EBA11FACEF00DU
+    val bits_source = make_bits_source_uintptr (8U)
 
     fn
-    source_func (bits_source : !bits_source_cloptr (uint64, 8) >> _,
-                 hash        : uint64,
+    source_func (bits_source : !bits_source_cloptr (uintptr, 8) >> _,
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (8, bits) | int bits) =
@@ -286,15 +286,15 @@ test_num_bits_eq_8 () : void =
     val _ =
       let
         var i : [i : nat] uint i
-        var u : uint64 = cast64 0
-        var factor : uint64 = cast64 1
+        var u : uintptr = castup 0
+        var factor : uintptr = castup 1
       in
         for (i := 0U; i < 35U; i := succ i)
           let
-            val bits = cast64 (source (hash, i)).1
+            val bits = castup (source (hash, i)).1
           in
             u := u + (bits * factor);
-            factor := factor * (cast64 256U)
+            factor := factor * (castup 256U)
           end;
         assertloc (u = hash)
       end
@@ -320,8 +320,8 @@ test_one_time () : void =
   {
     fn
     source_func {num_bits    : int}
-                (bits_source : bits_source_cloref (uint64, num_bits),
-                 hash        : uint64,
+                (bits_source : bits_source_cloref (uintptr, num_bits),
+                 hash        : uintptr,
                  depth       : uint) :
         [bits : int]
         (BITS_SOURCE_BITS (num_bits, bits) | int bits) =
@@ -332,27 +332,27 @@ test_one_time () : void =
       end
 
     macdef source (hash, depth) =
-      source_func (bits_source_uint64 (), ,(hash), ,(depth))
+      source_func (bits_source_uintptr (), ,(hash), ,(depth))
 
     (* FIXME: Currently testing is done only if sizeof(uintptr) = 8,
               as for instance on AMD64. *)
     val _ =
       if sizeof<uintptr> = i2sz 8 then
         {
-          val hash = cast64 0xBA5EBA11FACEF00DU
+          val hash = castup 0xBA5EBA11FACEF00DU
 
           val _ =
             let
               var i : [i : nat] uint i
-              var u : uint64 = cast64 0
-              var factor : uint64 = cast64 1
+              var u : uintptr = castup 0
+              var factor : uintptr = castup 1
             in
               for (i := 0U; i < 35U; i := succ i)
                 let
-                  val bits = cast64 (source (hash, i)).1
+                  val bits = castup (source (hash, i)).1
                 in
                   u := u + (bits * factor);
-                  factor := factor * (cast64 64U)
+                  factor := factor * (castup 64U)
                 end;
               assertloc (u = hash)
             end
