@@ -74,6 +74,14 @@ In the implementation below, an internal node is laid out as follows:
        .
     entry N        (uintptr)   -- where N < sizeof (uintptr)
 
+A leaf entry is either a uintptr proper, or else it is a uintptr
+serving as a pointer to a key-value pair:
+
+    key            (key type)
+    alignment      (>=0 bytes padding)
+    value          (value type)
+
+It is assumed that there is no padding before the key.
 
 POSSIBLE TO DO:
 
@@ -98,6 +106,14 @@ vtypedef link_vt (p : addr) =
 vtypedef link_vt =
   [p : addr] link_vt p
 
+castfn
+uintptr2link :
+  uintptr -<> [p : addr] link_vt p
+
+castfn
+link2uintptr :
+  {p : addr} link_vt p -<> uintptr
+
 stadef population_map_addr (p : addr) : addr = p
 stadef leaf_map_addr (p : addr) : addr = p + sizeof (uintptr)
 stadef chaining_map_addr (p : addr) : addr = p + 2 * sizeof (uintptr)
@@ -114,11 +130,11 @@ vtypedef node_vt (length : int, p : addr) =
     pointer = uptr p
   }
 vtypedef node_vt (length : int) =
-  [p : addr | null < p] node_vt (length, p)
+  [p : addr] node_vt (length, p)
 vtypedef node_vt (p : addr) =
   [length : int] node_vt (length, p)
 vtypedef node_vt =
-  [length : int] [p : addr | null < p] node_vt (length, p)
+  [length : int] [p : addr] node_vt (length, p)
 
 castfn
 node2uptr :
@@ -134,7 +150,7 @@ fn {}
 uintptr2node :
   uintptr -<>
     [length : int]
-    [p : addr | null < p]
+    [p : addr]
     node_vt (length, p)
 
 fn {}
@@ -277,25 +293,52 @@ leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool
 *)
 fn {vt : vtype}
 node_vt_free {length    : int}
-             {p         : addr | null < p}
+             {p         : addr}
              (node      : node_vt (length, p),
               leaf_free : !leaf_free_vt (vt) >> _) : void
 
 (********************************************************************)
 
-vtypedef key_test_vt (key_vt : vt@ype) =
-  (&key_vt, uintptr) -<cloptr1> bool
+(* A hash function stores the hash into space that was allocated
+   for it ahead of time. *)
+vtypedef hash_function_vt (hash_vt : vt@ype) =
+  (uintptr, &hash_vt? >> hash_vt) -<cloptr> void
+
+vtypedef key_test_vt = (uintptr, uintptr) -<cloptr1> bool
+
+(********************************************************************)
 
 (* start_new_tree -- this assumes the bits_source returns at least
                      one bit. Otherwise an assertion will fail.
    FIXME: Assure this through typechecking, instead. *)
 fun {hash_vt : vt@ype}
 start_new_tree
-        (bits_source : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
-         hash_data   : &hash_vt >> _,
-         value       : uintptr) :
+        {key_value    : int}
+        (bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_func    : !hash_function_vt (hash_vt) >> _,
+         hash_storage : &hash_vt? >> hash_vt?,
+         key_value    : uintptr key_value) :
     node_vt (1)
 
+fun {hash_vt : vt@ype}
+get_subtree_entry
+        {length       : int | length <= bitsizeof (uintptr)}
+        {key          : int}
+        {depth        : int}
+        (node         : !node_vt (length) >> _,
+         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_func    : !hash_function_vt (hash_vt) >> _,
+         hash_storage : &hash_vt? >> hash_vt?,
+         key_test     : !key_test_vt >> _,
+         key          : uintptr key,
+         depth        : uint depth,
+         is_stored    : &bool? >> bool is_stored,
+         key_value    : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[key_value : int | is_stored || key_value == 0]
+    void
+
+(*
 (* set_subtree_entry -- this assumes bits_source will return at
                         least one bit. Otherwise an assertion will
                         fail. (Note that, if depth = 0U, then
@@ -304,7 +347,7 @@ start_new_tree
 fun {hash_vt, key_vt  : vt@ype}
 set_subtree_entry
         {length       : int | length <= bitsizeof (uintptr)}
-        {node_p       : addr | null < node_p}
+        {node_p       : addr}
         (node         : &node_vt (length, node_p) >>
                             node_vt (new_length),
          bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
@@ -338,5 +381,6 @@ get_subtree_entry
                           uintptr u) :
     #[is_stored : bool]
     void
+*)
 
 (********************************************************************)

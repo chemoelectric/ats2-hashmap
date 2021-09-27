@@ -44,6 +44,14 @@ along with this program. If not, see
 #endif /* !ats2_hashmap_attribute_const_inline */
 
 ats2_hashmap_attribute_const_inline atstype_ptr
+ats2_hashmap_uintptr_set_hash_func (void)
+{
+  extern atstype_ptr
+    ats2_hashmap_uintptr_set_hash_func_cloref_p (void);
+  return ats2_hashmap_uintptr_set_hash_func_cloref_p ();
+}
+
+ats2_hashmap_attribute_const_inline atstype_ptr
 ats2_hashmap_uintptr_set_key_test (void)
 {
   extern atstype_ptr

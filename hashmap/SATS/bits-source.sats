@@ -32,8 +32,8 @@ local
 in
   (******************************************************************)
   (*
-    A bits source returns ~1 if the index is past the last
-    available bit.
+    A bits source returns ~1 == BITS_SOURCE_EXHAUSTED, if the index
+    is past the last available bit.
 
     FIXME: Say more about what a bits source does.
   *)

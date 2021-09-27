@@ -48,4 +48,10 @@ stadef bits_maxval (num_bits : int, bits : int) : bool =
   (num_bits == 7 && bits <= MAXVALOF_BITINDEX_7) ||
   (num_bits == 8 && bits <= MAXVALOF_BITINDEX_8)
 
+stadef valid_bits (num_bits : int, bits : int) : bool =
+  ((~1) <= bits) && (bits_maxval (num_bits, bits))
+
+stadef valid_unexhausted_bits (num_bits : int, bits : int) : bool =
+  (0 <= bits) && (bits_maxval (num_bits, bits))
+
 #endif (* ATS2_HASHMAP_BITS_SOURCE_INCLUDE_HEADER_GUARD__ *)

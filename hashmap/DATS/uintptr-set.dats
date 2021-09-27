@@ -43,11 +43,13 @@ staload _ = "hashmap/DATS/initialize-once.dats"
 #include "hashmap/CATS/uintptr-set-implementation.cats"
 %}
 
-typedef key_test_t (key_t : t@ype) =
-  (&key_t, uintptr) -<cloref1> bool
+extern fun
+uintptr_set_key_test () :
+    (uintptr, &uintptr? >> uintptr) -<cloref> void = "mac#%"
 
 extern fun
-uintptr_set_key_test () : key_test_t (uintptr) = "mac#%"
+uintptr_set_key_test () :
+    (uintptr, uintptr) -<cloref1> bool = "mac#%"
 
 datavtype set_vt (size : int) =
 | set_vt_nil (0) of ()
@@ -66,9 +68,32 @@ in
   fn
   make_closure (storage : &ptr? >> ptr) : void =
     {
+      val hash_func =
+        lam (key  : uintptr,
+             hash : &uintptr? >> uintptr) : void =<cloptr1>
+          hash := key
+      val _ = storage := $UNSAFE.castvwtp0{ptr} hash_func
+    }
+
+  extern fun
+  ats2_hashmap_uintptr_set_hash_func_cloref_p () : ptr = "ext#"
+
+  implement
+  ats2_hashmap_uintptr_set_hash_func_cloref_p () =
+    initialize_once<ptr> (addr@ init, addr@ storage, make_closure)
+end
+
+local
+  var init = initialize_once_nil ()
+  var storage : ptr
+in
+  fn
+  make_closure (storage : &ptr? >> ptr) : void =
+    {
       val key_test =
-        lam (key_data : &uintptr, entry : uintptr) : bool =<cloptr1>
-          key_data = entry
+        lam (key   : uintptr,
+             entry : uintptr) : bool =<cloptr1>
+          key = entry
       val _ = storage := $UNSAFE.castvwtp0{ptr} key_test
     }
 
@@ -113,21 +138,26 @@ implement
 uintptr_set_add_element (set, element) =
   let
     val bits_source = bits_source_uintptr ()
-    val bits_source_p = $UNSAFE.cast{Ptr} bits_source
+    val bits_source_p = $UNSAFE.castvwtp0{ptr} bits_source
 
-    var hash_data = element
-    val hash_data_p = addr@ hash_data
+    val hash_func = uintptr_set_key_test ()
+    val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
+
+    var hash_storage : uintptr
+    val hash_storage_p = addr@ hash_storage
   in
     case+ set of
     | ~ set_vt_nil () =>
       let
         val tree =
           array_mapped_tree_create
-            (bits_source_p, hash_data_p, element)
+            (bits_source_p, hash_func_p, hash_storage_p, element)
       in
         set_vt_tree (i2sz 1, tree)
       end
     | ~ set_vt_tree (size, tree) =>
+      set_vt_tree (size, tree) // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+(* FIXME FIXME FIXME FIXME FIXME
       let
         var node_p = $UNSAFE.castvwtp0{Ptr} tree
         val _ = assertloc (ptr_isnot_null node_p)
@@ -150,6 +180,7 @@ uintptr_set_add_element (set, element) =
         else
           set_vt_tree (size, $UNSAFE.castvwtp0 node_p)
       end
+*)
   end
 
 implement
@@ -170,22 +201,22 @@ uintptr_set_has_element (set, element) =
       val bits_source = bits_source_uintptr ()
       val bits_source_p = $UNSAFE.cast{Ptr} bits_source
 
-      var hash_data = element
-      val hash_data_p = addr@ hash_data
+      val hash_func = uintptr_set_key_test ()
+      val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
+
+      var hash_storage : uintptr
+      val hash_storage_p = addr@ hash_storage
 
       val key_test = uintptr_set_key_test ()
       val key_test_p = $UNSAFE.castvwtp1{Ptr} key_test
 
-      var key_data = element
-      val key_data_p = addr@ key_data
-
       var is_stored : bool
-      var value : uintptr
+      var key_value : uintptr
 
       val _ =
         array_mapped_tree_get_entry
-          (node_p, bits_source_p, hash_data_p,
-           key_test_p, key_data_p, is_stored, value)
+          (node_p, bits_source_p, hash_func_p, hash_storage_p,
+           key_test_p, element, is_stored, key_value)
     in
       is_stored
     end

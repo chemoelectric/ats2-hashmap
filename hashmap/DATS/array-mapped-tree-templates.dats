@@ -1033,6 +1033,271 @@ node_vt_free (node, leaf_free) =
 (********************************************************************)
 
 implement {hash_vt}
+start_new_tree (bits_source, hash_func, hash_storage, key_value) =
+  let
+    val () = hash_func (key_value, hash_storage)
+
+    val [bits : int] (pf_bits | bits) = bits_source (hash_storage, 0U)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
+    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+
+    (* Throw away the hash that was computed. *)
+    prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage)
+
+    (* FIXME: The following is really a precondition of
+              start_new_tree that we have not yet managed
+              to enforce through typechecking. *)
+    prval _ = $effmask_exn assertloc (0 <= bits)
+
+    val population_map = (one << bits)
+    val leaf_map = population_map
+    val chaining_map = zero
+
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = new_length1_node_alloc ()
+
+    val _ = uptr_set<uintptr> (pf_pop_map | population_map_ptr p,
+                                            population_map)
+    val _ = uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                             leaf_map)
+    val _ = uptr_set<uintptr> (pf_chain_map | chaining_map_ptr p,
+                                              chaining_map)
+
+    prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
+    val _ =
+      uptr_set<link_vt>
+        (pf_entry | entries_ptr p, uintptr2link key_value)
+    prval pf_rest = array_v_unnil_nil pf_rest
+    prval pf_entries = array_v_cons (pf_entry, pf_rest)
+  in
+    @{
+      view_of_population_map = pf_pop_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
+      view_of_entries = pf_entries,
+      mfree = pf_mfree |
+      pointer = p
+    }
+  end
+
+(********************************************************************)
+
+fn {}
+get_leaf_value
+        {length    : int | length <= bitsizeof (uintptr)}
+        {key       : int}
+        {bits      : int | valid_unexhausted_bits (NUM_BITS, bits)}
+        (node      : !node_vt (length) >> _,
+         bits      : int bits,
+         key_test  : !key_test_vt >> _,
+         key       : uintptr key,
+         is_stored : &bool? >> bool is_stored,
+         is_last   : &bool? >> bool is_last,
+         value     : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[is_last : bool | is_stored || is_last]
+    #[key_value : int | is_stored || key_value == 0]
+    void =
+  let
+    prval _ = lemma_node_vt_param {length} node
+    prval _ = prop_verify {0 < length} ()
+
+    prval _ = prop_verify {0 <= bits} ()
+
+    val population_map = get_population_map<> (node)
+    val bit_selection_mask = (one << bits)
+    val entry_is_stored =
+      bit_is_set<> (population_map, bit_selection_mask)
+  in
+    if entry_is_stored then
+      let
+        val leaf_map = get_leaf_map<> (node)
+        val entry_is_leaf =
+          bit_is_set<> (leaf_map, bit_selection_mask)
+
+        val [index : int] @(_ | index) =
+          get_popcount_low_bits (g1ofg0 population_map, i2u bits)
+        prval _ = $UN.prop_assert {index < length} ()
+
+        val entry = node[index]
+      in
+        if entry_is_leaf then
+          let
+            val chaining_map = get_chaining_map<> (node)
+            val entry_is_chain =
+              bit_is_set<> (chaining_map, bit_selection_mask)
+          in
+            if entry_is_chain then
+              let
+                fun
+                search {n : int | 0 <= n} .<n>.
+                       (key_test : !key_test_vt >> _,
+                        key      : uintptr key,
+                        lst      : !list_vt (uintptr, n) >> _) :
+                    @(bool, uintptr) =
+                  case+ lst of
+                  | NIL => @(false, zero)
+                  | @ head :: tail =>
+                    let
+                      val key_matches = key_test (key, head)
+                    in
+                      if key_matches then
+                        let
+                          val value = head
+                          prval _ = fold@ lst
+                        in
+                          @(true, value)
+                        end
+                      else
+                        let
+                          val result =
+                            search {n - 1} (key_test, key, tail)
+                          prval _ = fold@ lst
+                        in
+                          result
+                        end
+                    end
+                val lst =
+                  $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
+                prval _ = lemma_list_vt_param lst
+                val @(is_found, pointer) = search (key_test, key, lst)
+                prval _ = $UN.castvwtp0{Ptr} lst
+              in
+                if is_found then
+                  (* Success. *)
+                  begin
+                    is_last := true;
+                    is_stored := true;
+                    value := g1ofg0 pointer
+                  end
+                else
+                  (* No match for the key is found. *)
+                  begin
+                    is_last := true;
+                    is_stored := false;
+                    value := zero
+                  end
+              end
+            else
+              let
+                val key_matches = key_test (key, entry)
+              in
+                if key_matches then
+                  (* Success. *)
+                  begin
+                    is_last := true;
+                    is_stored := true;
+                    value := g1ofg0 entry
+                  end
+                else
+                  (* The entry does not match the key. *)
+                  begin
+                    is_last := true;
+                    is_stored := false;
+                    value := zero
+                  end
+              end
+          end
+        else
+          (* The entry is a link to a subnode. *)
+          begin
+            is_last := false;
+            is_stored := true;
+            value := g1ofg0 entry
+          end
+      end
+    else
+      (* There is no such entry. *)
+      begin
+        is_last := true;
+        is_stored := false;
+        value := zero
+      end
+  end
+
+fun {hash_vt : vt@ype}
+get_subtree_entry__loop
+        {length       : int | length <= bitsizeof (uintptr)}
+        {key          : int}
+        {depth        : int}
+        (node         : !node_vt (length) >> _,
+         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_storage : &hash_vt >> _,
+         key_test     : !key_test_vt >> _,
+         key          : uintptr key,
+         depth        : uint depth,
+         is_stored    : &bool? >> bool is_stored,
+         key_value    : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[key_value : int | is_stored || key_value == 0]
+    void =
+  let
+    val [bits : int] (pf_bits | bits) =
+      bits_source (hash_storage, depth)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {BITS_SOURCE_EXHAUSTED <= bits} ()
+    prval _ = prop_verify {bits_maxval (NUM_BITS, bits)} ()
+  in
+    if bits = BITS_SOURCE_EXHAUSTED then
+      begin
+        is_stored := false;
+        key_value := zero
+      end
+    else
+      let
+        var is_last : bool
+      in
+        get_leaf_value<>
+          {length} {key} {bits} (node, bits, key_test, key,
+                                 is_stored, is_last, key_value);
+        if not is_last then
+          {
+            val [length1 : int] [p1 : addr] next_node =
+              uintptr2node key_value
+            prval _ = lemma_node_vt_param {length1} {p1} (next_node)
+            val () =
+              get_subtree_entry__loop<hash_vt>
+                (next_node, bits_source, hash_storage, key_test, key,
+                 succ depth, is_stored, key_value)
+            prval _ = $UN.castvwtp0{uptr} next_node
+          }
+      end
+  end
+
+implement {hash_vt}
+get_subtree_entry (node, bits_source, hash_func, hash_storage,
+                   key_test, key, depth, is_stored, key_value) =
+  {
+    val () = hash_func (key, hash_storage)
+
+    val _ =
+      get_subtree_entry__loop<hash_vt>
+        (node, bits_source, hash_storage, key_test, key, depth,
+         is_stored, key_value)
+
+    (* Throw away the hash that was computed. *)
+    prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage)
+  }
+
+(********************************************************************)
+
+
+
+
+
+
+
+
+
+(*
+implement {hash_vt}
 start_new_tree (bits_source, hash_data, value) =
   let
     val [bits : int] (pf_bits | bits) = bits_source (hash_data, 0U)
@@ -1081,7 +1346,9 @@ start_new_tree (bits_source, hash_data, value) =
       pointer = p
     }
   end
+*)
 
+(*
 (********************************************************************)
 
 fun {}
@@ -1615,3 +1882,4 @@ get_subtree_entry {length} (node, bits_source, hash_data, key_test,
               depth, is_stored, value)
 
 (********************************************************************)
+*)

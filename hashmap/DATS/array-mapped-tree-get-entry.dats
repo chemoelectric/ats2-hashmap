@@ -39,65 +39,66 @@ staload _ = "hashmap/DATS/count-one-bits.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 
 implement
-array_mapped_tree_get_entry {node_p}
-                            {bits_source_p} {hash_data_p}
-                            {key_test_p} {key_data_p}
-                            (node_p, bits_source_p, hash_data_p,
-                             key_test_p, key_data_p,
-                             is_stored, value) =
-  let
+array_mapped_tree_get_entry (node_p, bits_source_p,
+                             hash_func_p, hash_storage_p,
+                             key_test_p, key,
+                             is_stored, key_value) =
+  {
     fn {}
-    get_result {node_p          : addr}
-               {bits_source_p   : addr}
-               {hash_data_p     : addr}
-               {key_test_p      : addr}
-               {key_data_p      : addr}
-               {hash_vt, key_vt : vt@ype}
-               (node_p          : ptr node_p,
-                bits_source_p   : ptr bits_source_p,
-                hash_data_p     : ptr hash_data_p,
-                key_test_p      : ptr key_test_p,
-                key_data_p      : ptr key_data_p,
-                is_stored       : &bool? >> bool is_stored,
-                value           : &uintptr? >>
-                                    [u : int | is_stored || u == 0]
-                                    uintptr u) :
-        #[is_stored : bool] void =
+    get_result {node_p         : addr}
+               {bits_source_p  : addr}
+               {hash_func_p    : addr}
+               {hash_storage_p : addr}
+               {key_test_p     : addr}
+               {key            : int}
+               {hash_vt        : vt@ype}
+               (node_p         : ptr node_p,
+                bits_source_p  : ptr bits_source_p,
+                hash_func_p    : ptr hash_func_p,
+                hash_storage_p : ptr hash_storage_p,
+                key_test_p     : ptr key_test_p,
+                key            : uintptr key,
+                is_stored      : &bool? >> bool is_stored,
+                key_value      : &uintptr? >> uintptr key_value) :
+        #[is_stored : bool]
+        #[key_value : int | is_stored || key_value == 0]
+        void =
       {
-        val _ = assertloc (ptr_isnot_null node_p)
-        
         (* Create linear types from the pointers. *)
         val node : node_vt node_p =
           uptr2node {node_p} (ptr2uptr {node_p} node_p)
         val bits_source =
           $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
                          bits_source_p
-        val hash_data =
-          $UN.castvwtp0 {@(hash_vt @ hash_data_p | ptr hash_data_p)}
-                        hash_data_p
-        val key_test =
-          $UN.castvwtp0 {(&key_vt, uintptr) -<cloptr1> bool}
-                        key_test_p
-        val key_data =
-          $UN.castvwtp0 {@(key_vt @ key_data_p | ptr key_data_p)}
-                        key_data_p
+        val hash_func =
+          $UN.castvwtp0 {hash_function_vt (hash_vt)} hash_func_p
+        val hash_storage =
+          $UN.castvwtp0 {@(hash_vt? @ hash_storage_p |
+                           ptr hash_storage_p)}
+                        hash_storage_p
+        val key_test = $UN.castvwtp0 {key_test_vt} key_test_p
 
         (* Search in the tree. *)
         prval _ = lemma_node_vt_param node
         val () =
-          get_subtree_entry<hash_vt, key_vt>
-            (node, bits_source, !(hash_data.1), key_test,
-             !(key_data.1), 0U, is_stored, value)
+          get_subtree_entry<hash_vt>
+            (node, bits_source, hash_func, !(hash_storage.1),
+             key_test, key, 0U, is_stored, key_value)
 
         (* Consume the linear types. *)
-        prval _ = $UN.castvwtp0{uptr} node
-        prval _ = $UN.castvwtp0{Ptr} bits_source
-        prval _ = $UN.castvwtp0{Ptr} hash_data
-        prval _ = $UN.castvwtp0{Ptr} key_test
-        prval _ = $UN.castvwtp0{Ptr} key_data
+        prval _ = $UN.castvwtp0{void} node
+        prval _ = $UN.castvwtp0{void} bits_source
+        prval _ = $UN.castvwtp0{void} hash_func
+        prval _ = $UN.castvwtp0{void} hash_storage
+        prval _ = $UN.castvwtp0{void} key_test
       }
-  in
-    get_result<> {node_p} {bits_source_p} {hash_data_p}
-                 (node_p, bits_source_p, hash_data_p,
-                  key_test_p, key_data_p, is_stored, value)
-  end
+
+    val _ =
+      get_result<> (g1ofg0 node_p,
+                    g1ofg0 bits_source_p,
+                    g1ofg0 hash_func_p,
+                    g1ofg0 hash_storage_p,
+                    g1ofg0 key_test_p,
+                    g1ofg0 key,
+                    is_stored, key_value)
+  }

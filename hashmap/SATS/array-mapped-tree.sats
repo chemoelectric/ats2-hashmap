@@ -42,14 +42,28 @@ array_mapped_tree_free
 
 fun
 array_mapped_tree_create
-        {bits_source_p : addr}
-        {hash_data_p   : addr}
-        (bits_source_p : ptr bits_source_p,
-         hash_data_p   : ptr hash_data_p,
-         value         : uintptr) :
-    [node_p : addr | null < node_p]
-    ptr node_p
+        (bits_source_p  : ptr,
+         hash_func_p    : ptr,
+         hash_storage_p : ptr,
+         key_value      : uintptr) :
+    [node_p : addr]
+    array_mapped_tree_vt node_p
 
+fun
+array_mapped_tree_get_entry
+        (node_p         : ptr,
+         bits_source_p  : ptr,
+         hash_func_p    : ptr,
+         hash_storage_p : ptr,
+         key_test_p     : ptr,
+         key            : uintptr,
+         is_stored      : &bool? >> bool is_stored,
+         key_value      : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[key_value : int | is_stored || key_value == 0]
+    void
+
+(*
 fun
 array_mapped_tree_set_entry
         {node_p        : addr | null < node_p}
@@ -86,5 +100,6 @@ array_mapped_tree_get_entry
                             uintptr u) :
     #[is_stored : bool]
     void
+*)
 
 (********************************************************************)

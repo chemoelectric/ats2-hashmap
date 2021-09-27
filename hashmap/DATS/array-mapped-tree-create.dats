@@ -30,42 +30,54 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/bits-source.sats"
+staload "hashmap/SATS/uptr.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 
 implement
-array_mapped_tree_create {bits_source_p} {hash_data_p}
-                         (bits_source_p, hash_data_p, value) =
+array_mapped_tree_create (bits_source_p, hash_func_p,
+                          hash_storage_p, key_value) =
   let
     fn {}
-    make_node {bits_source_p : addr}
-              {hash_data_p   : addr}
-              {hash_vt       : vt@ype}
-              (bits_source_p : ptr bits_source_p,
-               hash_data_p   : ptr hash_data_p,
-               value         : uintptr) :
-        [node_p : addr | null < node_p]
+    make_node {bits_source_p  : addr}
+              {hash_func_p    : addr}
+              {hash_storage_p : addr}
+              {key_value      : int}
+              {hash_vt        : vt@ype}
+              (bits_source_p  : ptr bits_source_p,
+               hash_func_p    : ptr hash_func_p,
+               hash_storage_p : ptr hash_storage_p,
+               key_value      : uintptr key_value) :
+        [node_p : addr]
         ptr node_p =
       let
         (* Create linear types from the pointers. *)
         val bits_source =
           $UN.castvwtp0 {bits_source_cloptr (hash_vt, NUM_BITS)}
-                         bits_source_p
-        val hash_data =
-          $UN.castvwtp0 {@(hash_vt @ hash_data_p | ptr hash_data_p)}
-                        hash_data_p
+                        bits_source_p
+        val hash_func =
+          $UN.castvwtp0 {hash_function_vt (hash_vt)} hash_func_p
+        val hash_storage =
+          $UN.castvwtp0 {@(hash_vt? @ hash_storage_p |
+                           ptr hash_storage_p)}
+                         hash_storage_p
 
-        val node =
-          start_new_tree<hash_vt> (bits_source, !(hash_data.1), value)
+        (* Create the tree. *)
+        val node = start_new_tree<hash_vt> (bits_source, hash_func,
+                                            !(hash_storage.1),
+                                            key_value)
 
         (* Consume the linear types. *)
-        prval _ = $UN.castvwtp0{Ptr} bits_source
-        prval _ = $UN.castvwtp0{Ptr} hash_data
+        prval _ = $UN.castvwtp0{void} bits_source
+        prval _ = $UN.castvwtp0{void} hash_func
+        prval _ = $UN.castvwtp0{void} hash_storage
       in
-        $UN.castvwtp0 node
+        uptr2ptr (node2uptr node)
       end
   in
-    make_node<> {bits_source_p} {hash_data_p} {..}
-                (bits_source_p, hash_data_p, value)
+    make_node<> (g1ofg0 bits_source_p,
+                 g1ofg0 hash_func_p,
+                 g1ofg0 hash_storage_p,
+                 g1ofg0 key_value)
   end

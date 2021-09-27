@@ -37,6 +37,8 @@ staload _ = "hashmap/DATS/count-one-bits.dats"
 staload _ = "hashmap/DATS/memory.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 
+(* FIXME: Needs updating.
+
 implement
 array_mapped_tree_set_entry {node_p}
                             {bits_source_p} {hash_data_p}
@@ -102,3 +104,4 @@ array_mapped_tree_set_entry {node_p}
                 (node_p, bits_source_p, hash_data_p,
                  key_test_p, key_data_p, value, is_new_slot)
   end
+*)
