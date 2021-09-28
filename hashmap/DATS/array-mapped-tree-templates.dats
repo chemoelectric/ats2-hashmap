@@ -95,19 +95,32 @@ set_bit (bits               : uintptr,
          bit_selection_mask : uintptr) :<> uintptr =
   (bits <+> bit_selection_mask)
 
+fn {}
+clear_bit (bits               : uintptr,
+           bit_selection_mask : uintptr) :<> uintptr =
+  (bits <*> (<~> bit_selection_mask))
+
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
+
+fn {}
+orelse1 {x, y : bool}
+        (x : bool x,
+         y : bool y) :<>
+    [z : bool | z == (x || y)]
+    bool z =
+  if x then
+    true
+  else
+    y
+infixl ( || ) |||
+macdef ||| = orelse1
 
 (********************************************************************)
 
 implement {}
 uintptr2node (i) =
-  let
-    val p = uintptr2uptr i
-    val _ = $effmask_exn (assertloc (uptr_isnot_null p))
-  in
-    uptr2node p
-  end
+  uptr2node (uintptr2uptr i)
 
 implement {}
 node2uintptr (node) =
@@ -392,6 +405,37 @@ get_leaf_map
     leaf_map
   end
 
+fn {}
+set_leaf_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         value  : uintptr) :<!refwrt>
+    void =
+  {
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    val _ = uptr_set<uintptr> (pf_leaf_map | leaf_map_ptr p,
+                                             value)
+
+    prval _ = node :=
+      @{
+        view_of_population_map = pf_pop_map,
+        view_of_leaf_map = pf_leaf_map,
+        view_of_chaining_map = pf_chain_map,
+        view_of_entries = pf_entries,
+        mfree = pf_mfree |
+        pointer = p
+      }
+  }
+
 (********************************************************************)
 
 fn {}
@@ -554,6 +598,53 @@ overload [] with set_entry_value
 
 (********************************************************************)
 
+(*
+fn {}
+node_vt_to_slot_node_vt
+        {length, index : int | index < length}
+        {p     : addr}
+        (node  : node_vt (length, p),
+         index : size_t index) :<!ref>
+    (* Returns the original node_vt recast as a slot_node_vt. *)
+    slot_node_vt (length, index, p) =
+  let
+    val @{
+          view_of_population_map = pf_pop_map,
+          view_of_leaf_map = pf_leaf_map,
+          view_of_chaining_map = pf_chain_map,
+          view_of_entries = pf_entries,
+          mfree = pf_mfree |
+          pointer = p
+        } = node
+
+    prval _ = lemma_g1uint_param index
+
+    prval @(pf_left, pf_right) =
+      array_v_subdivide2 {link_vt} {entries_addr p}
+                         {index, length - index}
+                         pf_entries
+    prval @(pf_entry, pf_right) =
+      array_v_uncons
+        {link_vt}
+        {(entries_addr p) + index * sizeof (link_vt)}
+        {length - index}
+        pf_right
+  in
+    @{
+      view_of_population_map = pf_pop_map,
+      view_of_leaf_map = pf_leaf_map,
+      view_of_chaining_map = pf_chain_map,
+      view_of_left_entries = pf_left,
+      view_of_slot = pf_entry,
+      view_of_right_entries = pf_right,
+      mfree = pf_mfree |
+      pointer = p
+    }
+  end
+*)
+
+(********************************************************************)
+
 fn {}
 expand_node {length, index : int | 0 <= index; index <= length}
             {p      : addr}
@@ -649,53 +740,6 @@ expand_node {length, index : int | 0 <= index; index <= length}
   end
 
 (********************************************************************)
-
-(* // We probably do not want this, because we wrote set_entry_value
-   // instead, and it is "safe enough".
-fn {}
-node_vt_to_slotted_node_vt
-        {length, index : int | index < length}
-        {p     : addr}
-        (node  : node_vt (length, p),
-         index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a slotted_node_vt. *)
-    slotted_node_vt (length, index, p) =
-  let
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_leaf_map = pf_leaf_map,
-          view_of_chaining_map = pf_chain_map,
-          view_of_entries = pf_entries,
-          mfree = pf_mfree |
-          pointer = p
-        } = node
-
-    prval _ = lemma_g1uint_param index
-
-    prval @(pf_left, pf_right) =
-      array_v_subdivide2 {link_vt} {entries_addr p}
-                         {index, length - index}
-                         pf_entries
-    prval @(pf_entry, pf_right) = array_v_uncons pf_right
-
-    prval _ =
-      $UN.castview2void_at {link_vt?} {link_vt} pf_entry
-
-    val slotted_node =
-      @{
-        view_of_population_map = pf_pop_map,
-        view_of_leaf_map = pf_leaf_map,
-        view_of_chaining_map = pf_chain_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      }
-  in
-    slotted_node
-  end
-*)
 
 (*
 fn {}
@@ -1419,14 +1463,15 @@ start_new_subtree
 fun {hash_vt : vt@ype}
 set_subtree_entry__loop
         {length : int | length <= bitsizeof (uintptr)}
-        {slot_p : addr}
+        {node_p : addr}
+        {p_slot : addr}
         {bits   : int | valid_unexhausted_bits (NUM_BITS, bits)}
         {hash2_is_set  : bool}
         {key_value     : int}
         {depth         : int}
-        (pf_slot       : !(node_vt (length) @ slot_p) >>
-                              node_vt (new_length) @ slot_p |
-         slot_p        : ptr slot_p,
+        (pf_slot       : !(node_vt (length, node_p) @ p_slot) >>
+                              node_vt (new_length) @ p_slot |
+         p_slot        : ptr p_slot,
          bits          : int bits,
          bits_source   : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
          hash_func     : !hash_function_vt (hash_vt),
@@ -1442,7 +1487,7 @@ set_subtree_entry__loop
     #[is_new_slot : bool]
     void =
   let
-    macdef node = !slot_p
+    macdef node = (!p_slot)
 
     prval _ = lemma_node_vt_param {length} (node)
     prval _ = prop_verify {0 < length} ()
@@ -1482,11 +1527,21 @@ set_subtree_entry__loop
                 (node, i2u index, key_value, is_new_slot)
             else
               let
-                val [bits : int] (pf_bits | bits) =
-                  bits_source (hash_storage1, depth)
-                prval _ = bits_source_bits_bounds pf_bits
+                (* The next set of bits for the new entry. *)
+                val [bits1 : int] (pf_bits1 | bits1) =
+                  bits_source (hash_storage1, succ depth)
+                prval _ = bits_source_bits_bounds pf_bits1
+
+                (* The next set of bits for the old entry. *)
+                prval _ =
+                  $UN.castview2void_at{hash_vt?} (view@ hash_storage2)
+                val _ = hash_func (entry, hash_storage2)
+                val [bits2 : int] (pf_bits2 | bits2) =
+                  bits_source (hash_storage2, succ depth)
+                prval _ = bits_source_bits_bounds pf_bits2
               in
-                if bits = BITS_SOURCE_EXHAUSTED then
+                if bits1 = BITS_SOURCE_EXHAUSTED |||
+                   bits2 = BITS_SOURCE_EXHAUSTED then
                   (* Separate chaining is required. *)
                   let
                   in
@@ -1495,66 +1550,47 @@ set_subtree_entry__loop
                     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                   end
                 else
-                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                    is_new_slot := true // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-(*
                   (* Create a new node, which will contain only the
-                     old entry, and then do a loop. *)
+                     old entry; store the pointer to it in the old
+                     location; and then do a loop. *)
                   {
-                    prval @(pf_left, pf_right) =
-                      array_v_subdivide2 {link_vt}
-                                         {entries_addr node_p}
-                                         {index, length - index}
-                                         (node.view_of_entries)
-                    prval @(pf_entry, pf_right) =
-                      array_v_uncons pf_right
+                    val [new_node_length : int] new_node =
+                      start_new_subtree<> (bits2, g1ofg0 entry)
 
-                    stadef p_entry =
-                      (entries_addr node_p) + index * sizeof (link_vt)
-                    val up_entry : uptr p_entry =
+                    val _ = node[index] := node2uintptr new_node
+
+                    val new_leaf_map =
+                      clear_bit (leaf_map, bit_selection_mask)
+                    val _ = set_leaf_map (node, new_leaf_map)
+
+                    (* Unsafely create a view of a slot in the
+                       node. (The node is not really "linear" as
+                       as long as this view exists, but the
+                       technique seems simple and untedious.) *)
+                    extern praxi
+                    create_slot_view :
+                      () -<prf> node_vt (new_node_length)
+                                  @ ((entries_addr node_p) +
+                                        index * sizeof (link_vt))
+                    prval pf_node_slot = create_slot_view ()
+
+                    val node_tmp = node
+                    val p_node_slot =
                       uptr_add<link_vt>
-                        (entries_ptr (node.pointer), index)
-                    val p_entry : ptr p_entry =
-                      uptr2ptr {p_entry} up_entry
-
-                    val _ = assertloc (ptr_isnot_null p_entry)
-
-                    prval _ =
-                      $UN.castview2void_at
-                        {uintptr} {link_vt} {p_entry}
-                        pf_entry
-
-                    val [new_length : int] new_node =
-                      start_new_subtree<> (bits, entry)
-                    prval _ = prop_verify {new_length == 1} ()
+                        (entries_ptr (node_tmp.pointer), index)
+                    val _ = ptr_set (pf_slot | p_slot, node_tmp)
+                                        
                     val _ =
-                      ptr_set<uintptr>
-                        (pf_entry | p_entry, node2uintptr new_node)
+                      set_subtree_entry__loop
+                        (pf_node_slot | uptr2ptr p_node_slot,
+                         bits1, bits_source, hash_func,
+                         hash_storage1, hash_storage2, true,
+                         key_test, key_value, succ depth,
+                         is_new_slot)
 
-                    prval _ =
-                      $UN.castview2void_at
-                        {node_vt (new_length)} {uintptr} {p_entry}
-                        pf_entry
-
-                    val _ =
-                      set_subtree_entry__loop2
-                        (pf_entry | p_entry, bits, bits_source,
-                         hash_data, key_test, key_data, succ depth,
-                         value, is_new_slot)
-
-                    prval _ =
-                      $UN.castview2void_at
-                        {link_vt} {node_vt} {p_entry}
-                        pf_entry
-
-                    prval pf_right = array_v_cons (pf_entry, pf_right)
-                    prval _ = node.view_of_entries :=
-                      array_v_join2 {link_vt} {entries_addr node_p}
-                                    {index, length - index}
-                                    (pf_left, pf_right)
+                    (* Consume the temporary, unsafe view. *)
+                    prval _ = $UN.castview2void{void} pf_node_slot
                   }
-*)
               end
           end
         else

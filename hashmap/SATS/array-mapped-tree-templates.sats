@@ -219,6 +219,31 @@ vtypedef new_slotted_node_vt (length : int, index : int) =
 vtypedef new_slotted_node_vt =
   [length, index : int] new_slotted_node_vt (length, index)
 
+(*
+(* slot_node_vt -- similar to a slotted_node_vt, but the fields
+                   are fully initialized. *)
+vtypedef slot_node_vt (length : int, index : int, p : addr) =
+  @{
+    view_of_population_map = uintptr @ population_map_addr (p),
+    view_of_leaf_map = uintptr @ leaf_map_addr (p),
+    view_of_chaining_map = uintptr @ chaining_map_addr (p),
+    view_of_left_entries =
+      @[link_vt][index] @ entries_addr (p),
+    view_of_slot =
+      link_vt @ (entries_addr (p) + index * sizeof (link_vt)),
+    view_of_right_entries =
+      @[link_vt][length - 1 - index]
+          @ (entries_addr (p) + index * sizeof (link_vt)
+                + sizeof (link_vt)),
+    mfree = mfree_gc_v p |
+    pointer = uptr p
+  }
+vtypedef slot_node_vt (length : int, index : int) =
+  [p : addr] slot_node_vt (length, index, p)
+vtypedef slot_node_vt =
+  [length, index : int] slot_node_vt (length, index)
+*)
+
 (* new_length1_node_vt -- A node of length one that needs
                           filling in. *)
 vtypedef new_length1_node_vt (p : addr) =
