@@ -178,7 +178,6 @@ test_root_node_expansion () : void =
     val _ = assertloc (size set = i2sz 7)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
-
     val _ =
       let
         var i : [i : int] uintptr i
@@ -201,10 +200,35 @@ test_root_node_expansion () : void =
     val _ = free set
   }
 
+fn
+test_root_node_leaf_collision () : void =
+  {
+    val set = uintptr_set () + (u2up 0x01U) + (u2up 0x0101U)
+    val _ = assertloc (size set = i2sz 2)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = (u2up 0x01U) ||
+               i = (u2up 0x0101U) then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
+    val _ = free set
+  }
+
 implement
 main0 () =
   {
     val _ = test_empty ()
     val _ = test_size_one ()
     val _ = test_root_node_expansion ()
+    val _ = test_root_node_leaf_collision ()
   }
