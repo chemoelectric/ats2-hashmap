@@ -1727,6 +1727,15 @@ skip_but_count_unpopulated (population : uintptr,
     loop (population, leaves, chains, count)
   end
 
+fn
+factor_factor (num_bits : int) : size_t =
+  case- num_bits of
+  | 4 => succ (i2sz MAXVALOF_BITINDEX_4)
+  | 5 => succ (i2sz MAXVALOF_BITINDEX_5)
+  | 6 => succ (i2sz MAXVALOF_BITINDEX_6)
+  | 7 => succ (i2sz MAXVALOF_BITINDEX_7)
+  | 8 => succ (i2sz MAXVALOF_BITINDEX_8)
+
 fun
 print_subtree_structure__
         {length : int | length <= bitsizeof (uintptr)}
@@ -1735,10 +1744,11 @@ print_subtree_structure__
         (out             : FILEref,
          node            : !node_vt (length, node_p) >> _,
          depth           : uint depth,
-         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void),
+         full_count      : size_t,
+         factor          : size_t) :
     void =
-  (* The current implementation uses stack to do a depth-first
-     transversal. FIXME: Do not use stack. *)
+  (* The current implementation uses non-tail recursion. *)
   {
     val population_map = get_population_map (node)
     val leaf_map = get_leaf_map (node)
@@ -1807,7 +1817,9 @@ print_subtree_structure__
                 prval _ = lemma_node_vt_param subnode
                 val _ =
                   print_subtree_structure__
-                    (out, subnode, succ depth, print_key_value)
+                    (out, subnode, succ depth, print_key_value,
+                     full_count + (factor * count),
+                     factor * factor_factor (NUM_BITS))
                 prval _ = $UN.castvwtp0{void} subnode
               }
             else if is_chain then
@@ -1818,9 +1830,8 @@ print_subtree_structure__
               begin
                 print_indentation (out, depth);
                 fprint! (out, "key-value ");
-                if count < i2sz 10 then
-                  fprint! (out, " ");
-                fprint! (out, "(", count, "): ");
+                fprint! (out, "(", count, ", ");
+                fprint! (out, full_count + (factor * count), "): ");
                 print_key_value (out, entry);
                 fprintln! (out)
               end
@@ -1828,7 +1839,7 @@ print_subtree_structure__
           val _ =
             for_each_bit (pf_rest | out, print_key_value,
                           population >> 1, leaves >> 1, chains >> 1,
-                          p_rest, pred restlen, succ count);
+                          p_rest, pred restlen, succ count)
 
           (* Recombine the views. *)
           prval _ = pf_entries := array_v_cons (pf_entry, pf_rest)
@@ -1843,6 +1854,7 @@ print_subtree_structure__
 
 implement
 print_subtree_structure (out, node, depth, print_key_value) =
-  print_subtree_structure__ (out, node, depth, print_key_value)
+  print_subtree_structure__ (out, node, depth, print_key_value,
+                             i2sz 0, i2sz 1)
 
 (********************************************************************)
