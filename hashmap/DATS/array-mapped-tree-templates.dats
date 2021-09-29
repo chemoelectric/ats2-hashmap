@@ -1748,7 +1748,8 @@ print_subtree_structure__
          full_count      : size_t,
          factor          : size_t) :
     void =
-  (* The current implementation uses non-tail recursion. *)
+  (* The current implementation uses non-tail recursion.
+     FIXME: Use tail recursion. *)
   {
     val population_map = get_population_map (node)
     val leaf_map = get_leaf_map (node)
@@ -1811,7 +1812,43 @@ print_subtree_structure__
           prval _ = $UN.castview2void_at{link_vt} pf_entry
 
           val _ =
-            if not is_leaf then
+            if is_leaf then
+              begin
+                print_indentation (out, depth);
+                fprint! (out, "key-value ");
+                fprint! (out, "(", count, ", ");
+                fprint! (out, full_count + (factor * count), "): ");
+                if is_chain then
+                  {
+                    fun
+                    loop {n   : int | 0 <= n} .<n>.
+                         (lst : !list_vt (uintptr, n) >> _,
+                          print_key_value :
+                              !((FILEref, uintptr) -<cloptr1> void),
+                          separator : string) :
+                        void =
+                      case+ lst of
+                      | NIL => ()
+                      | @ head :: tail =>
+                        {
+                          val _ = fprint! (out, separator)
+                          val _ = print_key_value (out, head)
+                          val _ = loop (tail, print_key_value, " ")
+                          prval _ = fold@ lst
+                        }
+                    val lst =
+                      $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
+                    val _ = fprint! (out, "(")
+                    prval _ = lemma_list_vt_param lst
+                    val _ = loop (lst, print_key_value, "")
+                    val _ = fprint! (out, ")")
+                    prval _ = $UN.castvwtp0{void} lst
+                  }
+                else
+                  print_key_value (out, entry);
+                fprintln! (out)
+              end
+            else
               {
                 val subnode = uintptr2node entry
                 prval _ = lemma_node_vt_param subnode
@@ -1822,19 +1859,6 @@ print_subtree_structure__
                      factor * factor_factor (NUM_BITS))
                 prval _ = $UN.castvwtp0{void} subnode
               }
-            else if is_chain then
-              {
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-              }
-            else
-              begin
-                print_indentation (out, depth);
-                fprint! (out, "key-value ");
-                fprint! (out, "(", count, ", ");
-                fprint! (out, full_count + (factor * count), "): ");
-                print_key_value (out, entry);
-                fprintln! (out)
-              end
 
           val _ =
             for_each_bit (pf_rest | out, print_key_value,
