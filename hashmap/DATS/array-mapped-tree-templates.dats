@@ -1679,7 +1679,7 @@ print_indentation {depth : int}
          (i : uint i) : void =
       if i <> 0U then
         begin
-          fprint! (out, " ");
+          fprint! (out, "| ");
           loop (pred i)
         end
     prval _ = lemma_g1uint_param depth
@@ -1744,6 +1744,7 @@ print_subtree_structure__
     val leaf_map = get_leaf_map (node)
     val chaining_map = get_chaining_map (node)
 
+    val _ = print_indentation (out, depth)
     val _ = fprintln! (out, "depth: ", depth)
     val _ = print_indentation (out, depth)
     val _ = fprint! (out, "population_map: ")
@@ -1802,16 +1803,24 @@ print_subtree_structure__
           val _ =
             if not is_leaf then
               {
-                val node = uintptr2node entry
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                prval _ = $UN.castvwtp0{void} node
+                val subnode = uintptr2node entry
+                prval _ = lemma_node_vt_param subnode
+                val _ =
+                  print_subtree_structure__
+                    (out, subnode, succ depth, print_key_value)
+                prval _ = $UN.castvwtp0{void} subnode
               }
             else if is_chain then
-              ()                (* FIXME *)
+              {
+// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              }
             else
               begin
                 print_indentation (out, depth);
-                fprint! (out, "key-value (", count, "): ");
+                fprint! (out, "key-value ");
+                if count < i2sz 10 then
+                  fprint! (out, " ");
+                fprint! (out, "(", count, "): ");
                 print_key_value (out, entry);
                 fprintln! (out)
               end

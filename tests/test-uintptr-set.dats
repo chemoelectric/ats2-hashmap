@@ -236,7 +236,32 @@ test_root_node_leaf_collision () : void =
           end
       end
     val print_entry = new_entry_printer ()
-    //val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
+    val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
+    val _ = entry_printer_free (print_entry)
+    val _ = free set
+
+    val set = uintptr_set () +
+                (u2up 0x000101U) +
+                (u2up 0x010101U)
+    val _ = assertloc (size set = i2sz 2)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = (u2up 0x000101U) ||
+               i = (u2up 0x010101U) then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
+    val print_entry = new_entry_printer ()
+    val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
     val _ = free set
   }
