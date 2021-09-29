@@ -1533,9 +1533,14 @@ set_subtree_entry__loop
                 prval _ = bits_source_bits_bounds pf_bits1
 
                 (* The next set of bits for the old entry. *)
-                prval _ =
-                  $UN.castview2void_at{hash_vt?} (view@ hash_storage2)
-                val _ = hash_func (entry, hash_storage2)
+                val _ =
+                  if not hash2_is_set then
+                    {
+                      prval _ =
+                        $UN.castview2void_at{hash_vt?}
+                          (view@ hash_storage2)
+                      val _ = hash_func (entry, hash_storage2)
+                    }
                 val [bits2 : int] (pf_bits2 | bits2) =
                   bits_source (hash_storage2, succ depth)
                 prval _ = bits_source_bits_bounds pf_bits2
