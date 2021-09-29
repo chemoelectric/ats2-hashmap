@@ -830,15 +830,24 @@ vtypedef node_list_vt = [n : int] node_list_vt n
 vtypedef more_nodes_vt (n : int) = list_vt (node_list_vt, n)
 vtypedef more_nodes_vt = [n : int] more_nodes_vt n
 
-fun {}
+fn {}
 skip_unpopulated (population : uintptr,
                   leaves     : uintptr,
                   chains     : uintptr) :
     @(uintptr, uintptr, uintptr) =
-  if bit_is_set<> (population, one) then
-    @(population, leaves, chains)
-  else
-    skip_unpopulated<> (population >> 1, leaves >> 1, chains >> 1)
+  let
+    fun
+    loop (pop : uintptr,
+          lv  : uintptr,
+          chn : uintptr) :
+        @(uintptr, uintptr, uintptr) =
+      if bit_is_set<> (pop, one) then
+        @(pop, lv, chn)
+      else
+        loop (pop >> 1, lv >> 1, chn >> 1)
+  in
+    loop (population, leaves, chains)
+  end
 
 (* Rather than recursively deepen the stack, let us free nodes while
    also building up lists of more nodes to be freed. *)
@@ -905,7 +914,7 @@ free_nodes (nodes      : node_list_vt,
                 val @(population, leaves, chains) =
                   skip_unpopulated<> (population, leaves, chains)
                 val is_leaf = bit_is_set<> (leaves, one)
-                val is_chain = (is_leaf && bit_is_set<> (leaves, one))
+                val is_chain = (is_leaf && bit_is_set<> (chains, one))
 
                 (* Separate the entries into the first entry and
                    and array of the remaining entries. *)
@@ -1718,8 +1727,18 @@ skip_but_count_unpopulated (population : uintptr,
     loop (population, leaves, chains, count)
   end
 
-implement
-print_subtree_structure (out, node, depth, print_key_value) =
+fun
+print_subtree_structure__
+        {length : int | length <= bitsizeof (uintptr)}
+        {node_p : addr}
+        {depth  : int}
+        (out             : FILEref,
+         node            : !node_vt (length, node_p) >> _,
+         depth           : uint depth,
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+    void =
+  (* The current implementation uses stack to do a depth-first
+     transversal. FIXME: Do not use stack. *)
   {
     val population_map = get_population_map (node)
     val leaf_map = get_leaf_map (node)
@@ -1746,7 +1765,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
       get_popcount (g1ofg0 population_map)
     prval _ = $UN.prop_assert {popcount == length} ()
 
-    fun
+    fnx
     for_each_bit
             {p_entries  : addr}
             {restlen    : int | 0 <= restlen; restlen <= length}
@@ -1769,7 +1788,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
             skip_but_count_unpopulated (population, leaves, chains,
                                         count)
           val is_leaf = bit_is_set<> (leaves, one)
-          val is_chain = (is_leaf && bit_is_set<> (leaves, one))
+          val is_chain = (is_leaf && bit_is_set<> (chains, one))
 
           (* Separate the entries into the first entry and
              and array of the remaining entries. *)
@@ -1781,15 +1800,21 @@ print_subtree_structure (out, node, depth, print_key_value) =
           prval _ = $UN.castview2void_at{link_vt} pf_entry
 
           val _ =
-            if is_leaf then
+            if not is_leaf then
+              {
+                val node = uintptr2node entry
+// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                prval _ = $UN.castvwtp0{void} node
+              }
+            else if is_chain then
+              ()                (* FIXME *)
+            else
               begin
                 print_indentation (out, depth);
                 fprint! (out, "key-value (", count, "): ");
                 print_key_value (out, entry);
                 fprintln! (out)
               end
-            else
-              ()                (* FIXME *)
 
           val _ =
             for_each_bit (pf_rest | out, print_key_value,
@@ -1806,5 +1831,9 @@ print_subtree_structure (out, node, depth, print_key_value) =
          population_map, leaf_map, chaining_map,
          entries_ptr (node.pointer), length, i2sz 0)
   }
+
+implement
+print_subtree_structure (out, node, depth, print_key_value) =
+  print_subtree_structure__ (out, node, depth, print_key_value)
 
 (********************************************************************)
