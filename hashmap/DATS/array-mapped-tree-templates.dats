@@ -194,8 +194,8 @@ get_popcount_low_bits {population_map : int}
 (********************************************************************)
 
 implement {}
-extract_static_length_of_node (node) =
-  $UN.castvwtp0 node
+extract_static_length_of_node {length} (node) =
+  $UN.castvwtp1 node
 
 (********************************************************************)
 
@@ -863,12 +863,11 @@ free_nodes (nodes      : node_list_vt,
       | ~ NIL => more_nodes
       | ~ node :: tail =>
         let
-          val [length : int] node = extract_static_length_of_node node
-
           val population_map = get_population_map<> (node)
           val leaf_map = get_leaf_map<> (node)
           val chaining_map = get_chaining_map<> (node)
 
+          val [length : int] _ = extract_static_length_of_node node
           prval _ = lemma_node_vt_param {length} node
 
           val [popcount : int] @(_ | length) =
@@ -1006,9 +1005,9 @@ free_nodes (nodes      : node_list_vt,
                 val result =
                   for_each_bit<vt>
                     {p_entries + sizeof (link_vt)} {restlen - 1}
-                    (pf_rest | leaf_free, population, leaves,
-                               chains, p_rest, pred restlen,
-                               new_nodes)
+                    (pf_rest | leaf_free, population >> 1,
+                               leaves >> 1, chains >> 1, p_rest,
+                               pred restlen, new_nodes)
 
                 (* Recombine the views. *)
                 prval _ = pf_entries :=
@@ -1656,6 +1655,156 @@ set_subtree_entry (node, bits_source, hash_func,
     (* Throw away the hashes. *)
     prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage1)
     prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage2)
+  }
+
+(********************************************************************)
+(* print_subtree_structure works depth-first. *)
+
+fn
+print_indentation {depth : int}
+                  (out   : FILEref,
+                   depth : uint depth) : void =
+  let
+    fun
+    loop {i : int | 0 <= i} .<i>.
+         (i : uint i) : void =
+      if i <> 0U then
+        begin
+          fprint! (out, " ");
+          loop (pred i)
+        end
+    prval _ = lemma_g1uint_param depth
+  in
+    loop (depth)
+  end
+
+fn
+print_bitmap (out : FILEref,
+              map : uintptr) : void =
+  let
+    fun
+    loop {i : int | 0 <= i; i <= BITSIZEOF_UINTPTR} .<i>.
+         (i : int i) : void =
+      if i <> 0 then
+        let
+          val j = pred i
+          val bit = bit_is_set<> (map, (one << j))
+        in
+          fprint! (out, (if bit then '1' else '0') : char);
+          loop (j)
+        end
+  in
+    loop (BITSIZEOF_UINTPTR)
+  end
+
+fn
+skip_but_count_unpopulated (population : uintptr,
+                            leaves     : uintptr,
+                            chains     : uintptr,
+                            count      : size_t) :
+    @(uintptr, uintptr, uintptr, size_t) =
+  let
+    fun
+    loop (pop : uintptr,
+          lv  : uintptr,
+          chn : uintptr,
+          cnt : size_t) :
+        @(uintptr, uintptr, uintptr, size_t) =
+      if bit_is_set<> (pop, one) then
+        @(pop, lv, chn, cnt)
+      else
+        loop (pop >> 1, lv >> 1, chn >> 1, succ cnt)
+  in
+    loop (population, leaves, chains, count)
+  end
+
+implement
+print_subtree_structure (out, node, depth, print_key_value) =
+  {
+    val population_map = get_population_map (node)
+    val leaf_map = get_leaf_map (node)
+    val chaining_map = get_chaining_map (node)
+
+    val _ = fprintln! (out, "depth: ", depth)
+    val _ = print_indentation (out, depth)
+    val _ = fprint! (out, "population_map: ")
+    val _ = print_bitmap (out, population_map)
+    val _ = fprintln! (out)
+    val _ = print_indentation (out, depth)
+    val _ = fprint! (out, "leaf_map:       ")
+    val _ = print_bitmap (out, leaf_map)
+    val _ = fprintln! (out)
+    val _ = print_indentation (out, depth)
+    val _ = fprint! (out, "chaining_map:   ")
+    val _ = print_bitmap (out, chaining_map)
+    val _ = fprintln! (out)
+
+    val [length : int] _ = extract_static_length_of_node node
+    prval _ = lemma_node_vt_param {length} node
+
+    val [popcount : int] @(_ | length) =
+      get_popcount (g1ofg0 population_map)
+    prval _ = $UN.prop_assert {popcount == length} ()
+
+    fun
+    for_each_bit
+            {p_entries  : addr}
+            {restlen    : int | 0 <= restlen; restlen <= length}
+            .<restlen>.
+            (pf_entries : !(@[link_vt][restlen] @ p_entries) >> _ |
+             out        : FILEref,
+             print_key_value : !((FILEref, uintptr) -<cloptr1> void),
+             population : uintptr,
+             leaves     : uintptr,
+             chains     : uintptr,
+             p_entries  : uptr p_entries,
+             restlen    : size_t restlen,
+             count      : size_t) : void =
+      if restlen <> i2sz 0 then
+        {
+          prval _ = lemma_array_v_param pf_entries
+          prval _ = prop_verify {0 <= restlen} ()
+
+          val @(population, leaves, chains, count) =
+            skip_but_count_unpopulated (population, leaves, chains,
+                                        count)
+          val is_leaf = bit_is_set<> (leaves, one)
+          val is_chain = (is_leaf && bit_is_set<> (leaves, one))
+
+          (* Separate the entries into the first entry and
+             and array of the remaining entries. *)
+          prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
+          val p_rest = uptr_succ<link_vt> (p_entries)
+
+          prval _ = $UN.castview2void_at{uintptr} pf_entry
+          val entry = uptr_get<uintptr> (pf_entry | p_entries)
+          prval _ = $UN.castview2void_at{link_vt} pf_entry
+
+          val _ =
+            if is_leaf then
+              begin
+                print_indentation (out, depth);
+                fprint! (out, "key-value (", count, "): ");
+                print_key_value (out, entry);
+                fprintln! (out)
+              end
+            else
+              ()                (* FIXME *)
+
+          val _ =
+            for_each_bit (pf_rest | out, print_key_value,
+                          population >> 1, leaves >> 1, chains >> 1,
+                          p_rest, pred restlen, succ count);
+
+          (* Recombine the views. *)
+          prval _ = pf_entries := array_v_cons (pf_entry, pf_rest)
+        }
+
+    val _ = 
+      for_each_bit
+        (node.view_of_entries | out, print_key_value,
+         population_map, leaf_map, chaining_map,
+         entries_ptr (node.pointer), length, i2sz 0)
   }
 
 (********************************************************************)

@@ -25,7 +25,6 @@ along with this program. If not, see
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
-#include "share/atspre_staload.hats"
 
 staload UN = "prelude/SATS/unsafe.sats"
 

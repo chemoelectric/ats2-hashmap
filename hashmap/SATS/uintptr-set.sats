@@ -21,6 +21,8 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
+(********************************************************************)
+
 absvtype uintptr_set_vt (size : int)
 vtypedef uintptr_set_vt = [size : int] uintptr_set_vt size
 
@@ -28,6 +30,8 @@ praxi
 lemma_uintptr_set_vt_param :
   {size : int}
   (uintptr_set_vt size) -<prf> [0 <= size] void
+
+(********************************************************************)
 
 fun {}
 uintptr_set () :
@@ -94,3 +98,15 @@ uintptr_elements
         {size : int}
         (set  : !(uintptr_set_vt size) >> _) :
     list_vt (uintptr, size)
+
+(********************************************************************)
+
+(* Something useful for testing and debugging. *)
+fun
+uintptr_set_print_structure
+        (out             : FILEref,
+         set             : !uintptr_set_vt >> _,
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+    void
+
+(********************************************************************)

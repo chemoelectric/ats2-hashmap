@@ -296,8 +296,12 @@ lemma_slotted_node_vt_param :
     void
 
 fn {}
-extract_static_length_of_node (node : node_vt) :<>
-    [length : int] node_vt length
+extract_static_length_of_node
+        {length : int}
+        {node_p : addr}
+        (node : !node_vt (length, node_p) >> _) :<>
+    [len : int | len == length]
+    void
 
 (********************************************************************)
 
@@ -397,5 +401,19 @@ set_subtree_entry
 (*
 FIXME: Add delete_subtree_entry.
 *)
+
+(********************************************************************)
+(* Something useful for testing and debugging. *)
+
+fun
+print_subtree_structure
+        {length : int | length <= bitsizeof (uintptr)}
+        {node_p : addr}
+        {depth  : int}
+        (out             : FILEref,
+         node            : !node_vt (length, node_p) >> _,
+         depth           : uint depth,
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+    void
 
 (********************************************************************)

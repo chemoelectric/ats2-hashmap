@@ -196,10 +196,10 @@ uintptr_set_has_element (set, element) =
   | set_vt_nil () => false
   | set_vt_tree (_, tree) =>
     let
-      val node_p = $UNSAFE.cast{Ptr} tree
+      val node_p = $UNSAFE.cast{ptr} tree
 
       val bits_source = bits_source_uintptr ()
-      val bits_source_p = $UNSAFE.cast{Ptr} bits_source
+      val bits_source_p = $UNSAFE.cast{ptr} bits_source
 
       val hash_func = uintptr_set_hash_func ()
       val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
@@ -208,7 +208,7 @@ uintptr_set_has_element (set, element) =
       val hash_storage_p = addr@ hash_storage
 
       val key_test = uintptr_set_key_test ()
-      val key_test_p = $UNSAFE.castvwtp1{Ptr} key_test
+      val key_test_p = $UNSAFE.castvwtp1{ptr} key_test
 
       var is_stored : bool
       var key_value : uintptr
@@ -220,3 +220,16 @@ uintptr_set_has_element (set, element) =
     in
       is_stored
     end
+
+implement
+uintptr_set_print_structure (out, set, print_key_value) =
+  case+ set of
+  | set_vt_nil () => fprintln! (out, "size: 0")
+  | @set_vt_tree (size, tree) =>
+    {
+      val _ = fprintln! (out, "size: ", size);
+      val _ =
+        array_mapped_tree_print_structure
+          (out, $UNSAFE.cast{ptr} tree, print_key_value)
+      prval _ = fold@ set
+    }

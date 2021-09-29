@@ -89,3 +89,14 @@ array_mapped_tree_set_entry
     void
 
 (********************************************************************)
+(* Something useful for testing and debugging. *)
+
+fun
+array_mapped_tree_print_structure
+        (out             : FILEref,
+         node_p          : ptr,
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+    void
+
+(********************************************************************)
+

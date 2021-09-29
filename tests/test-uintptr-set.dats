@@ -56,6 +56,15 @@ g1uint_lte<uintptrknd> (x, y) =
   $UN.cast (($UN.cast{uintptr} x) <= ($UN.cast{uintptr} y))
 
 fn
+new_entry_printer () : (FILEref, uintptr) -<cloptr1> void =
+  lam (out, entry) => fprint! (out, entry)
+
+fn
+entry_printer_free (printer : (FILEref, uintptr) -<cloptr1> void) :
+    void =
+  cloptr_free ($UN.castvwtp0 printer)
+
+fn
 println_uintptr (x : uintptr) : void =
   {
     val _ = $extfcall (int, "printf", "%08llX\n", $UN.cast{ullint} x)
@@ -174,8 +183,9 @@ test_root_node_expansion () : void =
         (u2up 0x04U) +
         (u2up 0x09U) +
         (u2up 0x11U) +
-        (u2up 0x01U)
-    val _ = assertloc (size set = i2sz 7)
+        (u2up 0x01U) +
+        (u2up 0x00U)
+    val _ = assertloc (size set = i2sz 8)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
     val _ =
@@ -191,12 +201,16 @@ test_root_node_expansion () : void =
                i = (u2up 0x04U) ||
                i = (u2up 0x09U) ||
                i = (u2up 0x11U) ||
-               i = (u2up 0x01U) then
+               i = (u2up 0x01U) ||
+               i = (u2up 0x00U) then
               assertloc (set \contains i)
             else
               assertloc (not (set \contains i))
           end
       end
+    val print_entry = new_entry_printer ()
+    val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
+    val _ = entry_printer_free (print_entry)
     val _ = free set
   }
 
@@ -221,6 +235,9 @@ test_root_node_leaf_collision () : void =
               assertloc (not (set \contains i))
           end
       end
+    val print_entry = new_entry_printer ()
+    //val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
+    val _ = entry_printer_free (print_entry)
     val _ = free set
   }
 
