@@ -1,0 +1,50 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+#include "hashmap/HATS/config.hats"
+#include "hashmap/HATS/array-mapped-tree-helpers.hats"
+
+staload "hashmap/SATS/print-bitmap.sats"
+
+implement
+print_bitmap (out, map) =
+  let
+    var buf = @[char][BITSIZEOF_UINTPTR_PLUS_ONE] ('\0')
+    var i : [i : int | 0 <= i; i <= BITSIZEOF_UINTPTR] int i
+  in
+    for (i := 0; i <> BITSIZEOF_UINTPTR; i := succ i)
+      let
+        val j = (pred BITSIZEOF_UINTPTR) - i
+      in
+        if bit_is_set<> (map, (one << i)) then
+          buf[j] := '1'
+        else
+          buf[j] := '0'
+      end;
+    fprint! (out ($UN.cast{string (BITSIZEOF_UINTPTR)} (addr@ buf)))
+  end

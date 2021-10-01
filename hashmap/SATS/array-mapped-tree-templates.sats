@@ -27,6 +27,7 @@ along with this program. If not, see
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/bits-source.sats"
 staload "hashmap/SATS/uptr.sats"
+staload "hashmap/SATS/count-one-bits.sats"
 
 (********************************************************************)
 
@@ -225,31 +226,6 @@ vtypedef new_slotted_node_vt (length : int, index : int) =
 vtypedef new_slotted_node_vt =
   [length, index : int] new_slotted_node_vt (length, index)
 
-(*
-(* slot_node_vt -- similar to a slotted_node_vt, but the fields
-                   are fully initialized. *)
-vtypedef slot_node_vt (length : int, index : int, p : addr) =
-  @{
-    view_of_population_map = uintptr @ population_map_addr (p),
-    view_of_leaf_map = uintptr @ leaf_map_addr (p),
-    view_of_chaining_map = uintptr @ chaining_map_addr (p),
-    view_of_left_entries =
-      @[link_vt][index] @ entries_addr (p),
-    view_of_slot =
-      link_vt @ (entries_addr (p) + index * sizeof (link_vt)),
-    view_of_right_entries =
-      @[link_vt][length - 1 - index]
-          @ (entries_addr (p) + index * sizeof (link_vt)
-                + sizeof (link_vt)),
-    mfree = mfree_gc_v p |
-    pointer = uptr p
-  }
-vtypedef slot_node_vt (length : int, index : int) =
-  [p : addr] slot_node_vt (length, index, p)
-vtypedef slot_node_vt =
-  [length, index : int] slot_node_vt (length, index)
-*)
-
 (* new_length1_node_vt -- A node of length one that needs
                           filling in. *)
 vtypedef new_length1_node_vt (p : addr) =
@@ -261,20 +237,6 @@ vtypedef new_length1_node_vt (p : addr) =
     mfree = mfree_gc_v p |
     pointer = uptr p
   }
-
-// FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-(* new_length2_node_vt -- A node of length two that needs
-                          filling in. *)
-vtypedef new_length2_node_vt (p : addr) =
-  @{
-    view_of_population_map = (uintptr?) @ population_map_addr (p),
-    view_of_leaf_map = (uintptr?) @ leaf_map_addr (p),
-    view_of_chaining_map = (uintptr?) @ chaining_map_addr (p),
-    view_of_entries = @[link_vt?][2] @ entries_addr (p),
-    mfree = mfree_gc_v p |
-    pointer = uptr p
-  }
-// FIXME: Are length two nodes needed? // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 praxi
 lemma_node_vt_param :
@@ -301,13 +263,158 @@ lemma_slotted_node_vt_param :
      0 <= index; index < length]
     void
 
-fn {}
+fun {}
 extract_static_length_of_node
         {length : int}
         {node_p : addr}
         (node : !node_vt (length, node_p) >> _) :<>
     [len : int | len == length]
     void
+
+(********************************************************************)
+
+fun {}
+population_map_ptr
+        {p : addr}
+        (p : uptr p) :<> uptr (population_map_addr p)
+
+fun {}
+leaf_map_ptr
+        {p : addr}
+        (p : uptr p) :<> uptr (leaf_map_addr p)
+
+fun {}
+chaining_map_ptr
+        {p : addr}
+        (p : uptr p) :<> uptr (chaining_map_addr p)
+
+fun {}
+entries_ptr
+        {p : addr}
+        (p : uptr p) :<> uptr (entries_addr p)
+
+(********************************************************************)
+
+fun {}
+get_population_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref> uintptr
+
+fun {}
+get_leaf_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref> uintptr
+
+fun {}
+set_leaf_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         value  : uintptr) :<!refwrt> void
+
+fun {}
+get_chaining_map
+        {length : int}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _) :<!ref> uintptr
+
+(********************************************************************)
+
+fun {tk : tkind}
+get_entry_value_g1uint
+        {length, index : int | index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1uint (tk, index)) :<!ref> uintptr
+
+fun {tk : tkind}
+get_entry_value_g1int
+        {length, index : int | 0 <= index; index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1int (tk, index)) :<!ref> uintptr
+
+overload get_entry_value with get_entry_value_g1uint
+overload get_entry_value with get_entry_value_g1int
+overload [] with get_entry_value
+
+(********************************************************************)
+
+fun {tk : tkind}
+set_entry_value_g1uint
+        {length, index : int | index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1uint (tk, index),
+         value  : uintptr) :<!refwrt> void
+
+fun {tk : tkind}
+set_entry_value_g1int
+        {length, index : int | 0 <= index; index < length}
+        {p      : addr}
+        (node   : !node_vt (length, p) >> _,
+         index  : g1int (tk, index),
+         value  : uintptr) :<!refwrt> void
+
+overload set_entry_value with set_entry_value_g1uint
+overload set_entry_value with set_entry_value_g1int
+overload [] with set_entry_value
+
+(********************************************************************)
+
+fun {}
+get_popcount {population_map : int}
+             (population_map : uintptr population_map) :<>
+    [popcount : int | 0 <= popcount; popcount <= BITSIZEOF_UINTPTR]
+    @(POPCOUNT (population_map, popcount) | size_t popcount)
+
+fun {}
+get_popcount_low_bits {population_map : int}
+                      {i              : int | i < BITSIZEOF_UINTPTR}
+                      (population_map : uintptr population_map,
+                       i              : uint i) :<>
+    [popcount : int | 0 <= popcount; popcount <= i]
+    @(POPCOUNT_LOW_BITS (population_map, i, popcount) | int popcount)
+
+(********************************************************************)
+
+fun {}
+node_alloc {length : int}
+           (length : size_t length) :<!wrt>
+    [p : addr | null < p]
+    @(@[uintptr?][length + 3] @ p, mfree_gc_v p | uptr p)
+
+fun {}
+new_slotted_node_alloc
+        {length, index : int | index < length}
+        (length : size_t length,
+         index  : size_t index) :<!wrt>
+    [p : addr | null < p]
+    new_slotted_node_vt (length, index, p)
+
+fun {}
+new_length1_node_alloc () :<!wrt>
+    [p : addr | null < p]
+    new_length1_node_vt p
+
+fun {}
+expired_node_vt_free
+        {length : int}
+        {p      : addr}
+        (node   : expired_node_vt (length, p)) :<!wrt> void
+
+(********************************************************************)
+
+fun {}
+expand_node {length, index : int | 0 <= index; index <= length}
+            {p      : addr}
+            (node   : node_vt (length, p),
+             length : size_t length,
+             index  : size_t index) :
+    [q : addr | null < q]
+    slotted_node_vt (length + 1, index, q)
 
 (********************************************************************)
 

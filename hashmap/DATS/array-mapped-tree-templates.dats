@@ -45,76 +45,15 @@ staload "hashmap/SATS/bits-source.sats"
 staload "hashmap/SATS/uptr.sats"
 staload _ = "hashmap/DATS/uptr.dats"
 
-staload UN = "prelude/SATS/unsafe.sats"
+#include "hashmap/HATS/array-mapped-tree-helpers.hats"
 
-(********************************************************************)
+staload UN = "prelude/SATS/unsafe.sats"
 
 prval _ = $UN.prop_assert {sizeof (uintptr) == SIZEOF_UINTPTR} ()
 prval _ = prop_verify {bitsizeof (uintptr) == BITSIZEOF_UINTPTR} ()
 
 prval _ = prop_verify {sizeof (link_vt) == sizeof (uintptr)} ()
 prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
-
-symintr <<
-infixl ( * ) <<
-overload << with g0uint_lsl_uintptr
-
-symintr >>
-infixl ( * ) >>
-overload >> with g0uint_lsr_uintptr
-
-symintr <*>
-infixl ( * ) <*>
-overload <*> with g0uint_land_uintptr
-
-symintr <+>
-infixl ( * ) <+>
-overload <+> with g0uint_lor_uintptr
-
-symintr <~>
-prefix ( * ) <~>
-overload <~> with g0uint_lnot_uintptr
-
-extern castfn
-g1int2uint_int_uintpr :
-  {i : int | 0 <= i} int i -<> uintptr i
-
-implement
-g1int2uint<intknd,uintptrknd> = g1int2uint_int_uintptr
-
-macdef zero = g1int2uint<intknd,uintptrknd> 0
-macdef one = g1int2uint<intknd,uintptrknd> 1
-
-fn {}
-bit_is_set (bits               : uintptr,
-            bit_selection_mask : uintptr) :<> bool =
-  (bits <*> bit_selection_mask) <> zero
-
-fn {}
-set_bit (bits               : uintptr,
-         bit_selection_mask : uintptr) :<> uintptr =
-  (bits <+> bit_selection_mask)
-
-fn {}
-clear_bit (bits               : uintptr,
-           bit_selection_mask : uintptr) :<> uintptr =
-  (bits <*> (<~> bit_selection_mask))
-
-#define NIL list_vt_nil ()
-#define :: list_vt_cons
-
-fn {}
-orelse1 {x, y : bool}
-        (x : bool x,
-         y : bool y) :<>
-    [z : bool | z == (x || y)]
-    bool z =
-  if x then
-    true
-  else
-    y
-infixl ( || ) |||
-macdef ||| = orelse1
 
 (********************************************************************)
 
@@ -128,37 +67,22 @@ node2uintptr (node) =
 
 (********************************************************************)
 
-fn {}
-population_map_ptr {p : addr}
-                   (p : uptr p) :<>
-    uptr (population_map_addr p) =
-  p
+implement {}
+population_map_ptr (p) = p
 
-fn {}
-leaf_map_ptr {p : addr}
-             (p : uptr p) :<>
-    uptr (leaf_map_addr p) =
-  uptr_succ<uintptr> (p)
+implement {}
+leaf_map_ptr (p) = uptr_succ<uintptr> (p)
 
-fn {}
-chaining_map_ptr {p : addr}
-                 (p : uptr p) :<>
-    uptr (chaining_map_addr p) =
-  uptr_add<uintptr> (p, 2)
+implement {}
+chaining_map_ptr (p) = uptr_add<uintptr> (p, 2)
 
-fn {}
-entries_ptr {p : addr}
-            (p : uptr p) :<>
-    uptr (entries_addr p) =
-  uptr_add<uintptr> (p, 3)
+implement {}
+entries_ptr (p) = uptr_add<uintptr> (p, 3)
 
 (********************************************************************)
 
-fn {}
-get_popcount {population_map : int}
-             (population_map : uintptr population_map) :<>
-    [popcount : int | 0 <= popcount; popcount <= BITSIZEOF_UINTPTR]
-    @(POPCOUNT (population_map, popcount) | size_t popcount) =
+implement {}
+get_popcount (population_map) =
   let
     val [popcount : int] (pf_popcount | popcount) =
       popcount<uintptrknd> (population_map)
@@ -171,13 +95,8 @@ get_popcount {population_map : int}
     @(pf_popcount | g1i2u popcount)
   end
 
-fn {}
-get_popcount_low_bits {population_map : int}
-                      {i              : int | i < BITSIZEOF_UINTPTR}
-                      (population_map : uintptr population_map,
-                       i              : uint i) :<>
-    [popcount : int | 0 <= popcount; popcount <= i]
-    @(POPCOUNT_LOW_BITS (population_map, i, popcount) | int popcount) =
+implement {}
+get_popcount_low_bits {population_map} {i} (population_map, i) =
   let
     val [popcount : int] (pf_popcount | popcount) =
       popcount_low_bits<uintptrknd> (population_map, i)
@@ -199,11 +118,8 @@ extract_static_length_of_node {length} (node) =
 
 (********************************************************************)
 
-fn {}
-node_alloc {length : int}
-           (length : size_t length) :<!wrt>
-    [p : addr | null < p]
-    @(@[uintptr?][length + 3] @ p, mfree_gc_v p | uptr p) =
+implement {}
+node_alloc (length) =
   let
     val size = length + (g1u2u 3U)
     val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
@@ -211,13 +127,8 @@ node_alloc {length : int}
     @(view, mfree | ptr2uptr pointer)
   end
 
-fn {}
-new_slotted_node_alloc
-        {length, index : int | index < length}
-        (length : size_t length,
-         index  : size_t index) :<!wrt>
-    [p : addr | null < p]
-    new_slotted_node_vt (length, index, p) =
+implement {}
+new_slotted_node_alloc {length, index} (length, index) =
   let
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {length} (length)
@@ -258,10 +169,8 @@ new_slotted_node_alloc
     }
   end
 
-fn {}
-new_length1_node_alloc () :<!wrt>
-    [p : addr | null < p]
-    new_length1_node_vt p =
+implement {}
+new_length1_node_alloc () =
   let
     val [p : addr] @(pf_view, pf_mfree | p) =
       node_alloc<> {1} (i2sz 1)
@@ -283,39 +192,10 @@ new_length1_node_alloc () :<!wrt>
     }
   end
 
-fn {}
-new_length2_node_alloc () :<!wrt>
-    [p : addr | null < p]
-    new_length2_node_vt p =
-  let
-    val [p : addr] @(pf_view, pf_mfree | p) =
-      node_alloc<> {2} (i2sz 2)
-    prval @(pf_pop_map, pf_view) = array_v_uncons pf_view
-    prval @(pf_leaf_map, pf_view) = array_v_uncons pf_view
-    prval @(pf_chain_map, pf_entries) = array_v_uncons pf_view
-    prval _ =
-      $UN.castview2void_at {@[link_vt?][2]} {@[uintptr?][2]}
-                           {entries_addr p}
-                           pf_entries
-  in
-    @{
-      view_of_population_map = pf_pop_map,
-      view_of_leaf_map = pf_leaf_map,
-      view_of_chaining_map = pf_chain_map,
-      view_of_entries = pf_entries,
-      mfree = pf_mfree |
-      pointer = p
-    }
-  end
-
 (********************************************************************)
 
-fn {}
-expired_node_vt_free
-        {length : int}
-        {p      : addr}
-        (node   : expired_node_vt (length, p)) :<!wrt>
-    void =
+implement {}
+expired_node_vt_free {length} {p} (node) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -340,12 +220,8 @@ expired_node_vt_free
 
 (********************************************************************)
 
-fn {}
-get_population_map
-        {length : int}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _) :<!ref>
-    uintptr =
+implement {}
+get_population_map (node) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -374,12 +250,8 @@ get_population_map
 
 (********************************************************************)
 
-fn {}
-get_leaf_map
-        {length : int}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _) :<!ref>
-    uintptr =
+implement {}
+get_leaf_map (node) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -405,13 +277,8 @@ get_leaf_map
     leaf_map
   end
 
-fn {}
-set_leaf_map
-        {length : int}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _,
-         value  : uintptr) :<!refwrt>
-    void =
+implement {}
+set_leaf_map (node, value) =
   {
     val @{
           view_of_population_map = pf_pop_map,
@@ -438,12 +305,8 @@ set_leaf_map
 
 (********************************************************************)
 
-fn {}
-get_chaining_map
-        {length : int}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _) :<!ref>
-    uintptr =
+implement {}
+get_chaining_map (node) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -472,13 +335,8 @@ get_chaining_map
 
 (********************************************************************)
 
-fn {tk : tkind}
-get_entry_value_g1uint
-        {length, index : int | index < length}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _,
-         index  : g1uint (tk, index)) :<!ref>
-    uintptr =
+implement {tk}
+get_entry_value_g1uint {length, index} {p} (node, index) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -521,28 +379,14 @@ get_entry_value_g1uint
     entry_value
   end
 
-fn {tk : tkind}
-get_entry_value_g1int
-        {length, index : int | 0 <= index; index < length}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _,
-         index  : g1int (tk, index)) :<!ref>
-    uintptr =
+implement {tk}
+get_entry_value_g1int (node, index) =
   get_entry_value_g1uint (node, g1int2uint<tk,sizeknd> index)
-
-overload get_entry_value with get_entry_value_g1uint
-overload get_entry_value with get_entry_value_g1int
-overload [] with get_entry_value
 
 (********************************************************************)
 
-fn {tk : tkind}
-set_entry_value_g1uint
-        {length, index : int | index < length}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _,
-         index  : g1uint (tk, index),
-         value  : uintptr) :<!refwrt> void =
+implement {tk}
+set_entry_value_g1uint {length, index} {p} (node, index, value) =
   {
     val @{
           view_of_population_map = pf_pop_map,
@@ -583,76 +427,14 @@ set_entry_value_g1uint
       }
   }
 
-fn {tk : tkind}
-set_entry_value_g1int
-        {length, index : int | 0 <= index; index < length}
-        {p      : addr}
-        (node   : !node_vt (length, p) >> _,
-         index  : g1int (tk, index),
-         value  : uintptr) :<!refwrt> void =
+implement {tk}
+set_entry_value_g1int (node, index, value) =
   set_entry_value_g1uint (node, g1int2uint<tk,sizeknd> index, value)
 
-overload set_entry_value with set_entry_value_g1uint
-overload set_entry_value with set_entry_value_g1int
-overload [] with set_entry_value
-
 (********************************************************************)
 
-(*
-fn {}
-node_vt_to_slot_node_vt
-        {length, index : int | index < length}
-        {p     : addr}
-        (node  : node_vt (length, p),
-         index : size_t index) :<!ref>
-    (* Returns the original node_vt recast as a slot_node_vt. *)
-    slot_node_vt (length, index, p) =
-  let
-    val @{
-          view_of_population_map = pf_pop_map,
-          view_of_leaf_map = pf_leaf_map,
-          view_of_chaining_map = pf_chain_map,
-          view_of_entries = pf_entries,
-          mfree = pf_mfree |
-          pointer = p
-        } = node
-
-    prval _ = lemma_g1uint_param index
-
-    prval @(pf_left, pf_right) =
-      array_v_subdivide2 {link_vt} {entries_addr p}
-                         {index, length - index}
-                         pf_entries
-    prval @(pf_entry, pf_right) =
-      array_v_uncons
-        {link_vt}
-        {(entries_addr p) + index * sizeof (link_vt)}
-        {length - index}
-        pf_right
-  in
-    @{
-      view_of_population_map = pf_pop_map,
-      view_of_leaf_map = pf_leaf_map,
-      view_of_chaining_map = pf_chain_map,
-      view_of_left_entries = pf_left,
-      view_of_slot = pf_entry,
-      view_of_right_entries = pf_right,
-      mfree = pf_mfree |
-      pointer = p
-    }
-  end
-*)
-
-(********************************************************************)
-
-fn {}
-expand_node {length, index : int | 0 <= index; index <= length}
-            {p      : addr}
-            (node   : node_vt (length, p),
-             length : size_t length,
-             index  : size_t index) :
-    [q : addr | null < q]
-    slotted_node_vt (length + 1, index, q) =
+implement {}
+expand_node {length, index} {p} (node, length, index) =
   let
     val @{
           view_of_population_map = pf_pop_map,
@@ -741,68 +523,6 @@ expand_node {length, index : int | 0 <= index; index <= length}
 
 (********************************************************************)
 
-(*
-fn {}
-slotted_node_vt_to_node_vt
-        {length, index : int | index < length}
-        {p             : addr}
-        (node          : slotted_node_vt (length, index, p),
-         index         : size_t index,
-         value         : uintptr,
-         old_pop_map   : uintptr,
-         old_leaf_map  : uintptr,
-         old_chain_map : uintptr,
-         is_leaf       : bool) :<!wrt>
-    node_vt (length, p) =
-  let
-    val new_bit = (one << (sz2i index))
-    val new_pop_map = old_pop_map <+> new_bit
-    val new_leaf_map =
-      if is_leaf then
-        old_leaf_map <+> new_bit
-      else
-        old_leaf_map <*> (<~> new_bit)
-
-    val @{
-        view_of_population_map = pf_pop_map,
-        view_of_leaf_map = pf_leaf_map,
-        view_of_chaining_map = pf_chain_map,
-        view_of_left_entries = pf_left,
-        view_of_new_entry = pf_entry,
-        view_of_right_entries = pf_right,
-        mfree = pf_mfree |
-        pointer = p
-      } = node
-
-    val () = ptr_set<uintptr> (pf_pop_map | p, new_pop_map)
-
-    val p_leaf_map = ptr_succ<uintptr> (p)
-    val leaf_map =
-      ptr_set<uintptr> (pf_leaf_map | p_leaf_map, new_leaf_map)
-
-    prval _ = lemma_g1uint_param index
-
-    val p_entry = ptr_add<uintptr> (p, i2sz 2 + index)
-    val () = ptr_set<uintptr> (pf_entry | p_entry, value)
-
-    prval _ = $UN.castview2void_at {link_vt} {uintptr} pf_entry
-
-    prval pf_entry_right = array_v_cons (pf_entry, pf_right)
-    prval pf_entries = array_v_join2 (pf_left, pf_entry_right)
-  in
-    @{
-      view_of_population_map = pf_pop_map,
-      view_of_leaf_map = pf_leaf_map,
-      view_of_chaining_map = pf_chain_map,
-      view_of_entries = pf_entries,
-      mfree = pf_mfree |
-      pointer = p
-    }
-  end
-*)
-
-(********************************************************************)
-
 implement {vt}
 leaf_free_vt_is_null (closure) =
   ptr_is_null ($UN.castvwtp1{Ptr} closure)
@@ -823,6 +543,11 @@ apply_leaf_free (leaf_free : !leaf_free_vt (vt) >> _,
     }
 
 (********************************************************************)
+// FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+//
+// FIXME: Redo this with my depth-first traversal algorithm.
+//
+// FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
 
 vtypedef node_list_vt (n : int) = list_vt (node_vt, n)
 vtypedef node_list_vt = [n : int] node_list_vt n
@@ -1665,343 +1390,5 @@ set_subtree_entry (node, bits_source, hash_func,
     prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage1)
     prval _ = $UN.castview2void_at{hash_vt?} (view@ hash_storage2)
   }
-
-(********************************************************************)
-
-fn
-print_indentation {depth : int}
-                  (out   : FILEref,
-                   depth : size_t depth) : void =
-  let
-    fun
-    loop {i : int | 0 <= i} .<i>.
-         (i : size_t i) : void =
-      if i <> i2sz 0 then
-        begin
-          fprint! (out, "| ");
-          loop (pred i)
-        end
-    prval _ = lemma_g1uint_param depth
-  in
-    loop (depth)
-  end
-
-fn
-make_bitmap_string (map : uintptr) : strnptr (BITSIZEOF_UINTPTR) =
-  let
-    var buf = @[char][BITSIZEOF_UINTPTR_PLUS_ONE] ('\0')
-    var i : [i : int | 0 <= i; i <= BITSIZEOF_UINTPTR] int i
-  in
-    for (i := 0; i <> BITSIZEOF_UINTPTR; i := succ i)
-      let
-        val j = (pred BITSIZEOF_UINTPTR) - i
-      in
-        if bit_is_set<> (map, (one << i)) then
-          buf[j] := '1'
-        else
-          buf[j] := '0'
-      end;
-    string1_copy ($UN.cast{string (BITSIZEOF_UINTPTR)} (addr@ buf))
-  end
-
-fn
-print_bitmap (out : FILEref,
-              map : uintptr) : void =
-  {
-    val s = make_bitmap_string (map)
-    val _ = fprint! (out, s)
-    val _ = free (s)
-  }
-
-fn
-nth_bit_index {n              : int}
-              (population_map : uintptr,
-               n              : size_t n) :<>
-    [i : int | 0 <= i; i < bitsizeof (uintptr)]
-    int i =
-  (* Return the bit index of one of the zeroth, first, second,
-     third, fourth, etc., entry in a node. *)
-  let
-    prval _ = lemma_g1uint_param n
-
-    fun
-    loop_m {m : int | 0 <= m}
-           {j : int | 0 <= j; j <= bitsizeof (uintptr)}
-           .<m>.
-           (m   : size_t m,
-            j   : int j) :<>
-        [i : int | 0 <= i; i < bitsizeof (uintptr)]
-        int i =
-      let
-        fun
-        loop_j {j : int | 0 <= j; j <= bitsizeof (uintptr)}
-               .<bitsizeof (uintptr) - j>.
-               (j   : int j) :<>
-            [k : int | 0 <= k; k < bitsizeof (uintptr)]
-            int k =
-          if bit_is_set<> (population_map, (one << j)) then
-            let
-              val _ = 
-                $effmask_exn (assertloc (j < BITSIZEOF_UINTPTR))
-            in
-              j
-            end
-          else
-            let
-              val _ =
-                $effmask_exn (assertloc (j + 1 < BITSIZEOF_UINTPTR))
-            in
-              loop_j (succ j)
-            end
-        val j = loop_j (j)
-        val _ =
-          $effmask_exn (assertloc (j + 1 < BITSIZEOF_UINTPTR))
-      in
-        if m = i2sz 0 then
-          j
-        else
-          loop_m (pred m, succ j)
-      end
-  in
-    loop_m (n, 0)
-  end
-
-typedef traversal_point_vt =
-  @{
-    node_p = uptr,
-    length = Size_t,
-    index = Size_t,
-    depth = Size_t,
-    bits = ullint               (* Conceivably could overflow. *)
-  }
-
-vtypedef traversal_stack_vt =
-  @{
-    size = Size_t,
-    top = traversal_point_vt,
-    rest = List_vt (traversal_point_vt)
-  }
-
-fn
-shifted_bits {bit_index : int | 0 <= bit_index}
-             (depth     : Size_t,
-              bit_index : int bit_index) : ullint =
-  let
-    var i : [i : int | 0 <= i] size_t i
-    var result : g0uint (ullintknd) = g1i2u bit_index
-  in
-    for (i := i2sz 0; i < depth; i := succ i)
-      result := g0uint_lsl_ullint (result, SIZEOF_BITINDEXOF_UINTPTR);
-    result
-  end
-
-fn
-print_key_value_heading {bit_index : int | 0 <= bit_index}
-                        (out       : FILEref,
-                         depth     : Size_t,
-                         bit_index : int bit_index,
-                         bits      : ullint) : void =
-  begin
-    print_indentation (out, depth);
-    fprint! (out, "key-value (", bit_index, ", ",
-             bits + shifted_bits (depth, bit_index), "): ")
-  end
-
-fun
-print_subtree_structure__loop
-        (out             : FILEref,
-         print_key_value : !((FILEref, uintptr) -<cloptr1> void),
-         stack           : &traversal_stack_vt) : void =
-  (* Depth-first traversal by tail recursion. *)
-  let
-    val size = stack.size
-    prval _ = lemma_g1uint_param size
-
-    val @{
-          node_p = node_p,
-          length = length,
-          index = index,
-          depth = depth,
-          bits = bits
-        } = (stack.top)
-
-    val [length : int] length = g1ofg0 length
-    prval _ = lemma_g1uint_param length
-
-    (* Make a linear type from the uptr. *)
-    val node = uptr2node_of_length {length} node_p
-
-    val population_map = get_population_map (node)
-    val leaf_map = get_leaf_map (node)
-    val chaining_map = get_chaining_map (node)
-  in
-    if index < length then
-      let
-        val bit_index = nth_bit_index (population_map, index)
-        val bit_selection_mask = (one << bit_index)
-        val is_leaf = bit_is_set<> (leaf_map, bit_selection_mask)
-        val is_chain =
-          (is_leaf &&
-           bit_is_set<> (chaining_map, bit_selection_mask))
-
-        val entry = node[index]
-
-      in
-        if index = i2sz 0 then
-          begin
-            print_indentation (out, depth);
-            fprintln! (out, "depth: ", depth);
-            print_indentation (out, depth);
-            fprint! (out, "population_map: ");
-            print_bitmap (out, population_map);
-            fprintln! (out);
-            print_indentation (out, depth);
-            fprint! (out, "leaf_map:       ");
-            print_bitmap (out, leaf_map);
-            fprintln! (out);
-            print_indentation (out, depth);
-            fprint! (out, "chaining_map:   ");
-            print_bitmap (out, chaining_map);
-            fprintln! (out)
-          end;
-
-        if not is_leaf then
-          let
-            val subnode = uintptr2node entry
-            val @(_ | subnode_length) =
-              get_popcount (g1ofg0 (get_population_map (subnode)))
-            prval _ = $UN.castvwtp0{void} subnode
-
-             prval _ = lemma_list_vt_param (stack.rest)
-          in
-            stack.size := succ size;
-            stack.top := 
-              @{
-                node_p = uintptr2uptr entry,
-                length = subnode_length,
-                index = i2sz 0,
-                depth = succ depth,
-                bits = bits + shifted_bits (depth, bit_index)
-              };
-            stack.rest :=
-              @{
-                node_p = node_p,
-                length = length,
-                index = succ index,
-                depth = depth,
-                bits = bits
-              } :: (stack.rest);
-            print_subtree_structure__loop (out, print_key_value,
-                                           stack)
-          end
-        else if is_chain then
-          {
-            fun
-            loop {n   : int | 0 <= n} .<n>.
-                 (lst : !list_vt (uintptr, n) >> _,
-                  print_key_value :
-                      !((FILEref, uintptr) -<cloptr1> void),
-                  separator : string) :
-                void =
-              case+ lst of
-              | NIL => ()
-              | @ head :: tail =>
-                {
-                  val _ = fprint! (out, separator)
-                  val _ = print_key_value (out, head)
-                  val _ = loop (tail, print_key_value, " ")
-                  prval _ = fold@ lst
-                }
-
-            val lst =
-              $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
-            prval _ = lemma_list_vt_param lst
-            val _ =
-              begin
-                print_key_value_heading (out, depth, bit_index, bits);
-                fprint! (out, "(");
-                loop (lst, print_key_value, "");
-                fprintln! (out, ")")
-              end
-            prval _ = $UN.castvwtp0{void} lst
-          }
-        else (* is_leaf but not is_chain *)
-          begin
-            print_key_value_heading (out, depth, bit_index, bits);
-            print_key_value (out, entry);
-            fprintln! (out);
-            stack.top :=
-              @{
-                node_p = node_p,
-                length = length,
-                index = succ index,
-                depth = depth,
-                bits = bits
-              };
-            print_subtree_structure__loop (out, print_key_value,
-                                           stack)
-          end
-      end
-    else if i2sz 0 < size then 
-      let
-      in
-        stack.size := pred size;
-        case+ (stack.rest) of
-        | NIL => ()
-        | ~ head :: tail =>
-          begin
-            stack.top := head;
-            stack.rest := tail
-          end;
-        print_subtree_structure__loop (out, print_key_value, stack)
-      end;
-
-    (* Consume the linear type. *)
-    { prval _ = $UN.castvwtp0{void} node }
-  end
-    
-implement
-print_subtree_structure (out, node, depth, print_key_value) =
-  let
-    val population_map = get_population_map (node)
-
-    val [length : int] _ = extract_static_length_of_node node
-    prval _ = lemma_node_vt_param {length} node
-
-    val [popcount : int] @(_ | length) =
-      get_popcount (g1ofg0 population_map)
-    prval _ = $UN.prop_assert {popcount == length} ()
-
-    stadef index = 0
-    val index : size_t index = i2sz 0
-
-    stadef depth = 0
-    val depth : size_t depth = i2sz 0
-
-    prval _ = prop_verify {0 <= length} ()
-    prval _ = prop_verify {0 <= index} ()
-    prval _ = prop_verify {index <= length} ()
-    prval _ = prop_verify {0 <= depth} ()
-
-    val starting_point : traversal_point_vt =
-      @{
-        node_p = ptr2uptr ($UN.castvwtp1{Ptr} node),
-        length = length,
-        index = index,
-        depth = depth,
-        bits = 0ULL
-      }
-
-    var stack =
-      @{
-        size = i2sz 1,
-        top = starting_point,
-        rest = NIL
-      }
-  in
-    print_subtree_structure__loop (out, print_key_value, stack);
-    case- stack.rest of
-    | ~ NIL => ()
-  end
 
 (********************************************************************)
