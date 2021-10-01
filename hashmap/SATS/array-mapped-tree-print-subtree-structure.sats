@@ -21,30 +21,24 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
-#define ATS_DYNLOADFLAG 0
-
-#include "share/atspre_define.hats"
-#include "share/atspre_staload.hats"
+#include "hashmap/HATS/config.hats"
+#include "hashmap/HATS/bits-source-include.hats"
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
-staload "hashmap/SATS/array-mapped-tree-print-subtree-structure.sats"
+staload "hashmap/SATS/bits-source.sats"
 staload "hashmap/SATS/uptr.sats"
+staload "hashmap/SATS/count-one-bits.sats"
 
-staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
-staload _ = "hashmap/DATS/uptr.dats"
-
-implement
-array_mapped_tree_print_structure (out, node_p, print_key_value) =
-  {
-    (* Create a linear type from the pointer. *)
-    val node = uptr2node (ptr2uptr (g1ofg0 node_p))
-
-    (* Print the tree structure. *)
-    prval _ = lemma_node_vt_param node
-    val _ = print_subtree_structure (out, node, 0U, print_key_value)
-
-    (* Consume the linear type. *)
-    prval _ = $UNSAFE.castvwtp0{void} node
-  }
-
+(* Something useful for testing and debugging: print the structure
+   and contents of the tree. *)
+fun
+print_subtree_structure
+        {length : int | length <= bitsizeof (uintptr)}
+        {node_p : addr}
+        {depth  : int}
+        (out             : FILEref,
+         node            : !node_vt (length, node_p) >> _,
+         depth           : uint depth,
+         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
+    void

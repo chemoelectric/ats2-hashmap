@@ -28,6 +28,7 @@ along with this program. If not, see
 
 staload UN = "prelude/SATS/unsafe.sats"
 
+staload "hashmap/SATS/array-mapped-tree-print-subtree-structure.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/uptr.sats"
 
