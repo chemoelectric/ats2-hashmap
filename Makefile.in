@@ -280,6 +280,8 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/atomic_sats.lo \
 	hashmap/DATS/array-mapped-tree-templates_dats.lo \
 	hashmap/SATS/array-mapped-tree-print-subtree-structure_sats.lo \
 	hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.lo \
+	hashmap/SATS/array-mapped-tree-node-vt-free_sats.lo \
+	hashmap/DATS/array-mapped-tree-node-vt-free_dats.lo \
 	hashmap/SATS/uintptr-set_sats.lo \
 	hashmap/DATS/uintptr-set_dats.lo hashmap/SATS/hashmap_sats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
@@ -345,6 +347,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-create_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-free_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/array-mapped-tree-node-vt-free_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-structure_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/array-mapped-tree-set-entry_dats.Plo \
@@ -384,6 +387,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/uptr_dats.Plo \
+	hashmap/SATS/$(DEPDIR)/array-mapped-tree-node-vt-free_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo \
@@ -960,6 +964,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/array-mapped-tree-templates.dats \
 	hashmap/SATS/array-mapped-tree-print-subtree-structure.sats \
 	hashmap/DATS/array-mapped-tree-print-subtree-structure.dats \
+	hashmap/SATS/array-mapped-tree-node-vt-free.sats \
+	hashmap/DATS/array-mapped-tree-node-vt-free.dats \
 	hashmap/HATS/array-mapped-tree-helpers.hats \
 	hashmap/SATS/uintptr-set.sats hashmap/DATS/uintptr-set.dats \
 	hashmap/CATS/uintptr-set-implementation.cats \
@@ -1066,6 +1072,8 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/DATS/array-mapped-tree-templates_dats.c \
 	hashmap/SATS/array-mapped-tree-print-subtree-structure_sats.c \
 	hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.c \
+	hashmap/SATS/array-mapped-tree-node-vt-free_sats.c \
+	hashmap/DATS/array-mapped-tree-node-vt-free_dats.c \
 	hashmap/SATS/uintptr-set_sats.c \
 	hashmap/DATS/uintptr-set_dats.c hashmap/SATS/hashmap_sats.c \
 	tests/test-bits-source-uint16 \
@@ -1184,6 +1192,8 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
 	hashmap/DATS/array-mapped-tree-templates_dats.c \
 	hashmap/SATS/array-mapped-tree-print-subtree-structure_sats.c \
 	hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.c \
+	hashmap/SATS/array-mapped-tree-node-vt-free_sats.c \
+	hashmap/DATS/array-mapped-tree-node-vt-free_dats.c \
 	hashmap/SATS/uintptr-set_sats.c \
 	hashmap/DATS/uintptr-set_dats.c hashmap/SATS/hashmap_sats.c
 libats2_hashmap_la_DEPENDENCIES = 
@@ -1544,6 +1554,12 @@ hashmap/SATS/array-mapped-tree-print-subtree-structure_sats.lo:  \
 hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/array-mapped-tree-node-vt-free_sats.lo:  \
+	hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/array-mapped-tree-node-vt-free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/uintptr-set_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/uintptr-set_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1621,6 +1637,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-create_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-free_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-node-vt-free_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-structure_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-mapped-tree-set-entry_dats.Plo@am__quote@ # am--include-marker
@@ -1660,6 +1677,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uptr_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree-node-vt-free_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo@am__quote@ # am--include-marker
@@ -2287,6 +2305,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-create_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-node-vt-free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-structure_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-set-entry_dats.Plo
@@ -2326,6 +2345,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uptr_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-node-vt-free_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo
@@ -2400,6 +2420,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-create_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-get-entry_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-node-vt-free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-structure_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/array-mapped-tree-set-entry_dats.Plo
@@ -2439,6 +2460,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr-set_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uptr_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-node-vt-free_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-print-subtree-structure_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree-templates_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-mapped-tree_sats.Plo

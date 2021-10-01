@@ -28,6 +28,8 @@ along with this program. If not, see
 
 #include "hashmap/HATS/bits-source-include.hats"
 
+staload UN = "prelude/SATS/unsafe.sats"
+
 staload "hashmap/SATS/uintptr-set.sats"
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/bits-source.sats"
@@ -56,8 +58,7 @@ datavtype set_vt (size : int) =
 | {n : int | 1 <= n}
   {node_p : addr}
   set_vt_tree (n) of
-    (size_t n,
-     array_mapped_tree_vt node_p)
+    (size_t n, ptr node_p)
 
 assume uintptr_set_vt (size) = set_vt (size)
 
@@ -72,7 +73,7 @@ in
         lam (key  : uintptr,
              hash : &uintptr? >> uintptr) : void =<cloptr1>
           hash := key
-      val _ = storage := $UNSAFE.castvwtp0{ptr} hash_func
+      val _ = storage := $UN.castvwtp0{ptr} hash_func
     }
 
   extern fun
@@ -94,7 +95,7 @@ in
         lam (key   : uintptr,
              entry : uintptr) : bool =<cloptr1>
           key = entry
-      val _ = storage := $UNSAFE.castvwtp0{ptr} key_test
+      val _ = storage := $UN.castvwtp0{ptr} key_test
     }
 
   extern fun
@@ -113,8 +114,15 @@ uintptr_set_free (set) =
   case+ set of
   | ~ set_vt_nil () => ()
   | ~ set_vt_tree (_, tree) =>
-    array_mapped_tree_free ($UNSAFE.cast{Ptr} tree,
-                            the_null_ptr)
+    {
+      val key_entry_free =
+        lam (_ : uintptr) : void =<cloptr1>
+          ()                    (* There is nothing to free. *)
+      val _ =
+        array_mapped_tree_free ($UN.cast{Ptr} tree,
+                                $UN.castvwtp1{Ptr} key_entry_free)
+      val _ = cloptr_free ($UN.castvwtp0{cloptr0} key_entry_free)
+    }
 
 implement {}
 uintptr_set_size (set) =
@@ -138,10 +146,10 @@ implement
 uintptr_set_add_element (set, element) =
   let
     val bits_source = bits_source_uintptr ()
-    val bits_source_p = $UNSAFE.castvwtp0{ptr} bits_source
+    val bits_source_p = $UN.castvwtp0{ptr} bits_source
 
     val hash_func = uintptr_set_hash_func ()
-    val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
+    val hash_func_p = $UN.castvwtp0{ptr} hash_func
 
     var hash_storage1 : uintptr
     val hash_storage1_p = addr@ hash_storage1
@@ -157,13 +165,13 @@ uintptr_set_add_element (set, element) =
       end
     | ~ set_vt_tree (size, tree) =>
       let
-        var node_p_ref = $UNSAFE.castvwtp0{Ptr} tree
+        var node_p_ref = $UN.castvwtp0{Ptr} tree
 
         var hash_storage2 : uintptr
         val hash_storage2_p = addr@ hash_storage2
 
         val key_test = uintptr_set_key_test ()
-        val key_test_p = $UNSAFE.castvwtp1{ptr} key_test
+        val key_test_p = $UN.castvwtp1{ptr} key_test
 
         var is_new_slot : bool
 
@@ -177,9 +185,9 @@ uintptr_set_add_element (set, element) =
         val node_p = node_p_ref
       in
         if is_new_slot then
-          set_vt_tree (succ size, $UNSAFE.castvwtp0 node_p)
+          set_vt_tree (succ size, $UN.castvwtp0 node_p)
         else
-          set_vt_tree (size, $UNSAFE.castvwtp0 node_p)
+          set_vt_tree (size, $UN.castvwtp0 node_p)
       end
   end
 
@@ -196,19 +204,19 @@ uintptr_set_has_element (set, element) =
   | set_vt_nil () => false
   | set_vt_tree (_, tree) =>
     let
-      val node_p = $UNSAFE.cast{ptr} tree
+      val node_p = $UN.cast{ptr} tree
 
       val bits_source = bits_source_uintptr ()
-      val bits_source_p = $UNSAFE.cast{ptr} bits_source
+      val bits_source_p = $UN.cast{ptr} bits_source
 
       val hash_func = uintptr_set_hash_func ()
-      val hash_func_p = $UNSAFE.castvwtp0{ptr} hash_func
+      val hash_func_p = $UN.castvwtp0{ptr} hash_func
 
       var hash_storage : uintptr
       val hash_storage_p = addr@ hash_storage
 
       val key_test = uintptr_set_key_test ()
-      val key_test_p = $UNSAFE.castvwtp1{ptr} key_test
+      val key_test_p = $UN.castvwtp1{ptr} key_test
 
       var is_stored : bool
       var key_value : uintptr
@@ -230,6 +238,6 @@ uintptr_set_print_structure (out, set, print_key_value) =
       val _ = fprintln! (out, "size: ", size);
       val _ =
         array_mapped_tree_print_structure
-          (out, $UNSAFE.cast{ptr} tree, print_key_value)
+          (out, $UN.cast{ptr} tree, print_key_value)
       prval _ = fold@ set
     }

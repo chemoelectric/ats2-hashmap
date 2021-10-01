@@ -29,16 +29,31 @@ staload UN = "prelude/SATS/unsafe.sats"
 
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
+staload "hashmap/SATS/array-mapped-tree-node-vt-free.sats"
 
+(*
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 staload _ = "hashmap/DATS/uptr.dats"
+*)
 
+(*
 implement
 array_mapped_tree_free (node_p, leaf_free_p) =
   {
     val node = $UN.castvwtp0{node_vt} node_p
     val leaf_free = $UN.castvwtp0{leaf_free_vt} leaf_free_p
-    val _ = node_vt_free (node, leaf_free)
+    val _ = node_vt_free__deprecated (node, leaf_free)
     prval _ = $UN.castvwtp0{Ptr} leaf_free
+  }
+*)
+
+implement
+array_mapped_tree_free (node_p, key_entry_free_p) =
+  {
+    val node = $UN.castvwtp0{node_vt} node_p
+    val key_entry_free =
+      $UN.castvwtp0{uintptr -<cloptr1> void } key_entry_free_p
+    val _ = node_vt_free (node, key_entry_free)
+    prval _ = $UN.castvwtp0{void} key_entry_free
   }

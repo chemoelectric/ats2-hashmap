@@ -417,30 +417,6 @@ expand_node {length, index : int | 0 <= index; index <= length}
     slotted_node_vt (length + 1, index, q)
 
 (********************************************************************)
-
-vtypedef leaf_free_vt (vt : vtype) = vt -<cloptr1> void
-vtypedef leaf_free_vt = [vt : vtype] leaf_free_vt vt
-
-fn {vt : vtype}
-leaf_free_vt_is_null (closure : !leaf_free_vt (vt) >> _) :<> bool
-
-(*
-  node_vt_free --
-
-  The leaf_free argument may be a null pointer, in which case
-  the stored entries should be of a nonlinear type that does
-  not need freeing.
-
-  FIXME: Say more.
-*)
-fn {vt : vtype}
-node_vt_free {length    : int}
-             {p         : addr}
-             (node      : node_vt (length, p),
-              leaf_free : !leaf_free_vt (vt) >> _) : void
-
-(********************************************************************)
-
 (*
   Notes on hash_function_vt:
 

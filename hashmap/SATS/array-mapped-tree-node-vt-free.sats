@@ -23,15 +23,9 @@ along with this program. If not, see
 
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 
-(* Something useful for testing and debugging: print the structure
-   and contents of the tree. *)
 fun
-print_subtree_structure
-        {length : int | length <= bitsizeof (uintptr)}
-        {node_p : addr}
-        {depth  : int}
-        (out             : FILEref,
-         node            : !node_vt (length, node_p) >> _,
-         depth           : uint depth,
-         print_key_value : !((FILEref, uintptr) -<cloptr1> void)) :
-    void
+node_vt_free
+        {length         : int}
+        {p              : addr}
+        (node           : node_vt (length, p),
+         key_value_free : !(uintptr -<cloptr1> void) >> _) : void

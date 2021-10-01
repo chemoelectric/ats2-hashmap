@@ -28,7 +28,7 @@ along with this program. If not, see
 
 staload UN = "prelude/SATS/unsafe.sats"
 
-staload "hashmap/SATS/array-mapped-tree-print-subtree-structure.sats"
+staload "hashmap/SATS/array-mapped-tree-node-vt-free.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/uptr.sats"
 
@@ -37,23 +37,28 @@ staload _ = "hashmap/DATS/uptr.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 
 staload "hashmap/SATS/nth-bit-index.sats"
-staload "hashmap/SATS/print-bitmap.sats"
 
 #include "hashmap/HATS/array-mapped-tree-helpers.hats"
 
+(* FIXME FIXME FIXME: Write tests for this, that it should
+                      not double-free nor leak. *)
+(*
+  NOTE/WARNING:
+
+  This code is quite "unsafe" and should be tested well.
+*)
+
 implement
-print_subtree_structure (out, node, depth, print_key_value) =
+node_vt_free {length} {p} (node, key_value_free) =
   let
+    typedef link_t = link_vt?!
+
     typedef traversal_point_vt =
       @{
         node_p = uptr,
         length = Size_t,
         index = Size_t,
-        depth = Size_t,
-        
-        (* bits could overflow, but this happening would merely
-           make the printout less useful. *)
-        bits = ullint
+        depth = Size_t
       }
 
     vtypedef traversal_stack_vt =
@@ -63,54 +68,10 @@ print_subtree_structure (out, node, depth, print_key_value) =
         rest = List_vt (traversal_point_vt)
       }
 
-    fn
-    shifted_bits {bit_index : int | 0 <= bit_index}
-                 (depth     : Size_t,
-                  bit_index : int bit_index) : ullint =
-      let
-        var i : [i : int | 0 <= i] size_t i
-        var result : g0uint (ullintknd) = g1i2u bit_index
-      in
-        for (i := i2sz 0; i < depth; i := succ i)
-          result :=
-            g0uint_lsl_ullint (result, SIZEOF_BITINDEXOF_UINTPTR);
-        result
-      end
-
-    fn
-    print_indentation {depth : int}
-                      (out   : FILEref,
-                       depth : size_t depth) : void =
-      let
-        fun
-        loop {i : int | 0 <= i} .<i>.
-             (i : size_t i) : void =
-          if i <> i2sz 0 then
-            begin
-              fprint! (out, "| ");
-              loop (pred i)
-            end
-        prval _ = lemma_g1uint_param depth
-      in
-        loop (depth)
-      end
-
-    fn
-    print_key_value_heading {bit_index : int | 0 <= bit_index}
-                            (out       : FILEref,
-                             depth     : Size_t,
-                             bit_index : int bit_index,
-                             bits      : ullint) : void =
-      begin
-        print_indentation (out, depth);
-        fprint! (out, "key-value (", bit_index, ", ",
-                 bits + shifted_bits (depth, bit_index), "): ")
-      end
-
     fun
-    big_loop (out             : FILEref,
-              print_key_value : !((FILEref, uintptr) -<cloptr1> void),
-              stack           : &traversal_stack_vt) : void =
+    big_loop (stack          : &traversal_stack_vt,
+              key_value_free : !(uintptr -<cloptr1> void) >> _) :
+        void =
       (* Depth-first traversal by tail recursion. *)
       let
         val size = stack.size
@@ -120,8 +81,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
               node_p = node_p,
               length = length,
               index = index,
-              depth = depth,
-              bits = bits
+              depth = depth
             } = (stack.top)
 
         val [length : int] length = g1ofg0 length
@@ -144,26 +104,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                bit_is_set<> (chaining_map, bit_selection_mask))
 
             val entry = node[index]
-
           in
-            if index = i2sz 0 then
-              begin
-                print_indentation (out, depth);
-                fprintln! (out, "depth: ", depth);
-                print_indentation (out, depth);
-                fprint! (out, "population_map: ");
-                print_bitmap (out, population_map);
-                fprintln! (out);
-                print_indentation (out, depth);
-                fprint! (out, "leaf_map:       ");
-                print_bitmap (out, leaf_map);
-                fprintln! (out);
-                print_indentation (out, depth);
-                fprint! (out, "chaining_map:   ");
-                print_bitmap (out, chaining_map);
-                fprintln! (out)
-              end;
-
             if not is_leaf then
               let
                 val subnode = uintptr2node entry
@@ -179,69 +120,57 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     node_p = uintptr2uptr entry,
                     length = subnode_length,
                     index = i2sz 0,
-                    depth = succ depth,
-                    bits = bits + shifted_bits (depth, bit_index)
+                    depth = succ depth
                   };
                 stack.rest :=
                   @{
                     node_p = node_p,
                     length = length,
                     index = succ index,
-                    depth = depth,
-                    bits = bits
+                    depth = depth
                   } :: (stack.rest);
-                big_loop (out, print_key_value, stack)
+                big_loop (stack, key_value_free)
               end
             else if is_chain then
               {
                 fun
                 loop {n   : int | 0 <= n} .<n>.
                      (lst : !list_vt (uintptr, n) >> _,
-                      print_key_value :
-                          !((FILEref, uintptr) -<cloptr1> void),
-                      separator : string) :
-                    void =
+                      key_value_free :
+                            !(uintptr -<cloptr1> void) >> _) : void =
                   case+ lst of
                   | NIL => ()
                   | @ head :: tail =>
                     {
-                      val _ = fprint! (out, separator)
-                      val _ = print_key_value (out, head)
-                      val _ = loop (tail, print_key_value, " ")
+                      val _ = key_value_free (head)
+                      val _ = loop (tail, key_value_free)
                       prval _ = fold@ lst
                     }
 
                 val lst =
                   $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
                 prval _ = lemma_list_vt_param lst
-                val _ =
-                  begin
-                    print_key_value_heading (out, depth, bit_index,
-                                             bits);
-                    fprint! (out, "(");
-                    loop (lst, print_key_value, "");
-                    fprintln! (out, ")")
-                  end
+                val _ = loop (lst, key_value_free)
                 prval _ = $UN.castvwtp0{void} lst
               }
             else (* is_leaf but not is_chain *)
               begin
-                print_key_value_heading (out, depth, bit_index, bits);
-                print_key_value (out, entry);
-                fprintln! (out);
                 stack.top :=
                   @{
                     node_p = node_p,
                     length = length,
                     index = succ index,
-                    depth = depth,
-                    bits = bits
+                    depth = depth
                   };
-                big_loop (out, print_key_value, stack)
+                big_loop (stack, key_value_free)
               end
           end
         else if i2sz 0 < size then 
           begin
+            (* Shameless cheating to free the node. *)
+            expired_node_vt_free
+              ($UN.castvwtp1{expired_node_vt} node);
+
             stack.size := pred size;
             case+ (stack.rest) of
             | NIL => ()
@@ -250,11 +179,11 @@ print_subtree_structure (out, node, depth, print_key_value) =
                 stack.top := head;
                 stack.rest := tail
               end;
-            big_loop (out, print_key_value, stack)
+            big_loop (stack, key_value_free)
           end;
 
         (* Consume the linear type. *)
-        { prval _ = $UN.castvwtp0{void} node }
+        $UN.castvwtp0{void} node;
       end
 
     val population_map = get_population_map (node)
@@ -271,8 +200,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
         node_p = ptr2uptr ($UN.castvwtp1{Ptr} node),
         length = length,
         index = i2sz 0,
-        depth = i2sz 0,
-        bits = 0ULL
+        depth = i2sz 0
       }
 
     var stack =
@@ -282,7 +210,12 @@ print_subtree_structure (out, node, depth, print_key_value) =
         rest = NIL
       }
   in
-    big_loop (out, print_key_value, stack);
+    big_loop (stack, key_value_free);
     case- stack.rest of
-    | ~ NIL => ()
+    | ~ NIL => ();
+  
+    {
+      (* The node has already been freed. *)
+      prval _ = $UN.castvwtp0{void} node
+    }
   end

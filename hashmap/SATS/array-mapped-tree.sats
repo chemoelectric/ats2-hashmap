@@ -33,22 +33,13 @@ along with this program. If not, see
 *)
 (********************************************************************)
 
-typedef array_mapped_tree_vt (node_p : addr) =
-  ptr node_p
-typedef array_mapped_tree_vt =
-  [node_p : addr] array_mapped_tree_vt node_p
-
-(* If free_entry_p is NULL, then the stored entries are not freed
-   and should be of a nonlinear type. *)
 fun
 array_mapped_tree_free
-        {node_p       : addr}
-        {free_entry_p : addr}   (* May be null. *)
-        (node_p       : array_mapped_tree_vt node_p,
-         free_entry_p : ptr free_entry_p) :
+        {node_p           : addr}
+        {key_entry_free_p : addr}
+        (node_p           : ptr node_p,
+         key_entry_free_p : ptr key_entry_free_p) :
     void
-
-(********************************************************************)
 
 fun
 array_mapped_tree_create
@@ -57,7 +48,7 @@ array_mapped_tree_create
          hash_storage_p : ptr,
          key_value      : uintptr) :
     [node_p : addr]
-    array_mapped_tree_vt node_p
+    ptr node_p
 
 fun
 array_mapped_tree_get_entry
