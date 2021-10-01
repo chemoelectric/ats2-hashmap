@@ -148,6 +148,17 @@ AC_SUBST([BITSIZEOF_UINT16],[`expr 8 '*' ${ac_cv_sizeof_uint16_t}`])
 AC_SUBST([BITSIZEOF_UINT32],[`expr 8 '*' ${ac_cv_sizeof_uint32_t}`])
 AC_SUBST([BITSIZEOF_UINT64],[`expr 8 '*' ${ac_cv_sizeof_uint64_t}`])
 
+AC_SUBST([BITSIZEOF_USINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int} '+' 1`])
+AC_SUBST([BITSIZEOF_UINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int} '+' 1`])
+AC_SUBST([BITSIZEOF_ULINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int} '+' 1`])
+AC_SUBST([BITSIZEOF_ULLINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int} '+' 1`])
+AC_SUBST([BITSIZEOF_SIZE_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_size_t} '+' 1`])
+AC_SUBST([BITSIZEOF_UINTPTR_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t} '+' 1`])
+AC_SUBST([BITSIZEOF_UINT8_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint8_t} '+' 1`])
+AC_SUBST([BITSIZEOF_UINT16_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint16_t} '+' 1`])
+AC_SUBST([BITSIZEOF_UINT32_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint32_t} '+' 1`])
+AC_SUBST([BITSIZEOF_UINT64_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint64_t} '+' 1`])
+
 AC_SUBST([MIN_SIZEOF_BITINDEX],[4])
 AC_SUBST([MAX_SIZEOF_BITINDEX],[8])
 

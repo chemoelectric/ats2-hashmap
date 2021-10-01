@@ -1667,17 +1667,16 @@ set_subtree_entry (node, bits_source, hash_func,
   }
 
 (********************************************************************)
-(* print_subtree_structure works depth-first. *)
 
 fn
 print_indentation {depth : int}
                   (out   : FILEref,
-                   depth : uint depth) : void =
+                   depth : size_t depth) : void =
   let
     fun
     loop {i : int | 0 <= i} .<i>.
-         (i : uint i) : void =
-      if i <> 0U then
+         (i : size_t i) : void =
+      if i <> i2sz 0 then
         begin
           fprint! (out, "| ");
           loop (pred i)
@@ -1688,87 +1687,283 @@ print_indentation {depth : int}
   end
 
 fn
+make_bitmap_string (map : uintptr) : strnptr (BITSIZEOF_UINTPTR) =
+  let
+    var buf = @[char][BITSIZEOF_UINTPTR_PLUS_ONE] ('\0')
+    var i : [i : int | 0 <= i; i <= BITSIZEOF_UINTPTR] int i
+  in
+    for (i := 0; i <> BITSIZEOF_UINTPTR; i := succ i)
+      let
+        val j = (pred BITSIZEOF_UINTPTR) - i
+      in
+        if bit_is_set<> (map, (one << i)) then
+          buf[j] := '1'
+        else
+          buf[j] := '0'
+      end;
+    string1_copy ($UN.cast{string (BITSIZEOF_UINTPTR)} (addr@ buf))
+  end
+
+fn
 print_bitmap (out : FILEref,
               map : uintptr) : void =
+  {
+    val s = make_bitmap_string (map)
+    val _ = fprint! (out, s)
+    val _ = free (s)
+  }
+
+fn
+nth_bit_index {n              : int}
+              (population_map : uintptr,
+               n              : size_t n) :<>
+    [i : int | 0 <= i; i < bitsizeof (uintptr)]
+    int i =
+  (* Return the bit index of one of the zeroth, first, second,
+     third, fourth, etc., entry in a node. *)
   let
+    prval _ = lemma_g1uint_param n
+
     fun
-    loop {i : int | 0 <= i; i <= BITSIZEOF_UINTPTR} .<i>.
-         (i : int i) : void =
-      if i <> 0 then
-        let
-          val j = pred i
-          val bit = bit_is_set<> (map, (one << j))
-        in
-          fprint! (out, (if bit then '1' else '0') : char);
-          loop (j)
-        end
+    loop_m {m : int | 0 <= m}
+           {j : int | 0 <= j; j <= bitsizeof (uintptr)}
+           .<m>.
+           (m   : size_t m,
+            j   : int j) :<>
+        [i : int | 0 <= i; i < bitsizeof (uintptr)]
+        int i =
+      let
+        fun
+        loop_j {j : int | 0 <= j; j <= bitsizeof (uintptr)}
+               .<bitsizeof (uintptr) - j>.
+               (j   : int j) :<>
+            [k : int | 0 <= k; k < bitsizeof (uintptr)]
+            int k =
+          if bit_is_set<> (population_map, (one << j)) then
+            let
+              val _ = 
+                $effmask_exn (assertloc (j < BITSIZEOF_UINTPTR))
+            in
+              j
+            end
+          else
+            let
+              val _ =
+                $effmask_exn (assertloc (j + 1 < BITSIZEOF_UINTPTR))
+            in
+              loop_j (succ j)
+            end
+        val j = loop_j (j)
+        val _ =
+          $effmask_exn (assertloc (j + 1 < BITSIZEOF_UINTPTR))
+      in
+        if m = i2sz 0 then
+          j
+        else
+          loop_m (pred m, succ j)
+      end
   in
-    loop (BITSIZEOF_UINTPTR)
+    loop_m (n, 0)
+  end
+
+typedef traversal_point_vt =
+  @{
+    node_p = uptr,
+    length = Size_t,
+    index = Size_t,
+    depth = Size_t,
+    bits = ullint               (* Conceivably could overflow. *)
+  }
+
+vtypedef traversal_stack_vt =
+  @{
+    size = Size_t,
+    top = traversal_point_vt,
+    rest = List_vt (traversal_point_vt)
+  }
+
+fn
+shifted_bits {bit_index : int | 0 <= bit_index}
+             (depth     : Size_t,
+              bit_index : int bit_index) : ullint =
+  let
+    var i : [i : int | 0 <= i] size_t i
+    var result : g0uint (ullintknd) = g1i2u bit_index
+  in
+    for (i := i2sz 0; i < depth; i := succ i)
+      result := g0uint_lsl_ullint (result, SIZEOF_BITINDEXOF_UINTPTR);
+    result
   end
 
 fn
-skip_but_count_unpopulated (population : uintptr,
-                            leaves     : uintptr,
-                            chains     : uintptr,
-                            count      : size_t) :
-    @(uintptr, uintptr, uintptr, size_t) =
-  let
-    fun
-    loop (pop : uintptr,
-          lv  : uintptr,
-          chn : uintptr,
-          cnt : size_t) :
-        @(uintptr, uintptr, uintptr, size_t) =
-      if bit_is_set<> (pop, one) then
-        @(pop, lv, chn, cnt)
-      else
-        loop (pop >> 1, lv >> 1, chn >> 1, succ cnt)
-  in
-    loop (population, leaves, chains, count)
+print_key_value_heading {bit_index : int | 0 <= bit_index}
+                        (out       : FILEref,
+                         depth     : Size_t,
+                         bit_index : int bit_index,
+                         bits      : ullint) : void =
+  begin
+    print_indentation (out, depth);
+    fprint! (out, "key-value (", bit_index, ", ",
+             bits + shifted_bits (depth, bit_index), "): ")
   end
-
-fn
-factor_factor (num_bits : int) : size_t =
-  case- num_bits of
-  | 4 => succ (i2sz MAXVALOF_BITINDEX_4)
-  | 5 => succ (i2sz MAXVALOF_BITINDEX_5)
-  | 6 => succ (i2sz MAXVALOF_BITINDEX_6)
-  | 7 => succ (i2sz MAXVALOF_BITINDEX_7)
-  | 8 => succ (i2sz MAXVALOF_BITINDEX_8)
 
 fun
-print_subtree_structure__
-        {length : int | length <= bitsizeof (uintptr)}
-        {node_p : addr}
-        {depth  : int}
+print_subtree_structure__loop
         (out             : FILEref,
-         node            : !node_vt (length, node_p) >> _,
-         depth           : uint depth,
          print_key_value : !((FILEref, uintptr) -<cloptr1> void),
-         full_count      : size_t,
-         factor          : size_t) :
-    void =
-  (* The current implementation uses non-tail recursion.
-     FIXME: Use tail recursion. *)
-  {
+         stack           : &traversal_stack_vt) : void =
+  (* Depth-first traversal by tail recursion. *)
+  let
+    val size = stack.size
+    prval _ = lemma_g1uint_param size
+
+    val @{
+          node_p = node_p,
+          length = length,
+          index = index,
+          depth = depth,
+          bits = bits
+        } = (stack.top)
+
+    val [length : int] length = g1ofg0 length
+    prval _ = lemma_g1uint_param length
+
+    (* Make a linear type from the uptr. *)
+    val node = uptr2node_of_length {length} node_p
+
     val population_map = get_population_map (node)
     val leaf_map = get_leaf_map (node)
     val chaining_map = get_chaining_map (node)
+  in
+    if index < length then
+      let
+        val bit_index = nth_bit_index (population_map, index)
+        val bit_selection_mask = (one << bit_index)
+        val is_leaf = bit_is_set<> (leaf_map, bit_selection_mask)
+        val is_chain =
+          (is_leaf &&
+           bit_is_set<> (chaining_map, bit_selection_mask))
 
-    val _ = print_indentation (out, depth)
-    val _ = fprintln! (out, "depth: ", depth)
-    val _ = print_indentation (out, depth)
-    val _ = fprint! (out, "population_map: ")
-    val _ = print_bitmap (out, population_map)
-    val _ = fprintln! (out)
-    val _ = print_indentation (out, depth)
-    val _ = fprint! (out, "leaf_map:       ")
-    val _ = print_bitmap (out, leaf_map)
-    val _ = fprintln! (out)
-    val _ = print_indentation (out, depth)
-    val _ = fprint! (out, "chaining_map:   ")
-    val _ = print_bitmap (out, chaining_map)
-    val _ = fprintln! (out)
+        val entry = node[index]
+
+      in
+        if index = i2sz 0 then
+          begin
+            print_indentation (out, depth);
+            fprintln! (out, "depth: ", depth);
+            print_indentation (out, depth);
+            fprint! (out, "population_map: ");
+            print_bitmap (out, population_map);
+            fprintln! (out);
+            print_indentation (out, depth);
+            fprint! (out, "leaf_map:       ");
+            print_bitmap (out, leaf_map);
+            fprintln! (out);
+            print_indentation (out, depth);
+            fprint! (out, "chaining_map:   ");
+            print_bitmap (out, chaining_map);
+            fprintln! (out)
+          end;
+
+        if not is_leaf then
+          let
+            val subnode = uintptr2node entry
+            val @(_ | subnode_length) =
+              get_popcount (g1ofg0 (get_population_map (subnode)))
+            prval _ = $UN.castvwtp0{void} subnode
+
+             prval _ = lemma_list_vt_param (stack.rest)
+          in
+            stack.size := succ size;
+            stack.top := 
+              @{
+                node_p = uintptr2uptr entry,
+                length = subnode_length,
+                index = i2sz 0,
+                depth = succ depth,
+                bits = bits + shifted_bits (depth, bit_index)
+              };
+            stack.rest :=
+              @{
+                node_p = node_p,
+                length = length,
+                index = succ index,
+                depth = depth,
+                bits = bits
+              } :: (stack.rest);
+            print_subtree_structure__loop (out, print_key_value,
+                                           stack)
+          end
+        else if is_chain then
+          {
+            fun
+            loop {n   : int | 0 <= n} .<n>.
+                 (lst : !list_vt (uintptr, n) >> _,
+                  print_key_value :
+                      !((FILEref, uintptr) -<cloptr1> void),
+                  separator : string) :
+                void =
+              case+ lst of
+              | NIL => ()
+              | @ head :: tail =>
+                {
+                  val _ = fprint! (out, separator)
+                  val _ = print_key_value (out, head)
+                  val _ = loop (tail, print_key_value, " ")
+                  prval _ = fold@ lst
+                }
+
+            val lst =
+              $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
+            prval _ = lemma_list_vt_param lst
+            val _ =
+              begin
+                print_key_value_heading (out, depth, bit_index, bits);
+                fprint! (out, "(");
+                loop (lst, print_key_value, "");
+                fprintln! (out, ")")
+              end
+            prval _ = $UN.castvwtp0{void} lst
+          }
+        else (* is_leaf but not is_chain *)
+          begin
+            print_key_value_heading (out, depth, bit_index, bits);
+            print_key_value (out, entry);
+            fprintln! (out);
+            stack.top :=
+              @{
+                node_p = node_p,
+                length = length,
+                index = succ index,
+                depth = depth,
+                bits = bits
+              };
+            print_subtree_structure__loop (out, print_key_value,
+                                           stack)
+          end
+      end
+    else if i2sz 0 < size then 
+      let
+      in
+        stack.size := pred size;
+        case+ (stack.rest) of
+        | NIL => ()
+        | ~ head :: tail =>
+          begin
+            stack.top := head;
+            stack.rest := tail
+          end;
+        print_subtree_structure__loop (out, print_key_value, stack)
+      end;
+
+    (* Consume the linear type. *)
+    { prval _ = $UN.castvwtp0{void} node }
+  end
+    
+implement
+print_subtree_structure (out, node, depth, print_key_value) =
+  let
+    val population_map = get_population_map (node)
 
     val [length : int] _ = extract_static_length_of_node node
     prval _ = lemma_node_vt_param {length} node
@@ -1777,108 +1972,36 @@ print_subtree_structure__
       get_popcount (g1ofg0 population_map)
     prval _ = $UN.prop_assert {popcount == length} ()
 
-    fnx
-    for_each_bit
-            {p_entries  : addr}
-            {restlen    : int | 0 <= restlen; restlen <= length}
-            .<restlen>.
-            (pf_entries : !(@[link_vt][restlen] @ p_entries) >> _ |
-             out        : FILEref,
-             print_key_value : !((FILEref, uintptr) -<cloptr1> void),
-             population : uintptr,
-             leaves     : uintptr,
-             chains     : uintptr,
-             p_entries  : uptr p_entries,
-             restlen    : size_t restlen,
-             count      : size_t) : void =
-      if restlen <> i2sz 0 then
-        {
-          prval _ = lemma_array_v_param pf_entries
-          prval _ = prop_verify {0 <= restlen} ()
+    stadef index = 0
+    val index : size_t index = i2sz 0
 
-          val @(population, leaves, chains, count) =
-            skip_but_count_unpopulated (population, leaves, chains,
-                                        count)
-          val is_leaf = bit_is_set<> (leaves, one)
-          val is_chain = (is_leaf && bit_is_set<> (chains, one))
+    stadef depth = 0
+    val depth : size_t depth = i2sz 0
 
-          (* Separate the entries into the first entry and
-             and array of the remaining entries. *)
-          prval @(pf_entry, pf_rest) = array_v_uncons pf_entries
-          val p_rest = uptr_succ<link_vt> (p_entries)
+    prval _ = prop_verify {0 <= length} ()
+    prval _ = prop_verify {0 <= index} ()
+    prval _ = prop_verify {index <= length} ()
+    prval _ = prop_verify {0 <= depth} ()
 
-          prval _ = $UN.castview2void_at{uintptr} pf_entry
-          val entry = uptr_get<uintptr> (pf_entry | p_entries)
-          prval _ = $UN.castview2void_at{link_vt} pf_entry
+    val starting_point : traversal_point_vt =
+      @{
+        node_p = ptr2uptr ($UN.castvwtp1{Ptr} node),
+        length = length,
+        index = index,
+        depth = depth,
+        bits = 0ULL
+      }
 
-          val _ =
-            if is_leaf then
-              begin
-                print_indentation (out, depth);
-                fprint! (out, "key-value ");
-                fprint! (out, "(", count, ", ");
-                fprint! (out, full_count + (factor * count), "): ");
-                if is_chain then
-                  {
-                    fun
-                    loop {n   : int | 0 <= n} .<n>.
-                         (lst : !list_vt (uintptr, n) >> _,
-                          print_key_value :
-                              !((FILEref, uintptr) -<cloptr1> void),
-                          separator : string) :
-                        void =
-                      case+ lst of
-                      | NIL => ()
-                      | @ head :: tail =>
-                        {
-                          val _ = fprint! (out, separator)
-                          val _ = print_key_value (out, head)
-                          val _ = loop (tail, print_key_value, " ")
-                          prval _ = fold@ lst
-                        }
-                    val lst =
-                      $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
-                    val _ = fprint! (out, "(")
-                    prval _ = lemma_list_vt_param lst
-                    val _ = loop (lst, print_key_value, "")
-                    val _ = fprint! (out, ")")
-                    prval _ = $UN.castvwtp0{void} lst
-                  }
-                else
-                  print_key_value (out, entry);
-                fprintln! (out)
-              end
-            else
-              {
-                val subnode = uintptr2node entry
-                prval _ = lemma_node_vt_param subnode
-                val _ =
-                  print_subtree_structure__
-                    (out, subnode, succ depth, print_key_value,
-                     full_count + (factor * count),
-                     factor * factor_factor (NUM_BITS))
-                prval _ = $UN.castvwtp0{void} subnode
-              }
-
-          val _ =
-            for_each_bit (pf_rest | out, print_key_value,
-                          population >> 1, leaves >> 1, chains >> 1,
-                          p_rest, pred restlen, succ count)
-
-          (* Recombine the views. *)
-          prval _ = pf_entries := array_v_cons (pf_entry, pf_rest)
-        }
-
-    val _ = 
-      for_each_bit
-        (node.view_of_entries | out, print_key_value,
-         population_map, leaf_map, chaining_map,
-         entries_ptr (node.pointer), length, i2sz 0)
-  }
-
-implement
-print_subtree_structure (out, node, depth, print_key_value) =
-  print_subtree_structure__ (out, node, depth, print_key_value,
-                             i2sz 0, i2sz 1)
+    var stack =
+      @{
+        size = i2sz 1,
+        top = starting_point,
+        rest = NIL
+      }
+  in
+    print_subtree_structure__loop (out, print_key_value, stack);
+    case- stack.rest of
+    | ~ NIL => ()
+  end
 
 (********************************************************************)

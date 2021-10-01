@@ -146,6 +146,12 @@ uptr2node :
   {p : addr}
   uptr p -<> [length : int] node_vt (length, p)
 
+castfn
+uptr2node_of_length :
+  {length : int}
+  {p      : addr}
+  uptr p -<> node_vt (length, p)
+
 fn {}
 uintptr2node :
   uintptr -<>
@@ -403,7 +409,8 @@ FIXME: Add delete_subtree_entry.
 *)
 
 (********************************************************************)
-(* Something useful for testing and debugging. *)
+(* Something useful for testing and debugging: print the structure
+   and contents of the tree. *)
 
 fun
 print_subtree_structure
