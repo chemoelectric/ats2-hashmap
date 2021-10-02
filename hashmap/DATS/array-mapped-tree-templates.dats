@@ -73,20 +73,8 @@ volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count = 0;
 
 %}
 
-extern fn node_alloc_increment__ () : void = "mac#%"
-extern fn node_alloc_decrement__ () : void = "mac#%"
-
-fn {}
-node_alloc_increment () : void =
-  node_alloc_increment__ ()
-
-fn {}
-node_alloc_decrement () : void =
-  begin
-    assertloc
-      ($extval (uintptr, "ats2_hashmap_node_alloc_count") <> zero);
-    node_alloc_decrement__ ()
-  end
+extern fn node_alloc_increment () : void = "mac#%"
+extern fn node_alloc_decrement () : void = "mac#%"
 
 (********************************************************************)
 

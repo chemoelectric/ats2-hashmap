@@ -21,18 +21,39 @@ along with this program. If not, see
 #ifndef ATS2_HASHMAP_CATS_NODE_ALLOC_COUNT_CATS_HEADER_GUARD__
 #define ATS2_HASHMAP_CATS_NODE_ALLOC_COUNT_CATS_HEADER_GUARD__
 
+#include <assert.h>
+
 extern volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count;
 
+#ifdef NDEBUG
+
 ATSinline() void
-ats2_hashmap_node_alloc_increment__ (void)
+ats2_hashmap_node_alloc_increment (void)
+{
+  /* Do nothing. */
+}
+
+ATSinline() void
+ats2_hashmap_node_alloc_decrement (void)
+{
+  /* Do nothing. */
+}
+
+#else
+
+ATSinline() void
+ats2_hashmap_node_alloc_increment (void)
 {
   ats2_hashmap_node_alloc_count += 1;
 }
 
 ATSinline() void
-ats2_hashmap_node_alloc_decrement__ (void)
+ats2_hashmap_node_alloc_decrement (void)
 {
+  assert (ats2_hashmap_node_alloc_count != 0);
   ats2_hashmap_node_alloc_count -= 1;
 }
+
+#endif
 
 #endif /* ATS2_HASHMAP_CATS_NODE_ALLOC_COUNT_CATS_HEADER_GUARD__ */
