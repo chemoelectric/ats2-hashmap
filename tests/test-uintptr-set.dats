@@ -31,6 +31,13 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/uintptr-set.sats"
 staload _ = "hashmap/DATS/uintptr-set.dats"
 
+%{#
+extern atstype_uintptr ats2_hashmap_node_alloc_count;
+%}
+
+macdef node_alloc_count =
+  $extval (uintptr, "ats2_hashmap_node_alloc_count")
+
 extern castfn
 i2up : {i : int | 0 <= i} int i -<> uintptr i
 
@@ -85,6 +92,7 @@ test_empty () : void =
           assertloc (not (has_element (set, $UN.cast i)))
       end
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
   }
 
 fn
@@ -131,6 +139,7 @@ test_size_one () : void =
       end
 
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
   }
 
 fn
@@ -155,6 +164,7 @@ test_root_node_expansion () : void =
           end
       end
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
 
     val set = uintptr_set () + (u2up 0x02U) + (u2up 0x01U)
     val _ = assertloc (size set = i2sz 2)
@@ -174,6 +184,7 @@ test_root_node_expansion () : void =
           end
       end
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
 
     val set =
       uintptr_set () +
@@ -212,6 +223,7 @@ test_root_node_expansion () : void =
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
   }
 
 fn
@@ -239,6 +251,7 @@ test_root_node_leaf_collision () : void =
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
 
     val set = uintptr_set () +
                 (u2up 0x000101U) +
@@ -264,6 +277,7 @@ test_root_node_leaf_collision () : void =
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
     val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
   }
 
 implement

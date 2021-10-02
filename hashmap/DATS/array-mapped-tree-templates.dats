@@ -57,6 +57,53 @@ prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
 
 (********************************************************************)
 
+%{^
+
+/* A counter used for testing the node allocations.
+
+   Note it should not be possible for a uintptr to overflow,
+   as long as it it is decremented with each deallocation:
+   a uintptr must represent all possible addresses. */
+
+atstype_uintptr ats2_hashmap_node_alloc_count = 0;
+
+%}
+
+%{#
+
+extern atstype_uintptr ats2_hashmap_node_alloc_count;
+
+ATSinline() void
+ats2_hashmap_node_alloc_increment__ (void)
+{
+  ats2_hashmap_node_alloc_count += 1;
+}
+
+ATSinline() void
+ats2_hashmap_node_alloc_decrement__ (void)
+{
+  ats2_hashmap_node_alloc_count -= 1;
+}
+
+%}
+
+extern fn node_alloc_increment__ () : void = "mac#%"
+extern fn node_alloc_decrement__ () : void = "mac#%"
+
+fn {}
+node_alloc_increment () : void =
+  node_alloc_increment__ ()
+
+fn {}
+node_alloc_decrement () : void =
+  begin
+    assertloc
+      ($extval (uintptr, "ats2_hashmap_node_alloc_count") <> zero);
+    node_alloc_decrement__ ()
+  end
+
+(********************************************************************)
+
 implement {}
 uintptr2node (i) =
   uptr2node (uintptr2uptr i)
@@ -124,6 +171,7 @@ node_alloc (length) =
     val size = length + (g1u2u 3U)
     val @(view, mfree | pointer) = array_ptr_alloc<uintptr> (size)
   in
+    $effmask_all (node_alloc_increment ());
     @(view, mfree | ptr2uptr pointer)
   end
 
@@ -215,7 +263,8 @@ expired_node_vt_free {length} {p} (node) =
     prval pf = array_v_cons (pf_pop_map, pf)
   in
     array_ptr_free {uintptr} {p} {length + 3}
-                   (pf, pf_mfree | uptr2ptr p)
+                   (pf, pf_mfree | uptr2ptr p);
+    $effmask_all (node_alloc_decrement ())
   end
 
 (********************************************************************)
