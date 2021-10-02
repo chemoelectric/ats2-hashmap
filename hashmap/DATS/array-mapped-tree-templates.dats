@@ -57,6 +57,10 @@ prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
 
 (********************************************************************)
 
+%{#
+#include "hashmap/CATS/node-alloc-count.cats"
+%}
+
 %{^
 
 /* A counter used for testing the node allocations.
@@ -65,25 +69,7 @@ prval _ = prop_verify {sizeof (link_vt) == SIZEOF_UINTPTR} ()
    as long as it it is decremented with each deallocation:
    a uintptr must represent all possible addresses. */
 
-atstype_uintptr ats2_hashmap_node_alloc_count = 0;
-
-%}
-
-%{#
-
-extern atstype_uintptr ats2_hashmap_node_alloc_count;
-
-ATSinline() void
-ats2_hashmap_node_alloc_increment__ (void)
-{
-  ats2_hashmap_node_alloc_count += 1;
-}
-
-ATSinline() void
-ats2_hashmap_node_alloc_decrement__ (void)
-{
-  ats2_hashmap_node_alloc_count -= 1;
-}
+volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count = 0;
 
 %}
 

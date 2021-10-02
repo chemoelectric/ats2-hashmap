@@ -32,7 +32,7 @@ staload "hashmap/SATS/uintptr-set.sats"
 staload _ = "hashmap/DATS/uintptr-set.dats"
 
 %{#
-extern atstype_uintptr ats2_hashmap_node_alloc_count;
+extern volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count;
 %}
 
 macdef node_alloc_count =

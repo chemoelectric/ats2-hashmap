@@ -954,6 +954,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/print-bitmap.dats hashmap/SATS/bits-source.sats \
 	hashmap/CATS/bits-source.cats \
 	hashmap/DATS/bits-source-uint64-uint64.dats \
+	hashmap/HATS/array-mapped-tree-helpers.hats \
+	hashmap/CATS/node-alloc-count.cats \
 	hashmap/SATS/array-mapped-tree.sats \
 	hashmap/DATS/array-mapped-tree-free.dats \
 	hashmap/DATS/array-mapped-tree-create.dats \
@@ -966,7 +968,6 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/array-mapped-tree-print-subtree-structure.dats \
 	hashmap/SATS/array-mapped-tree-node-vt-free.sats \
 	hashmap/DATS/array-mapped-tree-node-vt-free.dats \
-	hashmap/HATS/array-mapped-tree-helpers.hats \
 	hashmap/SATS/uintptr-set.sats hashmap/DATS/uintptr-set.dats \
 	hashmap/CATS/uintptr-set-implementation.cats \
 	hashmap/SATS/hashmap.sats tests/test-bits-source-uint16.dats \
