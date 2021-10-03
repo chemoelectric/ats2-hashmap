@@ -31,6 +31,8 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/uintptr-set.sats"
 staload _ = "hashmap/DATS/uintptr-set.dats"
 
+#include "hashmap/HATS/config.hats"
+
 %{#
 extern volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count;
 %}
@@ -132,32 +134,36 @@ fn
 compare_structure (set                : !uintptr_set_vt >> _,
                    filename           : String0,
                    reference_filename : String0) : bool =
-  let
-    val f = fileref_open_exn (filename, file_mode_w)
-    val print_entry = new_entry_printer ()
-    val _ = uintptr_set_print_structure (f, set, print_entry)
-    val _ = entry_printer_free (print_entry)
-    val _ = fileref_close (f)
+  (* Currently there are structure tests only for 64-bit uintptr. *)
+  if BITSIZEOF_UINTPTR = 64 then
+    let
+      val f = fileref_open_exn (filename, file_mode_w)
+      val print_entry = new_entry_printer ()
+      val _ = uintptr_set_print_structure (f, set, print_entry)
+      val _ = entry_printer_free (print_entry)
+      val _ = fileref_close (f)
 
-    val space = string1_copy (" ")
-    val fname = string1_copy (filename)
-    val reffname = string1_copy (reference_filename)
-    val cmp = string1_copy ("cmp -s ")
-    val command1 = strnptr_append (space, fname)
-    val command2 = strnptr_append (reffname, command1)
-    val _ = free (command1)
-    val command = strnptr_append (cmp, command2)
-    val _ = free (command2)
-    val status =
-      $extfcall (int, "system", $UN.castvwtp1{string} command)
-    val _ = free (command)
-    val _ = free (space)
-    val _ = free (fname)
-    val _ = free (reffname)
-    val _ = free (cmp)
-  in
-    status = 0
-  end
+      val space = string1_copy (" ")
+      val fname = string1_copy (filename)
+      val reffname = string1_copy (reference_filename)
+      val cmp = string1_copy ("cmp -s ")
+      val command1 = strnptr_append (space, fname)
+      val command2 = strnptr_append (reffname, command1)
+      val _ = free (command1)
+      val command = strnptr_append (cmp, command2)
+      val _ = free (command2)
+      val status =
+        $extfcall (int, "system", $UN.castvwtp1{string} command)
+      val _ = free (command)
+      val _ = free (space)
+      val _ = free (fname)
+      val _ = free (reffname)
+      val _ = free (cmp)
+    in
+      status = 0
+    end
+  else
+    true
 
 fn
 test_empty () : void =
