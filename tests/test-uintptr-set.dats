@@ -369,9 +369,11 @@ test_root_node_leaf_collision () : void =
               assertloc (not (set \contains i))
           end
       end
-    val print_entry = new_entry_printer ()
-    val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
-    val _ = entry_printer_free (print_entry)
+    val _ =
+      assertloc
+        (compare_structure
+          (set, "tests/test-03-10-2021-12-26-02.structure",
+                "tests/test-03-10-2021-12-26-02.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x0101U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -396,9 +398,11 @@ test_root_node_leaf_collision () : void =
               assertloc (not (set \contains i))
           end
       end
-    val print_entry = new_entry_printer ()
-    val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
-    val _ = entry_printer_free (print_entry)
+    val _ =
+      assertloc
+        (compare_structure
+          (set, "tests/test-03-10-2021-12-29-17.structure",
+                "tests/test-03-10-2021-12-29-17.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x010101U) :: (u2up 0x000101U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)

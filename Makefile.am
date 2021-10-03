@@ -540,8 +540,6 @@ CLEANFILES += tests/test-uintptr-set_dats.c
 structure-test-clean:
 	-rm -f tests/*.structure
 
-$(top_builddir)/config.status: $(top_srcdir)/tests/*.reference.in
-
 #--------------------------------------------------------------------------
 #
 # Computation of dependencies.

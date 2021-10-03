@@ -225,6 +225,8 @@ AC_CONFIG_FILES([tests/test-03-10-2021-11-55-11.structure.reference])
 AC_CONFIG_FILES([tests/test-03-10-2021-11-58-30.structure.reference])
 AC_CONFIG_FILES([tests/test-03-10-2021-12-00-18.structure.reference])
 AC_CONFIG_FILES([tests/test-03-10-2021-12-02-25.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-12-26-02.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-12-29-17.structure.reference])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 
