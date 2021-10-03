@@ -46,5 +46,6 @@ print_bitmap (out, map) =
         else
           buf[j] := '0'
       end;
-    fprint! (out ($UN.cast{string (BITSIZEOF_UINTPTR)} (addr@ buf)))
+    fprint!
+      (out, $UNSAFE.cast{string (BITSIZEOF_UINTPTR)} (addr@ buf))
   end
