@@ -31,21 +31,30 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree-node-vt-free.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/uptr.sats"
+staload "hashmap/SATS/nth-bit-index.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 staload _ = "hashmap/DATS/count-one-bits.dats"
 
-staload "hashmap/SATS/nth-bit-index.sats"
-
 #include "hashmap/HATS/array-mapped-tree-helpers.hats"
 
-(* FIXME FIXME FIXME: Write tests for this, that it should
-                      not double-free nor leak. *)
 (*
   NOTE/WARNING:
 
   This code is quite "unsafe" and should be tested well.
+
+  I have implemented a counter in node_alloc and node_vt_free.
+  If you run a test in which every array mapped tree is freed,
+  then the counter must equal zero, or there is a problem.
+
+  Also, if the counter would go negative, an assertion is
+  triggered.
+
+  See the regression tests.
+
+  (NDEBUG gets rid of the counting and makes the counter
+   always equal zero.)
 *)
 
 implement
@@ -152,6 +161,7 @@ node_vt_free {length} {p} (node, key_value_free) =
                 prval _ = lemma_list_vt_param lst
                 val _ = loop (lst, key_value_free)
                 prval _ = $UN.castvwtp0{void} lst
+                val _ = big_loop (stack, key_value_free)
               }
             else (* is_leaf but not is_chain *)
               begin

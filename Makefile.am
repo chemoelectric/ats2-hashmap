@@ -420,6 +420,8 @@ libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree-print-subtree-struc
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.c
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree-node-vt-free_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-node-vt-free_dats.c
+libats2_hashmap_la_SOURCES += hashmap/SATS/array-mapped-tree-subtree-to-list-vt_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/array-mapped-tree-subtree-to-list-vt_dats.c
 
 CLEANFILES += hashmap/SATS/array-mapped-tree_sats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-free_dats.c
@@ -433,6 +435,8 @@ CLEANFILES += hashmap/SATS/array-mapped-tree-print-subtree-structure_sats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-print-subtree-structure_dats.c
 CLEANFILES += hashmap/SATS/array-mapped-tree-node-vt-free_sats.c
 CLEANFILES += hashmap/DATS/array-mapped-tree-node-vt-free_dats.c
+CLEANFILES += hashmap/SATS/array-mapped-tree-subtree-to-list-vt_sats.c
+CLEANFILES += hashmap/DATS/array-mapped-tree-subtree-to-list-vt_dats.c
 
 EXTRA_DIST += hashmap/HATS/array-mapped-tree-helpers.hats
 EXTRA_DIST += hashmap/CATS/node-alloc-count.cats
@@ -448,6 +452,8 @@ EXTRA_DIST += hashmap/SATS/array-mapped-tree-print-subtree-structure.sats
 EXTRA_DIST += hashmap/DATS/array-mapped-tree-print-subtree-structure.dats
 EXTRA_DIST += hashmap/SATS/array-mapped-tree-node-vt-free.sats
 EXTRA_DIST += hashmap/DATS/array-mapped-tree-node-vt-free.dats
+EXTRA_DIST += hashmap/SATS/array-mapped-tree-subtree-to-list-vt.sats
+EXTRA_DIST += hashmap/DATS/array-mapped-tree-subtree-to-list-vt.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/uintptr-set_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr-set_dats.c
