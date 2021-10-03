@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Thu Sep 30 15:25:05 CDT 2021
+# from AX_AM_MACROS_STATIC on Sun Oct  3 10:55:54 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -195,6 +195,7 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/bits-source-ullint-one-time.dats.m4 \
 	hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4 \
 	tests/test-bits-source-uint64-uint64.dats \
+	tests/test-03-10-2021-10-50-40.structure.reference \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -694,6 +695,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
+	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
@@ -1329,6 +1331,8 @@ hashmap/DATS/bits-source-ullint-one-time.dats.m4: $(top_builddir)/config.status 
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-10-50-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -2674,7 +2678,7 @@ code-coverage-capture-hook:
 @GNU@ -include ats-dependencies/*.mk
 
 clean-local: code-coverage-clean ats-includes-clean
-distclean-local: code-coverage-dist-clean
+distclean-local: code-coverage-dist-clean structure-test-distclean
 
 @GNU@ include $(top_srcdir)/m4-rules.mk
 
@@ -2765,6 +2769,10 @@ hashmap/DATS/bits-source-ullint-one-time.dats: hashmap/DATS/bits-source-TYPE-one
 
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
+
+.PHONY: structure-test-distclean
+structure-test-distclean:
+	-rm -f tests/*.structure
 
 #--------------------------------------------------------------------------
 

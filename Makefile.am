@@ -78,7 +78,7 @@ CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/ccomp/runtime/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/prelude/CATS/*
 
 clean-local: code-coverage-clean ats-includes-clean
-distclean-local: code-coverage-dist-clean
+distclean-local: code-coverage-dist-clean structure-test-distclean
 
 #---------------------------------------------------------------------
 #
@@ -533,6 +533,10 @@ tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-uintptr-set.dats
 CLEANFILES += tests/test-uintptr-set
 CLEANFILES += tests/test-uintptr-set_dats.c
+
+.PHONY: structure-test-distclean
+structure-test-distclean:
+	-rm -f tests/*.structure
 
 #--------------------------------------------------------------------------
 #
