@@ -220,6 +220,11 @@ AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
 
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-03-10-2021-10-50-40.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-11-51-50.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-11-55-11.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-11-58-30.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-12-00-18.structure.reference])
+AC_CONFIG_FILES([tests/test-03-10-2021-12-02-25.structure.reference])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

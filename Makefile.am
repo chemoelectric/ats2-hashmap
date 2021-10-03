@@ -77,8 +77,10 @@ CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/ccomp/runtime/*
 CODE_COVERAGE_IGNORE_PATTERN += $(PATSHOME)/prelude/CATS/*
 
-clean-local: code-coverage-clean ats-includes-clean
-distclean-local: code-coverage-dist-clean structure-test-distclean
+clean-local: code-coverage-clean
+clean-local: ats-includes-clean
+clean-local: structure-test-clean
+distclean-local: code-coverage-dist-clean
 
 #---------------------------------------------------------------------
 #
@@ -534,9 +536,11 @@ EXTRA_DIST += tests/test-uintptr-set.dats
 CLEANFILES += tests/test-uintptr-set
 CLEANFILES += tests/test-uintptr-set_dats.c
 
-.PHONY: structure-test-distclean
-structure-test-distclean:
+.PHONY: structure-test-clean
+structure-test-clean:
 	-rm -f tests/*.structure
+
+$(top_builddir)/config.status: $(top_srcdir)/tests/*.reference.in
 
 #--------------------------------------------------------------------------
 #

@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Sun Oct  3 10:55:54 CDT 2021
+# from AX_AM_MACROS_STATIC on Sun Oct  3 12:03:54 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -196,6 +196,11 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4 \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-03-10-2021-10-50-40.structure.reference \
+	tests/test-03-10-2021-11-51-50.structure.reference \
+	tests/test-03-10-2021-11-55-11.structure.reference \
+	tests/test-03-10-2021-11-58-30.structure.reference \
+	tests/test-03-10-2021-12-00-18.structure.reference \
+	tests/test-03-10-2021-12-02-25.structure.reference \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -696,6 +701,11 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
@@ -1266,9 +1276,6 @@ GNUmakefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	esac;
 $(top_srcdir)/aminclude_static.am $(top_srcdir)/config-status-deps.am $(am__empty):
 
-$(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	$(SHELL) ./config.status --recheck
-
 $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	$(am__cd) $(srcdir) && $(AUTOCONF)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
@@ -1333,6 +1340,16 @@ hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4: $(top_builddir)/config.
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-03-10-2021-10-50-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-11-51-50.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-11-55-11.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-11-58-30.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-12-00-18.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-03-10-2021-12-02-25.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -2677,8 +2694,10 @@ code-coverage-capture-hook:
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
 
-clean-local: code-coverage-clean ats-includes-clean
-distclean-local: code-coverage-dist-clean structure-test-distclean
+clean-local: code-coverage-clean
+clean-local: ats-includes-clean
+clean-local: structure-test-clean
+distclean-local: code-coverage-dist-clean
 
 @GNU@ include $(top_srcdir)/m4-rules.mk
 
@@ -2770,9 +2789,11 @@ hashmap/DATS/bits-source-ullint-one-time.dats: hashmap/DATS/bits-source-TYPE-one
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats: hashmap/DATS/bits-source-TYPE-one-time.dats.m4
 
-.PHONY: structure-test-distclean
-structure-test-distclean:
+.PHONY: structure-test-clean
+structure-test-clean:
 	-rm -f tests/*.structure
+
+$(top_builddir)/config.status: $(top_srcdir)/tests/*.reference.in
 
 #--------------------------------------------------------------------------
 
