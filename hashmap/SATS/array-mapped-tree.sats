@@ -79,6 +79,11 @@ array_mapped_tree_set_entry
     #[is_new_slot : bool]
     void
 
+fun
+array_mapped_tree_to_list_vt (node_p : ptr) :
+  [n : int]
+  @(list_vt (uintptr, n), size_t n)
+
 (********************************************************************)
 (* Something useful for testing and debugging. *)
 

@@ -28,5 +28,6 @@ array_mapped_tree_subtree_to_list_vt
         {length         : int}
         {p              : addr}
         (node           : !node_vt (length, p) >> _) :
-  List_vt (uintptr)
+  [n : int]
+  @(list_vt (uintptr, n), size_t n)
 

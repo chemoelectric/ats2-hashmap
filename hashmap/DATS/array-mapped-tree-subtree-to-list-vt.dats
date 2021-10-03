@@ -58,8 +58,11 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
       }
 
     fun
-    big_loop (result : &List_vt (uintptr) >> List_vt (uintptr),
-              stack  : &traversal_stack_vt) : void =
+    big_loop {m             : int}
+             (result        : list_vt (uintptr, m),
+              result_length : size_t m,
+              stack         : &traversal_stack_vt) :
+        [n : int] @(list_vt (uintptr, n), size_t n) =
       (* Depth-first traversal by tail recursion. *)
       let
         val size = stack.size
@@ -92,7 +95,6 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                bit_is_set<> (chaining_map, bit_selection_mask))
 
             val entry = node[index]
-
           in
             if not is_leaf then
               let
@@ -118,21 +120,48 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                     index = succ index,
                     depth = depth
                   } :: (stack.rest);
-                big_loop (result, stack)
+                let
+                  prval _ = $UN.castvwtp0{void} node
+                in
+                  big_loop (result, result_length, stack)
+                end
               end
             else if is_chain then
               let
+                fun
+                loop {m, n   : int | 0 <= m; 0 <= n}
+                     (result : list_vt (uintptr, m),
+                      result_length : size_t m,
+                      lst : !list_vt (uintptr, n)) :
+                    @(list_vt (uintptr, m + n), size_t (m + n)) =
+                  case+ lst of
+                  | NIL => @(result, result_length)
+                  | @ head :: tail =>
+                    let
+                      val result_and_length =
+                        loop {m + 1, n - 1}
+                             (head :: result,
+                              succ (result_length),
+                              tail)
+                      prval _ = fold@ lst
+                    in
+                      result_and_length
+                    end
                 val lst =
                   $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
-                val _ = result :=
-                  list_vt_reverse_append (copy lst, result)
+                prval _ = lemma_list_vt_param result
+                prval _ = lemma_list_vt_param lst
+                val @(result, result_length) =
+                  loop (result, result_length, lst)
                 prval _ = $UN.castvwtp0{void} lst
+                prval _ = $UN.castvwtp0{void} node
               in
-                big_loop (result, stack)
+                big_loop (result, result_length, stack)
               end
             else (* is_leaf but not is_chain *)
               let
                 prval _ = lemma_list_vt_param result
+                prval _ = $UN.castvwtp0{void} node
               in
                 stack.top :=
                   @{
@@ -141,8 +170,9 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                     index = succ index,
                     depth = depth
                   };
-                result := entry :: result;
-                big_loop (result, stack)
+                big_loop (entry :: result,
+                          succ (result_length),
+                          stack)
               end
           end
         else if i2sz 0 < size then 
@@ -155,11 +185,18 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                 stack.top := head;
                 stack.rest := tail
               end;
-            big_loop (result, stack)
-          end;
-
-        (* Consume the linear type. *)
-        { prval _ = $UN.castvwtp0{void} node }
+            let
+              prval _ = $UN.castvwtp0{void} node
+            in
+              big_loop (result, result_length, stack)
+            end
+          end
+        else
+          let
+            prval _ = $UN.castvwtp0{void} node
+          in
+            @(result, result_length)
+          end
       end
 
     val population_map = get_population_map (node)
@@ -186,12 +223,11 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
         rest = NIL
       }
 
-    var result : List_vt (uintptr) = NIL
+    val result_and_length = big_loop {0} (NIL, i2sz 0, stack)
   in
-    big_loop (result, stack);
     begin
       case- stack.rest of
       | ~ NIL => ()
     end;
-    result
+    result_and_length
   end

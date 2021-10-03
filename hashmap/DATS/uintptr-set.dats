@@ -41,6 +41,9 @@ staload _ = "hashmap/DATS/atomic.dats"
 staload _ = "hashmap/DATS/spinlock.dats"
 staload _ = "hashmap/DATS/initialize-once.dats"
 
+#define NIL list_vt_nil ()
+#define :: list_vt_cons
+
 %{#
 #include "hashmap/CATS/uintptr-set-implementation.cats"
 %}
@@ -227,6 +230,22 @@ uintptr_set_has_element (set, element) =
            key_test_p, element, is_stored, key_value)
     in
       is_stored
+    end
+
+implement
+uintptr_elements {size} (set) =
+  case+ set of
+  | set_vt_nil () => NIL
+  | @set_vt_tree (size, tree) =>
+    let
+      val node_p = $UN.cast{ptr} tree
+      val [n : int] @(lst, n) = array_mapped_tree_to_list_vt (node_p)
+      prval _ = lemma_list_vt_param lst
+      val _ = assertloc (n = size)
+      prval _ = prop_verify {n == size} ()
+      prval _ = fold@ set
+    in
+      lst
     end
 
 implement
