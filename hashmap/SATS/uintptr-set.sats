@@ -94,7 +94,7 @@ overload has_element with uintptr_set_has_element
 overload contains with uintptr_set_has_element
 
 fun
-uintptr_elements
+uintptr_set_elements
         {size : int}
         (set  : !(uintptr_set_vt size) >> _) :
     list_vt (uintptr, size)

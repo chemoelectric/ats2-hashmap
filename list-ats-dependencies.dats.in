@@ -37,8 +37,8 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-#define :: list_vt_cons
 #define NIL list_vt_nil ()
+#define :: list_vt_cons
 
 #define BUILDDIR "@abs_builddir@/"
 #define SRCDIR "@abs_srcdir@/"

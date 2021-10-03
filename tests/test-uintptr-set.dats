@@ -38,6 +38,9 @@ extern volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count;
 macdef node_alloc_count =
   $extval (uintptr, "ats2_hashmap_node_alloc_count")
 
+#define NIL list_vt_nil ()
+#define :: list_vt_cons
+
 extern castfn
 i2up : {i : int | 0 <= i} int i -<> uintptr i
 
@@ -78,6 +81,54 @@ println_uintptr (x : uintptr) : void =
   }
 
 fn
+compare_elements (set : !uintptr_set_vt >> _,
+                  lst : List_vt uintptr) : bool =
+  let
+    val elems = uintptr_set_elements (set)
+    val length_elems = length elems
+    val length_lst = length lst
+  in
+    if length_elems <> length_lst then
+      begin
+        free elems;
+        free lst;
+        false
+      end
+    else
+      let
+        fun
+        loop {n : int | 0 <= n}
+             (elems : list_vt (uintptr, n),
+              lst   : list_vt (uintptr, n)) : bool =
+          case+ elems of
+          | ~ NIL =>
+            begin
+              case+ lst of
+              | ~ NIL => true
+            end
+          | ~ head1 :: tail1 =>
+            begin
+              case+ lst of
+              | ~ head2 :: tail2 =>
+                if head1 <> head2 then
+                  begin
+                    free tail1;
+                    free tail2;
+                    false
+                  end
+                else
+                  loop (tail1, tail2)
+            end
+      in
+        let
+          prval _ = lemma_list_vt_param lst
+        in
+          loop (elems, lst)
+        end
+      end
+  end
+
+fn
 test_empty () : void =
   {
     val set = uintptr_set ()
@@ -91,6 +142,7 @@ test_empty () : void =
         for (i := zero; i <= reasonably_big_number; i := succ i)
           assertloc (not (has_element (set, $UN.cast i)))
       end
+    val _ = assertloc (compare_elements (set, NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
   }
@@ -117,6 +169,7 @@ test_size_one () : void =
               assertloc (not (has_element (set, i)))
           end
       end
+    val _ = assertloc (compare_elements (set, (u2up 0x10U) :: NIL))
 
     (* Add the same entry. Also, use different notations for
        the same operations. *)
@@ -137,6 +190,7 @@ test_size_one () : void =
               assertloc (not (set \contains i))
           end
       end
+    val _ = assertloc (compare_elements (set, (u2up 0x10U) :: NIL))
 
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -149,7 +203,6 @@ test_root_node_expansion () : void =
     val _ = assertloc (size set = i2sz 2)
     val _ = assertloc (not (iseqz set))
     val _ = assertloc (isneqz set)
-
     val _ =
       let
         var i : [i : int] uintptr i
@@ -163,6 +216,7 @@ test_root_node_expansion () : void =
               assertloc (not (set \contains i))
           end
       end
+    val _ = assertloc (compare_elements (set, (u2up 0x02U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
 
@@ -183,6 +237,7 @@ test_root_node_expansion () : void =
               assertloc (not (set \contains i))
           end
       end
+    val _ = assertloc (compare_elements (set, (u2up 0x02U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
 
@@ -222,6 +277,15 @@ test_root_node_expansion () : void =
     val print_entry = new_entry_printer ()
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
+    val _ = assertloc (compare_elements (set,
+                                         (u2up 0x11U) ::
+                                         (u2up 0x0FU) ::
+                                         (u2up 0x09U) ::
+                                         (u2up 0x05U) ::
+                                         (u2up 0x04U) ::
+                                         (u2up 0x02U) ::
+                                         (u2up 0x01U) ::
+                                         (u2up 0x00U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
   }
@@ -250,6 +314,7 @@ test_root_node_leaf_collision () : void =
     val print_entry = new_entry_printer ()
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
+    val _ = assertloc (compare_elements (set, (u2up 0x0101U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
 
@@ -276,6 +341,7 @@ test_root_node_leaf_collision () : void =
     val print_entry = new_entry_printer ()
     val _ = uintptr_set_print_structure (stdout_ref, set, print_entry)
     val _ = entry_printer_free (print_entry)
+    val _ = assertloc (compare_elements (set, (u2up 0x010101U) :: (u2up 0x000101U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
   }

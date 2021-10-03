@@ -233,7 +233,7 @@ uintptr_set_has_element (set, element) =
     end
 
 implement
-uintptr_elements {size} (set) =
+uintptr_set_elements {size} (set) =
   case+ set of
   | set_vt_nil () => NIL
   | @set_vt_tree (size, tree) =>
