@@ -18,20 +18,20 @@
 
 */
 
-#ifndef HASHMAP_MEMORY_CATS_HEADER_GUARD__
-#define HASHMAP_MEMORY_CATS_HEADER_GUARD__
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
 
 #ifdef __GNUC__
 
-#define ats2_hashmap_memcpy __builtin_memcpy
-#define ats2_hashmap_memset __builtin_memset
+#define @ATS_EXTERN_PREFIX@memcpy __builtin_memcpy
+#define @ATS_EXTERN_PREFIX@memset __builtin_memset
 
 #else /* not __GNUC__ */
 
 #include <string.h>
-#define ats2_hashmap_memcpy memcpy
-#define ats2_hashmap_memset memset
+#define @ATS_EXTERN_PREFIX@memcpy memcpy
+#define @ATS_EXTERN_PREFIX@memset memset
 
 #endif
 
-#endif /* HASHMAP_MEMORY_CATS_HEADER_GUARD__ */
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__ */

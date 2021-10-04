@@ -22,13 +22,13 @@
 
 */
 
-#ifndef HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__
-#define HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@COUNT_ONE_BITS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@COUNT_ONE_BITS__
 
 #include <limits.h>
 #include <stdlib.h>
 
-#define ATS2_HASHMAP_COUNT_ONE_BITS_INLINE ATSinline ()
+#define @ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE ATSinline ()
 
 /* Assuming the GCC builtin is GCC_BUILTIN and the MSC builtin is MSC_BUILTIN,
    expand to code that computes the number of 1-bits of the local
@@ -36,14 +36,14 @@
    from the current function.  */
 #if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) \
     || (__clang_major__ >= 4)
-# define ATS2_HASHMAP_COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE) \
+# define @ATS_EXTERN_PREFIX@COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE) \
     return GCC_BUILTIN (x)
 #else
 
 /* Compute and return the number of 1-bits set in the least
    significant 32 bits of X. */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_one_bits_32 (unsigned int x)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_one_bits_32 (unsigned int x)
 {
   x = ((x & 0xaaaaaaaaU) >> 1) + (x & 0x55555555U);
   x = ((x & 0xccccccccU) >> 2) + (x & 0x33333333U);
@@ -62,7 +62,7 @@ ats2_hashmap_count_one_bits_32 (unsigned int x)
    But most people will use GCC or clang and so get the compiler’s
    built-in function; thus there is no rush to improve the
    algorithm. */
-# define ATS2_HASHMAP_COUNT_ONE_BITS_GENERIC(TYPE)                      \
+# define @ATS_EXTERN_PREFIX@COUNT_ONE_BITS_GENERIC(TYPE)                      \
     do                                                                  \
       {                                                                 \
         int count = 0;                                                  \
@@ -81,9 +81,8 @@ ats2_hashmap_count_one_bits_32 (unsigned int x)
 /*
   FIXME: It seems to me (Barry Schwartz) that this code should use
          atomic operations and a double-checked lock for the
-         ‘ats2_hashmap_popcount_support’ variable.
-
-         I, personally, have no way to use this code, anyway.
+         ‘@ATS_EXTERN_PREFIX@popcount_support’ variable.
+         I, however, am not using Microsoft C for anything.
 */
 
 /* While gcc falls back to its own generic code if the machine
@@ -112,119 +111,119 @@ static inline __popcnt64 (unsigned long long x)
 
 
 /* 1 if supported, 0 if not supported, -1 if unknown.  */
-extern int ats2_hashmap_popcount_support;
+extern int @ATS_EXTERN_PREFIX@popcount_support;
 
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_popcount_supported (void)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@popcount_supported (void)
 {
-  if (ats2_hashmap_popcount_support < 0)
+  if (@ATS_EXTERN_PREFIX@popcount_support < 0)
     {
       /* Do as described in
          <https://docs.microsoft.com/en-us/cpp/intrinsics/popcnt16-popcnt-popcnt64> */
       int cpu_info[4];
       __cpuid (cpu_info, 1);
-      ats2_hashmap_popcount_support = (cpu_info[2] >> 23) & 1;
+      @ATS_EXTERN_PREFIX@popcount_support = (cpu_info[2] >> 23) & 1;
     }
-  return ats2_hashmap_popcount_support;
+  return @ATS_EXTERN_PREFIX@popcount_support;
 }
 
-#  define ATS2_HASHMAP_COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE)   \
+#  define @ATS_EXTERN_PREFIX@COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE)   \
      do                                                                 \
        {                                                                \
-         if (ats2_hashmap_popcount_supported ())                        \
+         if (@ATS_EXTERN_PREFIX@popcount_supported ())                        \
            return MSC_BUILTIN (x);                                      \
          else                                                           \
-           ATS2_HASHMAP_COUNT_ONE_BITS_GENERIC (TYPE);                  \
+           @ATS_EXTERN_PREFIX@COUNT_ONE_BITS_GENERIC (TYPE);                  \
        }                                                                \
      while (0)
 
 # else
 
-#  define ATS2_HASHMAP_COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE) \
-     ATS2_HASHMAP_COUNT_ONE_BITS_GENERIC (TYPE)
+#  define @ATS_EXTERN_PREFIX@COUNT_ONE_BITS(GCC_BUILTIN, MSC_BUILTIN, TYPE) \
+     @ATS_EXTERN_PREFIX@COUNT_ONE_BITS_GENERIC (TYPE)
 
 # endif
 #endif
 
 /* Compute and return the number of 1-bits set in X. */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_one_bits_uint (unsigned int x)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_one_bits_uint (unsigned int x)
 {
-  ATS2_HASHMAP_COUNT_ONE_BITS (__builtin_popcount, __popcnt, unsigned int);
+  @ATS_EXTERN_PREFIX@COUNT_ONE_BITS (__builtin_popcount, __popcnt, unsigned int);
 }
 
 /* Compute and return the number of 1-bits set in X. */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_one_bits_ulint (unsigned long int x)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_one_bits_ulint (unsigned long int x)
 {
-  ATS2_HASHMAP_COUNT_ONE_BITS (__builtin_popcountl, __popcnt, unsigned long int);
+  @ATS_EXTERN_PREFIX@COUNT_ONE_BITS (__builtin_popcountl, __popcnt, unsigned long int);
 }
 
 /* Compute and return the number of 1-bits set in X. */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_one_bits_ullint (unsigned long long int x)
 {
-  ATS2_HASHMAP_COUNT_ONE_BITS (__builtin_popcountll, __popcnt64, unsigned long long int);
+  @ATS_EXTERN_PREFIX@COUNT_ONE_BITS (__builtin_popcountll, __popcnt64, unsigned long long int);
 }
 
-#define ats2_hashmap_count_one_bits_usint ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_usint @ATS_EXTERN_PREFIX@count_one_bits_uint
 
 #if SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_size @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_size @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_size ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_size @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for size_t."
 #endif
 
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_uintptr ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uintptr @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_uintptr ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uintptr @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_uintptr ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uintptr @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uintptr_t."
 #endif
 
 #if SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint8 @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint8 @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_uint8 ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint8 @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uint8_t."
 #endif
 
 #if SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint16 @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint16 @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_uint16 ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint16 @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uint16_t."
 #endif
 
 #if SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint32 @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint32 @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_uint32 ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint32 @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uint32_t."
 #endif
 
 #if SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint64 @ATS_EXTERN_PREFIX@count_one_bits_uint
 #elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint64 @ATS_EXTERN_PREFIX@count_one_bits_ulint
 #elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_one_bits_uint64 ats2_hashmap_count_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_one_bits_uint64 @ATS_EXTERN_PREFIX@count_one_bits_ullint
 #else
 #error "I failed to find a count-one-bits implementation for uint64_t."
 #endif
@@ -232,90 +231,90 @@ ats2_hashmap_count_one_bits_ullint (unsigned long long int x)
 /* Compute and return the number of 1-bits set in X,
    ignoring all bits of index i or higher,
    for i < 8 * sizeof (unsigned int). */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_low_one_bits_uint (unsigned int x, int i)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_low_one_bits_uint (unsigned int x, int i)
 {
-  return ats2_hashmap_count_one_bits_uint (x & ((1U << i) - 1U));
+  return @ATS_EXTERN_PREFIX@count_one_bits_uint (x & ((1U << i) - 1U));
 }
 
 /* Compute and return the number of 1-bits set in X,
    ignoring all bits of index i or higher,
    for i < 8 * sizeof (unsigned long int). */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_low_one_bits_ulint (unsigned long int x, int i)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_low_one_bits_ulint (unsigned long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ulint (x & ((1UL << i) - 1UL));
+  return @ATS_EXTERN_PREFIX@count_one_bits_ulint (x & ((1UL << i) - 1UL));
 }
 
 /* Compute and return the number of 1-bits set in X,
    ignoring all bits of index i or higher,
    for i < 8 * sizeof (unsigned long long int). */
-ATS2_HASHMAP_COUNT_ONE_BITS_INLINE int
-ats2_hashmap_count_low_one_bits_ullint (unsigned long long int x, int i)
+@ATS_EXTERN_PREFIX@COUNT_ONE_BITS_INLINE int
+@ATS_EXTERN_PREFIX@count_low_one_bits_ullint (unsigned long long int x, int i)
 {
-  return ats2_hashmap_count_one_bits_ullint (x & ((1ULL << i) - 1ULL));
+  return @ATS_EXTERN_PREFIX@count_one_bits_ullint (x & ((1ULL << i) - 1ULL));
 }
 
-#define ats2_hashmap_count_low_one_bits_usint ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_usint @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 
 #if SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_size @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_size @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_size ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_size @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for size_t."
 #endif
 
 #if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uintptr @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uintptr @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uintptr ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uintptr @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uintptr_t."
 #endif
 
 #if SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint8 @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint8 @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_UINT8_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint8 ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint8 @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uint8_t."
 #endif
 
 #if SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint16 @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint16 @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_UINT16_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint16 ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint16 @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uint16_t."
 #endif
 
 #if SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint32 @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint32 @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint32 ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint32 @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uint32_t."
 #endif
 
 #if SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_INT
-#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_uint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint64 @ATS_EXTERN_PREFIX@count_low_one_bits_uint
 #elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_ulint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint64 @ATS_EXTERN_PREFIX@count_low_one_bits_ulint
 #elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
-#define ats2_hashmap_count_low_one_bits_uint64 ats2_hashmap_count_low_one_bits_ullint
+#define @ATS_EXTERN_PREFIX@count_low_one_bits_uint64 @ATS_EXTERN_PREFIX@count_low_one_bits_ullint
 #else
 #error "I failed to find a count-low-one-bits implementation for uint64_t."
 #endif
 
-#endif /* HASHMAP_COUNT_ONE_BITS_CATS_HEADER_GUARD__ */
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@COUNT_ONE_BITS__ */

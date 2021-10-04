@@ -236,6 +236,15 @@ AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
 AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 
+AC_CONFIG_FILES([hashmap/CATS/memory.cats])
+AC_CONFIG_FILES([hashmap/SATS/memory.sats])
+AC_CONFIG_FILES([hashmap/DATS/memory.dats])
+
+AC_CONFIG_FILES([hashmap/CATS/count-one-bits.cats])
+AC_CONFIG_FILES([hashmap/SATS/count-one-bits.sats])
+AC_CONFIG_FILES([hashmap/DATS/count-one-bits.dats])
+AC_CONFIG_FILES([hashmap/DATS/count-one-bits-microsoft-c.dats])
+
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-03-10-2021-10-50-40.structure.reference])
 AC_CONFIG_FILES([tests/test-03-10-2021-11-51-50.structure.reference])

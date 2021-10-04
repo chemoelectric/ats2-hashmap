@@ -25,10 +25,16 @@ Modified for ats2-hashmap by Barry Schwartz.
 
 *)
 
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
 #define ATS_DYNLOADFLAG 0
 
 %{
 #if 1500 <= _MSC_VER && (defined _M_IX86 || defined _M_X64)
-int ats2_hashmap_popcount_support = -1;
+int @ATS_EXTERN_PREFIX@popcount_support = -1;
 #endif
 %}

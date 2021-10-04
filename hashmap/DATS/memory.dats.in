@@ -18,16 +18,19 @@ along with this program. If not, see
 
 *)
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
 
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/array-proofs.sats"
-staload "hashmap/SATS/memory.sats"
+staload "@ATS_SATS_DIRECTORY@/array-proofs.sats"
+staload "@ATS_SATS_DIRECTORY@/memory.sats"
 
 implement {vt}
 array_move1 {length} (dst, src, length) =

@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Mon Oct  4 13:43:56 CDT 2021
+# from AX_AM_MACROS_STATIC on Mon Oct  4 14:05:43 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -200,6 +200,11 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/SATS/initialize-once.sats \
 	hashmap/DATS/initialize-once.dats \
 	hashmap/SATS/array-proofs.sats hashmap/DATS/array-proofs.dats \
+	hashmap/CATS/memory.cats hashmap/SATS/memory.sats \
+	hashmap/DATS/memory.dats hashmap/CATS/count-one-bits.cats \
+	hashmap/SATS/count-one-bits.sats \
+	hashmap/DATS/count-one-bits.dats \
+	hashmap/DATS/count-one-bits-microsoft-c.dats \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-03-10-2021-10-50-40.structure.reference \
 	tests/test-03-10-2021-11-51-50.structure.reference \
@@ -682,6 +687,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
 	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
+	$(top_srcdir)/hashmap/CATS/count-one-bits.cats.in \
+	$(top_srcdir)/hashmap/CATS/memory.cats.in \
 	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
 	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
 	$(top_srcdir)/hashmap/DATS/atomic.dats.in \
@@ -710,13 +717,18 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-ullint.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint-one-time.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/count-one-bits-microsoft-c.dats.in \
+	$(top_srcdir)/hashmap/DATS/count-one-bits.dats.in \
 	$(top_srcdir)/hashmap/DATS/initialize-once.dats.in \
+	$(top_srcdir)/hashmap/DATS/memory.dats.in \
 	$(top_srcdir)/hashmap/DATS/spinlock.dats.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
+	$(top_srcdir)/hashmap/SATS/count-one-bits.sats.in \
 	$(top_srcdir)/hashmap/SATS/initialize-once.sats.in \
+	$(top_srcdir)/hashmap/SATS/memory.sats.in \
 	$(top_srcdir)/hashmap/SATS/spinlock.sats.in \
 	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
 	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
@@ -985,6 +997,13 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/initialize-once.dats.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
+	$(top_srcdir)/hashmap/CATS/memory.cats.in \
+	$(top_srcdir)/hashmap/SATS/memory.sats.in \
+	$(top_srcdir)/hashmap/DATS/memory.dats.in \
+	$(top_srcdir)/hashmap/CATS/count-one-bits.cats.in \
+	$(top_srcdir)/hashmap/SATS/count-one-bits.sats.in \
+	$(top_srcdir)/hashmap/DATS/count-one-bits.dats.in \
+	$(top_srcdir)/hashmap/DATS/count-one-bits-microsoft-c.dats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
@@ -1403,6 +1422,20 @@ hashmap/DATS/initialize-once.dats: $(top_builddir)/config.status $(top_srcdir)/h
 hashmap/SATS/array-proofs.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/array-proofs.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/memory.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/memory.cats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/memory.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/memory.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/memory.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/memory.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/count-one-bits.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/count-one-bits.cats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/count-one-bits.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/count-one-bits.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/count-one-bits.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/count-one-bits.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/count-one-bits-microsoft-c.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/count-one-bits-microsoft-c.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
