@@ -69,12 +69,7 @@ g1uint_lte<uintptrknd> (x, y) =
 
 implement
 gcompare_val_val<uintptr> (x, y) =
-  if x < y then
-    ~1
-  else if x = y then
-    0
-  else
-    1
+  compare (x, y)
 
 fn
 new_entry_printer () : (FILEref, uintptr) -<cloptr1> void =
