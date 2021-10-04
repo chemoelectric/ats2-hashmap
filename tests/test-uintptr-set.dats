@@ -67,6 +67,15 @@ implement
 g1uint_lte<uintptrknd> (x, y) =
   $UN.cast (($UN.cast{uintptr} x) <= ($UN.cast{uintptr} y))
 
+implement
+gcompare_val_val<uintptr> (x, y) =
+  if x < y then
+    ~1
+  else if x = y then
+    0
+  else
+    1
+
 fn
 new_entry_printer () : (FILEref, uintptr) -<cloptr1> void =
   lam (out, entry) => fprint! (out, entry)
@@ -121,12 +130,13 @@ compare_elements (set : !uintptr_set_vt >> _,
                 else
                   loop (tail1, tail2)
             end
+
+        val elems = list_vt_mergesort<uintptr> (elems)
+        val lst = list_vt_mergesort<uintptr> (lst)
+
+        prval _ = lemma_list_vt_param lst
       in
-        let
-          prval _ = lemma_list_vt_param lst
-        in
-          loop (elems, lst)
-        end
+        loop (elems, lst)
       end
   end
 
