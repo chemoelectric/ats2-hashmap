@@ -52,8 +52,25 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint64-uint
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source.hats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
 
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/atomic.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/atomic.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/atomic.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/spinlock.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize-once.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize-once.dats.in
+
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/config.hats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-12-26-02.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-03-10-2021-12-29-17.structure.reference.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/list-ats-dependencies.dats.in

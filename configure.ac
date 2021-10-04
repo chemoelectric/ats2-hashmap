@@ -48,6 +48,12 @@ fi
 AM_CONDITIONAL([DEPENDENCY_TRACKING],
   [test x"${enable_dependency_tracking}" != xno])
 
+AC_SUBST([ATS_PACKNAME],[ats2-hashmap])
+AC_SUBST([ATS_EXTERN_PREFIX],[ats2_hashmap_])
+AC_SUBST([ATS_CATS_DIRECTORY],[hashmap/CATS])
+AC_SUBST([ATS_SATS_DIRECTORY],[hashmap/SATS])
+AC_SUBST([ATS_DATS_DIRECTORY],[hashmap/DATS])
+
 #--------------------------------------------------------------------------
 #
 # Checks for programs.
@@ -217,6 +223,15 @@ AC_CONFIG_FILES([hashmap/DATS/bits-source-uint-one-time.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
+
+AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
+AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
+AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
+AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
+AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
+AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
+AC_CONFIG_FILES([hashmap/SATS/initialize-once.sats])
+AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
 
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-03-10-2021-10-50-40.structure.reference])

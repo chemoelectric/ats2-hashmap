@@ -18,27 +18,30 @@ along with this program. If not, see
 
 *)
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
 
 %{#
-#include "hashmap/CATS/atomic.cats"
+#include "@ATS_CATS_DIRECTORY@/atomic.cats"
 %}
 
 (*------------------------------------------------------------------*)
 
 typedef atomic_int (i : int) =
-  $extype"ats2_hashmap_atomic_int"
+  $extype"@ATS_EXTERN_PREFIX@atomic_int"
 typedef atomic_int =
   [i : int] atomic_int (i)
 
 typedef atomic_int_ptr (p : addr) =
-  $extype"ats2_hashmap_atomic_int_ptr"
+  $extype"@ATS_EXTERN_PREFIX@atomic_int_ptr"
 typedef atomic_int_ptr =
   [p : addr] atomic_int_ptr (p)
 
 typedef atomic_size_t_ptr (p : addr) =
-  $extype"ats2_hashmap_atomic_size_t_ptr"
+  $extype"@ATS_EXTERN_PREFIX@atomic_size_t_ptr"
 typedef atomic_size_t_ptr =
   [p : addr] atomic_size_t_ptr (p)
 
@@ -74,13 +77,13 @@ atomic_thread_fence_seq_cst () :<!ref> void = "mac#%"
 
 fun
 atomic_load_seq_cst_size_ptr (a : atomic_size_t_ptr) :<!ref> size_t =
-  "mac#ats2_hashmap_atomic_load_seq_cst"
+  "mac#@ATS_EXTERN_PREFIX@atomic_load_seq_cst"
 
 overload atomic_load_seq_cst_size with atomic_load_seq_cst_size_ptr
 
 fun
 atomic_load_acquire_int_ptr (a : atomic_int_ptr) :<!ref> int =
-  "mac#ats2_hashmap_atomic_load_acquire"
+  "mac#@ATS_EXTERN_PREFIX@atomic_load_acquire"
 
 fun {}
 atomic_load_acquire_int_ref (a : &atomic_int) :<!ref> int
@@ -97,7 +100,7 @@ overload atomic_load_acquire with atomic_load_acquire_int
 fun
 atomic_store_release_int_ptr (a     : atomic_int_ptr,
                               value : int) :<!refwrt> void =
-  "mac#ats2_hashmap_atomic_store_release"
+  "mac#@ATS_EXTERN_PREFIX@atomic_store_release"
 
 fun {}
 atomic_store_release_int_ref (a     : &atomic_int,
@@ -114,12 +117,12 @@ overload atomic_store_release with atomic_store_release_int
 fun
 atomic_fetch_add_seq_cst_size (a : atomic_size_t_ptr,
                                n : size_t) :<!refwrt> size_t =
-  "mac#ats2_hashmap_atomic_fetch_add_seq_cst"
+  "mac#@ATS_EXTERN_PREFIX@atomic_fetch_add_seq_cst"
 
 fun
 atomic_fetch_sub_seq_cst_size (a : atomic_size_t_ptr,
                                n : size_t) :<!refwrt> size_t =
-  "mac#ats2_hashmap_atomic_fetch_sub_seq_cst"
+  "mac#@ATS_EXTERN_PREFIX@atomic_fetch_sub_seq_cst"
 
 overload atomic_fetch_add_seq_cst with atomic_fetch_add_seq_cst_size
 overload atomic_fetch_sub_seq_cst with atomic_fetch_sub_seq_cst_size

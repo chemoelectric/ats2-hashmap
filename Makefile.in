@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Sun Oct  3 12:54:39 CDT 2021
+# from AX_AM_MACROS_STATIC on Mon Oct  4 13:22:35 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -194,6 +194,11 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/bits-source-ulint-one-time.dats.m4 \
 	hashmap/DATS/bits-source-ullint-one-time.dats.m4 \
 	hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4 \
+	hashmap/CATS/atomic.cats hashmap/SATS/atomic.sats \
+	hashmap/DATS/atomic.dats hashmap/CATS/spinlock.cats \
+	hashmap/SATS/spinlock.sats hashmap/DATS/spinlock.dats \
+	hashmap/SATS/initialize-once.sats \
+	hashmap/DATS/initialize-once.dats \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-03-10-2021-10-50-40.structure.reference \
 	tests/test-03-10-2021-11-51-50.structure.reference \
@@ -675,6 +680,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
+	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
+	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
+	$(top_srcdir)/hashmap/DATS/atomic.dats.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-TYPE-one-time.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-size-one-time.dats.m4.in \
@@ -700,8 +708,13 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-ullint.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint-one-time.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/initialize-once.dats.in \
+	$(top_srcdir)/hashmap/DATS/spinlock.dats.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
+	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
+	$(top_srcdir)/hashmap/SATS/initialize-once.sats.in \
+	$(top_srcdir)/hashmap/SATS/spinlock.sats.in \
 	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
 	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
 	$(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in \
@@ -737,6 +750,11 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+ATS_CATS_DIRECTORY = @ATS_CATS_DIRECTORY@
+ATS_DATS_DIRECTORY = @ATS_DATS_DIRECTORY@
+ATS_EXTERN_PREFIX = @ATS_EXTERN_PREFIX@
+ATS_PACKNAME = @ATS_PACKNAME@
+ATS_SATS_DIRECTORY = @ATS_SATS_DIRECTORY@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -954,8 +972,24 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4.in \
 	$(top_srcdir)/hashmap/HATS/bits-source.hats.in \
 	$(top_srcdir)/hashmap/HATS/bits-source-include.hats.in \
+	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
+	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
+	$(top_srcdir)/hashmap/DATS/atomic.dats.in \
+	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
+	$(top_srcdir)/hashmap/SATS/spinlock.sats.in \
+	$(top_srcdir)/hashmap/DATS/spinlock.dats.in \
+	$(top_srcdir)/hashmap/SATS/initialize-once.sats.in \
+	$(top_srcdir)/hashmap/DATS/initialize-once.dats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
+	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-26-02.structure.reference.in \
+	$(top_srcdir)/tests/test-03-10-2021-12-29-17.structure.reference.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
@@ -1343,6 +1377,22 @@ hashmap/DATS/bits-source-ulint-one-time.dats.m4: $(top_builddir)/config.status $
 hashmap/DATS/bits-source-ullint-one-time.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-ullint-one-time.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/atomic.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/atomic.cats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/atomic.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/atomic.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/atomic.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/atomic.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/spinlock.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/spinlock.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/spinlock.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/spinlock.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/spinlock.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/initialize-once.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/initialize-once.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/initialize-once.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/initialize-once.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

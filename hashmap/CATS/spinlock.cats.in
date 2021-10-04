@@ -18,11 +18,11 @@ along with this program. If not, see
 
 */
 
-#ifndef ATS2_HASHMAP_CATS_SPINLOCK_CATS_HEADER_GUARD__
-#define ATS2_HASHMAP_CATS_SPINLOCK_CATS_HEADER_GUARD__
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@CATS_SPINLOCK_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@CATS_SPINLOCK_CATS__
 
 #include <stdatomic.h>
-#include "hashmap/CATS/atomic.cats"
+#include "@ATS_CATS_DIRECTORY@/atomic.cats"
 
 /********************************************************************/
 
@@ -33,12 +33,12 @@ along with this program. If not, see
  *        compilers.
  */
 #if defined(__i386__) || defined(__x86_64__)
-#define ats2_hashmap_pause() __builtin_ia32_pause ()
+#define @ATS_EXTERN_PREFIX@pause() __builtin_ia32_pause ()
 #endif
 
 #else
 
-#define ats2_hashmap_pause() do { /* nothing */ } while (0)
+#define @ATS_EXTERN_PREFIX@pause() do { /* nothing */ } while (0)
 
 #endif
 
@@ -48,49 +48,49 @@ typedef struct
 {
   /* Use unsigned integers, so they will wrap around when they
      overflow. */
-  ats2_hashmap_atomic_size_t active;
-  ats2_hashmap_atomic_size_t available;
-} ats2_hashmap_spinlock_struct_t;
+  @ATS_EXTERN_PREFIX@atomic_size_t active;
+  @ATS_EXTERN_PREFIX@atomic_size_t available;
+} @ATS_EXTERN_PREFIX@spinlock_struct_t;
 
-typedef ats2_hashmap_spinlock_struct_t *ats2_hashmap_spinlock_t;
+typedef @ATS_EXTERN_PREFIX@spinlock_struct_t *@ATS_EXTERN_PREFIX@spinlock_t;
 
-ATSinline() ats2_hashmap_spinlock_t
-ats2_hashmap_spinlock_alloc (void)
+ATSinline() @ATS_EXTERN_PREFIX@spinlock_t
+@ATS_EXTERN_PREFIX@spinlock_alloc (void)
 {
-  ats2_hashmap_spinlock_t lock =
-    ATS_MALLOC (sizeof (ats2_hashmap_spinlock_struct_t));
+  @ATS_EXTERN_PREFIX@spinlock_t lock =
+    ATS_MALLOC (sizeof (@ATS_EXTERN_PREFIX@spinlock_struct_t));
   lock->active = 0;
   lock->available = 0;
   return lock;
 }
 
 ATSinline() void
-ats2_hashmap_spinlock_free (ats2_hashmap_spinlock_t lock)
+@ATS_EXTERN_PREFIX@spinlock_free (@ATS_EXTERN_PREFIX@spinlock_t lock)
 {
   ATS_MFREE (lock);
 }
 
-ATSinline() ats2_hashmap_spinlock_struct_t
-ats2_hashmap_spinlock_data (void)
+ATSinline() @ATS_EXTERN_PREFIX@spinlock_struct_t
+@ATS_EXTERN_PREFIX@spinlock_data (void)
 {
-  ats2_hashmap_spinlock_struct_t lock;
+  @ATS_EXTERN_PREFIX@spinlock_struct_t lock;
   lock.active = 0;
   lock.available = 0;
   return lock;
 }
 
-ATSinline() ats2_hashmap_atomic_size_t_ptr
-ats2_hashmap_spinlock_active_p (ats2_hashmap_spinlock_t lock)
+ATSinline() @ATS_EXTERN_PREFIX@atomic_size_t_ptr
+@ATS_EXTERN_PREFIX@spinlock_active_p (@ATS_EXTERN_PREFIX@spinlock_t lock)
 {
   return &(lock->active);
 }
 
-ATSinline() ats2_hashmap_atomic_size_t_ptr
-ats2_hashmap_spinlock_available_p (ats2_hashmap_spinlock_t lock)
+ATSinline() @ATS_EXTERN_PREFIX@atomic_size_t_ptr
+@ATS_EXTERN_PREFIX@spinlock_available_p (@ATS_EXTERN_PREFIX@spinlock_t lock)
 {
   return &(lock->available);
 }
 
 /********************************************************************/
 
-#endif /* ATS2_HASHMAP_CATS_SPINLOCK_CATS_HEADER_GUARD__ */
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@CATS_SPINLOCK_CATS__ */

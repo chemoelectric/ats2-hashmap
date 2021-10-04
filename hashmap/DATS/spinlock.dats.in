@@ -18,22 +18,21 @@ along with this program. If not, see
 
 *)
 
-%{#
-#include "hashmap/CATS/spinlock.cats"
-%}
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
 
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/atomic.sats"
-staload _ = "hashmap/DATS/atomic.dats"
+staload "@ATS_SATS_DIRECTORY@/atomic.sats"
+staload _ = "@ATS_DATS_DIRECTORY@/atomic.dats"
 
-staload "hashmap/SATS/spinlock.sats"
+staload "@ATS_SATS_DIRECTORY@/spinlock.sats"
 
 extern praxi
 make_spinlocked_v {p : addr} () :<prf>

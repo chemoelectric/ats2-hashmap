@@ -18,14 +18,17 @@ along with this program. If not, see
 
 *)
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
 
 %{#
-#include "hashmap/CATS/spinlock.cats"
+#include "@ATS_CATS_DIRECTORY@/spinlock.cats"
 %}
 
-staload "hashmap/SATS/atomic.sats"
+staload "@ATS_SATS_DIRECTORY@/atomic.sats"
 
 (********************************************************************)
 (* Fair spinlocks using a ticket system. *)
@@ -33,13 +36,13 @@ staload "hashmap/SATS/atomic.sats"
 (* Also see https://en.wikipedia.org/w/index.php?title=Ticket_lock&oldid=990949901 *)
 
 typedef spinlock_data_t =
-  $extype_struct"ats2_hashmap_spinlock_struct_t" of
+  $extype_struct"@ATS_EXTERN_PREFIX@spinlock_struct_t" of
     (* The ATS compiler needs to know the size of the structure. *)
     { spinlock_ticket_next_active = size_t,
       spinlock_ticket_next_available = size_t }
 
 abstype spinlock_t (p : addr) =
-  $extype"ats2_hashmap_spinlock_t"
+  $extype"@ATS_EXTERN_PREFIX@spinlock_t"
 
 absview spinlocked_v (p : addr)
 

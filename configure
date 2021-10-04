@@ -717,6 +717,11 @@ CODE_COVERAGE_ENABLED_FALSE
 CODE_COVERAGE_ENABLED_TRUE
 PATSOPT
 M4
+ATS_DATS_DIRECTORY
+ATS_SATS_DIRECTORY
+ATS_CATS_DIRECTORY
+ATS_EXTERN_PREFIX
+ATS_PACKNAME
 DEPENDENCY_TRACKING_FALSE
 DEPENDENCY_TRACKING_TRUE
 PKGCONFIG_PATSHOME
@@ -13018,6 +13023,17 @@ else
 fi
 
 
+ATS_PACKNAME=ats2-hashmap
+
+ATS_EXTERN_PREFIX=ats2_hashmap_
+
+ATS_CATS_DIRECTORY=hashmap/CATS
+
+ATS_SATS_DIRECTORY=hashmap/SATS
+
+ATS_DATS_DIRECTORY=hashmap/DATS
+
+
 #--------------------------------------------------------------------------
 #
 # Checks for programs.
@@ -15428,6 +15444,23 @@ ac_config_files="$ac_config_files hashmap/DATS/bits-source-ullint-one-time.dats.
 ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4"
 
 
+ac_config_files="$ac_config_files hashmap/CATS/atomic.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/atomic.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/atomic.dats"
+
+ac_config_files="$ac_config_files hashmap/CATS/spinlock.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/spinlock.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/spinlock.dats"
+
+ac_config_files="$ac_config_files hashmap/SATS/initialize-once.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/initialize-once.dats"
+
+
 ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
 
 ac_config_files="$ac_config_files tests/test-03-10-2021-10-50-40.structure.reference"
@@ -16528,6 +16561,14 @@ do
     "hashmap/DATS/bits-source-ulint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ulint-one-time.dats.m4" ;;
     "hashmap/DATS/bits-source-ullint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ullint-one-time.dats.m4" ;;
     "hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4" ;;
+    "hashmap/CATS/atomic.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/atomic.cats" ;;
+    "hashmap/SATS/atomic.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/atomic.sats" ;;
+    "hashmap/DATS/atomic.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/atomic.dats" ;;
+    "hashmap/CATS/spinlock.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/spinlock.cats" ;;
+    "hashmap/SATS/spinlock.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/spinlock.sats" ;;
+    "hashmap/DATS/spinlock.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/spinlock.dats" ;;
+    "hashmap/SATS/initialize-once.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/initialize-once.sats" ;;
+    "hashmap/DATS/initialize-once.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/initialize-once.dats" ;;
     "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
     "tests/test-03-10-2021-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-10-50-40.structure.reference" ;;
     "tests/test-03-10-2021-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-11-51-50.structure.reference" ;;

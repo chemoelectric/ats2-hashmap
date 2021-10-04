@@ -18,43 +18,43 @@ along with this program. If not, see
 
 */
 
-#ifndef ATS2_HASHMAP_CATS_ATOMIC_CATS_HEADER_GUARD__
-#define ATS2_HASHMAP_CATS_ATOMIC_CATS_HEADER_GUARD__
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@ATOMIC_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@ATOMIC_CATS__
 
 #include <stdatomic.h>
 
 /********************************************************************/
 
-typedef atomic_int ats2_hashmap_atomic_int;
-typedef volatile atomic_int *ats2_hashmap_atomic_int_ptr;
+typedef atomic_int @ATS_EXTERN_PREFIX@atomic_int;
+typedef volatile atomic_int *@ATS_EXTERN_PREFIX@atomic_int_ptr;
 
-typedef atomic_size_t ats2_hashmap_atomic_size_t;
-typedef volatile atomic_size_t *ats2_hashmap_atomic_size_t_ptr;
+typedef atomic_size_t @ATS_EXTERN_PREFIX@atomic_size_t;
+typedef volatile atomic_size_t *@ATS_EXTERN_PREFIX@atomic_size_t_ptr;
 
-ATSinline() ats2_hashmap_atomic_int_ptr
-ats2_hashmap_atomic_int_ref2ptr (atstype_ref p)
+ATSinline() @ATS_EXTERN_PREFIX@atomic_int_ptr
+@ATS_EXTERN_PREFIX@atomic_int_ref2ptr (atstype_ref p)
 {
-  return (ats2_hashmap_atomic_int_ptr) (void *) p;
+  return (@ATS_EXTERN_PREFIX@atomic_int_ptr) (void *) p;
 }
 
-#define ats2_hashmap_atomic_thread_fence_seq_cst() \
+#define @ATS_EXTERN_PREFIX@atomic_thread_fence_seq_cst() \
   atomic_thread_fence (memory_order_seq_cst)
 
-#define ats2_hashmap_atomic_load_seq_cst(p) \
+#define @ATS_EXTERN_PREFIX@atomic_load_seq_cst(p) \
   atomic_load_explicit ((p), memory_order_seq_cst)
 
-#define ats2_hashmap_atomic_load_acquire(p) \
+#define @ATS_EXTERN_PREFIX@atomic_load_acquire(p) \
   atomic_load_explicit ((p), memory_order_acquire)
 
-#define ats2_hashmap_atomic_store_release(p, value) \
+#define @ATS_EXTERN_PREFIX@atomic_store_release(p, value) \
   atomic_store_explicit((p), (value), memory_order_release)
 
-#define ats2_hashmap_atomic_fetch_add_seq_cst(p, n) \
+#define @ATS_EXTERN_PREFIX@atomic_fetch_add_seq_cst(p, n) \
   atomic_fetch_add_explicit ((p), (n), memory_order_seq_cst)
 
-#define ats2_hashmap_atomic_fetch_sub_seq_cst(p, n) \
+#define @ATS_EXTERN_PREFIX@atomic_fetch_sub_seq_cst(p, n) \
   atomic_fetch_sub_explicit ((p), (n), memory_order_seq_cst)
 
 /********************************************************************/
 
-#endif /* ATS2_HASHMAP_CATS_ATOMIC_CATS_HEADER_GUARD__ */
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@ATOMIC_CATS__ */

@@ -18,19 +18,18 @@ along with this program. If not, see
 
 *)
 
-%{#
-#include "hashmap/CATS/atomic.cats"
-%}
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
 
-#define ATS_PACKNAME "ats2-hashmap"
-#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
 
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/atomic.sats"
+staload "@ATS_SATS_DIRECTORY@/atomic.sats"
 
 implement {}
 atomic_load_acquire_int_ref (a) =
