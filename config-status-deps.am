@@ -61,6 +61,9 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize-once.sats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize-once.dats.in
 
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/config.hats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in

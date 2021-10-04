@@ -26,7 +26,7 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/array_prf.sats"
+staload "hashmap/SATS/array-proofs.sats"
 staload "hashmap/SATS/memory.sats"
 
 implement {vt}

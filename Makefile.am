@@ -180,12 +180,12 @@ CLEANFILES += hashmap/DATS/initialize-once_dats.c
 EXTRA_DIST += hashmap/SATS/initialize-once.sats
 EXTRA_DIST += hashmap/DATS/initialize-once.dats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/array_prf_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/array_prf_dats.c
-CLEANFILES += hashmap/SATS/array_prf_sats.c
-CLEANFILES += hashmap/DATS/array_prf_dats.c
-EXTRA_DIST += hashmap/SATS/array_prf.sats
-EXTRA_DIST += hashmap/DATS/array_prf.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
+CLEANFILES += hashmap/SATS/array-proofs_sats.c
+CLEANFILES += hashmap/DATS/array-proofs_dats.c
+EXTRA_DIST += hashmap/SATS/array-proofs.sats
+EXTRA_DIST += hashmap/DATS/array-proofs.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c

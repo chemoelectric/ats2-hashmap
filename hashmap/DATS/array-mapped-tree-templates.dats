@@ -32,7 +32,7 @@ along with this program. If not, see
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 
-staload "hashmap/SATS/array_prf.sats"
+staload "hashmap/SATS/array-proofs.sats"
 
 staload "hashmap/SATS/memory.sats"
 staload _ = "hashmap/DATS/memory.dats"

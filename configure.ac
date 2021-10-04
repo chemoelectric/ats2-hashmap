@@ -233,6 +233,9 @@ AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
 AC_CONFIG_FILES([hashmap/SATS/initialize-once.sats])
 AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
 
+AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
+AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
+
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-03-10-2021-10-50-40.structure.reference])
 AC_CONFIG_FILES([tests/test-03-10-2021-11-51-50.structure.reference])
