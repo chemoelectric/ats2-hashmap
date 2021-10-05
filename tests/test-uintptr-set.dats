@@ -599,7 +599,35 @@ test_array_of_numbers {n           : int}
           assertloc (set \contains numbers[i])
         end
     val result = compare_structure (set, struct_file, ref_file)
-// FIXME: The list may contain duplicates and needs to be cleaned of them.
+    val lst = list_vt_quicksort<uintptr> (array_to_list (numbers, n))
+    fun
+    loop (set : !uintptr_set_vt,
+          lst : !List_vt (uintptr),
+          i   : uintptr) : void =
+      case+ lst of
+      | NIL => ()
+      | @ head :: tail =>
+        {
+          fun
+          loop2 (set  : !uintptr_set_vt,
+                 head : uintptr,
+                 j    : uintptr) : uintptr =
+            if j = head then
+              begin
+                assertloc (set \contains j);
+                succ j
+              end
+            else
+              begin
+                assertloc (not (set \contains j));
+                loop2 (set, head, succ j)
+              end
+          val _ = loop (set, tail, loop2 (set, head, i))
+          prval _ = fold@ lst
+        }
+    val _ = free lst
+// FIXME: The list may contain duplicates and needs to be cleaned of them,
+//        before one can run this test:
 //    val result = result && compare_elements (set, array_to_list (numbers, n))
     val _ = free set
   in
