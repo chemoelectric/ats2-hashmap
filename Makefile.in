@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Tue Oct  5 13:30:51 CDT 2021
+# from AX_AM_MACROS_STATIC on Tue Oct  5 16:28:54 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -215,6 +215,8 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	tests/test-2021-10-03-12-26-02.structure.reference \
 	tests/test-2021-10-03-12-29-17.structure.reference \
 	tests/test-2021-10-05-01-01-01.structure.reference \
+	tests/test-2021-10-05-03-40-40.structure.reference \
+	tests/test-2021-10-05-04-18-20.structure.reference \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -740,6 +742,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in \
 	$(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in \
 	$(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-03-40-40.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-04-18-20.structure.reference.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
@@ -1017,6 +1021,8 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in \
 	$(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in \
 	$(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-03-40-40.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-04-18-20.structure.reference.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
@@ -1459,6 +1465,10 @@ tests/test-2021-10-03-12-26-02.structure.reference: $(top_builddir)/config.statu
 tests/test-2021-10-03-12-29-17.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-2021-10-05-01-01-01.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-2021-10-05-03-40-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-05-03-40-40.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-2021-10-05-04-18-20.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-05-04-18-20.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

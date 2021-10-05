@@ -38,6 +38,8 @@ extern volatile _Atomic atstype_uintptr ats2_hashmap_node_alloc_count;
 
 #define ats2_hashmap_test_uintptr_set_add(x, y) ((x) + (y))
 #define ats2_hashmap_test_uintptr_set_mul(x, y) ((x) * (y))
+#define ats2_hashmap_test_uintptr_set_mod(x, y) ((x) % (y))
+#define ats2_hashmap_test_uintptr_set_eq(x, y) ((x) == (y))
 %}
 
 macdef node_alloc_count =
@@ -100,6 +102,32 @@ g1uint_mul<uint64knd> (x, y) =
     mul (x, y)
   end
 
+implement
+g1uint_mod<uint64knd> (x, y) =
+  let
+    extern fun
+    mod_ {x, y : int | 1 <= y}
+         (x    : g1uint (uint64knd, x),
+          y    : g1uint (uint64knd, y)) :<>
+        g1uint (uint64knd, x mod y) =
+      "mac#ats2_hashmap_test_uintptr_set_mod"
+  in
+    mod_ (x, y)
+  end
+
+implement
+g1uint_eq<uint64knd> (x, y) =
+  let
+    extern fun
+    eq {x, y : int}
+       (x    : g1uint (uint64knd, x),
+        y    : g1uint (uint64knd, y)) :<>
+        bool (x == y) =
+      "mac#ats2_hashmap_test_uintptr_set_eq"
+  in
+    eq (x, y)
+  end
+
 fn
 new_entry_printer () : (FILEref, uintptr) -<cloptr1> void =
   lam (out, entry) => fprint! (out, entry)
@@ -155,8 +183,8 @@ compare_elements (set : !uintptr_set_vt >> _,
                   loop (tail1, tail2)
             end
 
-        val elems = list_vt_mergesort<uintptr> (elems)
-        val lst = list_vt_mergesort<uintptr> (lst)
+        val elems = list_vt_quicksort<uintptr> (elems)
+        val lst = list_vt_quicksort<uintptr> (lst)
 
         prval _ = lemma_list_vt_param lst
       in
@@ -200,11 +228,15 @@ compare_structure (set                : !uintptr_set_vt >> _,
     true
 
 fn
-generate_random_numbers {n    : int}
-                        {seed : int}
-                        (arr  : &(@[uintptr][n]),
-                         n    : size_t n,
-                         seed : uint64 seed) : void =
+generate_random_numbers {n       : int}
+                        {seed    : int}
+                        {modulus : int}
+                        {factor  : int}
+                        (arr     : &(@[uintptr][n]),
+                         n       : size_t n,
+                         seed    : uint64 seed,
+                         modulus : uint64 modulus,
+                         factor  : uint64 factor) : void =
   let
     (*
       See https://en.wikipedia.org/w/index.php?title=Linear_congruential_generator&oldid=1043012257
@@ -220,13 +252,17 @@ generate_random_numbers {n    : int}
     var seed : [seed : int] uint64 seed = seed
     var i : [i : int | 0 <= i; i <= n] size_t i
     prval _ = lemma_g1uint_param n
+    prval _ = lemma_g1uint_param modulus
   in
     for (i := i2sz 0; i <> n; i := succ i)
       let
         val seed1 = (a * seed) + c
       in
         seed := seed1;
-        arr[i] := $UN.cast seed1
+        if modulus = $extval (uint64 0, "((atstype_uint64) 0)") then
+          arr[i] := $UN.cast{uintptr} (factor * seed1)
+        else
+          arr[i] := $UN.cast{uintptr} (factor * (g1uint_mod (seed1, modulus)))
       end
   end
 
@@ -512,10 +548,40 @@ test_root_node_subnode_collision () : void =
   }
 
 fn
-test_random_numbers {n              : int}
-                    (random_numbers : &(@[uintptr][n]),
-                     n              : size_t n) : void =
-  {
+array_to_list {n   : int}
+              (arr : &(@[uintptr][n]),
+               n   : size_t n) :
+    list_vt (uintptr, n) =
+  let
+    fun
+    loop {i   : int | 0 <= i; i <= n} .<i>.
+         (arr : &(@[uintptr][n]),
+          n   : size_t n,
+          i   : size_t i,
+          lst : list_vt (uintptr, n - i)) :
+        list_vt (uintptr, n) =
+      if i = i2sz 0 then
+        lst
+      else
+        let
+          val j = pred i
+          val elem = arr[j]
+        in
+          loop {i - 1} (arr, n, j, elem :: lst)
+        end
+
+    prval _ = lemma_g1uint_param n
+  in
+    loop {n} (arr, n, n, NIL)
+  end
+
+fn
+test_array_of_numbers {n           : int}
+                      (numbers     : &(@[uintptr][n]),
+                       n           : size_t n,
+                       struct_file : String0,
+                       ref_file    : String0) : bool =
+  let
     prval _ = lemma_g1uint_param n
 
     var set : uintptr_set_vt = uintptr_set ()
@@ -523,17 +589,22 @@ test_random_numbers {n              : int}
     val _ =
       for (i := i2sz 0; i <> n; i := succ i)
         begin
-          //print! (i, " "); println_uintptr (random_numbers[i]);
-          set := set + random_numbers[i]
+          //print! (i, " "); println_uintptr (numbers[i]);
+          set := set + numbers[i]
         end
     val _ =
       for (i := i2sz 0; i <> n; i := succ i)
         begin
-          //print! (i, " "); println_uintptr (random_numbers[i]);
-          assertloc (set \contains random_numbers[i])
+          //print! (i, " "); println_uintptr (numbers[i]);
+          assertloc (set \contains numbers[i])
         end
+    val result = compare_structure (set, struct_file, ref_file)
+// FIXME: The list may contain duplicates and needs to be cleaned of them.
+//    val result = result && compare_elements (set, array_to_list (numbers, n))
     val _ = free set
-  }
+  in
+    result
+  end
 
 implement
 main0 () =
@@ -545,13 +616,35 @@ main0 () =
     val _ = test_root_node_subnode_collision ()
 
     #define NUMBER_OF_RANDOM_NUMBERS 1000
+
     var random_numbers =
       @[uintptr][NUMBER_OF_RANDOM_NUMBERS]
         ($extval (uintptr, "((atstype_uintptr) 0)"))
     val seed = $extval ([u : int] uint64 u, "((atstype_uint64) 1234)")
-    val _ = generate_random_numbers (random_numbers,
-                                     i2sz NUMBER_OF_RANDOM_NUMBERS,
-                                     seed)
     val _ =
-      test_random_numbers (random_numbers, i2sz NUMBER_OF_RANDOM_NUMBERS)
+      generate_random_numbers
+        (random_numbers, i2sz NUMBER_OF_RANDOM_NUMBERS, seed,
+         $extval (uint64 0, "((atstype_uint64) 0)"),
+         $extval (uint64 0, "((atstype_uint64) 1)"))
+    val _ =
+      assertloc
+        (test_array_of_numbers
+          (random_numbers, i2sz NUMBER_OF_RANDOM_NUMBERS,
+           "tests/test-2021-10-05-03-40-40.structure",
+           "tests/test-2021-10-05-03-40-40.structure.reference"))
+
+    var clashier_numbers =
+      @[uintptr][NUMBER_OF_RANDOM_NUMBERS]
+        ($extval (uintptr, "((atstype_uintptr) 0)"))
+    val _ =
+      generate_random_numbers
+        (clashier_numbers, i2sz NUMBER_OF_RANDOM_NUMBERS, seed,
+         $extval (uint64 0, "((atstype_uint64) 1000)"),
+         $extval (uint64 0, "((atstype_uint64) 1000)"))
+    val _ =
+      assertloc
+        (test_array_of_numbers
+          (clashier_numbers, i2sz NUMBER_OF_RANDOM_NUMBERS,
+           "tests/test-2021-10-05-04-18-20.structure",
+           "tests/test-2021-10-05-04-18-20.structure.reference"))
   }
