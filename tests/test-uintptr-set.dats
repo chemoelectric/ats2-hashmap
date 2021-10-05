@@ -187,8 +187,8 @@ test_empty () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-11-51-50.structure",
-                "tests/test-03-10-2021-11-51-50.structure.reference"))
+          (set, "tests/test-2021-10-03-11-51-50.structure",
+                "tests/test-2021-10-03-11-51-50.structure.reference"))
     val _ = assertloc (compare_elements (set, NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -219,8 +219,8 @@ test_size_one () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-11-55-11.structure",
-                "tests/test-03-10-2021-11-55-11.structure.reference"))
+          (set, "tests/test-2021-10-03-11-55-11.structure",
+                "tests/test-2021-10-03-11-55-11.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x10U) :: NIL))
 
     (* Add the same entry. Also, use different notations for
@@ -245,8 +245,8 @@ test_size_one () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-11-58-30.structure",
-                "tests/test-03-10-2021-11-58-30.structure.reference"))
+          (set, "tests/test-2021-10-03-11-58-30.structure",
+                "tests/test-2021-10-03-11-58-30.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x10U) :: NIL))
 
     val _ = free set
@@ -276,8 +276,8 @@ test_root_node_expansion () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-12-00-18.structure",
-                "tests/test-03-10-2021-12-00-18.structure.reference"))
+          (set, "tests/test-2021-10-03-12-00-18.structure",
+                "tests/test-2021-10-03-12-00-18.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x02U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -302,8 +302,8 @@ test_root_node_expansion () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-12-02-25.structure",
-                "tests/test-03-10-2021-12-02-25.structure.reference"))
+          (set, "tests/test-2021-10-03-12-02-25.structure",
+                "tests/test-2021-10-03-12-02-25.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x02U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -344,8 +344,8 @@ test_root_node_expansion () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-10-50-40.structure",
-                "tests/test-03-10-2021-10-50-40.structure.reference"))
+          (set, "tests/test-2021-10-03-10-50-40.structure",
+                "tests/test-2021-10-03-10-50-40.structure.reference"))
     val _ = assertloc (compare_elements (set,
                                          (u2up 0x11U) ::
                                          (u2up 0x0FU) ::
@@ -383,8 +383,8 @@ test_root_node_leaf_collision () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-12-26-02.structure",
-                "tests/test-03-10-2021-12-26-02.structure.reference"))
+          (set, "tests/test-2021-10-03-12-26-02.structure",
+                "tests/test-2021-10-03-12-26-02.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x0101U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
@@ -412,9 +412,41 @@ test_root_node_leaf_collision () : void =
     val _ =
       assertloc
         (compare_structure
-          (set, "tests/test-03-10-2021-12-29-17.structure",
-                "tests/test-03-10-2021-12-29-17.structure.reference"))
+          (set, "tests/test-2021-10-03-12-29-17.structure",
+                "tests/test-2021-10-03-12-29-17.structure.reference"))
     val _ = assertloc (compare_elements (set, (u2up 0x010101U) :: (u2up 0x000101U) :: NIL))
+    val _ = free set
+    val _ = assertloc (node_alloc_count = zero)
+  }
+
+fn
+test_root_node_subnode_collision () : void =
+  {
+    val set = uintptr_set () + (u2up 0x01U) + (u2up 0x0101U) + (u2up 0x010101U)
+    val _ = assertloc (size set = i2sz 3)
+    val _ = assertloc (not (iseqz set))
+    val _ = assertloc (isneqz set)
+    val _ =
+      let
+        var i : [i : int] uintptr i
+      in
+        for (i := zero; i <= reasonably_big_number; i := succ i)
+          begin
+            //println_uintptr (i);
+            if i = (u2up 0x01U) ||
+               i = (u2up 0x0101U) ||
+               i = (u2up 0x010101U) then
+              assertloc (set \contains i)
+            else
+              assertloc (not (set \contains i))
+          end
+      end
+    val _ =
+      assertloc
+        (compare_structure
+          (set, "tests/test-2021-10-05-01-01-01.structure",
+                "tests/test-2021-10-05-01-01-01.structure.reference"))
+    val _ = assertloc (compare_elements (set, (u2up 0x010101U) :: (u2up 0x0101U) :: (u2up 0x01U) :: NIL))
     val _ = free set
     val _ = assertloc (node_alloc_count = zero)
   }
@@ -426,4 +458,5 @@ main0 () =
     val _ = test_size_one ()
     val _ = test_root_node_expansion ()
     val _ = test_root_node_leaf_collision ()
+    val _ = test_root_node_subnode_collision ()
   }

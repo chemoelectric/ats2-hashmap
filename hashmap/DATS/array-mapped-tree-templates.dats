@@ -1039,9 +1039,9 @@ set_subtree_entry__loop
                     val _ = set_leaf_map (node, new_leaf_map)
 
                     (* Unsafely create a view of a slot in the
-                       node. (The node is not really "linear" as
-                       as long as this view exists, but the
-                       technique seems simple and untedious.) *)
+                       current node. (The node is not really
+                       "linear" as long as this view exists,
+                       but the technique seems simple.) *)
                     extern praxi
                     create_slot_view :
                       () -<prf> node_vt (new_node_length)
@@ -1069,13 +1069,46 @@ set_subtree_entry__loop
               end
           end
         else
-          (* One must work on a deeper node. *)
-          let
-          in
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            is_new_slot := false // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-          end
+          (* The current entry is a subnode. Make the subnode
+             the new "thing upon which to concentrate our work",
+             and then loop. *)
+          {
+            (* The next set of bits. The bits cannot be exhausted,
+               or there would be no subnode. *)
+            val [bits1 : int] (pf_bits1 | bits1) =
+              bits_source (hash_storage1, succ depth)
+            prval _ = bits_source_bits_bounds pf_bits1
+            val _ = assertloc (bits1 <> BITS_SOURCE_EXHAUSTED)
+
+            (* Unsafely create a view of a slot in the current
+               node. (The node is not really "linear" as long
+               as this view exists, but the technique seems
+               simple.) *)
+            extern praxi
+            create_slot_view :
+              () -<prf> [subnode_length : int |
+                            subnode_length <= bitsizeof (uintptr)]
+                        node_vt (subnode_length)
+                            @ ((entries_addr node_p) +
+                                  index * sizeof (link_vt))
+            prval pf_node_slot = create_slot_view ()
+
+            val node_tmp = node
+            val p_node_slot =
+              uptr_add<link_vt>
+                (entries_ptr (node_tmp.pointer), index)
+            val _ = ptr_set (pf_slot | p_slot, node_tmp)
+
+            val _ =
+              set_subtree_entry__loop
+                (pf_node_slot | uptr2ptr p_node_slot,
+                 bits1, bits_source, hash_func,
+                 hash_storage1, hash_storage2, hash2_is_set,
+                 key_test, key_value, succ depth, is_new_slot)
+
+            (* Consume the temporary, unsafe view. *)
+            prval _ = $UN.castview2void{void} pf_node_slot
+          }
       end
     else
       let

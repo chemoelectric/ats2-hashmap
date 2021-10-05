@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Mon Oct  4 14:05:43 CDT 2021
+# from AX_AM_MACROS_STATIC on Tue Oct  5 13:30:51 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -206,14 +206,15 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/DATS/count-one-bits.dats \
 	hashmap/DATS/count-one-bits-microsoft-c.dats \
 	tests/test-bits-source-uint64-uint64.dats \
-	tests/test-03-10-2021-10-50-40.structure.reference \
-	tests/test-03-10-2021-11-51-50.structure.reference \
-	tests/test-03-10-2021-11-55-11.structure.reference \
-	tests/test-03-10-2021-11-58-30.structure.reference \
-	tests/test-03-10-2021-12-00-18.structure.reference \
-	tests/test-03-10-2021-12-02-25.structure.reference \
-	tests/test-03-10-2021-12-26-02.structure.reference \
-	tests/test-03-10-2021-12-29-17.structure.reference \
+	tests/test-2021-10-03-10-50-40.structure.reference \
+	tests/test-2021-10-03-11-51-50.structure.reference \
+	tests/test-2021-10-03-11-55-11.structure.reference \
+	tests/test-2021-10-03-11-58-30.structure.reference \
+	tests/test-2021-10-03-12-00-18.structure.reference \
+	tests/test-2021-10-03-12-02-25.structure.reference \
+	tests/test-2021-10-03-12-26-02.structure.reference \
+	tests/test-2021-10-03-12-29-17.structure.reference \
+	tests/test-2021-10-05-01-01-01.structure.reference \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -730,14 +731,15 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/SATS/initialize-once.sats.in \
 	$(top_srcdir)/hashmap/SATS/memory.sats.in \
 	$(top_srcdir)/hashmap/SATS/spinlock.sats.in \
-	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-26-02.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-29-17.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-51-50.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-55-11.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-58-30.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-00-18.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-02-25.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
@@ -1006,14 +1008,15 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/count-one-bits-microsoft-c.dats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
-	$(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-26-02.structure.reference.in \
-	$(top_srcdir)/tests/test-03-10-2021-12-29-17.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-51-50.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-55-11.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-11-58-30.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-00-18.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-02-25.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in \
+	$(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
@@ -1439,21 +1442,23 @@ hashmap/DATS/count-one-bits-microsoft-c.dats: $(top_builddir)/config.status $(to
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-10-50-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-10-50-40.structure.reference.in
+tests/test-2021-10-03-10-50-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-11-51-50.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-51-50.structure.reference.in
+tests/test-2021-10-03-11-51-50.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-11-51-50.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-11-55-11.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-55-11.structure.reference.in
+tests/test-2021-10-03-11-55-11.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-11-55-11.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-11-58-30.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-11-58-30.structure.reference.in
+tests/test-2021-10-03-11-58-30.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-11-58-30.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-12-00-18.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-00-18.structure.reference.in
+tests/test-2021-10-03-12-00-18.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-12-00-18.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-12-02-25.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-02-25.structure.reference.in
+tests/test-2021-10-03-12-02-25.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-12-02-25.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-12-26-02.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-26-02.structure.reference.in
+tests/test-2021-10-03-12-26-02.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-tests/test-03-10-2021-12-29-17.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-03-10-2021-12-29-17.structure.reference.in
+tests/test-2021-10-03-12-29-17.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/test-2021-10-05-01-01-01.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

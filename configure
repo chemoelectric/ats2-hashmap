@@ -15484,21 +15484,23 @@ ac_config_files="$ac_config_files hashmap/DATS/count-one-bits-microsoft-c.dats"
 
 ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-10-50-40.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-10-50-40.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-11-51-50.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-51-50.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-11-55-11.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-55-11.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-11-58-30.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-58-30.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-12-00-18.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-00-18.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-12-02-25.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-02-25.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-12-26-02.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-26-02.structure.reference"
 
-ac_config_files="$ac_config_files tests/test-03-10-2021-12-29-17.structure.reference"
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-29-17.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-05-01-01-01.structure.reference"
 
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
@@ -16600,14 +16602,15 @@ do
     "hashmap/DATS/count-one-bits.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/count-one-bits.dats" ;;
     "hashmap/DATS/count-one-bits-microsoft-c.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/count-one-bits-microsoft-c.dats" ;;
     "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
-    "tests/test-03-10-2021-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-10-50-40.structure.reference" ;;
-    "tests/test-03-10-2021-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-11-51-50.structure.reference" ;;
-    "tests/test-03-10-2021-11-55-11.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-11-55-11.structure.reference" ;;
-    "tests/test-03-10-2021-11-58-30.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-11-58-30.structure.reference" ;;
-    "tests/test-03-10-2021-12-00-18.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-12-00-18.structure.reference" ;;
-    "tests/test-03-10-2021-12-02-25.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-12-02-25.structure.reference" ;;
-    "tests/test-03-10-2021-12-26-02.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-12-26-02.structure.reference" ;;
-    "tests/test-03-10-2021-12-29-17.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-03-10-2021-12-29-17.structure.reference" ;;
+    "tests/test-2021-10-03-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-10-50-40.structure.reference" ;;
+    "tests/test-2021-10-03-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-51-50.structure.reference" ;;
+    "tests/test-2021-10-03-11-55-11.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-55-11.structure.reference" ;;
+    "tests/test-2021-10-03-11-58-30.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-58-30.structure.reference" ;;
+    "tests/test-2021-10-03-12-00-18.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-00-18.structure.reference" ;;
+    "tests/test-2021-10-03-12-02-25.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-02-25.structure.reference" ;;
+    "tests/test-2021-10-03-12-26-02.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-26-02.structure.reference" ;;
+    "tests/test-2021-10-03-12-29-17.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-29-17.structure.reference" ;;
+    "tests/test-2021-10-05-01-01-01.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-01-01-01.structure.reference" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
