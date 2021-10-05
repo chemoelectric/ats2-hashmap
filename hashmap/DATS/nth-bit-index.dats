@@ -82,7 +82,7 @@ nth_bit_index (population_map, n) =
             end
         val j = loop_j (j)
         val _ =
-          $effmask_exn (assertloc (j + 1 < BITSIZEOF_UINTPTR))
+          $effmask_exn (assertloc (j + 1 <= BITSIZEOF_UINTPTR))
       in
         if m = i2sz 0 then
           j
