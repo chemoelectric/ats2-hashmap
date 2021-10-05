@@ -31,6 +31,21 @@ along with this program. If not, see
 
 staload "hashmap/SATS/nth-bit-index.sats"
 
+(*
+
+  FIXME:
+
+  nth_bit_index can be sped up by passing the previous value
+  as a starting point.
+
+  Also one might choose to use __builtin_ffsll
+  (ffsl.h/ffs.c/ffsl.c/ffsll.c in Gnulib) and shift the population
+  map. (Note I previously wrote code that shifted the population
+  map and I found myself committing coding errors. That is why
+  I switched to nth_bit_index.)
+
+*)
+
 implement
 nth_bit_index (population_map, n) =
   let
