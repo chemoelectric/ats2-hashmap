@@ -656,6 +656,7 @@ ac_includes_default="\
 #endif"
 
 ac_header_c_list=
+ac_func_c_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -2710,6 +2711,9 @@ as_fn_append ac_header_c_list " sys/types.h sys_types_h HAVE_SYS_TYPES_H"
 as_fn_append ac_header_c_list " unistd.h unistd_h HAVE_UNISTD_H"
 as_fn_append ac_header_c_list " wchar.h wchar_h HAVE_WCHAR_H"
 as_fn_append ac_header_c_list " minix/config.h minix_config_h HAVE_MINIX_CONFIG_H"
+as_fn_append ac_func_c_list " ffs HAVE_FFS"
+as_fn_append ac_func_c_list " ffsl HAVE_FFSL"
+as_fn_append ac_func_c_list " ffsll HAVE_FFSLL"
 
 # Auxiliary files required by this configure script.
 ac_aux_files="ltmain.sh missing install-sh compile config.guess config.sub"
@@ -15146,6 +15150,294 @@ fi
 #
 # Checks for library functions.
 
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcount" >&5
+printf %s "checking for __builtin_popcount... " >&6; }
+if test ${ax_cv_have___builtin_popcount+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcount(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcount=yes
+else $as_nop
+  ax_cv_have___builtin_popcount=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcount" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcount" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcount
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNT 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcountl" >&5
+printf %s "checking for __builtin_popcountl... " >&6; }
+if test ${ax_cv_have___builtin_popcountl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcountl(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcountl=yes
+else $as_nop
+  ax_cv_have___builtin_popcountl=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcountl" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcountl" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcountl
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNTL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcountll" >&5
+printf %s "checking for __builtin_popcountll... " >&6; }
+if test ${ax_cv_have___builtin_popcountll+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcountll(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcountll=yes
+else $as_nop
+  ax_cv_have___builtin_popcountll=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcountll" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcountll" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcountll
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNTLL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffs" >&5
+printf %s "checking for __builtin_ffs... " >&6; }
+if test ${ax_cv_have___builtin_ffs+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ffs(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ffs=yes
+else $as_nop
+  ax_cv_have___builtin_ffs=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffs" >&5
+printf "%s\n" "$ax_cv_have___builtin_ffs" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ffs
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_FFS 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffsl" >&5
+printf %s "checking for __builtin_ffsl... " >&6; }
+if test ${ax_cv_have___builtin_ffsl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ffsl(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ffsl=yes
+else $as_nop
+  ax_cv_have___builtin_ffsl=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffsl" >&5
+printf "%s\n" "$ax_cv_have___builtin_ffsl" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ffsl
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_FFSL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffsll" >&5
+printf %s "checking for __builtin_ffsll... " >&6; }
+if test ${ax_cv_have___builtin_ffsll+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ffsll(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ffsll=yes
+else $as_nop
+  ax_cv_have___builtin_ffsll=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffsll" >&5
+printf "%s\n" "$ax_cv_have___builtin_ffsll" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ffsll
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_FFSLL 1" >>confdefs.h
+
+fi
+
+
+
+ac_func=
+for ac_item in $ac_func_c_list
+do
+  if test $ac_func; then
+    ac_fn_c_check_func "$LINENO" $ac_func ac_cv_func_$ac_func
+    if eval test \"x\$ac_cv_func_$ac_func\" = xyes; then
+      echo "#define $ac_item 1" >> confdefs.h
+    fi
+    ac_func=
+  else
+    ac_func=$ac_item
+  fi
+done
+
+
+
+
 #--------------------------------------------------------------------------
 
 CPPFLAGS="${CPPFLAGS}${CPPFLAGS+ }\$(CODE_COVERAGE_CPPFLAGS)"
@@ -15473,13 +15765,11 @@ ac_config_files="$ac_config_files hashmap/SATS/memory.sats"
 ac_config_files="$ac_config_files hashmap/DATS/memory.dats"
 
 
-ac_config_files="$ac_config_files hashmap/CATS/count-one-bits.cats"
+ac_config_files="$ac_config_files hashmap/CATS/popcount.cats"
 
-ac_config_files="$ac_config_files hashmap/SATS/count-one-bits.sats"
+ac_config_files="$ac_config_files hashmap/SATS/popcount.sats"
 
-ac_config_files="$ac_config_files hashmap/DATS/count-one-bits.dats"
-
-ac_config_files="$ac_config_files hashmap/DATS/count-one-bits-microsoft-c.dats"
+ac_config_files="$ac_config_files hashmap/DATS/popcount.dats"
 
 
 ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
@@ -16601,10 +16891,9 @@ do
     "hashmap/CATS/memory.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/memory.cats" ;;
     "hashmap/SATS/memory.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/memory.sats" ;;
     "hashmap/DATS/memory.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/memory.dats" ;;
-    "hashmap/CATS/count-one-bits.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/count-one-bits.cats" ;;
-    "hashmap/SATS/count-one-bits.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/count-one-bits.sats" ;;
-    "hashmap/DATS/count-one-bits.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/count-one-bits.dats" ;;
-    "hashmap/DATS/count-one-bits-microsoft-c.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/count-one-bits-microsoft-c.dats" ;;
+    "hashmap/CATS/popcount.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/popcount.cats" ;;
+    "hashmap/SATS/popcount.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/popcount.sats" ;;
+    "hashmap/DATS/popcount.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/popcount.dats" ;;
     "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
     "tests/test-2021-10-03-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-10-50-40.structure.reference" ;;
     "tests/test-2021-10-03-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-51-50.structure.reference" ;;

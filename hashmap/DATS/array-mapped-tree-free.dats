@@ -33,7 +33,7 @@ staload "hashmap/SATS/array-mapped-tree-node-vt-free.sats"
 
 (*
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/popcount.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 *)
 

@@ -34,7 +34,7 @@ staload "hashmap/SATS/bits-source.sats"
 staload "hashmap/SATS/uptr.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/popcount.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 
 implement

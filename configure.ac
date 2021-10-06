@@ -116,6 +116,15 @@ AM_CONDITIONAL([UINTPTR_IS_UINT64],
 #
 # Checks for library functions.
 
+AX_GCC_BUILTIN([__builtin_popcount])
+AX_GCC_BUILTIN([__builtin_popcountl])
+AX_GCC_BUILTIN([__builtin_popcountll])
+
+AX_GCC_BUILTIN([__builtin_ffs])
+AX_GCC_BUILTIN([__builtin_ffsl])
+AX_GCC_BUILTIN([__builtin_ffsll])
+AC_CHECK_FUNCS_ONCE([ffs ffsl ffsll])
+
 #--------------------------------------------------------------------------
 
 CPPFLAGS="${CPPFLAGS}${CPPFLAGS+ }\$(CODE_COVERAGE_CPPFLAGS)"
@@ -240,10 +249,9 @@ AC_CONFIG_FILES([hashmap/CATS/memory.cats])
 AC_CONFIG_FILES([hashmap/SATS/memory.sats])
 AC_CONFIG_FILES([hashmap/DATS/memory.dats])
 
-AC_CONFIG_FILES([hashmap/CATS/count-one-bits.cats])
-AC_CONFIG_FILES([hashmap/SATS/count-one-bits.sats])
-AC_CONFIG_FILES([hashmap/DATS/count-one-bits.dats])
-AC_CONFIG_FILES([hashmap/DATS/count-one-bits-microsoft-c.dats])
+AC_CONFIG_FILES([hashmap/CATS/popcount.cats])
+AC_CONFIG_FILES([hashmap/SATS/popcount.sats])
+AC_CONFIG_FILES([hashmap/DATS/popcount.dats])
 
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-2021-10-03-10-50-40.structure.reference])

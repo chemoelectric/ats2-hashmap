@@ -68,10 +68,9 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/memory.cats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
 
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/count-one-bits.cats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/count-one-bits.sats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/count-one-bits.dats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/count-one-bits-microsoft-c.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/popcount.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/popcount.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/popcount.dats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/config.hats.in
 

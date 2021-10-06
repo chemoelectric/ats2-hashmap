@@ -1,0 +1,219 @@
+/*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*/
+
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__
+
+#define @ATS_EXTERN_PREFIX@popcount_cats_inline ATSinline()
+
+#define @ATS_EXTERN_PREFIX@KNOWN_TO_HAVE_POPCOUNT_BUILTINS  \
+  (4 <= __GNUC__) ||                                        \
+  (3 <= __GNUC__ && 4 <= __GNUC_MINOR__) ||                 \
+  (4 <= __clang_major__)
+
+#if !(defined HAVE___BUILTIN_POPCOUNT)
+#if @ATS_EXTERN_PREFIX@KNOWN_TO_HAVE_POPCOUNT_BUILTINS
+HAVE___BUILTIN_POPCOUNT=1
+#endif
+#endif
+
+#if !(defined HAVE___BUILTIN_POPCOUNTL)
+#if @ATS_EXTERN_PREFIX@KNOWN_TO_HAVE_POPCOUNT_BUILTINS
+HAVE___BUILTIN_POPCOUNTL=1
+#endif
+#endif
+
+#if !(defined HAVE___BUILTIN_POPCOUNTLL)
+#if @ATS_EXTERN_PREFIX@KNOWN_TO_HAVE_POPCOUNT_BUILTINS
+HAVE___BUILTIN_POPCOUNTLL=1
+#endif
+#endif
+
+#if HAVE___BUILTIN_POPCOUNT
+@ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int
+@ATS_EXTERN_PREFIX@builtin_popcount_uint (atstype_uint x)
+{
+  return __builtin_popcount (x);
+}
+#endif
+
+#if HAVE___BUILTIN_POPCOUNTL
+@ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int
+@ATS_EXTERN_PREFIX@builtin_popcount_ulint (atstype_ulint x)
+{
+  return __builtin_popcountl (x);
+}
+#endif
+
+#if HAVE___BUILTIN_POPCOUNTLL
+@ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int
+@ATS_EXTERN_PREFIX@builtin_popcount_ullint (atstype_ullint x)
+{
+  return __builtin_popcountll (x);
+}
+#endif
+
+@ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int
+@ATS_EXTERN_PREFIX@fallback_popcount_uint32 (atstype_uint32 x)
+{
+  /* See https://stackoverflow.com/questions/109023/how-to-count-the-number-of-set-bits-in-a-32-bit-integer */
+  x = x - ((x >> 1) & 0x55555555);
+  x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+  x = (x + (x >> 4)) & 0x0F0F0F0F;
+  return (x * 0x01010101) >> 24;   
+}
+
+@ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int
+@ATS_EXTERN_PREFIX@fallback_popcount_uint64 (atstype_uint64 x)
+{
+  /* See https://en.wikipedia.org/w/index.php?title=Hamming_weight&oldid=1036040796 */
+  x = x - (x >> 1) & 0x5555555555555555;
+  x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);
+  x = (x + (x >> 4)) & 0x0f0f0f0f0f0f0f0f;
+  return (x * 0x0101010101010101) >> 56;
+}
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint32 @ATS_EXTERN_PREFIX@fallback_popcount_uint32
+#if SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_INT && HAVE___BUILTIN_POPCOUNT
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint32 @ATS_EXTERN_PREFIX@builtin_popcount_uint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_INT && HAVE___BUILTIN_POPCOUNTL
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint32 @ATS_EXTERN_PREFIX@builtin_popcount_ulint
+#elif SIZEOF_UINT32_T <= SIZEOF_UNSIGNED_LONG_LONG_INT && HAVE___BUILTIN_POPCOUNTLL
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint32 @ATS_EXTERN_PREFIX@builtin_popcount_ullint
+#endif
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint64 @ATS_EXTERN_PREFIX@fallback_popcount_uint64
+#if SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_INT && HAVE___BUILTIN_POPCOUNT
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint64 @ATS_EXTERN_PREFIX@builtin_popcount_uint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_INT && HAVE___BUILTIN_POPCOUNTL
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint64 @ATS_EXTERN_PREFIX@builtin_popcount_ulint
+#elif SIZEOF_UINT64_T <= SIZEOF_UNSIGNED_LONG_LONG_INT && HAVE___BUILTIN_POPCOUNTLL
+#  undef @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint64 @ATS_EXTERN_PREFIX@builtin_popcount_ullint
+#endif
+
+#if HAVE___BUILTIN_POPCOUNT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint @ATS_EXTERN_PREFIX@builtin_popcount_uint
+#elif SIZEOF_UNSIGNED_INT <= SIZEOF_UINT32_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#elif SIZEOF_UNSIGNED_INT <= SIZEOF_UINT64_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uint @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#else
+   /* FIXME: This can be implemented with a loop. */
+#  error "I have no implementation for g0uint_popcount_uint; consider using GCC."
+#endif
+
+#if HAVE___BUILTIN_POPCOUNTL
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ulint @ATS_EXTERN_PREFIX@builtin_popcount_ulint
+#elif SIZEOF_UNSIGNED_LONG_INT <= SIZEOF_UINT32_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ulint @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#elif SIZEOF_UNSIGNED_LONG_INT <= SIZEOF_UINT64_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ullint @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#else
+   /* FIXME: This can be implemented with a loop. */
+#  error "I have no implementation for g0uint_popcount_ulint; consider using GCC."
+#endif
+
+#if HAVE___BUILTIN_POPCOUNTLL
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ullint @ATS_EXTERN_PREFIX@builtin_popcount_ullint
+#elif SIZEOF_UNSIGNED_LONG_LONG_INT <= SIZEOF_UINT32_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ullint @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#elif SIZEOF_UNSIGNED_LONG_LONG_INT <= SIZEOF_UINT64_T
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_ullint @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#else
+   /* FIXME: This can be implemented with a loop. */
+#  error "I have no implementation for g0uint_popcount_ullint; consider using GCC."
+#endif
+
+#if SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_size @ATS_EXTERN_PREFIX@g0uint_popcount_uint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_size @ATS_EXTERN_PREFIX@g0uint_popcount_ulint
+#elif SIZEOF_SIZE_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_size @ATS_EXTERN_PREFIX@g0uint_popcount_ullint
+#else
+   /* FIXME: This can be implemented with a loop. */
+#  error "I have no popcount implementation for size_t."
+#endif
+
+#if SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uintptr @ATS_EXTERN_PREFIX@g0uint_popcount_uint
+#elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uintptr @ATS_EXTERN_PREFIX@g0uint_popcount_ulint
+#elif SIZEOF_UINTPTR_T <= SIZEOF_UNSIGNED_LONG_LONG_INT
+#  define @ATS_EXTERN_PREFIX@g0uint_popcount_uintptr @ATS_EXTERN_PREFIX@g0uint_popcount_ullint
+#else
+   /* FIXME: This can be implemented with a loop. */
+#  error "I have no popcount implementation for uintptr_t."
+#endif
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_usint @ATS_EXTERN_PREFIX@g0uint_popcount_uint
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint8 @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint16 @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+
+/* Compute and return the number of 1-bits set in X, ignoring all bits
+   of index i or higher, for i < 8 * sizeof (unsigned int). */
+#define @ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION(T)           \
+  @ATS_EXTERN_PREFIX@popcount_cats_inline atstype_int                   \
+  @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_##T (atstype_##T x, atstype_int i) \
+  {                                                                     \
+    return @ATS_EXTERN_PREFIX@g0uint_popcount_##T                       \
+      (x & ((((atstype_##T) 1) << i) - ((atstype_##T) 1)));             \
+  }
+
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (usint)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uint)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (ulint)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (ullint)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uint8)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uint16)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uint32)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uint64)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (size)
+@ATS_EXTERN_PREFIX@MAKE_POPCOUNT_LOW_BITS_FUNCTION (uintptr)
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_usint @ATS_EXTERN_PREFIX@g0uint_popcount_usint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint @ATS_EXTERN_PREFIX@g0uint_popcount_uint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_ulint @ATS_EXTERN_PREFIX@g0uint_popcount_ulint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_ullint @ATS_EXTERN_PREFIX@g0uint_popcount_ullint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint8 @ATS_EXTERN_PREFIX@g0uint_popcount_uint8
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint16 @ATS_EXTERN_PREFIX@g0uint_popcount_uint16
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint32 @ATS_EXTERN_PREFIX@g0uint_popcount_uint32
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint64 @ATS_EXTERN_PREFIX@g0uint_popcount_uint64
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_size @ATS_EXTERN_PREFIX@g0uint_popcount_size
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uintptr @ATS_EXTERN_PREFIX@g0uint_popcount_uintptr
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_usint @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_usint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_ulint @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_ulint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_ullint @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_ullint
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint8 @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint8
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint16 @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint16
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint32 @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint32
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint64 @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint64
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_size @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_size
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uintptr @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uintptr
+
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__ */

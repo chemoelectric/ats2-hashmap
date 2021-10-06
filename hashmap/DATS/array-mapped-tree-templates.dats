@@ -37,8 +37,8 @@ staload "hashmap/SATS/array-proofs.sats"
 staload "hashmap/SATS/memory.sats"
 staload _ = "hashmap/DATS/memory.dats"
 
-staload "hashmap/SATS/count-one-bits.sats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
+staload "hashmap/SATS/popcount.sats"
+staload _ = "hashmap/DATS/popcount.dats"
 
 staload "hashmap/SATS/bits-source.sats"
 

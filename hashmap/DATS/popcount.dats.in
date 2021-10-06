@@ -1,0 +1,202 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+staload "@ATS_SATS_DIRECTORY@/popcount.sats"
+
+(********************************************************************)
+
+implement
+g0uint_popcount<usintknd> (x) =
+  g0uint_popcount_usint (x)
+
+implement
+g0uint_popcount<uintknd> (x) =
+  g0uint_popcount_uint (x)
+
+implement
+g0uint_popcount<ulintknd> (x) =
+  g0uint_popcount_ulint (x)
+
+implement
+g0uint_popcount<ullintknd> (x) =
+  g0uint_popcount_ullint (x)
+
+implement
+g0uint_popcount<sizeknd> (x) =
+  g0uint_popcount_size (x)
+
+implement
+g0uint_popcount<uintptrknd> (x) =
+  g0uint_popcount_uintptr (x)
+
+implement
+g0uint_popcount<uint8knd> (x) =
+  g0uint_popcount_uint8 (x)
+
+implement
+g0uint_popcount<uint16knd> (x) =
+  g0uint_popcount_uint16 (x)
+
+implement
+g0uint_popcount<uint32knd> (x) =
+  g0uint_popcount_uint32 (x)
+
+implement
+g0uint_popcount<uint64knd> (x) =
+  g0uint_popcount_uint64 (x)
+
+(********************************************************************)
+
+implement
+g1uint_popcount<usintknd> {x} (x) =
+  g1uint_popcount_usint {x} (x)
+
+implement
+g1uint_popcount<uintknd> {x} (x) =
+  g1uint_popcount_uint {x} (x)
+
+implement
+g1uint_popcount<ulintknd> {x} (x) =
+  g1uint_popcount_ulint {x} (x)
+
+implement
+g1uint_popcount<ullintknd> {x} (x) =
+  g1uint_popcount_ullint {x} (x)
+
+implement
+g1uint_popcount<sizeknd> {x} (x) =
+  g1uint_popcount_size {x} (x)
+
+implement
+g1uint_popcount<uintptrknd> {x} (x) =
+  g1uint_popcount_uintptr {x} (x)
+
+implement
+g1uint_popcount<uint8knd> {x} (x) =
+  g1uint_popcount_uint8 {x} (x)
+
+implement
+g1uint_popcount<uint16knd> {x} (x) =
+  g1uint_popcount_uint16 {x} (x)
+
+implement
+g1uint_popcount<uint32knd> {x} (x) =
+  g1uint_popcount_uint32 {x} (x)
+
+implement
+g1uint_popcount<uint64knd> {x} (x) =
+  g1uint_popcount_uint64 {x} (x)
+
+(********************************************************************)
+
+implement
+g0uint_popcount_low_bits<usintknd> (x, i) =
+  g0uint_popcount_low_bits_usint (x, i)
+
+implement
+g0uint_popcount_low_bits<uintknd> (x, i) =
+  g0uint_popcount_low_bits_uint (x, i)
+
+implement
+g0uint_popcount_low_bits<ulintknd> (x, i) =
+  g0uint_popcount_low_bits_ulint (x, i)
+
+implement
+g0uint_popcount_low_bits<ullintknd> (x, i) =
+  g0uint_popcount_low_bits_ullint (x, i)
+
+implement
+g0uint_popcount_low_bits<sizeknd> (x, i) =
+  g0uint_popcount_low_bits_size (x, i)
+
+implement
+g0uint_popcount_low_bits<uintptrknd> (x, i) =
+  g0uint_popcount_low_bits_uintptr (x, i)
+
+implement
+g0uint_popcount_low_bits<uint8knd> (x, i) =
+  g0uint_popcount_low_bits_uint8 (x, i)
+
+implement
+g0uint_popcount_low_bits<uint16knd> (x, i) =
+  g0uint_popcount_low_bits_uint16 (x, i)
+
+implement
+g0uint_popcount_low_bits<uint32knd> (x, i) =
+  g0uint_popcount_low_bits_uint32 (x, i)
+
+implement
+g0uint_popcount_low_bits<uint64knd> (x, i) =
+  g0uint_popcount_low_bits_uint64 (x, i)
+
+(********************************************************************)
+
+implement
+g1uint_popcount_low_bits<usintknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_usint {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uintknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<ulintknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_ulint {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<ullintknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_ullint {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<sizeknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_size {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uintptrknd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uintptr {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uint8knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint8 {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uint16knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint16 {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uint32knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint32 {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uint64knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint64 {x} {i} (x, i)
+
+(********************************************************************)

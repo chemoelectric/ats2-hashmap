@@ -27,7 +27,7 @@ along with this program. If not, see
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/bits-source.sats"
 staload "hashmap/SATS/uptr.sats"
-staload "hashmap/SATS/count-one-bits.sats"
+staload "hashmap/SATS/popcount.sats"
 
 (********************************************************************)
 

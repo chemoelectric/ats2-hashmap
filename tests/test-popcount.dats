@@ -26,8 +26,8 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/count-one-bits.sats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
+staload "hashmap/SATS/popcount.sats"
+staload _ = "hashmap/DATS/popcount.dats"
 
 typedef uintmax = $extype"uintmax_t"
 

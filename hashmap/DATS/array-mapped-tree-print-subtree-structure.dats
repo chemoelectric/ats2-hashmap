@@ -36,7 +36,7 @@ staload "hashmap/SATS/print-bitmap.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/uptr.dats"
-staload _ = "hashmap/DATS/count-one-bits.dats"
+staload _ = "hashmap/DATS/popcount.dats"
 
 #include "hashmap/HATS/array-mapped-tree-helpers.hats"
 

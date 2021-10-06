@@ -203,16 +203,24 @@ EXTRA_DIST += hashmap/SATS/uptr.sats
 EXTRA_DIST += hashmap/DATS/uptr.dats
 EXTRA_DIST += hashmap/CATS/uptr.cats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-CLEANFILES += hashmap/SATS/count-one-bits_sats.c
-CLEANFILES += hashmap/DATS/count-one-bits_dats.c
-CLEANFILES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-EXTRA_DIST += hashmap/SATS/count-one-bits.sats
-EXTRA_DIST += hashmap/CATS/count-one-bits.cats
-EXTRA_DIST += hashmap/DATS/count-one-bits.dats
-EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/popcount_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/popcount_dats.c
+CLEANFILES += hashmap/SATS/popcount_sats.c
+CLEANFILES += hashmap/DATS/popcount_dats.c
+EXTRA_DIST += hashmap/SATS/popcount.sats
+EXTRA_DIST += hashmap/DATS/popcount.dats
+EXTRA_DIST += hashmap/CATS/popcount.cats
+
+#libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
+#CLEANFILES += hashmap/SATS/count-one-bits_sats.c
+#CLEANFILES += hashmap/DATS/count-one-bits_dats.c
+#CLEANFILES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
+#EXTRA_DIST += hashmap/SATS/count-one-bits.sats
+#EXTRA_DIST += hashmap/CATS/count-one-bits.cats
+#EXTRA_DIST += hashmap/DATS/count-one-bits.dats
+#EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/nth-bit-index_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/nth-bit-index_dats.c
@@ -522,12 +530,12 @@ CLEANFILES += tests/test-bits-source-uintptr
 CLEANFILES += tests/test-bits-source-uintptr_dats.c
 endif UINTPTR_IS_UINT64
 
-check_PROGRAMS += tests/test-count-one-bits
-tests_test_count_one_bits_SOURCES = tests/test-count-one-bits_dats.c
-tests_test_count_one_bits_LDADD = $(lib_LTLIBRARIES)
-EXTRA_DIST += tests/test-count-one-bits.dats
-CLEANFILES += tests/test-count-one-bits
-CLEANFILES += tests/test-count-one-bits_dats.c
+check_PROGRAMS += tests/test-popcount
+tests_test_popcount_SOURCES = tests/test-popcount_dats.c
+tests_test_popcount_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-popcount.dats
+CLEANFILES += tests/test-popcount
+CLEANFILES += tests/test-popcount_dats.c
 
 check_PROGRAMS += tests/test-uintptr-set
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
