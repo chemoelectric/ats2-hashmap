@@ -58,8 +58,9 @@ test_popcount (u : g0uint (tk)) : bool =
       brute_force_popcount_low_bits
         (u, (i2sz 8) * sizeof<g0uint (tk)>)
     val (_ | b2) = popcount<tk> (g1ofg0 u)
+    val b3 = popcount<tk> (u)
   in
-    (g1ofg0 b1) = b2
+    ((g1ofg0 b1) = b2) && (b1 = b3)
   end
 
 fn {tk : tkind}
@@ -74,8 +75,9 @@ test_popcount_low_bits (u : g0uint (tk)) : bool =
         val j1 = min (n, j)
         val b1 = brute_force_popcount_low_bits (u, j1)
         val (_ | b2) = popcount_low_bits<tk> (g1ofg0 u, i2u j)
+        val b3 = popcount_low_bits<tk> (u, g0ofg1 (i2u j))
       in
-        result := result && ((g1ofg0 b1) = b2)
+        result := result && ((g1ofg0 b1) = b2) && (b1 = b3)
       end;
     result
   end

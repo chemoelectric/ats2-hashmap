@@ -101,16 +101,16 @@ popcount_fewer_bits_2 :
 fun {tk : tkind}
 g0uint_popcount : g0uint (tk) -<> int
 
-fun g0uint_popcount_usint : usint -<> int
-fun g0uint_popcount_uint : uint -<> int
-fun g0uint_popcount_ulint : ulint -<> int
-fun g0uint_popcount_ullint : ullint -<> int
-fun g0uint_popcount_size : size_t -<> int
-fun g0uint_popcount_uintptr : uintptr -<> int
-fun g0uint_popcount_uint8 : uint8 -<> int
-fun g0uint_popcount_uint16 : uint16 -<> int
-fun g0uint_popcount_uint32 : uint32 -<> int
-fun g0uint_popcount_uint64 : uint64 -<> int
+fun g0uint_popcount_usint : usint -<> int = "mac#%"
+fun g0uint_popcount_uint : uint -<> int = "mac#%"
+fun g0uint_popcount_ulint : ulint -<> int = "mac#%"
+fun g0uint_popcount_ullint : ullint -<> int = "mac#%"
+fun g0uint_popcount_size : size_t -<> int = "mac#%"
+fun g0uint_popcount_uintptr : uintptr -<> int = "mac#%"
+fun g0uint_popcount_uint8 : uint8 -<> int = "mac#%"
+fun g0uint_popcount_uint16 : uint16 -<> int = "mac#%"
+fun g0uint_popcount_uint32 : uint32 -<> int = "mac#%"
+fun g0uint_popcount_uint64 : uint64 -<> int = "mac#%"
 
 (********************************************************************)
 (* Compute and return the number of 1-bits set in x. *)
@@ -199,16 +199,17 @@ g1uint_popcount_uint64 :
 fun {tk : tkind}
 g0uint_popcount_low_bits : (g0uint (tk), uint) -<> int
 
-fun g0uint_popcount_low_bits_usint : (usint, uint) -<> int
-fun g0uint_popcount_low_bits_uint : (uint, uint) -<> int
-fun g0uint_popcount_low_bits_ulint : (ulint, uint) -<> int
-fun g0uint_popcount_low_bits_ullint : (ullint, uint) -<> int
-fun g0uint_popcount_low_bits_uint8 : (uint8, uint) -<> int
-fun g0uint_popcount_low_bits_uint16 : (uint16, uint) -<> int
-fun g0uint_popcount_low_bits_uint32 : (uint32, uint) -<> int
-fun g0uint_popcount_low_bits_uint64 : (uint64, uint) -<> int
-fun g0uint_popcount_low_bits_size : (size_t, uint) -<> int
-fun g0uint_popcount_low_bits_uintptr : (uintptr, uint) -<> int
+fun g0uint_popcount_low_bits_usint : (usint, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uint : (uint, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_ulint : (ulint, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_ullint : (ullint, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uint8 : (uint8, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uint16 : (uint16, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uint32 : (uint32, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uint64 : (uint64, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_size : (size_t, uint) -<> int = "mac#%"
+fun g0uint_popcount_low_bits_uintptr :
+  (uintptr, uint) -<> int = "mac#%"
 
 (********************************************************************)
 (* Compute and return the number of 1-bits set in x,
