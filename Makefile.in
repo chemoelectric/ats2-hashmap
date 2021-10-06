@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Wed Oct  6 14:26:03 CDT 2021
+# from AX_AM_MACROS_STATIC on Wed Oct  6 14:44:47 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -202,7 +202,8 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/CATS/memory.cats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/popcount.cats \
 	hashmap/SATS/popcount.sats hashmap/DATS/popcount.dats \
-	hashmap/CATS/ctz.cats \
+	hashmap/CATS/ctz.cats hashmap/SATS/ctz.sats \
+	hashmap/DATS/ctz.dats \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-2021-10-03-10-50-40.structure.reference \
 	tests/test-2021-10-03-11-51-50.structure.reference \
@@ -259,8 +260,8 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/atomic_sats.lo \
 	hashmap/DATS/array-proofs_dats.lo hashmap/SATS/memory_sats.lo \
 	hashmap/DATS/memory_dats.lo hashmap/SATS/uptr_sats.lo \
 	hashmap/DATS/uptr_dats.lo hashmap/SATS/popcount_sats.lo \
-	hashmap/DATS/popcount_dats.lo \
-	hashmap/SATS/nth-bit-index_sats.lo \
+	hashmap/DATS/popcount_dats.lo hashmap/SATS/ctz_sats.lo \
+	hashmap/DATS/ctz_dats.lo hashmap/SATS/nth-bit-index_sats.lo \
 	hashmap/DATS/nth-bit-index_dats.lo \
 	hashmap/SATS/print-bitmap_sats.lo \
 	hashmap/DATS/print-bitmap_dats.lo \
@@ -400,6 +401,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/bits-source-ullint_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-usint-one-time_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits-source-usint_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/ctz_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/memory_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/nth-bit-index_dats.Plo \
@@ -416,6 +418,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/atomic_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/ctz_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/memory_sats.Plo \
@@ -715,6 +718,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-ullint.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint-one-time.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/ctz.dats.in \
 	$(top_srcdir)/hashmap/DATS/initialize-once.dats.in \
 	$(top_srcdir)/hashmap/DATS/memory.dats.in \
 	$(top_srcdir)/hashmap/DATS/popcount.dats.in \
@@ -723,6 +727,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
+	$(top_srcdir)/hashmap/SATS/ctz.sats.in \
 	$(top_srcdir)/hashmap/SATS/initialize-once.sats.in \
 	$(top_srcdir)/hashmap/SATS/memory.sats.in \
 	$(top_srcdir)/hashmap/SATS/popcount.sats.in \
@@ -959,8 +964,6 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 # sanitizes the test-name: replaces with underscores: dashes and dots
 @CODE_COVERAGE_ENABLED_TRUE@code_coverage_sanitize = $(subst -,_,$(subst .,_,$(1)))
 @CODE_COVERAGE_ENABLED_TRUE@AM_DISTCHECK_CONFIGURE_FLAGS := $(AM_DISTCHECK_CONFIGURE_FLAGS) --disable-code-coverage
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/ctz.sats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/ctz.dats.in
 CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint8.dats.m4.in \
@@ -1006,6 +1009,8 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/SATS/popcount.sats.in \
 	$(top_srcdir)/hashmap/DATS/popcount.dats.in \
 	$(top_srcdir)/hashmap/CATS/ctz.cats.in \
+	$(top_srcdir)/hashmap/SATS/ctz.sats.in \
+	$(top_srcdir)/hashmap/DATS/ctz.dats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	$(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in \
@@ -1032,7 +1037,9 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/CATS/memory.cats hashmap/SATS/uptr.sats \
 	hashmap/DATS/uptr.dats hashmap/CATS/uptr.cats \
 	hashmap/SATS/popcount.sats hashmap/DATS/popcount.dats \
-	hashmap/CATS/popcount.cats hashmap/SATS/nth-bit-index.sats \
+	hashmap/CATS/popcount.cats hashmap/SATS/ctz.sats \
+	hashmap/DATS/ctz.dats hashmap/CATS/ctz.cats \
+	hashmap/SATS/nth-bit-index.sats \
 	hashmap/DATS/nth-bit-index.dats hashmap/SATS/print-bitmap.sats \
 	hashmap/DATS/print-bitmap.dats hashmap/SATS/bits-source.sats \
 	hashmap/CATS/bits-source.cats \
@@ -1070,7 +1077,8 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
 	hashmap/DATS/memory_dats.c hashmap/SATS/uptr_sats.c \
 	hashmap/DATS/uptr_dats.c hashmap/SATS/popcount_sats.c \
-	hashmap/DATS/popcount_dats.c hashmap/SATS/nth-bit-index_sats.c \
+	hashmap/DATS/popcount_dats.c hashmap/SATS/ctz_sats.c \
+	hashmap/DATS/ctz_dats.c hashmap/SATS/nth-bit-index_sats.c \
 	hashmap/DATS/nth-bit-index_dats.c \
 	hashmap/SATS/print-bitmap_sats.c \
 	hashmap/DATS/print-bitmap_dats.c \
@@ -1230,17 +1238,6 @@ AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
-
-#libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-#CLEANFILES += hashmap/SATS/count-one-bits_sats.c
-#CLEANFILES += hashmap/DATS/count-one-bits_dats.c
-#CLEANFILES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-#EXTRA_DIST += hashmap/SATS/count-one-bits.sats
-#EXTRA_DIST += hashmap/CATS/count-one-bits.cats
-#EXTRA_DIST += hashmap/DATS/count-one-bits.dats
-#EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
 libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
 	hashmap/DATS/atomic_dats.c hashmap/SATS/spinlock_sats.c \
 	hashmap/DATS/spinlock_dats.c \
@@ -1250,7 +1247,8 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
 	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
 	hashmap/DATS/memory_dats.c hashmap/SATS/uptr_sats.c \
 	hashmap/DATS/uptr_dats.c hashmap/SATS/popcount_sats.c \
-	hashmap/DATS/popcount_dats.c hashmap/SATS/nth-bit-index_sats.c \
+	hashmap/DATS/popcount_dats.c hashmap/SATS/ctz_sats.c \
+	hashmap/DATS/ctz_dats.c hashmap/SATS/nth-bit-index_sats.c \
 	hashmap/DATS/nth-bit-index_dats.c \
 	hashmap/SATS/print-bitmap_sats.c \
 	hashmap/DATS/print-bitmap_dats.c \
@@ -1446,6 +1444,10 @@ hashmap/DATS/popcount.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/CATS/ctz.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/ctz.cats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/ctz.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/ctz.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/ctz.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/ctz.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-2021-10-03-10-50-40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in
@@ -1604,6 +1606,10 @@ hashmap/DATS/uptr_dats.lo: hashmap/DATS/$(am__dirstamp) \
 hashmap/SATS/popcount_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/popcount_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/ctz_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/ctz_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/nth-bit-index_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
@@ -1832,6 +1838,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-ullint_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-usint-one-time_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits-source-usint_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/ctz_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/memory_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/nth-bit-index_dats.Plo@am__quote@ # am--include-marker
@@ -1848,6 +1855,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/atomic_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/ctz_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/memory_sats.Plo@am__quote@ # am--include-marker
@@ -2506,6 +2514,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-ullint_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-usint-one-time_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-usint_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/ctz_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/nth-bit-index_dats.Plo
@@ -2522,6 +2531,7 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/ctz_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
@@ -2623,6 +2633,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-ullint_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-usint-one-time_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits-source-usint_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/ctz_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/initialize-once_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/nth-bit-index_dats.Plo
@@ -2639,6 +2650,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits-source_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/ctz_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/initialize-once_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo

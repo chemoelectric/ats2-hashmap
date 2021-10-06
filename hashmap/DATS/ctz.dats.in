@@ -1,0 +1,118 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+staload "@ATS_SATS_DIRECTORY@/ctz.sats"
+
+(********************************************************************)
+
+implement
+g0uint_ctz<usintknd> (x) =
+  g0uint_ctz_usint (x)
+
+implement
+g0uint_ctz<uintknd> (x) =
+  g0uint_ctz_uint (x)
+
+implement
+g0uint_ctz<ulintknd> (x) =
+  g0uint_ctz_ulint (x)
+
+implement
+g0uint_ctz<ullintknd> (x) =
+  g0uint_ctz_ullint (x)
+
+implement
+g0uint_ctz<sizeknd> (x) =
+  g0uint_ctz_size (x)
+
+implement
+g0uint_ctz<uintptrknd> (x) =
+  g0uint_ctz_uintptr (x)
+
+implement
+g0uint_ctz<uint8knd> (x) =
+  g0uint_ctz_uint8 (x)
+
+implement
+g0uint_ctz<uint16knd> (x) =
+  g0uint_ctz_uint16 (x)
+
+implement
+g0uint_ctz<uint32knd> (x) =
+  g0uint_ctz_uint32 (x)
+
+implement
+g0uint_ctz<uint64knd> (x) =
+  g0uint_ctz_uint64 (x)
+
+(********************************************************************)
+
+implement
+g1uint_ctz<usintknd> {x} (x) =
+  g1uint_ctz_usint {x} (x)
+
+implement
+g1uint_ctz<uintknd> {x} (x) =
+  g1uint_ctz_uint {x} (x)
+
+implement
+g1uint_ctz<ulintknd> {x} (x) =
+  g1uint_ctz_ulint {x} (x)
+
+implement
+g1uint_ctz<ullintknd> {x} (x) =
+  g1uint_ctz_ullint {x} (x)
+
+implement
+g1uint_ctz<sizeknd> {x} (x) =
+  g1uint_ctz_size {x} (x)
+
+implement
+g1uint_ctz<uintptrknd> {x} (x) =
+  g1uint_ctz_uintptr {x} (x)
+
+implement
+g1uint_ctz<uint8knd> {x} (x) =
+  g1uint_ctz_uint8 {x} (x)
+
+implement
+g1uint_ctz<uint16knd> {x} (x) =
+  g1uint_ctz_uint16 {x} (x)
+
+implement
+g1uint_ctz<uint32knd> {x} (x) =
+  g1uint_ctz_uint32 {x} (x)
+
+implement
+g1uint_ctz<uint64knd> {x} (x) =
+  g1uint_ctz_uint64 {x} (x)
+
+(********************************************************************)

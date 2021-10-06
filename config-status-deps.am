@@ -73,8 +73,8 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/popcount.sats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/popcount.dats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/ctz.cats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/ctz.sats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/ctz.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/ctz.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/ctz.dats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/config.hats.in
 

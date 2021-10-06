@@ -253,8 +253,8 @@ AC_CONFIG_FILES([hashmap/SATS/popcount.sats])
 AC_CONFIG_FILES([hashmap/DATS/popcount.dats])
 
 AC_CONFIG_FILES([hashmap/CATS/ctz.cats])
-#AC_CONFIG_FILES([hashmap/SATS/ctz.sats])
-#AC_CONFIG_FILES([hashmap/DATS/ctz.dats])
+AC_CONFIG_FILES([hashmap/SATS/ctz.sats])
+AC_CONFIG_FILES([hashmap/DATS/ctz.dats])
 
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-2021-10-03-10-50-40.structure.reference])

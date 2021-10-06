@@ -1,0 +1,155 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
+%{#
+#include "@ATS_CATS_DIRECTORY@/ctz.cats"
+%}
+
+(********************************************************************)
+
+(* "ctz" is the count of trailing 0-bits in x. *)
+absprop CTZ (x : int, ctz : int)
+
+praxi
+ctz_isfun :
+  {x : int}
+  {ctz1, ctz2 : int}
+  (CTZ (x, ctz1),
+   CTZ (x, ctz2)) -<prf>
+    [ctz1 == ctz2] void
+
+praxi
+ctz_is_nonnegative :
+  {x : int}
+  {ctz : int}
+  CTZ (x, ctz) -<prf>
+    [0 <= ctz] void
+
+(********************************************************************)
+(* Compute and return the count of trailing 0-bits in x.
+   If x is 0, the result is undefined. *)
+
+fun {tk : tkind}
+g0uint_ctz : g0uint (tk) -<> int
+
+fun g0uint_ctz_usint : usint -<> int = "mac#%"
+fun g0uint_ctz_uint : uint -<> int = "mac#%"
+fun g0uint_ctz_ulint : ulint -<> int = "mac#%"
+fun g0uint_ctz_ullint : ullint -<> int = "mac#%"
+fun g0uint_ctz_size : size_t -<> int = "mac#%"
+fun g0uint_ctz_uintptr : uintptr -<> int = "mac#%"
+fun g0uint_ctz_uint8 : uint8 -<> int = "mac#%"
+fun g0uint_ctz_uint16 : uint16 -<> int = "mac#%"
+fun g0uint_ctz_uint32 : uint32 -<> int = "mac#%"
+fun g0uint_ctz_uint64 : uint64 -<> int = "mac#%"
+
+(********************************************************************)
+(* Compute and return the count of trailing 0-bits in x.
+   The case of x=0 is not handled. *)
+
+fun {tk : tkind}
+g1uint_ctz :
+  {x : int | 0 < x}
+  g1uint (tk, x) -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz)
+
+fun
+g1uint_ctz_usint :
+  {x : int | 0 < x}
+  usint x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uint :
+  {x : int | 0 < x}
+  uint x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_ulint :
+  {x : int | 0 < x}
+  ulint x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_ullint :
+  {x : int | 0 < x}
+  ullint x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_size :
+  {x : int | 0 < x}
+  size_t x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uintptr :
+  {x : int | 0 < x}
+  uintptr x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uint8 :
+  {x : int | 0 < x}
+  uint8 x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uint16 :
+  {x : int | 0 < x}
+  uint16 x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uint32 :
+  {x : int | 0 < x}
+  uint32 x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+fun
+g1uint_ctz_uint64 :
+  {x : int | 0 < x}
+  uint64 x -<>
+    [ctz : int]
+    @(CTZ (x, ctz) | int ctz) = "mac#%"
+
+(********************************************************************)
+
+overload ctz with g0uint_ctz of 0
+overload ctz with g1uint_ctz of 20
+
+(********************************************************************)

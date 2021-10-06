@@ -306,9 +306,9 @@ g1uint_popcount_low_bits_uint64 :
 (********************************************************************)
 
 overload popcount with g0uint_popcount of 0
-overload popcount with g1uint_popcount of 1
+overload popcount with g1uint_popcount of 20
 
 overload popcount_low_bits with g0uint_popcount_low_bits of 0
-overload popcount_low_bits with g1uint_popcount_low_bits of 1
+overload popcount_low_bits with g1uint_popcount_low_bits of 20
 
 (********************************************************************)

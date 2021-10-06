@@ -211,16 +211,13 @@ EXTRA_DIST += hashmap/SATS/popcount.sats
 EXTRA_DIST += hashmap/DATS/popcount.dats
 EXTRA_DIST += hashmap/CATS/popcount.cats
 
-#libats2_hashmap_la_SOURCES += hashmap/SATS/count-one-bits_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits_dats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-#CLEANFILES += hashmap/SATS/count-one-bits_sats.c
-#CLEANFILES += hashmap/DATS/count-one-bits_dats.c
-#CLEANFILES += hashmap/DATS/count-one-bits-microsoft-c_dats.c
-#EXTRA_DIST += hashmap/SATS/count-one-bits.sats
-#EXTRA_DIST += hashmap/CATS/count-one-bits.cats
-#EXTRA_DIST += hashmap/DATS/count-one-bits.dats
-#EXTRA_DIST += hashmap/DATS/count-one-bits-microsoft-c.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/ctz_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/ctz_dats.c
+CLEANFILES += hashmap/SATS/ctz_sats.c
+CLEANFILES += hashmap/DATS/ctz_dats.c
+EXTRA_DIST += hashmap/SATS/ctz.sats
+EXTRA_DIST += hashmap/DATS/ctz.dats
+EXTRA_DIST += hashmap/CATS/ctz.cats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/nth-bit-index_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/nth-bit-index_dats.c
