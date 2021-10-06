@@ -187,13 +187,6 @@ main0 () =
                       $UNSAFE.cast 0x245843F08774E2A1)
     var i : [i : nat | i <= 100] int i
 
-val _ = // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-      for (i := 0; i < 100; i := succ i)
-        assertloc (test_popcount<uint32knd> ($UNSAFE.cast{uint32} (test_numbers[i])))
-val _ = // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-      for (i := 0; i < 100; i := succ i)
-        assertloc (test_popcount<uint64knd> ($UNSAFE.cast{uint64} (test_numbers[i])))
-
     (* Test popcount() *)
     val _ =
       for (i := 0; i < 100; i := succ i)
