@@ -120,10 +120,9 @@ AX_GCC_BUILTIN([__builtin_popcount])
 AX_GCC_BUILTIN([__builtin_popcountl])
 AX_GCC_BUILTIN([__builtin_popcountll])
 
-AX_GCC_BUILTIN([__builtin_ffs])
-AX_GCC_BUILTIN([__builtin_ffsl])
-AX_GCC_BUILTIN([__builtin_ffsll])
-AC_CHECK_FUNCS_ONCE([ffs ffsl ffsll])
+AX_GCC_BUILTIN([__builtin_ctz])
+AX_GCC_BUILTIN([__builtin_ctzl])
+AX_GCC_BUILTIN([__builtin_ctzll])
 
 #--------------------------------------------------------------------------
 
@@ -252,6 +251,10 @@ AC_CONFIG_FILES([hashmap/DATS/memory.dats])
 AC_CONFIG_FILES([hashmap/CATS/popcount.cats])
 AC_CONFIG_FILES([hashmap/SATS/popcount.sats])
 AC_CONFIG_FILES([hashmap/DATS/popcount.dats])
+
+AC_CONFIG_FILES([hashmap/CATS/ctz.cats])
+#AC_CONFIG_FILES([hashmap/SATS/ctz.sats])
+#AC_CONFIG_FILES([hashmap/DATS/ctz.dats])
 
 AC_CONFIG_FILES([tests/test-bits-source-uint64-uint64.dats])
 AC_CONFIG_FILES([tests/test-2021-10-03-10-50-40.structure.reference])

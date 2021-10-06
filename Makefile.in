@@ -33,7 +33,7 @@
 #
 
 # aminclude_static.am generated automatically by Autoconf
-# from AX_AM_MACROS_STATIC on Wed Oct  6 13:10:12 CDT 2021
+# from AX_AM_MACROS_STATIC on Wed Oct  6 14:26:03 CDT 2021
 
 #
 # Copyright © 2021 Barry Schwartz
@@ -202,6 +202,7 @@ CONFIG_CLEAN_FILES = hashmap/HATS/config.hats \
 	hashmap/CATS/memory.cats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/popcount.cats \
 	hashmap/SATS/popcount.sats hashmap/DATS/popcount.dats \
+	hashmap/CATS/ctz.cats \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-2021-10-03-10-50-40.structure.reference \
 	tests/test-2021-10-03-11-51-50.structure.reference \
@@ -683,6 +684,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
 	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
+	$(top_srcdir)/hashmap/CATS/ctz.cats.in \
 	$(top_srcdir)/hashmap/CATS/memory.cats.in \
 	$(top_srcdir)/hashmap/CATS/popcount.cats.in \
 	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
@@ -957,6 +959,8 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 # sanitizes the test-name: replaces with underscores: dashes and dots
 @CODE_COVERAGE_ENABLED_TRUE@code_coverage_sanitize = $(subst -,_,$(subst .,_,$(1)))
 @CODE_COVERAGE_ENABLED_TRUE@AM_DISTCHECK_CONFIGURE_FLAGS := $(AM_DISTCHECK_CONFIGURE_FLAGS) --disable-code-coverage
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/ctz.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/ctz.dats.in
 CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits-source-uint8.dats.m4.in \
@@ -1001,6 +1005,7 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/CATS/popcount.cats.in \
 	$(top_srcdir)/hashmap/SATS/popcount.sats.in \
 	$(top_srcdir)/hashmap/DATS/popcount.dats.in \
+	$(top_srcdir)/hashmap/CATS/ctz.cats.in \
 	$(top_srcdir)/hashmap/HATS/config.hats.in \
 	$(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in \
 	$(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in \
@@ -1438,6 +1443,8 @@ hashmap/CATS/popcount.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/
 hashmap/SATS/popcount.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/popcount.sats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/popcount.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/popcount.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/ctz.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/ctz.cats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/test-bits-source-uint64-uint64.dats: $(top_builddir)/config.status $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

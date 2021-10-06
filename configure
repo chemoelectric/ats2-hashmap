@@ -656,7 +656,6 @@ ac_includes_default="\
 #endif"
 
 ac_header_c_list=
-ac_func_c_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -2711,9 +2710,6 @@ as_fn_append ac_header_c_list " sys/types.h sys_types_h HAVE_SYS_TYPES_H"
 as_fn_append ac_header_c_list " unistd.h unistd_h HAVE_UNISTD_H"
 as_fn_append ac_header_c_list " wchar.h wchar_h HAVE_WCHAR_H"
 as_fn_append ac_header_c_list " minix/config.h minix_config_h HAVE_MINIX_CONFIG_H"
-as_fn_append ac_func_c_list " ffs HAVE_FFS"
-as_fn_append ac_func_c_list " ffsl HAVE_FFSL"
-as_fn_append ac_func_c_list " ffsll HAVE_FFSLL"
 
 # Auxiliary files required by this configure script.
 ac_aux_files="ltmain.sh missing install-sh compile config.guess config.sub"
@@ -15289,9 +15285,9 @@ fi
 
 
 
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffs" >&5
-printf %s "checking for __builtin_ffs... " >&6; }
-if test ${ax_cv_have___builtin_ffs+y}
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctz" >&5
+printf %s "checking for __builtin_ctz... " >&6; }
+if test ${ax_cv_have___builtin_ctz+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
@@ -15303,7 +15299,7 @@ int
 main (void)
 {
 
-            __builtin_ffs(0)
+            __builtin_ctz(0)
 
   ;
   return 0;
@@ -15311,21 +15307,21 @@ main (void)
 _ACEOF
 if ac_fn_c_try_link "$LINENO"
 then :
-  ax_cv_have___builtin_ffs=yes
+  ax_cv_have___builtin_ctz=yes
 else $as_nop
-  ax_cv_have___builtin_ffs=no
+  ax_cv_have___builtin_ctz=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
 
 fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffs" >&5
-printf "%s\n" "$ax_cv_have___builtin_ffs" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctz" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctz" >&6; }
 
-    if test yes = $ax_cv_have___builtin_ffs
+    if test yes = $ax_cv_have___builtin_ctz
 then :
 
-printf "%s\n" "#define HAVE___BUILTIN_FFS 1" >>confdefs.h
+printf "%s\n" "#define HAVE___BUILTIN_CTZ 1" >>confdefs.h
 
 fi
 
@@ -15334,9 +15330,9 @@ fi
 
 
 
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffsl" >&5
-printf %s "checking for __builtin_ffsl... " >&6; }
-if test ${ax_cv_have___builtin_ffsl+y}
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctzl" >&5
+printf %s "checking for __builtin_ctzl... " >&6; }
+if test ${ax_cv_have___builtin_ctzl+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
@@ -15348,7 +15344,7 @@ int
 main (void)
 {
 
-            __builtin_ffsl(0)
+            __builtin_ctzl(0)
 
   ;
   return 0;
@@ -15356,21 +15352,21 @@ main (void)
 _ACEOF
 if ac_fn_c_try_link "$LINENO"
 then :
-  ax_cv_have___builtin_ffsl=yes
+  ax_cv_have___builtin_ctzl=yes
 else $as_nop
-  ax_cv_have___builtin_ffsl=no
+  ax_cv_have___builtin_ctzl=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
 
 fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffsl" >&5
-printf "%s\n" "$ax_cv_have___builtin_ffsl" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctzl" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctzl" >&6; }
 
-    if test yes = $ax_cv_have___builtin_ffsl
+    if test yes = $ax_cv_have___builtin_ctzl
 then :
 
-printf "%s\n" "#define HAVE___BUILTIN_FFSL 1" >>confdefs.h
+printf "%s\n" "#define HAVE___BUILTIN_CTZL 1" >>confdefs.h
 
 fi
 
@@ -15379,9 +15375,9 @@ fi
 
 
 
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ffsll" >&5
-printf %s "checking for __builtin_ffsll... " >&6; }
-if test ${ax_cv_have___builtin_ffsll+y}
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctzll" >&5
+printf %s "checking for __builtin_ctzll... " >&6; }
+if test ${ax_cv_have___builtin_ctzll+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
@@ -15393,7 +15389,7 @@ int
 main (void)
 {
 
-            __builtin_ffsll(0)
+            __builtin_ctzll(0)
 
   ;
   return 0;
@@ -15401,39 +15397,23 @@ main (void)
 _ACEOF
 if ac_fn_c_try_link "$LINENO"
 then :
-  ax_cv_have___builtin_ffsll=yes
+  ax_cv_have___builtin_ctzll=yes
 else $as_nop
-  ax_cv_have___builtin_ffsll=no
+  ax_cv_have___builtin_ctzll=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
 
 fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ffsll" >&5
-printf "%s\n" "$ax_cv_have___builtin_ffsll" >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctzll" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctzll" >&6; }
 
-    if test yes = $ax_cv_have___builtin_ffsll
+    if test yes = $ax_cv_have___builtin_ctzll
 then :
 
-printf "%s\n" "#define HAVE___BUILTIN_FFSLL 1" >>confdefs.h
+printf "%s\n" "#define HAVE___BUILTIN_CTZLL 1" >>confdefs.h
 
 fi
-
-
-
-ac_func=
-for ac_item in $ac_func_c_list
-do
-  if test $ac_func; then
-    ac_fn_c_check_func "$LINENO" $ac_func ac_cv_func_$ac_func
-    if eval test \"x\$ac_cv_func_$ac_func\" = xyes; then
-      echo "#define $ac_item 1" >> confdefs.h
-    fi
-    ac_func=
-  else
-    ac_func=$ac_item
-  fi
-done
 
 
 
@@ -15771,6 +15751,11 @@ ac_config_files="$ac_config_files hashmap/SATS/popcount.sats"
 
 ac_config_files="$ac_config_files hashmap/DATS/popcount.dats"
 
+
+ac_config_files="$ac_config_files hashmap/CATS/ctz.cats"
+
+#AC_CONFIG_FILES([hashmap/SATS/ctz.sats])
+#AC_CONFIG_FILES([hashmap/DATS/ctz.dats])
 
 ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
 
@@ -16894,6 +16879,7 @@ do
     "hashmap/CATS/popcount.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/popcount.cats" ;;
     "hashmap/SATS/popcount.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/popcount.sats" ;;
     "hashmap/DATS/popcount.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/popcount.dats" ;;
+    "hashmap/CATS/ctz.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/ctz.cats" ;;
     "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
     "tests/test-2021-10-03-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-10-50-40.structure.reference" ;;
     "tests/test-2021-10-03-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-51-50.structure.reference" ;;
