@@ -219,13 +219,6 @@ EXTRA_DIST += hashmap/SATS/ctz.sats
 EXTRA_DIST += hashmap/DATS/ctz.dats
 EXTRA_DIST += hashmap/CATS/ctz.cats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/nth-bit-index_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/nth-bit-index_dats.c
-CLEANFILES += hashmap/SATS/nth-bit-index_sats.c
-CLEANFILES += hashmap/DATS/nth-bit-index_dats.c
-EXTRA_DIST += hashmap/SATS/nth-bit-index.sats
-EXTRA_DIST += hashmap/DATS/nth-bit-index.dats
-
 libats2_hashmap_la_SOURCES += hashmap/SATS/print-bitmap_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/print-bitmap_dats.c
 CLEANFILES += hashmap/SATS/print-bitmap_sats.c

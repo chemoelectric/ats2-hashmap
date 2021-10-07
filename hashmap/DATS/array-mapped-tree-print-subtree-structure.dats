@@ -31,12 +31,13 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree-print-subtree-structure.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/uptr.sats"
-staload "hashmap/SATS/nth-bit-index.sats"
+staload "hashmap/SATS/ctz.sats"
 staload "hashmap/SATS/print-bitmap.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 staload _ = "hashmap/DATS/popcount.dats"
+staload _ = "hashmap/DATS/ctz.dats"
 
 #include "hashmap/HATS/array-mapped-tree-helpers.hats"
 
@@ -49,6 +50,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
         length = Size_t,
         index = Size_t,
         depth = Size_t,
+        population = uintptr,
         
         (* bits could overflow, but this happening would merely
            make the printout less useful. *)
@@ -120,6 +122,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
               length = length,
               index = index,
               depth = depth,
+              population = population,
               bits = bits
             } = (stack.top)
 
@@ -129,18 +132,23 @@ print_subtree_structure (out, node, depth, print_key_value) =
         (* Make a linear type from the uptr. *)
         val node = uptr2node_of_length {length} node_p
 
-        val population_map = get_population_map (node)
         val leaf_map = get_leaf_map (node)
         val chaining_map = get_chaining_map (node)
       in
         if index < length then
           let
-            val bit_index = nth_bit_index (population_map, index)
+            val bit_index = g1ofg0 (ctz<uintptrknd> (population))
+            val _ = assertloc (0 <= bit_index)
             val bit_selection_mask = (one << bit_index)
+
             val is_leaf = bit_is_set<> (leaf_map, bit_selection_mask)
             val is_chain =
               (is_leaf &&
                bit_is_set<> (chaining_map, bit_selection_mask))
+
+            (* Next time, skip the current bit position. *)
+            val population =
+              clear_bit<> (population, bit_selection_mask)
 
             val entry = node[index]
 
@@ -151,7 +159,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                 fprintln! (out, "depth: ", depth);
                 print_indentation (out, depth);
                 fprint! (out, "population_map: ");
-                print_bitmap (out, population_map);
+                print_bitmap (out, get_population_map (node));
                 fprintln! (out);
                 print_indentation (out, depth);
                 fprint! (out, "leaf_map:       ");
@@ -166,8 +174,10 @@ print_subtree_structure (out, node, depth, print_key_value) =
             if not is_leaf then
               let
                 val subnode = uintptr2node entry
+                val subnode_population_map =
+                  get_population_map (subnode)
                 val @(_ | subnode_length) =
-                  get_popcount (g1ofg0 (get_population_map (subnode)))
+                  get_popcount (g1ofg0 subnode_population_map)
                 prval _ = $UN.castvwtp0{void} subnode
 
                 prval _ = lemma_list_vt_param (stack.rest)
@@ -179,6 +189,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = subnode_length,
                     index = i2sz 0,
                     depth = succ depth,
+                    population = subnode_population_map,
                     bits = bits + shifted_bits (depth, bit_index)
                   };
                 stack.rest :=
@@ -187,6 +198,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = length,
                     index = succ index,
                     depth = depth,
+                    population = population,
                     bits = bits
                   } :: (stack.rest);
                 big_loop (out, print_key_value, stack)
@@ -235,6 +247,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = length,
                     index = succ index,
                     depth = depth,
+                    population = population,
                     bits = bits
                   };
                 big_loop (out, print_key_value, stack)
@@ -272,6 +285,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
         length = length,
         index = i2sz 0,
         depth = i2sz 0,
+        population = population_map,
         bits = 0ULL
       }
 

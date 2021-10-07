@@ -31,11 +31,12 @@ staload UN = "prelude/SATS/unsafe.sats"
 staload "hashmap/SATS/array-mapped-tree-subtree-to-list-vt.sats"
 staload "hashmap/SATS/array-mapped-tree-templates.sats"
 staload "hashmap/SATS/uptr.sats"
-staload "hashmap/SATS/nth-bit-index.sats"
+staload "hashmap/SATS/ctz.sats"
 
 staload _ = "hashmap/DATS/array-mapped-tree-templates.dats"
 staload _ = "hashmap/DATS/uptr.dats"
 staload _ = "hashmap/DATS/popcount.dats"
+staload _ = "hashmap/DATS/ctz.dats"
 
 #include "hashmap/HATS/array-mapped-tree-helpers.hats"
 
@@ -47,7 +48,8 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
         node_p = uptr,
         length = Size_t,
         index = Size_t,
-        depth = Size_t
+        depth = Size_t,
+        population = uintptr
       }
 
     vtypedef traversal_stack_vt =
@@ -72,7 +74,8 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
               node_p = node_p,
               length = length,
               index = index,
-              depth = depth
+              depth = depth,
+              population = population
             } = (stack.top)
 
         val [length : int] length = g1ofg0 length
@@ -81,26 +84,34 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
         (* Make a linear type from the uptr. *)
         val node = uptr2node_of_length {length} node_p
 
-        val population_map = get_population_map (node)
+//        val population_map = get_population_map (node) ????????????????????????????????????????????????????????????
         val leaf_map = get_leaf_map (node)
         val chaining_map = get_chaining_map (node)
       in
         if index < length then
           let
-            val bit_index = nth_bit_index (population_map, index)
+            val bit_index = g1ofg0 (ctz<uintptrknd> (population))
+            val _ = assertloc (0 <= bit_index)
             val bit_selection_mask = (one << bit_index)
+
             val is_leaf = bit_is_set<> (leaf_map, bit_selection_mask)
             val is_chain =
               (is_leaf &&
                bit_is_set<> (chaining_map, bit_selection_mask))
+
+            (* Next time, skip the current bit position. *)
+            val population =
+              clear_bit<> (population, bit_selection_mask)
 
             val entry = node[index]
           in
             if not is_leaf then
               let
                 val subnode = uintptr2node entry
+                val subnode_population_map =
+                  get_population_map (subnode)
                 val @(_ | subnode_length) =
-                  get_popcount (g1ofg0 (get_population_map (subnode)))
+                  get_popcount (g1ofg0 subnode_population_map)
                 prval _ = $UN.castvwtp0{void} subnode
 
                 prval _ = lemma_list_vt_param (stack.rest)
@@ -111,14 +122,16 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                     node_p = uintptr2uptr entry,
                     length = subnode_length,
                     index = i2sz 0,
-                    depth = succ depth
+                    depth = succ depth,
+                    population = subnode_population_map
                   };
                 stack.rest :=
                   @{
                     node_p = node_p,
                     length = length,
                     index = succ index,
-                    depth = depth
+                    depth = depth,
+                    population = population
                   } :: (stack.rest);
                 let
                   prval _ = $UN.castvwtp0{void} node
@@ -168,7 +181,8 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                     node_p = node_p,
                     length = length,
                     index = succ index,
-                    depth = depth
+                    depth = depth,
+                    population = population
                   };
                 big_loop (entry :: result,
                           succ (result_length),
@@ -213,7 +227,8 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
         node_p = ptr2uptr ($UN.castvwtp1{Ptr} node),
         length = length,
         index = i2sz 0,
-        depth = i2sz 0
+        depth = i2sz 0,
+        population = population_map
       }
 
     var stack =
