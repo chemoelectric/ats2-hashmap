@@ -139,7 +139,8 @@ check_PROGRAMS = tests/test-bits-source-uint16$(EXEEXT) \
 	tests/test-bits-source-uint32$(EXEEXT) \
 	tests/test-bits-source-uint64$(EXEEXT) \
 	tests/test-bits-source-uint64-uint64$(EXEEXT) $(am__EXEEXT_1) \
-	tests/test-popcount$(EXEEXT) tests/test-uintptr-set$(EXEEXT)
+	tests/test-popcount$(EXEEXT) tests/test-ctz$(EXEEXT) \
+	tests/test-uintptr-set$(EXEEXT)
 @UINTPTR_IS_UINT64_TRUE@am__append_1 = tests/test-bits-source-uintptr
 @UINTPTR_IS_UINT64_TRUE@am__append_2 = tests/test-bits-source-uintptr.dats
 @UINTPTR_IS_UINT64_TRUE@am__append_3 = tests/test-bits-source-uintptr \
@@ -342,6 +343,9 @@ tests_test_bits_source_uintptr_OBJECTS =  \
 	$(am_tests_test_bits_source_uintptr_OBJECTS)
 @UINTPTR_IS_UINT64_TRUE@tests_test_bits_source_uintptr_DEPENDENCIES =  \
 @UINTPTR_IS_UINT64_TRUE@	$(lib_LTLIBRARIES)
+am_tests_test_ctz_OBJECTS = tests/test-ctz_dats.$(OBJEXT)
+tests_test_ctz_OBJECTS = $(am_tests_test_ctz_OBJECTS)
+tests_test_ctz_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_popcount_OBJECTS = tests/test-popcount_dats.$(OBJEXT)
 tests_test_popcount_OBJECTS = $(am_tests_test_popcount_OBJECTS)
 tests_test_popcount_DEPENDENCIES = $(lib_LTLIBRARIES)
@@ -433,6 +437,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po \
+	tests/$(DEPDIR)/test-ctz_dats.Po \
 	tests/$(DEPDIR)/test-popcount_dats.Po \
 	tests/$(DEPDIR)/test-uintptr-set_dats.Po
 am__mv = mv -f
@@ -461,7 +466,7 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(tests_test_bits_source_uintptr_SOURCES) \
-	$(tests_test_popcount_SOURCES) \
+	$(tests_test_ctz_SOURCES) $(tests_test_popcount_SOURCES) \
 	$(tests_test_uintptr_set_SOURCES)
 DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
@@ -470,7 +475,7 @@ DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(am__tests_test_bits_source_uintptr_SOURCES_DIST) \
-	$(tests_test_popcount_SOURCES) \
+	$(tests_test_ctz_SOURCES) $(tests_test_popcount_SOURCES) \
 	$(tests_test_uintptr_set_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -1066,8 +1071,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/SATS/hashmap.sats tests/test-bits-source-uint16.dats \
 	tests/test-bits-source-uint32.dats \
 	tests/test-bits-source-uint64.dats $(am__append_2) \
-	tests/test-popcount.dats tests/test-uintptr-set.dats \
-	list-ats-dependencies.dats
+	tests/test-popcount.dats tests/test-ctz.dats \
+	tests/test-uintptr-set.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/SATS/spinlock_sats.c hashmap/DATS/spinlock_dats.c \
@@ -1181,9 +1186,10 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	tests/test-bits-source-uint64-uint64.dats \
 	tests/test-bits-source-uint64-uint64 \
 	tests/test-bits-source-uint64-uint64_dats.c $(am__append_3) \
-	tests/test-popcount tests/test-popcount_dats.c \
-	tests/test-uintptr-set tests/test-uintptr-set_dats.c \
-	list-ats-dependencies list-ats-dependencies_depsprog.c
+	tests/test-popcount tests/test-popcount_dats.c tests/test-ctz \
+	tests/test-ctz_dats.c tests/test-uintptr-set \
+	tests/test-uintptr-set_dats.c list-ats-dependencies \
+	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = 
 AM_M4FLAGS = 
@@ -1308,6 +1314,8 @@ tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 @UINTPTR_IS_UINT64_TRUE@tests_test_bits_source_uintptr_LDADD = $(lib_LTLIBRARIES)
 tests_test_popcount_SOURCES = tests/test-popcount_dats.c
 tests_test_popcount_LDADD = $(lib_LTLIBRARIES)
+tests_test_ctz_SOURCES = tests/test-ctz_dats.c
+tests_test_ctz_LDADD = $(lib_LTLIBRARIES)
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
 tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
@@ -1777,6 +1785,12 @@ tests/test-bits-source-uintptr_dats.$(OBJEXT): tests/$(am__dirstamp) \
 tests/test-bits-source-uintptr$(EXEEXT): $(tests_test_bits_source_uintptr_OBJECTS) $(tests_test_bits_source_uintptr_DEPENDENCIES) $(EXTRA_tests_test_bits_source_uintptr_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits-source-uintptr$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_uintptr_OBJECTS) $(tests_test_bits_source_uintptr_LDADD) $(LIBS)
+tests/test-ctz_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-ctz$(EXEEXT): $(tests_test_ctz_OBJECTS) $(tests_test_ctz_DEPENDENCIES) $(EXTRA_tests_test_ctz_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-ctz$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_ctz_OBJECTS) $(tests_test_ctz_LDADD) $(LIBS)
 tests/test-popcount_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -1870,6 +1884,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-ctz_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-popcount_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-uintptr-set_dats.Po@am__quote@ # am--include-marker
 
@@ -2216,6 +2231,13 @@ tests/test-popcount.log: tests/test-popcount$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-ctz.log: tests/test-ctz$(EXEEXT)
+	@p='tests/test-ctz$(EXEEXT)'; \
+	b='tests/test-ctz'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 tests/test-uintptr-set.log: tests/test-uintptr-set$(EXEEXT)
 	@p='tests/test-uintptr-set$(EXEEXT)'; \
 	b='tests/test-uintptr-set'; \
@@ -2546,6 +2568,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po
+	-rm -f tests/$(DEPDIR)/test-ctz_dats.Po
 	-rm -f tests/$(DEPDIR)/test-popcount_dats.Po
 	-rm -f tests/$(DEPDIR)/test-uintptr-set_dats.Po
 	-rm -f GNUmakefile
@@ -2665,6 +2688,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po
+	-rm -f tests/$(DEPDIR)/test-ctz_dats.Po
 	-rm -f tests/$(DEPDIR)/test-popcount_dats.Po
 	-rm -f tests/$(DEPDIR)/test-uintptr-set_dats.Po
 	-rm -f GNUmakefile

@@ -534,6 +534,13 @@ EXTRA_DIST += tests/test-popcount.dats
 CLEANFILES += tests/test-popcount
 CLEANFILES += tests/test-popcount_dats.c
 
+check_PROGRAMS += tests/test-ctz
+tests_test_ctz_SOURCES = tests/test-ctz_dats.c
+tests_test_ctz_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-ctz.dats
+CLEANFILES += tests/test-ctz
+CLEANFILES += tests/test-ctz_dats.c
+
 check_PROGRAMS += tests/test-uintptr-set
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
 tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
