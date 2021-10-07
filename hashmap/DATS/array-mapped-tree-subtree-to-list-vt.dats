@@ -169,6 +169,14 @@ array_mapped_tree_subtree_to_list_vt {length} {p} (node) =
                 prval _ = $UN.castvwtp0{void} lst
                 prval _ = $UN.castvwtp0{void} node
               in
+                stack.top :=
+                  @{
+                    node_p = node_p,
+                    length = length,
+                    index = succ index,
+                    depth = depth,
+                    population = population
+                  };
                 big_loop (result, result_length, stack)
               end
             else (* is_leaf but not is_chain *)

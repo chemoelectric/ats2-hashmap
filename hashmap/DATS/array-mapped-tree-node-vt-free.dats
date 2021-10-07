@@ -153,28 +153,35 @@ node_vt_free {length} {p} (node, key_value_free) =
                 big_loop (stack, key_value_free)
               end
             else if is_chain then
-              {
+              let
                 fun
                 loop {n   : int | 0 <= n} .<n>.
-                     (lst : !list_vt (uintptr, n) >> _,
+                     (lst : list_vt (uintptr, n),
                       key_value_free :
                             !(uintptr -<cloptr1> void) >> _) : void =
                   case+ lst of
-                  | NIL => ()
-                  | @ head :: tail =>
-                    {
-                      val _ = key_value_free (head)
-                      val _ = loop (tail, key_value_free)
-                      prval _ = fold@ lst
-                    }
+                  | ~ NIL => ()
+                  | ~ head :: tail =>
+                    begin
+                      key_value_free (head);
+                      loop (tail, key_value_free)
+                    end
 
                 val lst =
                   $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
                 prval _ = lemma_list_vt_param lst
                 val _ = loop (lst, key_value_free)
-                prval _ = $UN.castvwtp0{void} lst
-                val _ = big_loop (stack, key_value_free)
-              }
+              in
+                stack.top :=
+                  @{
+                    node_p = node_p,
+                    length = length,
+                    index = succ index,
+                    depth = depth,
+                    population = population
+                  };
+                big_loop (stack, key_value_free)
+              end
             else (* is_leaf but not is_chain *)
               begin
                 stack.top :=

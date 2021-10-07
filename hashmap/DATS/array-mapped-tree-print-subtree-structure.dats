@@ -204,7 +204,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                 big_loop (out, print_key_value, stack)
               end
             else if is_chain then
-              {
+              let
                 fun
                 loop {n   : int | 0 <= n} .<n>.
                      (lst : !list_vt (uintptr, n) >> _,
@@ -234,8 +234,18 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     fprintln! (out, ")")
                   end
                 prval _ = $UN.castvwtp0{void} lst
-                val _ = big_loop (out, print_key_value, stack)
-              }
+              in
+                stack.top :=
+                  @{
+                    node_p = node_p,
+                    length = length,
+                    index = succ index,
+                    depth = depth,
+                    population = population,
+                    bits = bits
+                  };
+                big_loop (out, print_key_value, stack)
+              end
             else (* is_leaf but not is_chain *)
               begin
                 print_key_value_heading (out, depth, bit_index, bits);
