@@ -116,145 +116,163 @@
    (((x) & UINT64_C (0x00FF000000000000)) >> (5 * 8)) | \
    (((x) & UINT64_C (0xFF00000000000000)) >> (7 * 8)))
 
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 @ATS_EXTERN_PREFIX@macro_bswap8
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint8 @ATS_EXTERN_PREFIX@macro_bswap8
 
 #if HAVE___BUILTIN_BSWAP16
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 __builtin_bswap16
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint16 __builtin_bswap16
 #else
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 @ATS_EXTERN_PREFIX@macro_bswap16
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint16 @ATS_EXTERN_PREFIX@macro_bswap16
 #endif
 
 #if HAVE___BUILTIN_BSWAP32
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 __builtin_bswap32
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint32 __builtin_bswap32
 #else
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 @ATS_EXTERN_PREFIX@macro_bswap32
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint32 @ATS_EXTERN_PREFIX@macro_bswap32
 #endif
 
 #if HAVE___BUILTIN_BSWAP64
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 __builtin_bswap64
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint64 __builtin_bswap64
 #else
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 @ATS_EXTERN_PREFIX@macro_bswap64
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint64 @ATS_EXTERN_PREFIX@macro_bswap64
 #endif
 
 #if SIZEOF_UNSIGNED_SHORT_INT == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_UNSIGNED_SHORT_INT == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_usint(x) ((atstype_usint) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_usint"
 #endif
 
 #if SIZEOF_UNSIGNED_INT == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_UNSIGNED_INT == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_UNSIGNED_INT == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_UNSIGNED_INT == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_UNSIGNED_INT == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_UNSIGNED_INT == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_UNSIGNED_INT == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_UNSIGNED_INT == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uint(x) ((atstype_uint) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_uint"
 #endif
 
 #if SIZEOF_UNSIGNED_LONG_INT == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_UNSIGNED_LONG_INT == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ulint(x) ((atstype_ulint) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_ulint"
 #endif
 
 #if SIZEOF_UNSIGNED_LONG_LONG_INT == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_UNSIGNED_LONG_LONG_INT == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_ullint(x) ((atstype_ullint) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_ullint"
 #endif
 
 #if SIZEOF_SIZE_T == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_SIZE_T == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_SIZE_T == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_SIZE_T == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_SIZE_T == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_SIZE_T == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_SIZE_T == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_SIZE_T == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_size(x) ((atstype_size) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_size"
 #endif
 
 #if SIZEOF_UINTPTR_T == 1
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@g0uint_bswap_uint8 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap_uint8 (x))
 #elif SIZEOF_UINTPTR_T == 2
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@g0uint_bswap_uint16 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap_uint16 (x))
 #elif SIZEOF_UINTPTR_T == 3
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap24 (x))
 #elif SIZEOF_UINTPTR_T == 4
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@g0uint_bswap_uint32 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap_uint32 (x))
 #elif SIZEOF_UINTPTR_T == 5
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap40 (x))
 #elif SIZEOF_UINTPTR_T == 6
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap48 (x))
 #elif SIZEOF_UINTPTR_T == 7
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap56 (x))
 #elif SIZEOF_UINTPTR_T == 8
-#define @ATS_EXTERN_PREFIX@g0uint_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@g0uint_bswap_uint64 (x))
+#define @ATS_EXTERN_PREFIX@macro_bswap_uintptr(x) ((atstype_uintptr) @ATS_EXTERN_PREFIX@macro_bswap_uint64 (x))
 #else
 #error "I have no implementation for g0uint_bswap_uintptr"
 #endif
+
+#define @ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION(T)       \
+  ATSinline() atstype_##T                               \
+  @ATS_EXTERN_PREFIX@g0uint_bswap_##T (atstype_##T x)   \
+  {                                                     \
+  return @ATS_EXTERN_PREFIX@macro_bswap_##T (x);        \
+  }
+
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (usint)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uint)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (ulint)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (ullint)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uint8)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uint16)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uint32)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uint64)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (size)
+@ATS_EXTERN_PREFIX@MAKE_BSWAP_FUNCTION (uintptr)
 
 /********************************************************************/
 /*
