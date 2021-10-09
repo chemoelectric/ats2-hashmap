@@ -34,6 +34,9 @@ staload "hashmap/SATS/uintptr-set.sats"
 staload "hashmap/SATS/array-mapped-tree.sats"
 staload "hashmap/SATS/bits-source.sats"
 
+staload "hashmap/SATS/memory.sats"
+staload _ = "hashmap/DATS/memory.dats"
+
 staload "hashmap/SATS/atomic.sats"
 staload "hashmap/SATS/spinlock.sats"
 staload "hashmap/SATS/initialize-once.sats"
@@ -75,7 +78,7 @@ in
       val hash_func =
         lam (key  : uintptr,
              hash : &uintptr? >> uintptr) : void =<cloptr1>
-          hash := key
+          hash := bswap_on_big_endian<uintptrknd> key
       val _ = storage := $UN.castvwtp0{ptr} hash_func
     }
 
