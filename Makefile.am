@@ -560,6 +560,13 @@ EXTRA_DIST += tests/test-bswap.dats
 CLEANFILES += tests/test-bswap
 CLEANFILES += tests/test-bswap_dats.c
 
+check_PROGRAMS += tests/test-big-endian
+tests_test_big_endian_SOURCES = tests/test-big-endian_dats.c
+tests_test_big_endian_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-big-endian.dats
+CLEANFILES += tests/test-big-endian
+CLEANFILES += tests/test-big-endian_dats.c
+
 check_PROGRAMS += tests/test-little-endian
 tests_test_little_endian_SOURCES = tests/test-little-endian_dats.c
 tests_test_little_endian_LDADD = $(lib_LTLIBRARIES)

@@ -103,6 +103,29 @@ implement g0uint_bswap<uintptrknd> (x) = g0uint_bswap_uintptr (x)
 
 (********************************************************************)
 
+implement g0uint_big_endian<usintknd> (x) =
+  g0uint_big_endian_usint (x)
+implement g0uint_big_endian<uintknd> (x) =
+  g0uint_big_endian_uint (x)
+implement g0uint_big_endian<ulintknd> (x) =
+  g0uint_big_endian_ulint (x)
+implement g0uint_big_endian<ullintknd> (x) =
+  g0uint_big_endian_ullint (x)
+implement g0uint_big_endian<uint8knd> (x) =
+  g0uint_big_endian_uint8 (x)
+implement g0uint_big_endian<uint16knd> (x) =
+  g0uint_big_endian_uint16 (x)
+implement g0uint_big_endian<uint32knd> (x) =
+  g0uint_big_endian_uint32 (x)
+implement g0uint_big_endian<uint64knd> (x) =
+  g0uint_big_endian_uint64 (x)
+implement g0uint_big_endian<sizeknd> (x) =
+  g0uint_big_endian_size (x)
+implement g0uint_big_endian<uintptrknd> (x) =
+  g0uint_big_endian_uintptr (x)
+
+(********************************************************************)
+
 implement g0uint_little_endian<usintknd> (x) =
   g0uint_little_endian_usint (x)
 implement g0uint_little_endian<uintknd> (x) =

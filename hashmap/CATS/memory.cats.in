@@ -21,6 +21,11 @@
 #ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
 #define HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
 
+#define @ATS_EXTERN_PREFIX@BIGENDIAN @BIGENDIAN@
+#define @ATS_EXTERN_PREFIX@LITTLEENDIAN @LITTLEENDIAN@
+#define @ATS_EXTERN_PREFIX@UNIVERSALENDIAN @UNIVERSALENDIAN@
+#define @ATS_EXTERN_PREFIX@ENDIANNESS @ENDIANNESS@
+
 /********************************************************************/
 /*
  * Copying and setting blocks of memory.
@@ -276,13 +281,44 @@
 
 /********************************************************************/
 /*
- * Setting byte order to little-endian.
+ * Setting byte order to big-endian.
  */
 
-#define @ATS_EXTERN_PREFIX@BIGENDIAN @BIGENDIAN@
-#define @ATS_EXTERN_PREFIX@LITTLEENDIAN @LITTLEENDIAN@
-#define @ATS_EXTERN_PREFIX@UNIVERSALENDIAN @UNIVERSALENDIAN@
-#define @ATS_EXTERN_PREFIX@ENDIANNESS @ENDIANNESS@
+#if (@ATS_EXTERN_PREFIX@ENDIANNESS == @ATS_EXTERN_PREFIX@BIGENDIAN ||   \
+     ((@ATS_EXTERN_PREFIX@ENDIANNESS == @ATS_EXTERN_PREFIX@UNIVERSALENDIAN) && \
+      (defined __BIG_ENDIAN__)))
+/* The storage is already big-endian. */
+#define @ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION(T)      \
+  ATSinline() atstype_##T                                   \
+  @ATS_EXTERN_PREFIX@g0uint_big_endian_##T (atstype_##T x)  \
+  {                                                         \
+  return (x);                                               \
+  }
+#else
+/* The storage is little-endian. */
+#define @ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION(T)      \
+  ATSinline() atstype_##T                                   \
+  @ATS_EXTERN_PREFIX@g0uint_big_endian_##T (atstype_##T x)  \
+  {                                                         \
+  return @ATS_EXTERN_PREFIX@macro_bswap_##T (x);            \
+  }
+#endif
+
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (usint)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uint)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (ulint)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (ullint)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uint8)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uint16)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uint32)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uint64)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (size)
+@ATS_EXTERN_PREFIX@MAKE_BIG_ENDIAN_FUNCTION (uintptr)
+
+/********************************************************************/
+/*
+ * Setting byte order to little-endian.
+ */
 
 #if (@ATS_EXTERN_PREFIX@ENDIANNESS == @ATS_EXTERN_PREFIX@BIGENDIAN ||   \
      ((@ATS_EXTERN_PREFIX@ENDIANNESS == @ATS_EXTERN_PREFIX@UNIVERSALENDIAN) && \
@@ -292,7 +328,7 @@
   ATSinline() atstype_##T                                       \
   @ATS_EXTERN_PREFIX@g0uint_little_endian_##T (atstype_##T x)   \
   {                                                             \
-  return g0uint_bswap_##T (x);                                  \
+  return @ATS_EXTERN_PREFIX@macro_bswap_##T (x);                \
   }
 #else
 /* The storage already is little-endian. */

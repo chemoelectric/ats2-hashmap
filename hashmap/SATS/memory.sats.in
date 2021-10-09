@@ -109,6 +109,27 @@ overload bswap with g0uint_bswap of 0
 
 (********************************************************************)
 (*
+  Setting byte order to big-endian.
+*)
+
+fun {tk : tkind}
+g0uint_big_endian : g0uint (tk) -<> g0uint (tk)
+
+fun g0uint_big_endian_usint : usint -<> usint = "mac#%"
+fun g0uint_big_endian_uint : uint -<> uint = "mac#%"
+fun g0uint_big_endian_ulint : ulint -<> ulint = "mac#%"
+fun g0uint_big_endian_ullint : ullint -<> ullint = "mac#%"
+fun g0uint_big_endian_uint8 : uint8 -<> uint8 = "mac#%"
+fun g0uint_big_endian_uint16 : uint16 -<> uint16 = "mac#%"
+fun g0uint_big_endian_uint32 : uint32 -<> uint32 = "mac#%"
+fun g0uint_big_endian_uint64 : uint64 -<> uint64 = "mac#%"
+fun g0uint_big_endian_size : size_t -<> size_t = "mac#%"
+fun g0uint_big_endian_uintptr : uintptr -<> uintptr = "mac#%"
+
+overload big_endian with g0uint_big_endian of 0
+
+(********************************************************************)
+(*
   Setting byte order to little-endian.
 *)
 
