@@ -660,6 +660,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+WITH_ATS2_SPOOKYHASH_FALSE
+WITH_ATS2_SPOOKYHASH_TRUE
 SIZEOF_BITINDEXOF_UINTPTR
 MAXVALOF_BITINDEX_8
 MAXVALOF_BITINDEX_7
@@ -703,6 +705,14 @@ GNU
 UINTPTR_IS_UINT64_FALSE
 UINTPTR_IS_UINT64_TRUE
 HAVE_UINT128
+REQUIRES_PRIVATE_PKGS
+ATS2_SPOOKYHASH_PATSOPTFLAGS
+ATS2_SPOOKYHASH_LIBS
+ATS2_SPOOKYHASH_CFLAGS
+pkgconfigdir
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH
+PKG_CONFIG
 CODE_COVERAGE_LIBS
 CODE_COVERAGE_CXXFLAGS
 CODE_COVERAGE_CFLAGS
@@ -859,8 +869,10 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+with_ats2_spookyhash
 with_gcov
 enable_code_coverage
+with_pkgconfigdir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -873,6 +885,12 @@ CPPFLAGS
 LT_SYS_LIBRARY_PATH
 PATSHOME
 PKGCONFIG_PATSHOME
+PKG_CONFIG
+PKG_CONFIG_PATH
+PKG_CONFIG_LIBDIR
+ATS2_SPOOKYHASH_CFLAGS
+ATS2_SPOOKYHASH_LIBS
+ATS2_SPOOKYHASH_PATSOPTFLAGS
 GNU_MAKE'
 
 
@@ -1528,7 +1546,11 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
+  --without-ats2-spookyhash
+                          disable support for SpookyHash
   --with-gcov=GCOV        use given GCOV for coverage (GCOV=gcov).
+  --with-pkgconfigdir     pkg-config installation directory
+                          ['${libdir}/pkgconfig']
 
 Some influential environment variables:
   CC          C compiler command
@@ -1544,6 +1566,17 @@ Some influential environment variables:
   PKGCONFIG_PATSHOME
               The PATSHOME setting to put in the pkg-config file
               [default="${PATSHOME}"]
+  PKG_CONFIG  path to pkg-config utility
+  PKG_CONFIG_PATH
+              directories to add to pkg-config's search path
+  PKG_CONFIG_LIBDIR
+              path overriding pkg-config's built-in search path
+  ATS2_SPOOKYHASH_CFLAGS
+              C compiler flags for ATS2_SPOOKYHASH, overriding pkg-config
+  ATS2_SPOOKYHASH_LIBS
+              linker flags for ATS2_SPOOKYHASH, overriding pkg-config
+  ATS2_SPOOKYHASH_PATSOPTFLAGS
+              value of PATSOPTFLAGS for ats2-spookyhash, overriding pkg-config
   GNU_MAKE    GNU Make command
 
 Use these variables to override the choices made by `configure' or to help
@@ -13034,6 +13067,16 @@ ATS_SATS_DIRECTORY=hashmap/SATS
 ATS_DATS_DIRECTORY=hashmap/DATS
 
 
+
+# Check whether --with-ats2-spookyhash was given.
+if test ${with_ats2_spookyhash+y}
+then :
+  withval=$with_ats2_spookyhash;
+else $as_nop
+  with_ats2_spookyhash=yes
+fi
+
+
 #--------------------------------------------------------------------------
 #
 # Checks for programs.
@@ -14744,9 +14787,265 @@ else
 fi
 
 
+
+
+
+
+
+
+
+if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+	if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}pkg-config; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_PKG_CONFIG+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_PKG_CONFIG="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+if test -n "$PKG_CONFIG"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $PKG_CONFIG" >&5
+printf "%s\n" "$PKG_CONFIG" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_PKG_CONFIG"; then
+  ac_pt_PKG_CONFIG=$PKG_CONFIG
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_ac_pt_PKG_CONFIG+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $ac_pt_PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_PKG_CONFIG="$ac_pt_PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_ac_pt_PKG_CONFIG="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_PKG_CONFIG=$ac_cv_path_ac_pt_PKG_CONFIG
+if test -n "$ac_pt_PKG_CONFIG"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_pt_PKG_CONFIG" >&5
+printf "%s\n" "$ac_pt_PKG_CONFIG" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+  if test "x$ac_pt_PKG_CONFIG" = x; then
+    PKG_CONFIG=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+printf "%s\n" "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    PKG_CONFIG=$ac_pt_PKG_CONFIG
+  fi
+else
+  PKG_CONFIG="$ac_cv_path_PKG_CONFIG"
+fi
+
+fi
+if test -n "$PKG_CONFIG"; then
+	_pkg_min_version=0.9.0
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config is at least version $_pkg_min_version" >&5
+printf %s "checking pkg-config is at least version $_pkg_min_version... " >&6; }
+	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	else
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+		PKG_CONFIG=""
+	fi
+fi
+PKG_CONFIG="${PKG_CONFIG} --define-variable=PATSHOME=\"${PATSHOME}\""
+
+
+
+# Check whether --with-pkgconfigdir was given.
+if test ${with_pkgconfigdir+y}
+then :
+  withval=$with_pkgconfigdir;
+else $as_nop
+  with_pkgconfigdir='${libdir}/pkgconfig'
+fi
+
+pkgconfigdir=$with_pkgconfigdir
+
+
+
+
+
 #--------------------------------------------------------------------------
 #
 # Checks for libraries.
+
+if test "x${with_ats2_spookyhash}" != xno
+then :
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ATS2_SPOOKYHASH" >&5
+printf %s "checking for ATS2_SPOOKYHASH... " >&6; }
+
+if test -n "$ATS2_SPOOKYHASH_CFLAGS"; then
+    pkg_cv_ATS2_SPOOKYHASH_CFLAGS="$ATS2_SPOOKYHASH_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_CFLAGS=`$PKG_CONFIG --cflags "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$ATS2_SPOOKYHASH_LIBS"; then
+    pkg_cv_ATS2_SPOOKYHASH_LIBS="$ATS2_SPOOKYHASH_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_LIBS=`$PKG_CONFIG --libs "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        ATS2_SPOOKYHASH_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "ats2-spookyhash" 2>&1`
+        else
+	        ATS2_SPOOKYHASH_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "ats2-spookyhash" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$ATS2_SPOOKYHASH_PKG_ERRORS" >&5
+
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+See \`config.log' for more details" "$LINENO" 5; }
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	ATS2_SPOOKYHASH_CFLAGS=$pkg_cv_ATS2_SPOOKYHASH_CFLAGS
+	ATS2_SPOOKYHASH_LIBS=$pkg_cv_ATS2_SPOOKYHASH_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
+
+if test -n "$ATS2_SPOOKYHASH_PATSOPTFLAGS"; then
+    pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS="$ATS2_SPOOKYHASH_PATSOPTFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS=`$PKG_CONFIG --variable="PATSOPTFLAGS" "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+ATS2_SPOOKYHASH_PATSOPTFLAGS=$pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS
+
+if test "x$ATS2_SPOOKYHASH_PATSOPTFLAGS" = x""
+then :
+
+fi
+fi
+
+fi
+
+
 
 #--------------------------------------------------------------------------
 #
@@ -15787,6 +16086,18 @@ ac_config_files="$ac_config_files tests/test-2021-10-05-04-18-20.structure.refer
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
 
+ac_config_files="$ac_config_files ats2-hashmap.pc"
+
+
+ if test "x${with_ats2_spookyhash}" != xno; then
+  WITH_ATS2_SPOOKYHASH_TRUE=
+  WITH_ATS2_SPOOKYHASH_FALSE='#'
+else
+  WITH_ATS2_SPOOKYHASH_TRUE='#'
+  WITH_ATS2_SPOOKYHASH_FALSE=
+fi
+
+
 # What to use as the shell in shebangs.
 #AC_ARG_VAR([POSIX_SH],[The full absolute path of a POSIX shell])
 #POSIX_SH=${POSIX_SH-`command -p -v sh`}
@@ -15978,6 +16289,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${UINTPTR_IS_UINT64_TRUE}" && test -z "${UINTPTR_IS_UINT64_FALSE}"; then
   as_fn_error $? "conditional \"UINTPTR_IS_UINT64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_ATS2_SPOOKYHASH_TRUE}" && test -z "${WITH_ATS2_SPOOKYHASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_ATS2_SPOOKYHASH\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -16897,6 +17212,7 @@ do
     "tests/test-2021-10-05-03-40-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-03-40-40.structure.reference" ;;
     "tests/test-2021-10-05-04-18-20.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-04-18-20.structure.reference" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
+    "ats2-hashmap.pc") CONFIG_FILES="$CONFIG_FILES ats2-hashmap.pc" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

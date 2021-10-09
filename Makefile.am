@@ -69,6 +69,8 @@ AM_CPPFLAGS += -I$(srcdir)/lib
 AM_CPPFLAGS += -I$(PATSHOME)
 AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
 
+AM_CFLAGS += $(ATS2_SPOOKYHASH_CFLAGS)
+
 LDADD += $(CODE_COVERAGE_LIBS)
 
 CODE_COVERAGE_IGNORE_PATTERN =
@@ -146,14 +148,14 @@ EXTRA_DIST += ats-nodeptracking-rules.mk
 
 #--------------------------------------------------------------------------
 #
-# The ATS2 library.
+# The ATS2 libraries.
 #
 
 lib_LTLIBRARIES += libats2-hashmap.la
 
 libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
-libats2_hashmap_la_LIBADD =
+libats2_hashmap_la_LIBADD = $(ATS2_SPOOKYHASH_LIBS)
 
 hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
@@ -470,9 +472,26 @@ nobase_nodist_pkginclude_HEADERS += hashmap/DATS/uintptr-set.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/CATS/uintptr-set-implementation.cats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
+CLEANFILES += hashmap/DATS/hashmap_dats.c
 EXTRA_DIST += hashmap/SATS/hashmap.sats
+EXTRA_DIST += hashmap/DATS/hashmap.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
+
+if WITH_ATS2_SPOOKYHASH
+libats2_hashmap_la_SOURCES += hashmap/SATS/strptr-map_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/strptr-map_dats.c
+endif WITH_ATS2_SPOOKYHASH
+CLEANFILES += hashmap/SATS/strptr-map_sats.c
+CLEANFILES += hashmap/DATS/strptr-map_dats.c
+EXTRA_DIST += hashmap/SATS/strptr-map.sats
+EXTRA_DIST += hashmap/DATS/strptr-map.dats
+if WITH_ATS2_SPOOKYHASH
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strptr-map.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strptr-map.dats
+endif WITH_ATS2_SPOOKYHASH
 
 #--------------------------------------------------------------------------
 #
@@ -568,8 +587,7 @@ list_ats_dependencies_LDADD += -latslib
 
 #--------------------------------------------------------------------------
 
-#nodist_pkgconfig_DATA += ats2-hashmap.pc
-#nodist_pkgconfig_DATA += hashmap.pc
+nodist_pkgconfig_DATA += ats2-hashmap.pc
 
 #--------------------------------------------------------------------------
 # local variables:

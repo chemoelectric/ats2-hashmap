@@ -50,11 +50,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
         length = Size_t,
         index = Size_t,
         depth = Size_t,
-        population = uintptr,
-        
-        (* bits could overflow, but this happening would merely
-           make the printout less useful. *)
-        bits = ullint
+        population = uintptr
       }
 
     vtypedef traversal_stack_vt =
@@ -100,12 +96,10 @@ print_subtree_structure (out, node, depth, print_key_value) =
     print_key_value_heading {bit_index : int | 0 <= bit_index}
                             (out       : FILEref,
                              depth     : Size_t,
-                             bit_index : int bit_index,
-                             bits      : ullint) : void =
+                             bit_index : int bit_index) : void =
       begin
         print_indentation (out, depth);
-        fprint! (out, "key-value (", bit_index, ", ",
-                 bits + shifted_bits (depth, bit_index), "): ")
+        fprint! (out, "key-value (", bit_index, "): ")
       end
 
     fun
@@ -122,8 +116,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
               length = length,
               index = index,
               depth = depth,
-              population = population,
-              bits = bits
+              population = population
             } = (stack.top)
 
         val [length : int] length = g1ofg0 length
@@ -189,8 +182,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = subnode_length,
                     index = i2sz 0,
                     depth = succ depth,
-                    population = subnode_population_map,
-                    bits = bits + shifted_bits (depth, bit_index)
+                    population = subnode_population_map
                   };
                 stack.rest :=
                   @{
@@ -198,8 +190,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = length,
                     index = succ index,
                     depth = depth,
-                    population = population,
-                    bits = bits
+                    population = population
                   } :: (stack.rest);
                 big_loop (out, print_key_value, stack)
               end
@@ -227,8 +218,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                 prval _ = lemma_list_vt_param lst
                 val _ =
                   begin
-                    print_key_value_heading (out, depth, bit_index,
-                                             bits);
+                    print_key_value_heading (out, depth, bit_index);
                     fprint! (out, "(");
                     loop (lst, print_key_value, "");
                     fprintln! (out, ")")
@@ -241,14 +231,13 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = length,
                     index = succ index,
                     depth = depth,
-                    population = population,
-                    bits = bits
+                    population = population
                   };
                 big_loop (out, print_key_value, stack)
               end
             else (* is_leaf but not is_chain *)
               begin
-                print_key_value_heading (out, depth, bit_index, bits);
+                print_key_value_heading (out, depth, bit_index);
                 print_key_value (out, entry);
                 fprintln! (out);
                 stack.top :=
@@ -257,8 +246,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
                     length = length,
                     index = succ index,
                     depth = depth,
-                    population = population,
-                    bits = bits
+                    population = population
                   };
                 big_loop (out, print_key_value, stack)
               end
@@ -295,8 +283,7 @@ print_subtree_structure (out, node, depth, print_key_value) =
         length = length,
         index = i2sz 0,
         depth = i2sz 0,
-        population = population_map,
-        bits = 0ULL
+        population = population_map
       }
 
     var stack =

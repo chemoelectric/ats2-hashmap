@@ -54,6 +54,12 @@ AC_SUBST([ATS_CATS_DIRECTORY],[hashmap/CATS])
 AC_SUBST([ATS_SATS_DIRECTORY],[hashmap/SATS])
 AC_SUBST([ATS_DATS_DIRECTORY],[hashmap/DATS])
 
+AC_ARG_WITH([ats2-spookyhash],
+  [AS_HELP_STRING([--without-ats2-spookyhash],
+    [disable support for SpookyHash])],
+    [],
+    [with_ats2_spookyhash=yes])
+
 #--------------------------------------------------------------------------
 #
 # Checks for programs.
@@ -77,9 +83,22 @@ AX_CODE_COVERAGE
 AM_CONDITIONAL([DEPENDENCY_TRACKING],
   [test x"${enable_dependency_tracking}" != xno])
 
+PKG_PROG_PKG_CONFIG
+PKG_CONFIG="${PKG_CONFIG} --define-variable=PATSHOME=\"${PATSHOME}\""
+PKG_INSTALLDIR
+
 #--------------------------------------------------------------------------
 #
 # Checks for libraries.
+
+AS_IF([test "x${with_ats2_spookyhash}" != xno],
+  [PKG_CHECK_MODULES([ATS2_SPOOKYHASH],[ats2-spookyhash],
+    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
+     PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
+    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
+])
+
+AC_SUBST([REQUIRES_PRIVATE_PKGS])
 
 #--------------------------------------------------------------------------
 #
@@ -270,6 +289,11 @@ AC_CONFIG_FILES([tests/test-2021-10-05-03-40-40.structure.reference])
 AC_CONFIG_FILES([tests/test-2021-10-05-04-18-20.structure.reference])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
+
+AC_CONFIG_FILES([ats2-hashmap.pc])
+
+AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
+               [test "x${with_ats2_spookyhash}" != xno])
 
 # What to use as the shell in shebangs.
 #AC_ARG_VAR([POSIX_SH],[The full absolute path of a POSIX shell])
