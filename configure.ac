@@ -131,9 +131,25 @@ AC_SUBST([HAVE_UINT128])
 AM_CONDITIONAL([UINTPTR_IS_UINT64],
   [test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}])
 
+BIGENDIAN=0
+LITTLEENDIAN=1
+UNIVERSALENDIAN=2
+AC_C_BIGENDIAN([ENDIANNESS=${BIGENDIAN}],
+               [ENDIANNESS=${LITTLEENDIAN}],
+               [AC_MSG_FAILURE([I cannot determine the platform's endianness])],
+               [ENDIANNESS=${UNIVERSALENDIAN}])
+AC_SUBST([BIGENDIAN])
+AC_SUBST([LITTLEENDIAN])
+AC_SUBST([UNIVERSALENDIAN])
+AC_SUBST([ENDIANNESS])
+
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
+
+AX_GCC_BUILTIN([__builtin_bswap16])
+AX_GCC_BUILTIN([__builtin_bswap32])
+AX_GCC_BUILTIN([__builtin_bswap64])
 
 AX_GCC_BUILTIN([__builtin_popcount])
 AX_GCC_BUILTIN([__builtin_popcountl])

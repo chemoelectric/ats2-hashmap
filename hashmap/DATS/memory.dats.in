@@ -32,6 +32,8 @@ along with this program. If not, see
 staload "@ATS_SATS_DIRECTORY@/array-proofs.sats"
 staload "@ATS_SATS_DIRECTORY@/memory.sats"
 
+(********************************************************************)
+
 implement {vt}
 array_move1 {length} (dst, src, length) =
   {
@@ -85,3 +87,42 @@ array_copy_elements {n1, n2} {i1, i2} {length}
       array_v_join3 {t} {..} {i2, length, n2 - i2 - length}
                     (pf2a, pf2b, pf2c)
   }
+
+(********************************************************************)
+
+implement g0uint_bswap<usintknd> (x) = g0uint_bswap_usint (x)
+implement g0uint_bswap<uintknd> (x) = g0uint_bswap_uint (x)
+implement g0uint_bswap<ulintknd> (x) = g0uint_bswap_ulint (x)
+implement g0uint_bswap<ullintknd> (x) = g0uint_bswap_ullint (x)
+implement g0uint_bswap<uint8knd> (x) = g0uint_bswap_uint8 (x)
+implement g0uint_bswap<uint16knd> (x) = g0uint_bswap_uint16 (x)
+implement g0uint_bswap<uint32knd> (x) = g0uint_bswap_uint32 (x)
+implement g0uint_bswap<uint64knd> (x) = g0uint_bswap_uint64 (x)
+implement g0uint_bswap<sizeknd> (x) = g0uint_bswap_size (x)
+implement g0uint_bswap<uintptrknd> (x) = g0uint_bswap_uintptr (x)
+
+(********************************************************************)
+
+implement g0uint_little_endian<usintknd> (x) =
+  g0uint_little_endian_usint (x)
+implement g0uint_little_endian<uintknd> (x) =
+  g0uint_little_endian_uint (x)
+implement g0uint_little_endian<ulintknd> (x) =
+  g0uint_little_endian_ulint (x)
+implement g0uint_little_endian<ullintknd> (x) =
+  g0uint_little_endian_ullint (x)
+implement g0uint_little_endian<uint8knd> (x) =
+  g0uint_little_endian_uint8 (x)
+implement g0uint_little_endian<uint16knd> (x) =
+  g0uint_little_endian_uint16 (x)
+implement g0uint_little_endian<uint32knd> (x) =
+  g0uint_little_endian_uint32 (x)
+implement g0uint_little_endian<uint64knd> (x) =
+  g0uint_little_endian_uint64 (x)
+implement g0uint_little_endian<sizeknd> (x) =
+  g0uint_little_endian_size (x)
+implement g0uint_little_endian<uintptrknd> (x) =
+  g0uint_little_endian_uintptr (x)
+
+(********************************************************************)
+

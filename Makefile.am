@@ -553,6 +553,20 @@ EXTRA_DIST += tests/test-ctz.dats
 CLEANFILES += tests/test-ctz
 CLEANFILES += tests/test-ctz_dats.c
 
+check_PROGRAMS += tests/test-bswap
+tests_test_bswap_SOURCES = tests/test-bswap_dats.c
+tests_test_bswap_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bswap.dats
+CLEANFILES += tests/test-bswap
+CLEANFILES += tests/test-bswap_dats.c
+
+check_PROGRAMS += tests/test-little-endian
+tests_test_little_endian_SOURCES = tests/test-little-endian_dats.c
+tests_test_little_endian_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-little-endian.dats
+CLEANFILES += tests/test-little-endian
+CLEANFILES += tests/test-little-endian_dats.c
+
 check_PROGRAMS += tests/test-uintptr-set
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
 tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
