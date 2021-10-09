@@ -560,19 +560,19 @@ EXTRA_DIST += tests/test-bswap.dats
 CLEANFILES += tests/test-bswap
 CLEANFILES += tests/test-bswap_dats.c
 
-check_PROGRAMS += tests/test-big-endian
-tests_test_big_endian_SOURCES = tests/test-big-endian_dats.c
-tests_test_big_endian_LDADD = $(lib_LTLIBRARIES)
-EXTRA_DIST += tests/test-big-endian.dats
-CLEANFILES += tests/test-big-endian
-CLEANFILES += tests/test-big-endian_dats.c
+check_PROGRAMS += tests/test-bswap-on-little-endian
+tests_test_bswap_on_little_endian_SOURCES = tests/test-bswap-on-little-endian_dats.c
+tests_test_bswap_on_little_endian_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bswap-on-little-endian.dats
+CLEANFILES += tests/test-bswap-on-little-endian
+CLEANFILES += tests/test-bswap-on-little-endian_dats.c
 
-check_PROGRAMS += tests/test-little-endian
-tests_test_little_endian_SOURCES = tests/test-little-endian_dats.c
-tests_test_little_endian_LDADD = $(lib_LTLIBRARIES)
-EXTRA_DIST += tests/test-little-endian.dats
-CLEANFILES += tests/test-little-endian
-CLEANFILES += tests/test-little-endian_dats.c
+check_PROGRAMS += tests/test-bswap-on-big-endian
+tests_test_bswap_on_big_endian_SOURCES = tests/test-bswap-on-big-endian_dats.c
+tests_test_bswap_on_big_endian_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bswap-on-big-endian.dats
+CLEANFILES += tests/test-bswap-on-big-endian
+CLEANFILES += tests/test-bswap-on-big-endian_dats.c
 
 check_PROGRAMS += tests/test-uintptr-set
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c

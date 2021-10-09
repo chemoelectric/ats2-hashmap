@@ -146,8 +146,9 @@ check_PROGRAMS = tests/test-bits-source-uint16$(EXEEXT) \
 	tests/test-bits-source-uint64$(EXEEXT) \
 	tests/test-bits-source-uint64-uint64$(EXEEXT) $(am__EXEEXT_1) \
 	tests/test-popcount$(EXEEXT) tests/test-ctz$(EXEEXT) \
-	tests/test-bswap$(EXEEXT) tests/test-big-endian$(EXEEXT) \
-	tests/test-little-endian$(EXEEXT) \
+	tests/test-bswap$(EXEEXT) \
+	tests/test-bswap-on-little-endian$(EXEEXT) \
+	tests/test-bswap-on-big-endian$(EXEEXT) \
 	tests/test-uintptr-set$(EXEEXT)
 @UINTPTR_IS_UINT64_TRUE@am__append_3 = tests/test-bits-source-uintptr
 @UINTPTR_IS_UINT64_TRUE@am__append_4 = tests/test-bits-source-uintptr.dats
@@ -383,10 +384,6 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
 list_ats_dependencies_OBJECTS = $(am_list_ats_dependencies_OBJECTS)
-am_tests_test_big_endian_OBJECTS =  \
-	tests/test-big-endian_dats.$(OBJEXT)
-tests_test_big_endian_OBJECTS = $(am_tests_test_big_endian_OBJECTS)
-tests_test_big_endian_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_bits_source_uint16_OBJECTS =  \
 	tests/test-bits-source-uint16_dats.$(OBJEXT)
 tests_test_bits_source_uint16_OBJECTS =  \
@@ -418,14 +415,19 @@ tests_test_bits_source_uintptr_OBJECTS =  \
 am_tests_test_bswap_OBJECTS = tests/test-bswap_dats.$(OBJEXT)
 tests_test_bswap_OBJECTS = $(am_tests_test_bswap_OBJECTS)
 tests_test_bswap_DEPENDENCIES = $(lib_LTLIBRARIES)
+am_tests_test_bswap_on_big_endian_OBJECTS =  \
+	tests/test-bswap-on-big-endian_dats.$(OBJEXT)
+tests_test_bswap_on_big_endian_OBJECTS =  \
+	$(am_tests_test_bswap_on_big_endian_OBJECTS)
+tests_test_bswap_on_big_endian_DEPENDENCIES = $(lib_LTLIBRARIES)
+am_tests_test_bswap_on_little_endian_OBJECTS =  \
+	tests/test-bswap-on-little-endian_dats.$(OBJEXT)
+tests_test_bswap_on_little_endian_OBJECTS =  \
+	$(am_tests_test_bswap_on_little_endian_OBJECTS)
+tests_test_bswap_on_little_endian_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_ctz_OBJECTS = tests/test-ctz_dats.$(OBJEXT)
 tests_test_ctz_OBJECTS = $(am_tests_test_ctz_OBJECTS)
 tests_test_ctz_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_little_endian_OBJECTS =  \
-	tests/test-little-endian_dats.$(OBJEXT)
-tests_test_little_endian_OBJECTS =  \
-	$(am_tests_test_little_endian_OBJECTS)
-tests_test_little_endian_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_popcount_OBJECTS = tests/test-popcount_dats.$(OBJEXT)
 tests_test_popcount_OBJECTS = $(am_tests_test_popcount_OBJECTS)
 tests_test_popcount_DEPENDENCIES = $(lib_LTLIBRARIES)
@@ -513,15 +515,15 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/strptr-map_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/uptr_sats.Plo \
-	tests/$(DEPDIR)/test-big-endian_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint16_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint32_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po \
+	tests/$(DEPDIR)/test-bswap-on-big-endian_dats.Po \
+	tests/$(DEPDIR)/test-bswap-on-little-endian_dats.Po \
 	tests/$(DEPDIR)/test-bswap_dats.Po \
 	tests/$(DEPDIR)/test-ctz_dats.Po \
-	tests/$(DEPDIR)/test-little-endian_dats.Po \
 	tests/$(DEPDIR)/test-popcount_dats.Po \
 	tests/$(DEPDIR)/test-uintptr-set_dats.Po
 am__mv = mv -f
@@ -545,27 +547,27 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
-	$(tests_test_big_endian_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(tests_test_bits_source_uintptr_SOURCES) \
-	$(tests_test_bswap_SOURCES) $(tests_test_ctz_SOURCES) \
-	$(tests_test_little_endian_SOURCES) \
-	$(tests_test_popcount_SOURCES) \
+	$(tests_test_bswap_SOURCES) \
+	$(tests_test_bswap_on_big_endian_SOURCES) \
+	$(tests_test_bswap_on_little_endian_SOURCES) \
+	$(tests_test_ctz_SOURCES) $(tests_test_popcount_SOURCES) \
 	$(tests_test_uintptr_set_SOURCES)
 DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
 	$(list_ats_dependencies_SOURCES) \
-	$(tests_test_big_endian_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(am__tests_test_bits_source_uintptr_SOURCES_DIST) \
-	$(tests_test_bswap_SOURCES) $(tests_test_ctz_SOURCES) \
-	$(tests_test_little_endian_SOURCES) \
-	$(tests_test_popcount_SOURCES) \
+	$(tests_test_bswap_SOURCES) \
+	$(tests_test_bswap_on_big_endian_SOURCES) \
+	$(tests_test_bswap_on_little_endian_SOURCES) \
+	$(tests_test_ctz_SOURCES) $(tests_test_popcount_SOURCES) \
 	$(tests_test_uintptr_set_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -1175,9 +1177,9 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-bits-source-uint32.dats \
 	tests/test-bits-source-uint64.dats $(am__append_4) \
 	tests/test-popcount.dats tests/test-ctz.dats \
-	tests/test-bswap.dats tests/test-big-endian.dats \
-	tests/test-little-endian.dats tests/test-uintptr-set.dats \
-	list-ats-dependencies.dats
+	tests/test-bswap.dats tests/test-bswap-on-little-endian.dats \
+	tests/test-bswap-on-big-endian.dats \
+	tests/test-uintptr-set.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	hashmap/SATS/spinlock_sats.c hashmap/DATS/spinlock_dats.c \
@@ -1292,10 +1294,12 @@ CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
 	tests/test-bits-source-uint64-uint64_dats.c $(am__append_5) \
 	tests/test-popcount tests/test-popcount_dats.c tests/test-ctz \
 	tests/test-ctz_dats.c tests/test-bswap tests/test-bswap_dats.c \
-	tests/test-big-endian tests/test-big-endian_dats.c \
-	tests/test-little-endian tests/test-little-endian_dats.c \
-	tests/test-uintptr-set tests/test-uintptr-set_dats.c \
-	list-ats-dependencies list-ats-dependencies_depsprog.c
+	tests/test-bswap-on-little-endian \
+	tests/test-bswap-on-little-endian_dats.c \
+	tests/test-bswap-on-big-endian \
+	tests/test-bswap-on-big-endian_dats.c tests/test-uintptr-set \
+	tests/test-uintptr-set_dats.c list-ats-dependencies \
+	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = 
 AM_M4FLAGS = 
@@ -1425,10 +1429,10 @@ tests_test_ctz_SOURCES = tests/test-ctz_dats.c
 tests_test_ctz_LDADD = $(lib_LTLIBRARIES)
 tests_test_bswap_SOURCES = tests/test-bswap_dats.c
 tests_test_bswap_LDADD = $(lib_LTLIBRARIES)
-tests_test_big_endian_SOURCES = tests/test-big-endian_dats.c
-tests_test_big_endian_LDADD = $(lib_LTLIBRARIES)
-tests_test_little_endian_SOURCES = tests/test-little-endian_dats.c
-tests_test_little_endian_LDADD = $(lib_LTLIBRARIES)
+tests_test_bswap_on_little_endian_SOURCES = tests/test-bswap-on-little-endian_dats.c
+tests_test_bswap_on_little_endian_LDADD = $(lib_LTLIBRARIES)
+tests_test_bswap_on_big_endian_SOURCES = tests/test-bswap-on-big-endian_dats.c
+tests_test_bswap_on_big_endian_LDADD = $(lib_LTLIBRARIES)
 tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
 tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
@@ -1872,12 +1876,6 @@ tests/$(am__dirstamp):
 tests/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tests/$(DEPDIR)
 	@: > tests/$(DEPDIR)/$(am__dirstamp)
-tests/test-big-endian_dats.$(OBJEXT): tests/$(am__dirstamp) \
-	tests/$(DEPDIR)/$(am__dirstamp)
-
-tests/test-big-endian$(EXEEXT): $(tests_test_big_endian_OBJECTS) $(tests_test_big_endian_DEPENDENCIES) $(EXTRA_tests_test_big_endian_DEPENDENCIES) tests/$(am__dirstamp)
-	@rm -f tests/test-big-endian$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(tests_test_big_endian_OBJECTS) $(tests_test_big_endian_LDADD) $(LIBS)
 tests/test-bits-source-uint16_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -1914,18 +1912,24 @@ tests/test-bswap_dats.$(OBJEXT): tests/$(am__dirstamp) \
 tests/test-bswap$(EXEEXT): $(tests_test_bswap_OBJECTS) $(tests_test_bswap_DEPENDENCIES) $(EXTRA_tests_test_bswap_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bswap$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bswap_OBJECTS) $(tests_test_bswap_LDADD) $(LIBS)
+tests/test-bswap-on-big-endian_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bswap-on-big-endian$(EXEEXT): $(tests_test_bswap_on_big_endian_OBJECTS) $(tests_test_bswap_on_big_endian_DEPENDENCIES) $(EXTRA_tests_test_bswap_on_big_endian_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bswap-on-big-endian$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bswap_on_big_endian_OBJECTS) $(tests_test_bswap_on_big_endian_LDADD) $(LIBS)
+tests/test-bswap-on-little-endian_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bswap-on-little-endian$(EXEEXT): $(tests_test_bswap_on_little_endian_OBJECTS) $(tests_test_bswap_on_little_endian_DEPENDENCIES) $(EXTRA_tests_test_bswap_on_little_endian_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bswap-on-little-endian$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bswap_on_little_endian_OBJECTS) $(tests_test_bswap_on_little_endian_LDADD) $(LIBS)
 tests/test-ctz_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-ctz$(EXEEXT): $(tests_test_ctz_OBJECTS) $(tests_test_ctz_DEPENDENCIES) $(EXTRA_tests_test_ctz_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-ctz$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_ctz_OBJECTS) $(tests_test_ctz_LDADD) $(LIBS)
-tests/test-little-endian_dats.$(OBJEXT): tests/$(am__dirstamp) \
-	tests/$(DEPDIR)/$(am__dirstamp)
-
-tests/test-little-endian$(EXEEXT): $(tests_test_little_endian_OBJECTS) $(tests_test_little_endian_DEPENDENCIES) $(EXTRA_tests_test_little_endian_DEPENDENCIES) tests/$(am__dirstamp)
-	@rm -f tests/test-little-endian$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(tests_test_little_endian_OBJECTS) $(tests_test_little_endian_LDADD) $(LIBS)
 tests/test-popcount_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -2015,15 +2019,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strptr-map_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/uptr_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-big-endian_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint16_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint32_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bswap-on-big-endian_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bswap-on-little-endian_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bswap_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-ctz_dats.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-little-endian_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-popcount_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-uintptr-set_dats.Po@am__quote@ # am--include-marker
 
@@ -2384,16 +2388,16 @@ tests/test-bswap.log: tests/test-bswap$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
-tests/test-big-endian.log: tests/test-big-endian$(EXEEXT)
-	@p='tests/test-big-endian$(EXEEXT)'; \
-	b='tests/test-big-endian'; \
+tests/test-bswap-on-little-endian.log: tests/test-bswap-on-little-endian$(EXEEXT)
+	@p='tests/test-bswap-on-little-endian$(EXEEXT)'; \
+	b='tests/test-bswap-on-little-endian'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
-tests/test-little-endian.log: tests/test-little-endian$(EXEEXT)
-	@p='tests/test-little-endian$(EXEEXT)'; \
-	b='tests/test-little-endian'; \
+tests/test-bswap-on-big-endian.log: tests/test-bswap-on-big-endian$(EXEEXT)
+	@p='tests/test-bswap-on-big-endian$(EXEEXT)'; \
+	b='tests/test-bswap-on-big-endian'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -2724,15 +2728,15 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/strptr-map_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/uptr_sats.Plo
-	-rm -f tests/$(DEPDIR)/test-big-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bswap-on-big-endian_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bswap-on-little-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bswap_dats.Po
 	-rm -f tests/$(DEPDIR)/test-ctz_dats.Po
-	-rm -f tests/$(DEPDIR)/test-little-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-popcount_dats.Po
 	-rm -f tests/$(DEPDIR)/test-uintptr-set_dats.Po
 	-rm -f GNUmakefile
@@ -2848,15 +2852,15 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/strptr-map_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/uintptr-set_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/uptr_sats.Plo
-	-rm -f tests/$(DEPDIR)/test-big-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits-source-uintptr_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bswap-on-big-endian_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bswap-on-little-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bswap_dats.Po
 	-rm -f tests/$(DEPDIR)/test-ctz_dats.Po
-	-rm -f tests/$(DEPDIR)/test-little-endian_dats.Po
 	-rm -f tests/$(DEPDIR)/test-popcount_dats.Po
 	-rm -f tests/$(DEPDIR)/test-uintptr-set_dats.Po
 	-rm -f GNUmakefile

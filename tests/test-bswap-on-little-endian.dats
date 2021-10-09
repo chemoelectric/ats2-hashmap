@@ -45,7 +45,7 @@ extern fn
 apple_bigendian () : bool = "mac#my_apple_bigendian"
 
 fn {tk : tkind}
-test_big_endian () : bool =
+test_bswap_on_little_endian () : bool =
   let
     typedef t = g0uint (tk)
   in
@@ -53,21 +53,21 @@ test_big_endian () : bool =
         (ENDIANNESS = UNIVERSALENDIAN && apple_bigendian ())) then
       begin
         if sizeof<t> = i2sz 1 then
-          big_endian<tk> ($UN.cast{t} 0x12ULL) = $UN.cast{t} 0x12ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x12ULL) = $UN.cast{t} 0x12ULL
         else if sizeof<t> = i2sz 2 then
-          big_endian<tk> ($UN.cast{t} 0x1234ULL) = $UN.cast{t} 0x1234ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x1234ULL) = $UN.cast{t} 0x1234ULL
         else if sizeof<t> = i2sz 3 then
-          big_endian<tk> ($UN.cast{t} 0x123456ULL) = $UN.cast{t} 0x123456ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456ULL) = $UN.cast{t} 0x123456ULL
         else if sizeof<t> = i2sz 4 then
-          big_endian<tk> ($UN.cast{t} 0x12345678ULL) = $UN.cast{t} 0x12345678ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x12345678ULL) = $UN.cast{t} 0x12345678ULL
         else if sizeof<t> = i2sz 5 then
-          big_endian<tk> ($UN.cast{t} 0x123456789AULL) = $UN.cast{t} 0x123456789AULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789AULL) = $UN.cast{t} 0x123456789AULL
         else if sizeof<t> = i2sz 6 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCULL) = $UN.cast{t} 0x123456789ABCULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCULL) = $UN.cast{t} 0x123456789ABCULL
         else if sizeof<t> = i2sz 7 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCDEULL) = $UN.cast{t} 0x123456789ABCDEULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCDEULL) = $UN.cast{t} 0x123456789ABCDEULL
         else if sizeof<t> = i2sz 8 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCDEF0ULL) = $UN.cast{t} 0x123456789ABCDEF0ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCDEF0ULL) = $UN.cast{t} 0x123456789ABCDEF0ULL
         else
           false
       end
@@ -75,21 +75,21 @@ test_big_endian () : bool =
              (ENDIANNESS = UNIVERSALENDIAN && not (apple_bigendian ()))) then
       begin
         if sizeof<t> = i2sz 1 then
-          big_endian<tk> ($UN.cast{t} 0x12ULL) = $UN.cast{t} 0x12ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x12ULL) = $UN.cast{t} 0x12ULL
         else if sizeof<t> = i2sz 2 then
-          big_endian<tk> ($UN.cast{t} 0x1234ULL) = $UN.cast{t} 0x3412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x1234ULL) = $UN.cast{t} 0x3412ULL
         else if sizeof<t> = i2sz 3 then
-          big_endian<tk> ($UN.cast{t} 0x123456ULL) = $UN.cast{t} 0x563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456ULL) = $UN.cast{t} 0x563412ULL
         else if sizeof<t> = i2sz 4 then
-          big_endian<tk> ($UN.cast{t} 0x12345678ULL) = $UN.cast{t} 0x78563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x12345678ULL) = $UN.cast{t} 0x78563412ULL
         else if sizeof<t> = i2sz 5 then
-          big_endian<tk> ($UN.cast{t} 0x123456789AULL) = $UN.cast{t} 0x9A78563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789AULL) = $UN.cast{t} 0x9A78563412ULL
         else if sizeof<t> = i2sz 6 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCULL) = $UN.cast{t} 0xBC9A78563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCULL) = $UN.cast{t} 0xBC9A78563412ULL
         else if sizeof<t> = i2sz 7 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCDEULL) = $UN.cast{t} 0xDEBC9A78563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCDEULL) = $UN.cast{t} 0xDEBC9A78563412ULL
         else if sizeof<t> = i2sz 8 then
-          big_endian<tk> ($UN.cast{t} 0x123456789ABCDEF0ULL) = $UN.cast{t} 0xF0DEBC9A78563412ULL
+          bswap_on_little_endian<tk> ($UN.cast{t} 0x123456789ABCDEF0ULL) = $UN.cast{t} 0xF0DEBC9A78563412ULL
         else
           false
       end
@@ -100,14 +100,14 @@ test_big_endian () : bool =
 implement
 main0 () =
   {
-    val _ = assertloc (test_big_endian<usintknd> ())
-    val _ = assertloc (test_big_endian<uintknd> ())
-    val _ = assertloc (test_big_endian<ulintknd> ())
-    val _ = assertloc (test_big_endian<ullintknd> ())
-    val _ = assertloc (test_big_endian<uint8knd> ())
-    val _ = assertloc (test_big_endian<uint16knd> ())
-    val _ = assertloc (test_big_endian<uint32knd> ())
-    val _ = assertloc (test_big_endian<uint64knd> ())
-    val _ = assertloc (test_big_endian<sizeknd> ())
-    val _ = assertloc (test_big_endian<uintptrknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<usintknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uintknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<ulintknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<ullintknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uint8knd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uint16knd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uint32knd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uint64knd> ())
+    val _ = assertloc (test_bswap_on_little_endian<sizeknd> ())
+    val _ = assertloc (test_bswap_on_little_endian<uintptrknd> ())
   }
