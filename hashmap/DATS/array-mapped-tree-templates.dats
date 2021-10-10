@@ -809,6 +809,8 @@ replace_old_entry
     #[is_new_slot : bool | is_new_slot == false]
     void =
   begin
+  // FIXME!!!!!!!!! MUST FREE THE OLD ENTRY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // This is too much error-making. I need to redo this all as safer Postiats templates.
     node[index] := key_value;
     is_new_slot := false
   end

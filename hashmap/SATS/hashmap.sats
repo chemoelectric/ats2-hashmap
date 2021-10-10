@@ -58,5 +58,15 @@ hashmap {hash_vt, key_vt, value_vt : vt@ype}
         () :
     hashmap_vt (hash_vt, key_vt, value_vt, 0)
 
+fun {key_vt, value_vt : vt@ype}
+hashmap_free
+        {size       : int}
+        {hash_vt    : vt@ype}
+        (map        : hashmap_vt (hash_vt, key_vt, value_vt, size),
+         key_free   : !(key_vt -<cloptr1> void) >> _,
+         value_free : !(value_vt -<cloptr1> void) >> _) :
+    void
+overload free with hashmap_free
+
 (********************************************************************)
 
