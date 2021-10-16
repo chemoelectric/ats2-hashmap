@@ -1,0 +1,94 @@
+#
+# Copyright © 2021 Barry Schwartz
+#
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License, as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received copies of the GNU General Public License
+# along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
+# FIXME: Is there a better way to just be sure to run ./config.status
+#        again when one of these files changes?
+
+CONFIG_STATUS_DEPENDENCIES =
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/common-macros.m4.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint8.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint16.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint32.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint64.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint128.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uintptr.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-size.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-usint.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-ulint.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-ullint.dats.m4.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-TYPE-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint8-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint16-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint32-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint64-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint128-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uintptr-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-size-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-usint-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-ulint-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-ullint-one-time.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source.hats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/atomic.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/atomic.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/atomic.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/spinlock.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize-once.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize-once.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/memory.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/popcount.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/popcount.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/popcount.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/ctz.cats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/ctz.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/ctz.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/config.hats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-10-50-40.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-11-51-50.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-11-55-11.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-11-58-30.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-12-00-18.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-12-02-25.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-12-26-02.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-03-12-29-17.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-05-01-01-01.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-05-03-40-40.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-05-04-18-20.structure.reference.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/list-ats-dependencies.dats.in

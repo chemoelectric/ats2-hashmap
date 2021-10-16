@@ -660,15 +660,75 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
-ifnGNUmake
-ifGNUmake
+WITH_ATS2_SPOOKYHASH_FALSE
+WITH_ATS2_SPOOKYHASH_TRUE
+SIZEOF_BITINDEXOF_UINTPTR
+MAXVALOF_BITINDEX_8
+MAXVALOF_BITINDEX_7
+MAXVALOF_BITINDEX_6
+MAXVALOF_BITINDEX_5
+MAXVALOF_BITINDEX_4
+MAX_SIZEOF_BITINDEX
+MIN_SIZEOF_BITINDEX
+BITSIZEOF_UINT64_PLUS_ONE
+BITSIZEOF_UINT32_PLUS_ONE
+BITSIZEOF_UINT16_PLUS_ONE
+BITSIZEOF_UINT8_PLUS_ONE
+BITSIZEOF_UINTPTR_PLUS_ONE
+BITSIZEOF_SIZE_PLUS_ONE
+BITSIZEOF_ULLINT_PLUS_ONE
+BITSIZEOF_ULINT_PLUS_ONE
+BITSIZEOF_UINT_PLUS_ONE
+BITSIZEOF_USINT_PLUS_ONE
+BITSIZEOF_UINT64
+BITSIZEOF_UINT32
+BITSIZEOF_UINT16
+BITSIZEOF_UINT8
+BITSIZEOF_UINTPTR
+BITSIZEOF_SIZE
+BITSIZEOF_ULLINT
+BITSIZEOF_ULINT
+BITSIZEOF_UINT
+BITSIZEOF_USINT
+SIZEOF_UINT64
+SIZEOF_UINT32
+SIZEOF_UINT16
+SIZEOF_UINT8
+SIZEOF_UINTPTR
+SIZEOF_SIZE
+SIZEOF_ULLINT
+SIZEOF_ULINT
+SIZEOF_UINT
+SIZEOF_USINT
 GNU_MAKE
 GNU
+ENDIANNESS
+UNIVERSALENDIAN
+LITTLEENDIAN
+BIGENDIAN
+UINTPTR_IS_UINT64_FALSE
+UINTPTR_IS_UINT64_TRUE
+HAVE_UINT128
 REQUIRES_PRIVATE_PKGS
+ATS2_SPOOKYHASH_PATSOPTFLAGS
+ATS2_SPOOKYHASH_LIBS
+ATS2_SPOOKYHASH_CFLAGS
 pkgconfigdir
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+CODE_COVERAGE_LIBS
+CODE_COVERAGE_CXXFLAGS
+CODE_COVERAGE_CFLAGS
+CODE_COVERAGE_CPPFLAGS
+GENHTML
+LCOV
+GCOV
+ifnGNUmake
+ifGNUmake
+CODE_COVERAGE_ENABLED
+CODE_COVERAGE_ENABLED_FALSE
+CODE_COVERAGE_ENABLED_TRUE
 PATSOPT
 M4
 ATS_DATS_DIRECTORY
@@ -813,6 +873,9 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+with_ats2_spookyhash
+with_gcov
+enable_code_coverage
 with_pkgconfigdir
 '
       ac_precious_vars='build_alias
@@ -829,6 +892,9 @@ PKGCONFIG_PATSHOME
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
+ATS2_SPOOKYHASH_CFLAGS
+ATS2_SPOOKYHASH_LIBS
+ATS2_SPOOKYHASH_PATSOPTFLAGS
 GNU_MAKE'
 
 
@@ -1471,6 +1537,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-code-coverage  Whether to enable code coverage support
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1483,6 +1550,9 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
+  --without-ats2-spookyhash
+                          disable support for SpookyHash
+  --with-gcov=GCOV        use given GCOV for coverage (GCOV=gcov).
   --with-pkgconfigdir     pkg-config installation directory
                           ['${libdir}/pkgconfig']
 
@@ -1505,6 +1575,12 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
+  ATS2_SPOOKYHASH_CFLAGS
+              C compiler flags for ATS2_SPOOKYHASH, overriding pkg-config
+  ATS2_SPOOKYHASH_LIBS
+              linker flags for ATS2_SPOOKYHASH, overriding pkg-config
+  ATS2_SPOOKYHASH_PATSOPTFLAGS
+              value of PATSOPTFLAGS for ats2-spookyhash, overriding pkg-config
   GNU_MAKE    GNU Make command
 
 Use these variables to override the choices made by `configure' or to help
@@ -1768,6 +1844,295 @@ printf "%s\n" "$ac_res" >&6; }
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_func
+
+# ac_fn_c_try_run LINENO
+# ----------------------
+# Try to run conftest.$ac_ext, and return whether this succeeded. Assumes that
+# executables *can* be run.
+ac_fn_c_try_run ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+printf "%s\n" "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; } && { ac_try='./conftest$ac_exeext'
+  { { case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+printf "%s\n" "$ac_try_echo"; } >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  ac_retval=0
+else $as_nop
+  printf "%s\n" "$as_me: program exited with status $ac_status" >&5
+       printf "%s\n" "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+       ac_retval=$ac_status
+fi
+  rm -rf conftest.dSYM conftest_ipa8_conftest.oo
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+} # ac_fn_c_try_run
+
+# ac_fn_c_compute_int LINENO EXPR VAR INCLUDES
+# --------------------------------------------
+# Tries to find the compile-time value of EXPR in a program that includes
+# INCLUDES, setting VAR accordingly. Returns whether the value could be
+# computed
+ac_fn_c_compute_int ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if test "$cross_compiling" = yes; then
+    # Depending upon the size, compute the lo and hi bounds.
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+static int test_array [1 - 2 * !(($2) >= 0)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_lo=0 ac_mid=0
+  while :; do
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+static int test_array [1 - 2 * !(($2) <= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_hi=$ac_mid; break
+else $as_nop
+  as_fn_arith $ac_mid + 1 && ac_lo=$as_val
+			if test $ac_lo -le $ac_mid; then
+			  ac_lo= ac_hi=
+			  break
+			fi
+			as_fn_arith 2 '*' $ac_mid + 1 && ac_mid=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+  done
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+static int test_array [1 - 2 * !(($2) < 0)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_hi=-1 ac_mid=-1
+  while :; do
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+static int test_array [1 - 2 * !(($2) >= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_lo=$ac_mid; break
+else $as_nop
+  as_fn_arith '(' $ac_mid ')' - 1 && ac_hi=$as_val
+			if test $ac_mid -le $ac_hi; then
+			  ac_lo= ac_hi=
+			  break
+			fi
+			as_fn_arith 2 '*' $ac_mid && ac_mid=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+  done
+else $as_nop
+  ac_lo= ac_hi=
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+# Binary search between lo and hi bounds.
+while test "x$ac_lo" != "x$ac_hi"; do
+  as_fn_arith '(' $ac_hi - $ac_lo ')' / 2 + $ac_lo && ac_mid=$as_val
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+static int test_array [1 - 2 * !(($2) <= $ac_mid)];
+test_array [0] = 0;
+return test_array [0];
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_hi=$ac_mid
+else $as_nop
+  as_fn_arith '(' $ac_mid ')' + 1 && ac_lo=$as_val
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+done
+case $ac_lo in #((
+?*) eval "$3=\$ac_lo"; ac_retval=0 ;;
+'') ac_retval=1 ;;
+esac
+  else
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+static long int longval (void) { return $2; }
+static unsigned long int ulongval (void) { return $2; }
+#include <stdio.h>
+#include <stdlib.h>
+int
+main (void)
+{
+
+  FILE *f = fopen ("conftest.val", "w");
+  if (! f)
+    return 1;
+  if (($2) < 0)
+    {
+      long int i = longval ();
+      if (i != ($2))
+	return 1;
+      fprintf (f, "%ld", i);
+    }
+  else
+    {
+      unsigned long int i = ulongval ();
+      if (i != ($2))
+	return 1;
+      fprintf (f, "%lu", i);
+    }
+  /* Do not output a trailing newline, as this causes \r\n confusion
+     on some platforms.  */
+  return ferror (f) || fclose (f) != 0;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"
+then :
+  echo >>conftest.val; read $3 <conftest.val; ac_retval=0
+else $as_nop
+  ac_retval=1
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+rm -f conftest.val
+
+  fi
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+} # ac_fn_c_compute_int
+
+# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
+# -------------------------------------------
+# Tests whether TYPE exists after having included INCLUDES, setting cache
+# variable VAR accordingly.
+ac_fn_c_check_type ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+printf %s "checking for $2... " >&6; }
+if eval test \${$3+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  eval "$3=no"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+if (sizeof ($2))
+	 return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+if (sizeof (($2)))
+	    return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+
+else $as_nop
+  eval "$3=yes"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+printf "%s\n" "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_type
 ac_configure_args_raw=
 for ac_arg
 do
@@ -12706,11 +13071,15 @@ ATS_SATS_DIRECTORY=hashmap/SATS
 ATS_DATS_DIRECTORY=hashmap/DATS
 
 
-#AC_ARG_WITH([ats2-spookyhash],
-#  [AS_HELP_STRING([--without-ats2-spookyhash],
-#    [disable support for SpookyHash])],
-#    [],
-#    [with_ats2_spookyhash=yes])
+
+# Check whether --with-ats2-spookyhash was given.
+if test ${with_ats2_spookyhash+y}
+then :
+  withval=$with_ats2_spookyhash;
+else $as_nop
+  with_ats2_spookyhash=yes
+fi
+
 
 #--------------------------------------------------------------------------
 #
@@ -14028,6 +14397,391 @@ printf "%s\n" "$ac_cv_path_EGREP" >&6; }
 
 
 
+# Enable optional code coverage analysis.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	# allow to override gcov location
+
+# Check whether --with-gcov was given.
+if test ${with_gcov+y}
+then :
+  withval=$with_gcov; _AX_CODE_COVERAGE_GCOV_PROG_WITH=$with_gcov
+else $as_nop
+  _AX_CODE_COVERAGE_GCOV_PROG_WITH=gcov
+fi
+
+
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether to build with code coverage support" >&5
+printf %s "checking whether to build with code coverage support... " >&6; }
+	# Check whether --enable-code-coverage was given.
+if test ${enable_code_coverage+y}
+then :
+  enableval=$enable_code_coverage;
+else $as_nop
+  enable_code_coverage=no
+fi
+
+
+	 if test "x$enable_code_coverage" = xyes; then
+  CODE_COVERAGE_ENABLED_TRUE=
+  CODE_COVERAGE_ENABLED_FALSE='#'
+else
+  CODE_COVERAGE_ENABLED_TRUE='#'
+  CODE_COVERAGE_ENABLED_FALSE=
+fi
+
+	CODE_COVERAGE_ENABLED=$enable_code_coverage
+
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $enable_code_coverage" >&5
+printf "%s\n" "$enable_code_coverage" >&6; }
+
+	if  test "x$enable_code_coverage" = xyes
+then :
+
+
+	  for ac_prog in gawk mawk nawk awk
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_AWK+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$AWK"; then
+  ac_cv_prog_AWK="$AWK" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_AWK="$ac_prog"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+AWK=$ac_cv_prog_AWK
+if test -n "$AWK"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $AWK" >&5
+printf "%s\n" "$AWK" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+  test -n "$AWK" && break
+done
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for GNU make" >&5
+printf %s "checking for GNU make... " >&6; }
+if test ${_cv_gnu_make_command+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+      _cv_gnu_make_command="" ;
+    for a in "$MAKE" make gmake gnumake ; do
+      if test -z "$a" ; then continue ; fi ;
+      if "$a" --version 2> /dev/null | grep GNU 2>&1 > /dev/null ; then
+        _cv_gnu_make_command=$a ;
+        AX_CHECK_GNU_MAKE_HEADLINE=$("$a" --version 2> /dev/null | grep "GNU Make")
+        ax_check_gnu_make_version=$(echo ${AX_CHECK_GNU_MAKE_HEADLINE} | ${AWK} -F " " '{ print $(NF); }')
+        break ;
+      fi
+    done ;
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $_cv_gnu_make_command" >&5
+printf "%s\n" "$_cv_gnu_make_command" >&6; }
+  if test "x$_cv_gnu_make_command" = x""
+then :
+  ifGNUmake="#"
+else $as_nop
+  ifGNUmake=""
+fi
+  if test "x$_cv_gnu_make_command" = x""
+then :
+  ifnGNUmake=""
+else $as_nop
+  ifnGNUmake="#"
+fi
+  if test "x$_cv_gnu_make_command" = x""
+then :
+  { ax_cv_gnu_make_command=; unset ax_cv_gnu_make_command;}
+else $as_nop
+  ax_cv_gnu_make_command=${_cv_gnu_make_command}
+fi
+  if test "x$_cv_gnu_make_command" = x""
+then :
+  as_fn_error $? "not using GNU make that is needed for coverage" "$LINENO" 5
+fi
+
+
+
+
+	# check for gcov
+	if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}$_AX_CODE_COVERAGE_GCOV_PROG_WITH", so it can be a program name with args.
+set dummy ${ac_tool_prefix}$_AX_CODE_COVERAGE_GCOV_PROG_WITH; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_GCOV+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$GCOV"; then
+  ac_cv_prog_GCOV="$GCOV" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_GCOV="${ac_tool_prefix}$_AX_CODE_COVERAGE_GCOV_PROG_WITH"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+GCOV=$ac_cv_prog_GCOV
+if test -n "$GCOV"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $GCOV" >&5
+printf "%s\n" "$GCOV" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_GCOV"; then
+  ac_ct_GCOV=$GCOV
+  # Extract the first word of "$_AX_CODE_COVERAGE_GCOV_PROG_WITH", so it can be a program name with args.
+set dummy $_AX_CODE_COVERAGE_GCOV_PROG_WITH; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_ac_ct_GCOV+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$ac_ct_GCOV"; then
+  ac_cv_prog_ac_ct_GCOV="$ac_ct_GCOV" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_GCOV="$_AX_CODE_COVERAGE_GCOV_PROG_WITH"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_GCOV=$ac_cv_prog_ac_ct_GCOV
+if test -n "$ac_ct_GCOV"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_ct_GCOV" >&5
+printf "%s\n" "$ac_ct_GCOV" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+  if test "x$ac_ct_GCOV" = x; then
+    GCOV=":"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+printf "%s\n" "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    GCOV=$ac_ct_GCOV
+  fi
+else
+  GCOV="$ac_cv_prog_GCOV"
+fi
+
+	if test "X$GCOV" = "X:"
+then :
+  as_fn_error $? "gcov is needed to do coverage" "$LINENO" 5
+fi
+
+
+		if  test "$GCC" = "no"
+then :
+
+		as_fn_error $? "not compiling with gcc, which is required for gcov code coverage" "$LINENO" 5
+
+fi
+
+	# Extract the first word of "lcov", so it can be a program name with args.
+set dummy lcov; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_LCOV+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$LCOV"; then
+  ac_cv_prog_LCOV="$LCOV" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_LCOV="lcov"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+LCOV=$ac_cv_prog_LCOV
+if test -n "$LCOV"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $LCOV" >&5
+printf "%s\n" "$LCOV" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+	# Extract the first word of "genhtml", so it can be a program name with args.
+set dummy genhtml; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_GENHTML+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$GENHTML"; then
+  ac_cv_prog_GENHTML="$GENHTML" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_GENHTML="genhtml"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+GENHTML=$ac_cv_prog_GENHTML
+if test -n "$GENHTML"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $GENHTML" >&5
+printf "%s\n" "$GENHTML" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+
+	if  test x"$LCOV" = x
+then :
+
+		as_fn_error $? "To enable code coverage reporting you must have lcov installed" "$LINENO" 5
+
+fi
+
+	if  test x"$GENHTML" = x
+then :
+
+		as_fn_error $? "Could not find genhtml from the lcov package" "$LINENO" 5
+
+fi
+
+			CODE_COVERAGE_CPPFLAGS="-DNDEBUG"
+	CODE_COVERAGE_CFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
+	CODE_COVERAGE_CXXFLAGS="-O0 -g -fprofile-arcs -ftest-coverage"
+	CODE_COVERAGE_LIBS="-lgcov"
+
+
+
+
+
+
+
+fi
+
+
+
+
+
+
+
+
+
+
+
+
  if test x"${enable_dependency_tracking}" != xno; then
   DEPENDENCY_TRACKING_TRUE=
   DEPENDENCY_TRACKING_FALSE='#'
@@ -14189,12 +14943,111 @@ pkgconfigdir=$with_pkgconfigdir
 #
 # Checks for libraries.
 
-#AS_IF([test "x${with_ats2_spookyhash}" != xno],
-#  [PKG_CHECK_MODULES([ATS2_SPOOKYHASH],[ats2-spookyhash],
-#    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
-#     PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
-#    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
-#])
+if test "x${with_ats2_spookyhash}" != xno
+then :
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ATS2_SPOOKYHASH" >&5
+printf %s "checking for ATS2_SPOOKYHASH... " >&6; }
+
+if test -n "$ATS2_SPOOKYHASH_CFLAGS"; then
+    pkg_cv_ATS2_SPOOKYHASH_CFLAGS="$ATS2_SPOOKYHASH_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_CFLAGS=`$PKG_CONFIG --cflags "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$ATS2_SPOOKYHASH_LIBS"; then
+    pkg_cv_ATS2_SPOOKYHASH_LIBS="$ATS2_SPOOKYHASH_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_LIBS=`$PKG_CONFIG --libs "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        ATS2_SPOOKYHASH_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "ats2-spookyhash" 2>&1`
+        else
+	        ATS2_SPOOKYHASH_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "ats2-spookyhash" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$ATS2_SPOOKYHASH_PKG_ERRORS" >&5
+
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+See \`config.log' for more details" "$LINENO" 5; }
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	ATS2_SPOOKYHASH_CFLAGS=$pkg_cv_ATS2_SPOOKYHASH_CFLAGS
+	ATS2_SPOOKYHASH_LIBS=$pkg_cv_ATS2_SPOOKYHASH_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
+
+if test -n "$ATS2_SPOOKYHASH_PATSOPTFLAGS"; then
+    pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS="$ATS2_SPOOKYHASH_PATSOPTFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-spookyhash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-spookyhash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS=`$PKG_CONFIG --variable="PATSOPTFLAGS" "ats2-spookyhash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+ATS2_SPOOKYHASH_PATSOPTFLAGS=$pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS
+
+if test "x$ATS2_SPOOKYHASH_PATSOPTFLAGS" = x""
+then :
+
+fi
+fi
+
+fi
 
 
 
@@ -14206,50 +15059,1048 @@ pkgconfigdir=$with_pkgconfigdir
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
-#AC_CHECK_SIZEOF([unsigned short int])
-#AC_CHECK_SIZEOF([unsigned int])
-#AC_CHECK_SIZEOF([unsigned long int])
-#AC_CHECK_SIZEOF([unsigned long long int])
-#AC_CHECK_SIZEOF([size_t])
-#AC_CHECK_SIZEOF([uintptr_t])
-#AC_CHECK_SIZEOF([uint8_t])
-#AC_CHECK_SIZEOF([uint16_t])
-#AC_CHECK_SIZEOF([uint32_t])
-#AC_CHECK_SIZEOF([uint64_t])
-#
-#AC_CHECK_TYPE([unsigned __int128])
-#if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
-#  HAVE_UINT128=1
-#  AC_CHECK_SIZEOF([unsigned __int128])
-#else
-#  HAVE_UINT128=0
-#fi
-#AC_SUBST([HAVE_UINT128])
-#
-#AM_CONDITIONAL([UINTPTR_IS_UINT64],
-#  [test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}])
-#
-#BIGENDIAN=0
-#LITTLEENDIAN=1
-#UNIVERSALENDIAN=2
-#AC_C_BIGENDIAN([ENDIANNESS=${BIGENDIAN}],
-#               [ENDIANNESS=${LITTLEENDIAN}],
-#               [AC_MSG_FAILURE([I cannot determine the platform's endianness])],
-#               [ENDIANNESS=${UNIVERSALENDIAN}])
-#AC_SUBST([BIGENDIAN])
-#AC_SUBST([LITTLEENDIAN])
-#AC_SUBST([UNIVERSALENDIAN])
-#AC_SUBST([ENDIANNESS])
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned short int" >&5
+printf %s "checking size of unsigned short int... " >&6; }
+if test ${ac_cv_sizeof_unsigned_short_int+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned short int))" "ac_cv_sizeof_unsigned_short_int"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned_short_int" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned short int)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned_short_int=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned_short_int" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned_short_int" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED_SHORT_INT $ac_cv_sizeof_unsigned_short_int" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned int" >&5
+printf %s "checking size of unsigned int... " >&6; }
+if test ${ac_cv_sizeof_unsigned_int+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned int))" "ac_cv_sizeof_unsigned_int"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned_int" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned int)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned_int=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned_int" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned_int" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED_INT $ac_cv_sizeof_unsigned_int" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned long int" >&5
+printf %s "checking size of unsigned long int... " >&6; }
+if test ${ac_cv_sizeof_unsigned_long_int+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned long int))" "ac_cv_sizeof_unsigned_long_int"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned_long_int" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned long int)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned_long_int=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned_long_int" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned_long_int" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED_LONG_INT $ac_cv_sizeof_unsigned_long_int" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned long long int" >&5
+printf %s "checking size of unsigned long long int... " >&6; }
+if test ${ac_cv_sizeof_unsigned_long_long_int+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned long long int))" "ac_cv_sizeof_unsigned_long_long_int"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned_long_long_int" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned long long int)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned_long_long_int=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned_long_long_int" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned_long_long_int" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED_LONG_LONG_INT $ac_cv_sizeof_unsigned_long_long_int" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of size_t" >&5
+printf %s "checking size of size_t... " >&6; }
+if test ${ac_cv_sizeof_size_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (size_t))" "ac_cv_sizeof_size_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_size_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (size_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_size_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_size_t" >&5
+printf "%s\n" "$ac_cv_sizeof_size_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_SIZE_T $ac_cv_sizeof_size_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uintptr_t" >&5
+printf %s "checking size of uintptr_t... " >&6; }
+if test ${ac_cv_sizeof_uintptr_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uintptr_t))" "ac_cv_sizeof_uintptr_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uintptr_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uintptr_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uintptr_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uintptr_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uintptr_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINTPTR_T $ac_cv_sizeof_uintptr_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint8_t" >&5
+printf %s "checking size of uint8_t... " >&6; }
+if test ${ac_cv_sizeof_uint8_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint8_t))" "ac_cv_sizeof_uint8_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint8_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint8_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint8_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint8_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint8_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT8_T $ac_cv_sizeof_uint8_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint16_t" >&5
+printf %s "checking size of uint16_t... " >&6; }
+if test ${ac_cv_sizeof_uint16_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint16_t))" "ac_cv_sizeof_uint16_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint16_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint16_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint16_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint16_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint16_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT16_T $ac_cv_sizeof_uint16_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint32_t" >&5
+printf %s "checking size of uint32_t... " >&6; }
+if test ${ac_cv_sizeof_uint32_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint32_t))" "ac_cv_sizeof_uint32_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint32_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint32_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint32_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint32_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint32_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT32_T $ac_cv_sizeof_uint32_t" >>confdefs.h
+
+
+# The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of uint64_t" >&5
+printf %s "checking size of uint64_t... " >&6; }
+if test ${ac_cv_sizeof_uint64_t+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (uint64_t))" "ac_cv_sizeof_uint64_t"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_uint64_t" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (uint64_t)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_uint64_t=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_uint64_t" >&5
+printf "%s\n" "$ac_cv_sizeof_uint64_t" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UINT64_T $ac_cv_sizeof_uint64_t" >>confdefs.h
+
+
+
+ac_fn_c_check_type "$LINENO" "unsigned __int128" "ac_cv_type_unsigned___int128" "$ac_includes_default"
+if test "x$ac_cv_type_unsigned___int128" = xyes
+then :
+
+fi
+
+if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
+  HAVE_UINT128=1
+  # The cast to long int works around a bug in the HP C Compiler
+# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
+# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
+# This bug is HP SR number 8606223364.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking size of unsigned __int128" >&5
+printf %s "checking size of unsigned __int128... " >&6; }
+if test ${ac_cv_sizeof_unsigned___int128+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (unsigned __int128))" "ac_cv_sizeof_unsigned___int128"        "$ac_includes_default"
+then :
+
+else $as_nop
+  if test "$ac_cv_type_unsigned___int128" = yes; then
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "cannot compute sizeof (unsigned __int128)
+See \`config.log' for more details" "$LINENO" 5; }
+   else
+     ac_cv_sizeof_unsigned___int128=0
+   fi
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_unsigned___int128" >&5
+printf "%s\n" "$ac_cv_sizeof_unsigned___int128" >&6; }
+
+
+
+printf "%s\n" "#define SIZEOF_UNSIGNED___INT128 $ac_cv_sizeof_unsigned___int128" >>confdefs.h
+
+
+else
+  HAVE_UINT128=0
+fi
+
+
+ if test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}; then
+  UINTPTR_IS_UINT64_TRUE=
+  UINTPTR_IS_UINT64_FALSE='#'
+else
+  UINTPTR_IS_UINT64_TRUE='#'
+  UINTPTR_IS_UINT64_FALSE=
+fi
+
+
+BIGENDIAN=0
+LITTLEENDIAN=1
+UNIVERSALENDIAN=2
+ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether byte ordering is bigendian" >&5
+printf %s "checking whether byte ordering is bigendian... " >&6; }
+if test ${ac_cv_c_bigendian+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_cv_c_bigendian=unknown
+    # See if we're dealing with a universal compiler.
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifndef __APPLE_CC__
+	       not a universal capable compiler
+	     #endif
+	     typedef int dummy;
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+
+	# Check for potential -arch flags.  It is not universal unless
+	# there are at least two -arch flags with different values.
+	ac_arch=
+	ac_prev=
+	for ac_word in $CC $CFLAGS $CPPFLAGS $LDFLAGS; do
+	 if test -n "$ac_prev"; then
+	   case $ac_word in
+	     i?86 | x86_64 | ppc | ppc64)
+	       if test -z "$ac_arch" || test "$ac_arch" = "$ac_word"; then
+		 ac_arch=$ac_word
+	       else
+		 ac_cv_c_bigendian=universal
+		 break
+	       fi
+	       ;;
+	   esac
+	   ac_prev=
+	 elif test "x$ac_word" = "x-arch"; then
+	   ac_prev=arch
+	 fi
+       done
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+    if test $ac_cv_c_bigendian = unknown; then
+      # See if sys/param.h defines the BYTE_ORDER macro.
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/types.h>
+	     #include <sys/param.h>
+
+int
+main (void)
+{
+#if ! (defined BYTE_ORDER && defined BIG_ENDIAN \
+		     && defined LITTLE_ENDIAN && BYTE_ORDER && BIG_ENDIAN \
+		     && LITTLE_ENDIAN)
+	      bogus endian macros
+	     #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  # It does; now see whether it defined to BIG_ENDIAN or not.
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/types.h>
+		#include <sys/param.h>
+
+int
+main (void)
+{
+#if BYTE_ORDER != BIG_ENDIAN
+		 not big endian
+		#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_cv_c_bigendian=yes
+else $as_nop
+  ac_cv_c_bigendian=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+    fi
+    if test $ac_cv_c_bigendian = unknown; then
+      # See if <limits.h> defines _LITTLE_ENDIAN or _BIG_ENDIAN (e.g., Solaris).
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <limits.h>
+
+int
+main (void)
+{
+#if ! (defined _LITTLE_ENDIAN || defined _BIG_ENDIAN)
+	      bogus endian macros
+	     #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  # It does; now see whether it defined to _BIG_ENDIAN or not.
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <limits.h>
+
+int
+main (void)
+{
+#ifndef _BIG_ENDIAN
+		 not big endian
+		#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_cv_c_bigendian=yes
+else $as_nop
+  ac_cv_c_bigendian=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+    fi
+    if test $ac_cv_c_bigendian = unknown; then
+      # Compile a test program.
+      if test "$cross_compiling" = yes
+then :
+  # Try to guess by grepping values from an object file.
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+unsigned short int ascii_mm[] =
+		  { 0x4249, 0x4765, 0x6E44, 0x6961, 0x6E53, 0x7953, 0 };
+		unsigned short int ascii_ii[] =
+		  { 0x694C, 0x5454, 0x656C, 0x6E45, 0x6944, 0x6E61, 0 };
+		int use_ascii (int i) {
+		  return ascii_mm[i] + ascii_ii[i];
+		}
+		unsigned short int ebcdic_ii[] =
+		  { 0x89D3, 0xE3E3, 0x8593, 0x95C5, 0x89C4, 0x9581, 0 };
+		unsigned short int ebcdic_mm[] =
+		  { 0xC2C9, 0xC785, 0x95C4, 0x8981, 0x95E2, 0xA8E2, 0 };
+		int use_ebcdic (int i) {
+		  return ebcdic_mm[i] + ebcdic_ii[i];
+		}
+		extern int foo;
+
+int
+main (void)
+{
+return use_ascii (foo) == use_ebcdic (foo);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  if grep BIGenDianSyS conftest.$ac_objext >/dev/null; then
+	      ac_cv_c_bigendian=yes
+	    fi
+	    if grep LiTTleEnDian conftest.$ac_objext >/dev/null ; then
+	      if test "$ac_cv_c_bigendian" = unknown; then
+		ac_cv_c_bigendian=no
+	      else
+		# finding both strings is unlikely to happen, but who knows?
+		ac_cv_c_bigendian=unknown
+	      fi
+	    fi
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$ac_includes_default
+int
+main (void)
+{
+
+	     /* Are we little or big endian?  From Harbison&Steele.  */
+	     union
+	     {
+	       long int l;
+	       char c[sizeof (long int)];
+	     } u;
+	     u.l = 1;
+	     return u.c[sizeof (long int) - 1] == 1;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"
+then :
+  ac_cv_c_bigendian=no
+else $as_nop
+  ac_cv_c_bigendian=yes
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+    fi
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_bigendian" >&5
+printf "%s\n" "$ac_cv_c_bigendian" >&6; }
+ case $ac_cv_c_bigendian in #(
+   yes)
+     ENDIANNESS=${BIGENDIAN};; #(
+   no)
+     ENDIANNESS=${LITTLEENDIAN} ;; #(
+   universal)
+     ENDIANNESS=${UNIVERSALENDIAN}
+     ;; #(
+   *)
+     { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "I cannot determine the platform's endianness
+See \`config.log' for more details" "$LINENO" 5; } ;;
+ esac
+
+
+
+
+
 
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
 
-#AX_GCC_BUILTIN([__builtin_bswap16])
-#AX_GCC_BUILTIN([__builtin_bswap32])
-#AX_GCC_BUILTIN([__builtin_bswap64])
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_bswap16" >&5
+printf %s "checking for __builtin_bswap16... " >&6; }
+if test ${ax_cv_have___builtin_bswap16+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_bswap16(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_bswap16=yes
+else $as_nop
+  ax_cv_have___builtin_bswap16=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_bswap16" >&5
+printf "%s\n" "$ax_cv_have___builtin_bswap16" >&6; }
+
+    if test yes = $ax_cv_have___builtin_bswap16
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_BSWAP16 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_bswap32" >&5
+printf %s "checking for __builtin_bswap32... " >&6; }
+if test ${ax_cv_have___builtin_bswap32+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_bswap32(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_bswap32=yes
+else $as_nop
+  ax_cv_have___builtin_bswap32=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_bswap32" >&5
+printf "%s\n" "$ax_cv_have___builtin_bswap32" >&6; }
+
+    if test yes = $ax_cv_have___builtin_bswap32
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_BSWAP32 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_bswap64" >&5
+printf %s "checking for __builtin_bswap64... " >&6; }
+if test ${ax_cv_have___builtin_bswap64+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_bswap64(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_bswap64=yes
+else $as_nop
+  ax_cv_have___builtin_bswap64=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_bswap64" >&5
+printf "%s\n" "$ax_cv_have___builtin_bswap64" >&6; }
+
+    if test yes = $ax_cv_have___builtin_bswap64
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_BSWAP64 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcount" >&5
+printf %s "checking for __builtin_popcount... " >&6; }
+if test ${ax_cv_have___builtin_popcount+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcount(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcount=yes
+else $as_nop
+  ax_cv_have___builtin_popcount=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcount" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcount" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcount
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNT 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcountl" >&5
+printf %s "checking for __builtin_popcountl... " >&6; }
+if test ${ax_cv_have___builtin_popcountl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcountl(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcountl=yes
+else $as_nop
+  ax_cv_have___builtin_popcountl=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcountl" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcountl" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcountl
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNTL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_popcountll" >&5
+printf %s "checking for __builtin_popcountll... " >&6; }
+if test ${ax_cv_have___builtin_popcountll+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_popcountll(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_popcountll=yes
+else $as_nop
+  ax_cv_have___builtin_popcountll=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_popcountll" >&5
+printf "%s\n" "$ax_cv_have___builtin_popcountll" >&6; }
+
+    if test yes = $ax_cv_have___builtin_popcountll
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_POPCOUNTLL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctz" >&5
+printf %s "checking for __builtin_ctz... " >&6; }
+if test ${ax_cv_have___builtin_ctz+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ctz(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ctz=yes
+else $as_nop
+  ax_cv_have___builtin_ctz=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctz" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctz" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ctz
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_CTZ 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctzl" >&5
+printf %s "checking for __builtin_ctzl... " >&6; }
+if test ${ax_cv_have___builtin_ctzl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ctzl(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ctzl=yes
+else $as_nop
+  ax_cv_have___builtin_ctzl=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctzl" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctzl" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ctzl
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_CTZL 1" >>confdefs.h
+
+fi
+
+
+
+
+
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for __builtin_ctzll" >&5
+printf %s "checking for __builtin_ctzll... " >&6; }
+if test ${ax_cv_have___builtin_ctzll+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+            __builtin_ctzll(0)
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_have___builtin_ctzll=yes
+else $as_nop
+  ax_cv_have___builtin_ctzll=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_have___builtin_ctzll" >&5
+printf "%s\n" "$ax_cv_have___builtin_ctzll" >&6; }
+
+    if test yes = $ax_cv_have___builtin_ctzll
+then :
+
+printf "%s\n" "#define HAVE___BUILTIN_CTZLL 1" >>confdefs.h
+
+fi
+
+
+
 
 #--------------------------------------------------------------------------
+
+CPPFLAGS="${CPPFLAGS}${CPPFLAGS+ }\$(CODE_COVERAGE_CPPFLAGS)"
+CFLAGS="${CFLAGS}${CFLAGS+ }\$(CODE_COVERAGE_CFLAGS)"
 
 # You can use ‘@GNU@’ to make GNU Make constructs unbothersome to
 # Automake. (By the way, you often can use ‘$(eval ...)’ as well, but
@@ -14386,120 +16237,250 @@ printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
-#AC_SUBST([SIZEOF_USINT],[${ac_cv_sizeof_unsigned_short_int}])
-#AC_SUBST([SIZEOF_UINT],[${ac_cv_sizeof_unsigned_int}])
-#AC_SUBST([SIZEOF_ULINT],[${ac_cv_sizeof_unsigned_long_int}])
-#AC_SUBST([SIZEOF_ULLINT],[${ac_cv_sizeof_unsigned_long_long_int}])
-#AC_SUBST([SIZEOF_SIZE],[${ac_cv_sizeof_size_t}])
-#AC_SUBST([SIZEOF_UINTPTR],[${ac_cv_sizeof_uintptr_t}])
-#AC_SUBST([SIZEOF_UINT8],[${ac_cv_sizeof_uint8_t}])
-#AC_SUBST([SIZEOF_UINT16],[${ac_cv_sizeof_uint16_t}])
-#AC_SUBST([SIZEOF_UINT32],[${ac_cv_sizeof_uint32_t}])
-#AC_SUBST([SIZEOF_UINT64],[${ac_cv_sizeof_uint64_t}])
-#
-#AC_SUBST([BITSIZEOF_USINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int}`])
-#AC_SUBST([BITSIZEOF_UINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`])
-#AC_SUBST([BITSIZEOF_ULINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`])
-#AC_SUBST([BITSIZEOF_ULLINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`])
-#AC_SUBST([BITSIZEOF_SIZE],[`expr 8 '*' ${ac_cv_sizeof_size_t}`])
-#AC_SUBST([BITSIZEOF_UINTPTR],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`])
-#AC_SUBST([BITSIZEOF_UINT8],[`expr 8 '*' ${ac_cv_sizeof_uint8_t}`])
-#AC_SUBST([BITSIZEOF_UINT16],[`expr 8 '*' ${ac_cv_sizeof_uint16_t}`])
-#AC_SUBST([BITSIZEOF_UINT32],[`expr 8 '*' ${ac_cv_sizeof_uint32_t}`])
-#AC_SUBST([BITSIZEOF_UINT64],[`expr 8 '*' ${ac_cv_sizeof_uint64_t}`])
-#
-#AC_SUBST([BITSIZEOF_USINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_ULINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_ULLINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_SIZE_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_size_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINTPTR_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT8_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint8_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT16_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint16_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT32_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint32_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT64_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint64_t} '+' 1`])
-#
-#AC_SUBST([MIN_SIZEOF_BITINDEX],[4])
-#AC_SUBST([MAX_SIZEOF_BITINDEX],[8])
-#
-#AC_SUBST([MAXVALOF_BITINDEX_4],[15])
-#AC_SUBST([MAXVALOF_BITINDEX_5],[31])
-#AC_SUBST([MAXVALOF_BITINDEX_6],[63])
-#AC_SUBST([MAXVALOF_BITINDEX_7],[127])
-#AC_SUBST([MAXVALOF_BITINDEX_8],[255])
-#
-#bits_in_index_of ()
-#{
-#  if test 32 -le $1 ; then
-#    echo 8
-#  elif test 16 -le $1 ; then
-#    echo 7
-#  elif test 8 -le $1 ; then
-#    echo 6
-#  elif test 4 -le $1 ; then
-#    echo 5
-#  elif test 2 -le $1 ; then
-#    echo 4
-#  else
-#    AC_MSG_ERROR([uintptr_t must be at least 2 bytes long])
-#  fi
-#}
-#AC_SUBST([SIZEOF_BITINDEXOF_UINTPTR],[`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`])
-#
-#AC_CONFIG_FILES([hashmap/HATS/config.hats])
-#AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
+SIZEOF_USINT=${ac_cv_sizeof_unsigned_short_int}
+
+SIZEOF_UINT=${ac_cv_sizeof_unsigned_int}
+
+SIZEOF_ULINT=${ac_cv_sizeof_unsigned_long_int}
+
+SIZEOF_ULLINT=${ac_cv_sizeof_unsigned_long_long_int}
+
+SIZEOF_SIZE=${ac_cv_sizeof_size_t}
+
+SIZEOF_UINTPTR=${ac_cv_sizeof_uintptr_t}
+
+SIZEOF_UINT8=${ac_cv_sizeof_uint8_t}
+
+SIZEOF_UINT16=${ac_cv_sizeof_uint16_t}
+
+SIZEOF_UINT32=${ac_cv_sizeof_uint32_t}
+
+SIZEOF_UINT64=${ac_cv_sizeof_uint64_t}
+
+
+BITSIZEOF_USINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int}`
+
+BITSIZEOF_UINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`
+
+BITSIZEOF_ULINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`
+
+BITSIZEOF_ULLINT=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`
+
+BITSIZEOF_SIZE=`expr 8 '*' ${ac_cv_sizeof_size_t}`
+
+BITSIZEOF_UINTPTR=`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`
+
+BITSIZEOF_UINT8=`expr 8 '*' ${ac_cv_sizeof_uint8_t}`
+
+BITSIZEOF_UINT16=`expr 8 '*' ${ac_cv_sizeof_uint16_t}`
+
+BITSIZEOF_UINT32=`expr 8 '*' ${ac_cv_sizeof_uint32_t}`
+
+BITSIZEOF_UINT64=`expr 8 '*' ${ac_cv_sizeof_uint64_t}`
+
+
+BITSIZEOF_USINT_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int} '+' 1`
+
+BITSIZEOF_UINT_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_unsigned_int} '+' 1`
+
+BITSIZEOF_ULINT_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int} '+' 1`
+
+BITSIZEOF_ULLINT_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int} '+' 1`
+
+BITSIZEOF_SIZE_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_size_t} '+' 1`
+
+BITSIZEOF_UINTPTR_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_uintptr_t} '+' 1`
+
+BITSIZEOF_UINT8_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_uint8_t} '+' 1`
+
+BITSIZEOF_UINT16_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_uint16_t} '+' 1`
+
+BITSIZEOF_UINT32_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_uint32_t} '+' 1`
+
+BITSIZEOF_UINT64_PLUS_ONE=`expr 8 '*' ${ac_cv_sizeof_uint64_t} '+' 1`
+
+
+MIN_SIZEOF_BITINDEX=4
+
+MAX_SIZEOF_BITINDEX=8
+
+
+MAXVALOF_BITINDEX_4=15
+
+MAXVALOF_BITINDEX_5=31
+
+MAXVALOF_BITINDEX_6=63
+
+MAXVALOF_BITINDEX_7=127
+
+MAXVALOF_BITINDEX_8=255
+
+
+bits_in_index_of ()
+{
+  if test 32 -le $1 ; then
+    echo 8
+  elif test 16 -le $1 ; then
+    echo 7
+  elif test 8 -le $1 ; then
+    echo 6
+  elif test 4 -le $1 ; then
+    echo 5
+  elif test 2 -le $1 ; then
+    echo 4
+  else
+    as_fn_error $? "uintptr_t must be at least 2 bytes long" "$LINENO" 5
+  fi
+}
+SIZEOF_BITINDEXOF_UINTPTR=`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`
+
+
+ac_config_files="$ac_config_files hashmap/HATS/config.hats"
+
+ac_config_files="$ac_config_files hashmap/HATS/bits-source-include.hats"
+
 
 ac_config_files="$ac_config_files common-macros.m4"
 
 
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-size.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-usint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint.dats.m4])
-#
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-TYPE-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-size-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-usint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
-#
-#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
-#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
-#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
-#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
-#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
-#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
-#AC_CONFIG_FILES([hashmap/SATS/initialize-once.sats])
-#AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
-#
-#AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
-#AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
-#
-#AC_CONFIG_FILES([hashmap/CATS/memory.cats])
-#AC_CONFIG_FILES([hashmap/SATS/memory.sats])
-#AC_CONFIG_FILES([hashmap/DATS/memory.dats])
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-UINTTYPE.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint8.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint16.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint32.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint128.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintptr.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-size.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-usint.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ulint.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ullint.dats.m4"
+
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-TYPE-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint8-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint16-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint32-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint128-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uintptr-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-size-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-usint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ulint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-ullint-one-time.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4"
+
+
+ac_config_files="$ac_config_files hashmap/CATS/atomic.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/atomic.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/atomic.dats"
+
+ac_config_files="$ac_config_files hashmap/CATS/spinlock.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/spinlock.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/spinlock.dats"
+
+ac_config_files="$ac_config_files hashmap/SATS/initialize-once.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/initialize-once.dats"
+
+
+ac_config_files="$ac_config_files hashmap/SATS/array-proofs.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/array-proofs.dats"
+
+
+ac_config_files="$ac_config_files hashmap/CATS/memory.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/memory.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/memory.dats"
+
+
+ac_config_files="$ac_config_files hashmap/CATS/popcount.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/popcount.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/popcount.dats"
+
+
+ac_config_files="$ac_config_files hashmap/CATS/ctz.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/ctz.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/ctz.dats"
+
+
+ac_config_files="$ac_config_files tests/test-bits-source-uint64-uint64.dats"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-10-50-40.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-51-50.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-55-11.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-11-58-30.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-00-18.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-02-25.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-26-02.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-03-12-29-17.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-05-01-01-01.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-05-03-40-40.structure.reference"
+
+ac_config_files="$ac_config_files tests/test-2021-10-05-04-18-20.structure.reference"
+
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
 
-#AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
-#               [test "x${with_ats2_spookyhash}" != xno])
+ac_config_files="$ac_config_files ats2-hashmap.pc"
+
+
+ if test "x${with_ats2_spookyhash}" != xno; then
+  WITH_ATS2_SPOOKYHASH_TRUE=
+  WITH_ATS2_SPOOKYHASH_FALSE='#'
+else
+  WITH_ATS2_SPOOKYHASH_TRUE='#'
+  WITH_ATS2_SPOOKYHASH_FALSE=
+fi
+
+
+# What to use as the shell in shebangs.
+#AC_ARG_VAR([POSIX_SH],[The full absolute path of a POSIX shell])
+#POSIX_SH=${POSIX_SH-`command -p -v sh`}
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -14678,8 +16659,20 @@ if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE
   as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${CODE_COVERAGE_ENABLED_TRUE}" && test -z "${CODE_COVERAGE_ENABLED_FALSE}"; then
+  as_fn_error $? "conditional \"CODE_COVERAGE_ENABLED\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE}"; then
   as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${UINTPTR_IS_UINT64_TRUE}" && test -z "${UINTPTR_IS_UINT64_FALSE}"; then
+  as_fn_error $? "conditional \"UINTPTR_IS_UINT64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_ATS2_SPOOKYHASH_TRUE}" && test -z "${WITH_ATS2_SPOOKYHASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_ATS2_SPOOKYHASH\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -15539,8 +17532,67 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
+    "hashmap/HATS/config.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/config.hats" ;;
+    "hashmap/HATS/bits-source-include.hats") CONFIG_FILES="$CONFIG_FILES hashmap/HATS/bits-source-include.hats" ;;
     "common-macros.m4") CONFIG_FILES="$CONFIG_FILES common-macros.m4" ;;
+    "hashmap/DATS/bits-source-UINTTYPE.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-UINTTYPE.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint8.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint8.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint16.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint16.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint32.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint128.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint128.dats.m4" ;;
+    "hashmap/DATS/bits-source-uintptr.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintptr.dats.m4" ;;
+    "hashmap/DATS/bits-source-size.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-size.dats.m4" ;;
+    "hashmap/DATS/bits-source-usint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-usint.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint.dats.m4" ;;
+    "hashmap/DATS/bits-source-ulint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ulint.dats.m4" ;;
+    "hashmap/DATS/bits-source-ullint.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ullint.dats.m4" ;;
+    "hashmap/DATS/bits-source-TYPE-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-TYPE-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint8-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint8-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint16-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint16-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint32-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint32-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint128-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint128-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uintptr-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uintptr-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-size-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-size-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-usint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-usint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-ulint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ulint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-ullint-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-ullint-one-time.dats.m4" ;;
+    "hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4" ;;
+    "hashmap/CATS/atomic.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/atomic.cats" ;;
+    "hashmap/SATS/atomic.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/atomic.sats" ;;
+    "hashmap/DATS/atomic.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/atomic.dats" ;;
+    "hashmap/CATS/spinlock.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/spinlock.cats" ;;
+    "hashmap/SATS/spinlock.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/spinlock.sats" ;;
+    "hashmap/DATS/spinlock.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/spinlock.dats" ;;
+    "hashmap/SATS/initialize-once.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/initialize-once.sats" ;;
+    "hashmap/DATS/initialize-once.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/initialize-once.dats" ;;
+    "hashmap/SATS/array-proofs.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/array-proofs.sats" ;;
+    "hashmap/DATS/array-proofs.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/array-proofs.dats" ;;
+    "hashmap/CATS/memory.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/memory.cats" ;;
+    "hashmap/SATS/memory.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/memory.sats" ;;
+    "hashmap/DATS/memory.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/memory.dats" ;;
+    "hashmap/CATS/popcount.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/popcount.cats" ;;
+    "hashmap/SATS/popcount.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/popcount.sats" ;;
+    "hashmap/DATS/popcount.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/popcount.dats" ;;
+    "hashmap/CATS/ctz.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/ctz.cats" ;;
+    "hashmap/SATS/ctz.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/ctz.sats" ;;
+    "hashmap/DATS/ctz.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/ctz.dats" ;;
+    "tests/test-bits-source-uint64-uint64.dats") CONFIG_FILES="$CONFIG_FILES tests/test-bits-source-uint64-uint64.dats" ;;
+    "tests/test-2021-10-03-10-50-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-10-50-40.structure.reference" ;;
+    "tests/test-2021-10-03-11-51-50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-51-50.structure.reference" ;;
+    "tests/test-2021-10-03-11-55-11.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-55-11.structure.reference" ;;
+    "tests/test-2021-10-03-11-58-30.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-11-58-30.structure.reference" ;;
+    "tests/test-2021-10-03-12-00-18.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-00-18.structure.reference" ;;
+    "tests/test-2021-10-03-12-02-25.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-02-25.structure.reference" ;;
+    "tests/test-2021-10-03-12-26-02.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-26-02.structure.reference" ;;
+    "tests/test-2021-10-03-12-29-17.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-03-12-29-17.structure.reference" ;;
+    "tests/test-2021-10-05-01-01-01.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-01-01-01.structure.reference" ;;
+    "tests/test-2021-10-05-03-40-40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-03-40-40.structure.reference" ;;
+    "tests/test-2021-10-05-04-18-20.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/test-2021-10-05-04-18-20.structure.reference" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
+    "ats2-hashmap.pc") CONFIG_FILES="$CONFIG_FILES ats2-hashmap.pc" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
