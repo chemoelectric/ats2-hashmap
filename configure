@@ -14566,6 +14566,9 @@ printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
 ac_config_files="$ac_config_files common-macros.m4"
 
 
+ac_config_files="$ac_config_files hashmap/CATS/const.cats"
+
+
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
@@ -14592,16 +14595,24 @@ ac_config_files="$ac_config_files common-macros.m4"
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
-#
-#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
-#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
-#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
-#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
-#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
-#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
-#AC_CONFIG_FILES([hashmap/SATS/initialize-once.sats])
-#AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
-#
+
+ac_config_files="$ac_config_files hashmap/CATS/atomic.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/atomic.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/atomic.dats"
+
+ac_config_files="$ac_config_files hashmap/CATS/spinlock.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/spinlock.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/spinlock.dats"
+
+ac_config_files="$ac_config_files hashmap/SATS/initialize_once.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/initialize_once.dats"
+
+
 #AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 #AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 #
@@ -15654,6 +15665,15 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
     "common-macros.m4") CONFIG_FILES="$CONFIG_FILES common-macros.m4" ;;
+    "hashmap/CATS/const.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/const.cats" ;;
+    "hashmap/CATS/atomic.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/atomic.cats" ;;
+    "hashmap/SATS/atomic.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/atomic.sats" ;;
+    "hashmap/DATS/atomic.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/atomic.dats" ;;
+    "hashmap/CATS/spinlock.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/spinlock.cats" ;;
+    "hashmap/SATS/spinlock.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/spinlock.sats" ;;
+    "hashmap/DATS/spinlock.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/spinlock.dats" ;;
+    "hashmap/SATS/initialize_once.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/initialize_once.sats" ;;
+    "hashmap/DATS/initialize_once.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/initialize_once.dats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

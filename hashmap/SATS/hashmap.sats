@@ -75,13 +75,9 @@ hashmap$key_vt_free : key_vt -> void
 fun {value_vt : vtype}
 hashmap$value_vt_free : value_vt -> void
 
-// FIXME:
-// FIXME:
-// FIXME:
-// FIXME: I need a key equality function.
-// FIXME:
-// FIXME:
-// FIXME:
+fun {key_vt : vtype}
+hashmap$key_eq (key_arg    : !key_vt >> _,
+                key_stored : !key_vt >> _) : bool
 
 (********************************************************************)
 

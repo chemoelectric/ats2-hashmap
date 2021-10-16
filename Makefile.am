@@ -43,6 +43,7 @@ LDADD =
 bin_PROGRAMS =
 lib_LTLIBRARIES =
 EXTRA_PROGRAMS =
+nobase_dist_pkginclude_HEADERS =
 nobase_nodist_pkginclude_HEADERS =
 nodist_pkgconfig_DATA =
 
@@ -146,29 +147,21 @@ libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 
 #hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
-#libats2_hashmap_la_SOURCES += hashmap/SATS/atomic_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/atomic_dats.c
-#CLEANFILES += hashmap/SATS/atomic_sats.c
-#CLEANFILES += hashmap/DATS/atomic_dats.c
-#EXTRA_DIST += hashmap/SATS/atomic.sats
-#EXTRA_DIST += hashmap/DATS/atomic.dats
-#EXTRA_DIST += hashmap/CATS/atomic.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/spinlock_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/spinlock_dats.c
-#CLEANFILES += hashmap/SATS/spinlock_sats.c
-#CLEANFILES += hashmap/DATS/spinlock_dats.c
-#EXTRA_DIST += hashmap/SATS/spinlock.sats
-#EXTRA_DIST += hashmap/DATS/spinlock.dats
-#EXTRA_DIST += hashmap/CATS/spinlock.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/initialize-once_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/initialize-once_dats.c
-#CLEANFILES += hashmap/SATS/initialize-once_sats.c
-#CLEANFILES += hashmap/DATS/initialize-once_dats.c
-#EXTRA_DIST += hashmap/SATS/initialize-once.sats
-#EXTRA_DIST += hashmap/DATS/initialize-once.dats
-#
+libats2_hashmap_la_SOURCES += hashmap/SATS/atomic_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/atomic_dats.c
+CLEANFILES += hashmap/SATS/atomic_sats.c
+CLEANFILES += hashmap/DATS/atomic_dats.c
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/spinlock_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/spinlock_dats.c
+CLEANFILES += hashmap/SATS/spinlock_sats.c
+CLEANFILES += hashmap/DATS/spinlock_dats.c
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/initialize_once_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/initialize_once_dats.c
+CLEANFILES += hashmap/SATS/initialize_once_sats.c
+CLEANFILES += hashmap/DATS/initialize_once_dats.c
+
 #libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
 #CLEANFILES += hashmap/SATS/array-proofs_sats.c
@@ -184,37 +177,20 @@ libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 #EXTRA_DIST += hashmap/DATS/memory.dats
 #EXTRA_DIST += hashmap/CATS/memory.cats
 #
-#libats2_hashmap_la_SOURCES += hashmap/SATS/uptr_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/uptr_dats.c
-#CLEANFILES += hashmap/SATS/uptr_sats.c
-#CLEANFILES += hashmap/DATS/uptr_dats.c
-#EXTRA_DIST += hashmap/SATS/uptr.sats
-#EXTRA_DIST += hashmap/DATS/uptr.dats
-#EXTRA_DIST += hashmap/CATS/uptr.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/popcount_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/popcount_dats.c
-#CLEANFILES += hashmap/SATS/popcount_sats.c
-#CLEANFILES += hashmap/DATS/popcount_dats.c
-#EXTRA_DIST += hashmap/SATS/popcount.sats
-#EXTRA_DIST += hashmap/DATS/popcount.dats
-#EXTRA_DIST += hashmap/CATS/popcount.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/ctz_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/ctz_dats.c
-#CLEANFILES += hashmap/SATS/ctz_sats.c
-#CLEANFILES += hashmap/DATS/ctz_dats.c
-#EXTRA_DIST += hashmap/SATS/ctz.sats
-#EXTRA_DIST += hashmap/DATS/ctz.dats
-#EXTRA_DIST += hashmap/CATS/ctz.cats
-#
 #libats2_hashmap_la_SOURCES += hashmap/SATS/print-bitmap_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/print-bitmap_dats.c
 #CLEANFILES += hashmap/SATS/print-bitmap_sats.c
 #CLEANFILES += hashmap/DATS/print-bitmap_dats.c
 #EXTRA_DIST += hashmap/SATS/print-bitmap.sats
 #EXTRA_DIST += hashmap/DATS/print-bitmap.dats
-#
+
+nobase_nodist_pkginclude_HEADERS += hashmap/CATS/const.cats
+
+libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source_sats.c
+CLEANFILES += hashmap/SATS/bits_source_sats.c
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
+nobase_dist_pkginclude_HEADERS += hashmap/CATS/bits_source.cats
+
 #libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint8_dats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint16_dats.c
@@ -462,10 +438,8 @@ libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
 CLEANFILES += hashmap/DATS/hashmap_dats.c
-EXTRA_DIST += hashmap/SATS/hashmap.sats
-EXTRA_DIST += hashmap/DATS/hashmap.dats
-nobase_nodist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
+nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 
 #if WITH_ATS2_SPOOKYHASH
 #libats2_hashmap_la_SOURCES += hashmap/SATS/strptr-map_sats.c

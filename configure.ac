@@ -231,6 +231,8 @@ StM_CONFIG_MAKEFILES
 
 AC_CONFIG_FILES([common-macros.m4])
 
+AC_CONFIG_FILES([hashmap/CATS/const.cats])
+
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
@@ -257,16 +259,16 @@ AC_CONFIG_FILES([common-macros.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
-#
-#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
-#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
-#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
-#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
-#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
-#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
-#AC_CONFIG_FILES([hashmap/SATS/initialize-once.sats])
-#AC_CONFIG_FILES([hashmap/DATS/initialize-once.dats])
-#
+
+AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
+AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
+AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
+AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
+AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
+AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
+AC_CONFIG_FILES([hashmap/SATS/initialize_once.sats])
+AC_CONFIG_FILES([hashmap/DATS/initialize_once.dats])
+
 #AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 #AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 #
