@@ -183,7 +183,7 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libats2_hashmap_la_LIBADD =
+am__DEPENDENCIES_1 =
 am__dirstamp = $(am__leading_dot)dirstamp
 am_libats2_hashmap_la_OBJECTS = hashmap/SATS/hashmap_sats.lo \
 	hashmap/DATS/hashmap_dats.lo
@@ -473,6 +473,9 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+ATS2_POPCOUNT_CFLAGS = @ATS2_POPCOUNT_CFLAGS@
+ATS2_POPCOUNT_LIBS = @ATS2_POPCOUNT_LIBS@
+ATS2_POPCOUNT_PATSOPTFLAGS = @ATS2_POPCOUNT_PATSOPTFLAGS@
 ATS_CATS_DIRECTORY = @ATS_CATS_DIRECTORY@
 ATS_DATS_DIRECTORY = @ATS_DATS_DIRECTORY@
 ATS_EXTERN_PREFIX = @ATS_EXTERN_PREFIX@
@@ -691,10 +694,12 @@ BUILT_SOURCES =
 AM_M4FLAGS = 
 
 # We will not be using exceptions.
-AM_CPPFLAGS = -D_ATS_CCOMP_EXCEPTION_NONE -DATS_MEMALLOC_LIBC \
-	-I$(builddir) -I$(srcdir) -I$(builddir)/lib -I$(srcdir)/lib \
-	-I$(PATSHOME) -I$(PATSHOME)/ccomp/runtime/
-AM_CFLAGS = 
+
+#AM_CPPFLAGS += -DATS_MEMALLOC_LIBC  # <- FIXME: Try to do this only when building tests.
+AM_CPPFLAGS = -D_ATS_CCOMP_EXCEPTION_NONE -I$(builddir) -I$(srcdir) \
+	-I$(builddir)/lib -I$(srcdir)/lib -I$(PATSHOME) \
+	-I$(PATSHOME)/ccomp/runtime/
+AM_CFLAGS = $(ATS2_POPCOUNT_CFLAGS)
 AM_LDFLAGS = 
 LDADD = 
 
@@ -724,11 +729,11 @@ TOTAL_M4FLAGS = $(AM_M4FLAGS) $(M4FLAGS) $(XM4FLAGS)
 #--------------------------------------------------------------------------
 PATSOPT_DEPS = 
 PATSCC_DEPS = 
-AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir)
+AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir) \
+	$(ATS2_POPCOUNT_PATSOPTFLAGS)
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
-#libats2_hashmap_la_LIBADD = $(ATS2_SPOOKYHASH_LIBS)
 
 #hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
@@ -1046,6 +1051,7 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 libats2_hashmap_la_SOURCES = hashmap/SATS/hashmap_sats.c \
 	hashmap/DATS/hashmap_dats.c
 libats2_hashmap_la_DEPENDENCIES = 
+libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1885,8 +1891,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 
 @GNU@ include $(top_srcdir)/silent-rules.mk
 @GNU@ -include ats-dependencies/*.mk
-
-#AM_CFLAGS += $(ATS2_SPOOKYHASH_CFLAGS)
 
 clean-local: ats-includes-clean
 

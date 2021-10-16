@@ -665,6 +665,9 @@ ifGNUmake
 GNU_MAKE
 GNU
 REQUIRES_PRIVATE_PKGS
+ATS2_POPCOUNT_PATSOPTFLAGS
+ATS2_POPCOUNT_LIBS
+ATS2_POPCOUNT_CFLAGS
 pkgconfigdir
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
@@ -829,6 +832,9 @@ PKGCONFIG_PATSHOME
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
+ATS2_POPCOUNT_CFLAGS
+ATS2_POPCOUNT_LIBS
+ATS2_POPCOUNT_PATSOPTFLAGS
 GNU_MAKE'
 
 
@@ -1505,6 +1511,12 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
+  ATS2_POPCOUNT_CFLAGS
+              C compiler flags for ATS2_POPCOUNT, overriding pkg-config
+  ATS2_POPCOUNT_LIBS
+              linker flags for ATS2_POPCOUNT, overriding pkg-config
+  ATS2_POPCOUNT_PATSOPTFLAGS
+              value of PATSOPTFLAGS for ats2-popcount, overriding pkg-config
   GNU_MAKE    GNU Make command
 
 Use these variables to override the choices made by `configure' or to help
@@ -14195,6 +14207,108 @@ pkgconfigdir=$with_pkgconfigdir
 #     PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
 #    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
 #])
+
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ATS2_POPCOUNT" >&5
+printf %s "checking for ATS2_POPCOUNT... " >&6; }
+
+if test -n "$ATS2_POPCOUNT_CFLAGS"; then
+    pkg_cv_ATS2_POPCOUNT_CFLAGS="$ATS2_POPCOUNT_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-popcount\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-popcount") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_POPCOUNT_CFLAGS=`$PKG_CONFIG --cflags "ats2-popcount" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$ATS2_POPCOUNT_LIBS"; then
+    pkg_cv_ATS2_POPCOUNT_LIBS="$ATS2_POPCOUNT_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-popcount\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-popcount") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_POPCOUNT_LIBS=`$PKG_CONFIG --libs "ats2-popcount" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        ATS2_POPCOUNT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "ats2-popcount" 2>&1`
+        else
+	        ATS2_POPCOUNT_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "ats2-popcount" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$ATS2_POPCOUNT_PKG_ERRORS" >&5
+
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-popcount was not found.
+See \`config.log' for more details" "$LINENO" 5; }
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-popcount was not found.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	ATS2_POPCOUNT_CFLAGS=$pkg_cv_ATS2_POPCOUNT_CFLAGS
+	ATS2_POPCOUNT_LIBS=$pkg_cv_ATS2_POPCOUNT_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-popcount"
+
+if test -n "$ATS2_POPCOUNT_PATSOPTFLAGS"; then
+    pkg_cv_ATS2_POPCOUNT_PATSOPTFLAGS="$ATS2_POPCOUNT_PATSOPTFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-popcount\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-popcount") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_POPCOUNT_PATSOPTFLAGS=`$PKG_CONFIG --variable="PATSOPTFLAGS" "ats2-popcount" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+ATS2_POPCOUNT_PATSOPTFLAGS=$pkg_cv_ATS2_POPCOUNT_PATSOPTFLAGS
+
+if test "x$ATS2_POPCOUNT_PATSOPTFLAGS" = x""
+then :
+
+fi
+fi
 
 
 

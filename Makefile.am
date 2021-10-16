@@ -58,7 +58,7 @@ DISTCLEANFILES += GNUmakefile
 # We will not be using exceptions.
 AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
 
-AM_CPPFLAGS += -DATS_MEMALLOC_LIBC
+#AM_CPPFLAGS += -DATS_MEMALLOC_LIBC  # <- FIXME: Try to do this only when building tests.
 AM_CPPFLAGS += -I$(builddir)
 AM_CPPFLAGS += -I$(srcdir)
 AM_CPPFLAGS += -I$(builddir)/lib
@@ -66,7 +66,7 @@ AM_CPPFLAGS += -I$(srcdir)/lib
 AM_CPPFLAGS += -I$(PATSHOME)
 AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
 
-#AM_CFLAGS += $(ATS2_SPOOKYHASH_CFLAGS)
+AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
 
 clean-local: ats-includes-clean
 
@@ -100,6 +100,7 @@ PATSCC_DEPS =
 AM_PATSOPTFLAGS =
 AM_PATSOPTFLAGS += -IATS $(builddir)
 AM_PATSOPTFLAGS += -IATS $(srcdir)
+AM_PATSOPTFLAGS += $(ATS2_POPCOUNT_PATSOPTFLAGS)
 
 TOTAL_PATSOPTFLAGS =
 TOTAL_PATSOPTFLAGS += $(AM_PATSOPTFLAGS)
@@ -141,7 +142,7 @@ lib_LTLIBRARIES += libats2-hashmap.la
 
 libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
-#libats2_hashmap_la_LIBADD = $(ATS2_SPOOKYHASH_LIBS)
+libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 
 #hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 

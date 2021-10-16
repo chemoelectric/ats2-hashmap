@@ -40,7 +40,7 @@ vtypedef hashmap_vt =
   [size : int]
   hashmap_vt (key_vt, value_vt, size)
 
-praxi
+prfn                            (* FIXME: PROVE THIS *)
 lemma_hashmap_vt_param :
   {size : int}
   hashmap_vt (size) -<prf> [0 <= size] void
@@ -74,6 +74,14 @@ fun {key_vt : vtype}
 hashmap$key_vt_free : key_vt -> void
 fun {value_vt : vtype}
 hashmap$value_vt_free : value_vt -> void
+
+// FIXME:
+// FIXME:
+// FIXME:
+// FIXME: I need a key equality function.
+// FIXME:
+// FIXME:
+// FIXME:
 
 (********************************************************************)
 

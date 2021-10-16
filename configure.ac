@@ -95,6 +95,11 @@ PKG_INSTALLDIR
 #    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
 #])
 
+PKG_CHECK_MODULES([ATS2_POPCOUNT],[ats2-popcount],
+  [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-popcount"
+   PKG_CHECK_VAR([ATS2_POPCOUNT_PATSOPTFLAGS],[ats2-popcount],[PATSOPTFLAGS])],
+  [AC_MSG_FAILURE([ats2-popcount was not found.])])
+
 AC_SUBST([REQUIRES_PRIVATE_PKGS])
 
 #--------------------------------------------------------------------------
