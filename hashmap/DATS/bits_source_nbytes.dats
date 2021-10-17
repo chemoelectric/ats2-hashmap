@@ -110,9 +110,9 @@ bits_source_nbytes {n} {depth} (n, hash, depth) =
     stadef total_num_bits = char_bit * n
     val total_num_bits : size_t total_num_bits = char_bit * n
 
-    prval _ = mul_gte_gte_gte {char_bit, depth} ()
-    stadef start = char_bit * depth
-    val start : size_t start = char_bit * (g1u2u depth)
+    prval _ = mul_gte_gte_gte {num_bits, depth} ()
+    stadef start = num_bits * depth
+    val start : size_t start = num_bits * (g1u2u depth)
   in
     if total_num_bits <= start then
       BITS_SOURCE_EXHAUSTED
@@ -150,7 +150,10 @@ bits_source_nbytes {n} {depth} (n, hash, depth) =
 
             val u1 = $UNSAFE.cast (hash[succ i])
 
-            val lshift_amount = rshift_amount - (char_bit - num_bits)
+            (* FIXME: Prove this. *)
+            val _ = $effmask_exn assertloc (rshift_amount <= char_bit)
+
+            val lshift_amount = char_bit - rshift_amount
           in
             u2i (mask & (((u0 >> (g1u2u rshift_amount)) & mask) +
                          ((u1 << (g1u2u lshift_amount)))))
