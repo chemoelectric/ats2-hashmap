@@ -33,7 +33,6 @@ staload _ = "hashmap/DATS/bits_source.dats"
 
 prval _ = prop_verify {BITS_SOURCE_NUM_BITS == 6} ()
 
-macdef cast64 = $UNSAFE.cast{uint64}
 macdef castb = $UNSAFE.cast{byte}
 
 fn

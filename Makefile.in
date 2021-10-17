@@ -137,7 +137,8 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint32$(EXEEXT) \
 	tests/test-bits_source_uint64$(EXEEXT) \
 	tests/test-bits_source_uint64_uint64$(EXEEXT) \
-	tests/test-bits_source_8bytes$(EXEEXT)
+	tests/test-bits_source_8bytes$(EXEEXT) \
+	tests/test-bits_source_16bytes$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_gnu_make.m4 \
@@ -233,6 +234,11 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
 list_ats_dependencies_OBJECTS = $(am_list_ats_dependencies_OBJECTS)
+am_tests_test_bits_source_16bytes_OBJECTS =  \
+	tests/test-bits_source_16bytes_dats.$(OBJEXT)
+tests_test_bits_source_16bytes_OBJECTS =  \
+	$(am_tests_test_bits_source_16bytes_OBJECTS)
+tests_test_bits_source_16bytes_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_bits_source_8bytes_OBJECTS =  \
 	tests/test-bits_source_8bytes_dats.$(OBJEXT)
 tests_test_bits_source_8bytes_OBJECTS =  \
@@ -307,6 +313,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
+	tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint16_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint32_dats.Po \
@@ -334,6 +341,7 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
+	$(tests_test_bits_source_16bytes_SOURCES) \
 	$(tests_test_bits_source_8bytes_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
@@ -342,6 +350,7 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint8_SOURCES)
 DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
+	$(tests_test_bits_source_16bytes_SOURCES) \
 	$(tests_test_bits_source_8bytes_SOURCES) \
 	$(tests_test_bits_source_uint16_SOURCES) \
 	$(tests_test_bits_source_uint32_SOURCES) \
@@ -765,7 +774,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-bits_source_uint32.dats \
 	tests/test-bits_source_uint64.dats \
 	tests/test-bits_source_uint64_uint64.dats \
-	tests/test-bits_source_8bytes.dats list-ats-dependencies.dats
+	tests/test-bits_source_8bytes.dats \
+	tests/test-bits_source_16bytes.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/bits_source-parameters_sats.c \
 	hashmap/SATS/bits_source_sats.c \
@@ -793,7 +803,9 @@ CLEANFILES = hashmap/SATS/bits_source-parameters_sats.c \
 	tests/test-bits_source_uint64_uint64 \
 	tests/test-bits_source_uint64_uint64_dats.c \
 	tests/test-bits_source_8bytes \
-	tests/test-bits_source_8bytes_dats.c list-ats-dependencies \
+	tests/test-bits_source_8bytes_dats.c \
+	tests/test-bits_source_16bytes \
+	tests/test-bits_source_16bytes_dats.c list-ats-dependencies \
 	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
@@ -942,6 +954,8 @@ tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uin
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
+tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
+tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1194,6 +1208,12 @@ tests/$(am__dirstamp):
 tests/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tests/$(DEPDIR)
 	@: > tests/$(DEPDIR)/$(am__dirstamp)
+tests/test-bits_source_16bytes_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bits_source_16bytes$(EXEEXT): $(tests_test_bits_source_16bytes_OBJECTS) $(tests_test_bits_source_16bytes_DEPENDENCIES) $(EXTRA_tests_test_bits_source_16bytes_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bits_source_16bytes$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_16bytes_OBJECTS) $(tests_test_bits_source_16bytes_LDADD) $(LIBS)
 tests/test-bits_source_8bytes_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -1270,6 +1290,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint16_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint32_dats.Po@am__quote@ # am--include-marker
@@ -1644,6 +1665,13 @@ tests/test-bits_source_8bytes.log: tests/test-bits_source_8bytes$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-bits_source_16bytes.log: tests/test-bits_source_16bytes$(EXEEXT)
+	@p='tests/test-bits_source_16bytes$(EXEEXT)'; \
+	b='tests/test-bits_source_16bytes'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1926,6 +1954,7 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
+	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint32_dats.Po
@@ -2009,6 +2038,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
+	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint32_dats.Po

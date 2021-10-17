@@ -333,6 +333,13 @@ EXTRA_DIST += tests/test-bits_source_8bytes.dats
 CLEANFILES += tests/test-bits_source_8bytes
 CLEANFILES += tests/test-bits_source_8bytes_dats.c
 
+check_PROGRAMS += tests/test-bits_source_16bytes
+tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
+tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_16bytes.dats
+CLEANFILES += tests/test-bits_source_16bytes
+CLEANFILES += tests/test-bits_source_16bytes_dats.c
+
 #--------------------------------------------------------------------------
 #
 # Computation of dependencies.
