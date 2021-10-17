@@ -1,0 +1,4 @@
+include(`common-macros.m4')
+m4_define(`UINTTYPE',`uint8')
+m4_define(`BITSIZE', `8')
+m4_include(`hashmap/DATS/bits_source_UINTnn.dats.m4')

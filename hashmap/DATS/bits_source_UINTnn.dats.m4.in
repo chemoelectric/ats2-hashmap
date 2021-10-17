@@ -1,0 +1,77 @@
+(* --*- mode: ATS -*--
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+staload "hashmap/SATS/bits_source-parameters.sats"
+staload "hashmap/SATS/bits_source.sats"
+
+%{^
+#undef ats2_hashmap_bits_source_rshift
+#define ats2_hashmap_bits_source_rshift(u, i) ((u) >> (i))
+
+#undef ats2_hashmap_bits_source_land
+#define ats2_hashmap_bits_source_land(u, v) ((u) & (v))
+%}
+
+extern fn
+rshift_`'UINTTYPE {u, i : int}
+                  (u    : UINTTYPE u,
+                   i    : uint i) :<>
+    [v : int] UINTTYPE v = "mac#ats2_hashmap_bits_source_rshift"
+
+extern fn
+land_uint {u, v : int}
+          (u    : uint u,
+           v    : uint v) :<>
+    [w : int | w <= u; w <= v]
+    uint w = "mac#ats2_hashmap_bits_source_land"
+
+infix >>
+overload >> with rshift_`'UINTTYPE of 1000
+infix &
+overload & with land_uint of 1000
+
+divert(-1)
+m4_define(`QUOTIENT',`m4_eval(BITSIZE / @BITS_SOURCE_NUM_BITS@)')
+m4_define(`REMAINDER',`m4_eval(BITSIZE % @BITS_SOURCE_NUM_BITS@)')
+m4_define(`DEPTH_BOUND',`m4_if(REMAINDER,0,QUOTIENT,m4_incr(QUOTIENT))')
+divert`'dnl
+
+implement
+bits_source_`'UINTTYPE {depth} (hash, depth) =
+  if depth < i2u DEPTH_BOUND then
+    let
+      val shift : uint (BITS_SOURCE_NUM_BITS * depth) =
+        (i2u BITS_SOURCE_NUM_BITS) * depth
+      val hash_shifted : [u : int] uint u =
+        $UNSAFE.cast ((g1ofg0 hash) >> shift)
+      val bits = hash_shifted & (i2u BITS_SOURCE_MASK)
+    in
+      u2i bits
+    end
+  else
+    BITS_SOURCE_EXHAUSTED

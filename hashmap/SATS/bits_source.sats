@@ -21,18 +21,24 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
+staload "hashmap/SATS/bits_source-parameters.sats"
+
+(*
 %{#
-#include <hashmap/CATS/bits_source.cats>
+/* #include <hashmap/CATS/bits_source.cats> */ // FIXME GET RID OF THIS // FIXME // FIXME // FIXME // FIXME
 %}
+*)
 
 (********************************************************************)
 
+(*
 stadef bits_source_bits_maxval (num_bits : int, bits : int) : bool =
   (num_bits == 4 && bits <= 15) ||
   (num_bits == 5 && bits <= 31) ||
   (num_bits == 6 && bits <= 63) ||
   (num_bits == 7 && bits <= 127) ||
   (num_bits == 8 && bits <= 255)
+*)
 
 (********************************************************************)
 
@@ -45,30 +51,28 @@ stadef bits_source_bits_maxval (num_bits : int, bits : int) : bool =
 
 #define BITS_SOURCE_EXHAUSTED (~1)
 
-absprop BITS_SOURCE_BITS (num_bits : int, bits : int)
+stadef bits_source_valid_value (bits : int) : bool =
+  BITS_SOURCE_EXHAUSTED <= bits && bits <= BITS_SOURCE_MAXVAL
 
-praxi
-bits_source_bits_make :
-  {num_bits : int}
-  {bits     : int | (~1) <= bits &&
-                    bits_source_bits_maxval (num_bits, bits)}
-  () -<prf> BITS_SOURCE_BITS (num_bits, bits)
+stadef bits_source_valid_bits (bits : int) : bool =
+  0 <= bits && bits <= BITS_SOURCE_MAXVAL
 
-praxi
-bits_source_bits_bounds :
-  {num_bits : int}
-  {bits     : int}
-  BITS_SOURCE_BITS (num_bits, bits) -<prf>
-    [(~1) <= bits && bits_source_bits_maxval (num_bits, bits)]
-    void
+(********************************************************************)
 
 vtypedef
-bits_source_vt (hash_vt  : vt@ype+,
-                num_bits : int) =
-  (* It is convenient to make a bits source a closure. *)
-  [depth : int]
-  (&hash_vt >> _, uint depth) -<cloptr1>
-    [bits : int]
-    @(BITS_SOURCE_BITS (num_bits, bits) | int bits)
+bits_source_vt (hash_vt : vt@ype+) =
+  {depth : int}
+  (&hash_vt >> _, uint depth) ->
+    [bits : int | bits_source_valid_value bits]
+    int bits
+
+fun {hash_vt : vt@ype}
+bits_source : bits_source_vt (hash_vt)
+
+fun bits_source_uint8 : bits_source_vt (uint8)
+fun bits_source_uint16 : bits_source_vt (uint16)
+fun bits_source_uint32 : bits_source_vt (uint32)
+fun bits_source_uint64 : bits_source_vt (uint64)
+fun bits_source_uint64_uint64 : bits_source_vt (@(uint64, uint64))
 
 (********************************************************************)

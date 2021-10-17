@@ -147,20 +147,22 @@ libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 
 #hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/atomic_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/atomic_dats.c
-CLEANFILES += hashmap/SATS/atomic_sats.c
-CLEANFILES += hashmap/DATS/atomic_dats.c
-
-libats2_hashmap_la_SOURCES += hashmap/SATS/spinlock_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/spinlock_dats.c
-CLEANFILES += hashmap/SATS/spinlock_sats.c
-CLEANFILES += hashmap/DATS/spinlock_dats.c
-
-libats2_hashmap_la_SOURCES += hashmap/SATS/initialize_once_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/initialize_once_dats.c
-CLEANFILES += hashmap/SATS/initialize_once_sats.c
-CLEANFILES += hashmap/DATS/initialize_once_dats.c
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#libats2_hashmap_la_SOURCES += hashmap/SATS/atomic_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/atomic_dats.c
+#CLEANFILES += hashmap/SATS/atomic_sats.c
+#CLEANFILES += hashmap/DATS/atomic_dats.c
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/spinlock_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/spinlock_dats.c
+#CLEANFILES += hashmap/SATS/spinlock_sats.c
+#CLEANFILES += hashmap/DATS/spinlock_dats.c
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/initialize_once_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/initialize_once_dats.c
+#CLEANFILES += hashmap/SATS/initialize_once_sats.c
+#CLEANFILES += hashmap/DATS/initialize_once_dats.c
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
 
 #libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
@@ -184,12 +186,30 @@ CLEANFILES += hashmap/DATS/initialize_once_dats.c
 #EXTRA_DIST += hashmap/SATS/print-bitmap.sats
 #EXTRA_DIST += hashmap/DATS/print-bitmap.dats
 
-nobase_nodist_pkginclude_HEADERS += hashmap/CATS/const.cats
+#nobase_nodist_pkginclude_HEADERS += hashmap/CATS/const.cats # FIXME: PROBABLY NOT NEEDED : FIXME FIXME FIXME
 
+libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source-parameters_sats.c
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint8_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint16_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint32_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_dats.c
+CLEANFILES += hashmap/SATS/bits_source-parameters_sats.c
 CLEANFILES += hashmap/SATS/bits_source_sats.c
+CLEANFILES += hashmap/DATS/bits_source_uint8_dats.c
+CLEANFILES += hashmap/DATS/bits_source_uint8.dats
+CLEANFILES += hashmap/DATS/bits_source_uint16_dats.c
+CLEANFILES += hashmap/DATS/bits_source_uint16.dats
+CLEANFILES += hashmap/DATS/bits_source_uint32_dats.c
+CLEANFILES += hashmap/DATS/bits_source_uint32.dats
+CLEANFILES += hashmap/DATS/bits_source_uint64_dats.c
+CLEANFILES += hashmap/DATS/bits_source_uint64.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source-parameters.sats
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
-nobase_dist_pkginclude_HEADERS += hashmap/CATS/bits_source.cats
+hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
 
 #libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint8_dats.c

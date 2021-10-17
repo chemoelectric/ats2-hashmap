@@ -151,12 +151,14 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = common-macros.m4 hashmap/CATS/const.cats \
-	hashmap/CATS/atomic.cats hashmap/SATS/atomic.sats \
-	hashmap/DATS/atomic.dats hashmap/CATS/spinlock.cats \
-	hashmap/SATS/spinlock.sats hashmap/DATS/spinlock.dats \
-	hashmap/SATS/initialize_once.sats \
-	hashmap/DATS/initialize_once.dats list-ats-dependencies.dats
+CONFIG_CLEAN_FILES = common-macros.m4 \
+	hashmap/SATS/bits_source-parameters.sats \
+	hashmap/DATS/bits_source_UINTnn.dats.m4 \
+	hashmap/DATS/bits_source_uint8.dats.m4 \
+	hashmap/DATS/bits_source_uint16.dats.m4 \
+	hashmap/DATS/bits_source_uint32.dats.m4 \
+	hashmap/DATS/bits_source_uint64.dats.m4 \
+	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -192,13 +194,14 @@ am__uninstall_files_from_dir = { \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libats2_hashmap_la_OBJECTS = hashmap/SATS/atomic_sats.lo \
-	hashmap/DATS/atomic_dats.lo hashmap/SATS/spinlock_sats.lo \
-	hashmap/DATS/spinlock_dats.lo \
-	hashmap/SATS/initialize_once_sats.lo \
-	hashmap/DATS/initialize_once_dats.lo \
-	hashmap/SATS/bits_source_sats.lo hashmap/SATS/hashmap_sats.lo \
-	hashmap/DATS/hashmap_dats.lo
+am_libats2_hashmap_la_OBJECTS =  \
+	hashmap/SATS/bits_source-parameters_sats.lo \
+	hashmap/SATS/bits_source_sats.lo \
+	hashmap/DATS/bits_source_uint8_dats.lo \
+	hashmap/DATS/bits_source_uint16_dats.lo \
+	hashmap/DATS/bits_source_uint32_dats.lo \
+	hashmap/DATS/bits_source_uint64_dats.lo \
+	hashmap/SATS/hashmap_sats.lo hashmap/DATS/hashmap_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -222,15 +225,14 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
-	hashmap/DATS/$(DEPDIR)/atomic_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_uint16_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_uint32_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_uint64_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo \
-	hashmap/DATS/$(DEPDIR)/initialize_once_dats.Plo \
-	hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo \
-	hashmap/SATS/$(DEPDIR)/atomic_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo \
-	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
-	hashmap/SATS/$(DEPDIR)/initialize_once_sats.Plo \
-	hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo
+	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -467,18 +469,15 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
-	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
-	$(top_srcdir)/hashmap/CATS/const.cats.in \
-	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
-	$(top_srcdir)/hashmap/DATS/atomic.dats.in \
-	$(top_srcdir)/hashmap/DATS/initialize_once.dats.in \
-	$(top_srcdir)/hashmap/DATS/spinlock.dats.in \
-	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
-	$(top_srcdir)/hashmap/SATS/initialize_once.sats.in \
-	$(top_srcdir)/hashmap/SATS/spinlock.sats.in AUTHORS COPYING \
-	INSTALL README build-aux/compile build-aux/config.guess \
-	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
-	build-aux/ltmain.sh build-aux/missing
+	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in \
+	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
+	AUTHORS COPYING INSTALL README build-aux/compile \
+	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
+	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -514,6 +513,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BITS_SOURCE_EXPT2 = @BITS_SOURCE_EXPT2@
+BITS_SOURCE_MASK = @BITS_SOURCE_MASK@
+BITS_SOURCE_MAXVAL = @BITS_SOURCE_MAXVAL@
+BITS_SOURCE_NUM_BITS = @BITS_SOURCE_NUM_BITS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -575,6 +578,7 @@ PKGCONFIG_PATSHOME = @PKGCONFIG_PATSHOME@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+POPULATION_MAP_T = @POPULATION_MAP_T@
 RANLIB = @RANLIB@
 REQUIRES_PRIVATE_PKGS = @REQUIRES_PRIVATE_PKGS@
 SED = @SED@
@@ -641,6 +645,8 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/const.cats.in # FIXME: PROBABLY NOT NEEDED   FIXME FIXME FIXME FIXME
+
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint8.dats.m4.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint16.dats.m4.in
@@ -670,6 +676,17 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 #
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source.hats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
+
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/atomic.cats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/atomic.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/atomic.dats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/spinlock.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize_once.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize_once.dats.in
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
 
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
@@ -701,27 +718,29 @@ AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-05-03-40-40.structure.reference.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-2021-10-05-04-18-20.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
-	$(top_srcdir)/hashmap/CATS/const.cats.in \
-	$(top_srcdir)/hashmap/CATS/atomic.cats.in \
-	$(top_srcdir)/hashmap/SATS/atomic.sats.in \
-	$(top_srcdir)/hashmap/DATS/atomic.dats.in \
-	$(top_srcdir)/hashmap/CATS/spinlock.cats.in \
-	$(top_srcdir)/hashmap/SATS/spinlock.sats.in \
-	$(top_srcdir)/hashmap/DATS/spinlock.dats.in \
-	$(top_srcdir)/hashmap/SATS/initialize_once.sats.in \
-	$(top_srcdir)/hashmap/DATS/initialize_once.dats.in \
+	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-CLEANFILES = hashmap/SATS/atomic_sats.c hashmap/DATS/atomic_dats.c \
-	hashmap/SATS/spinlock_sats.c hashmap/DATS/spinlock_dats.c \
-	hashmap/SATS/initialize_once_sats.c \
-	hashmap/DATS/initialize_once_dats.c \
-	hashmap/SATS/bits_source_sats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c list-ats-dependencies \
-	list-ats-dependencies_depsprog.c
+CLEANFILES = hashmap/SATS/bits_source-parameters_sats.c \
+	hashmap/SATS/bits_source_sats.c \
+	hashmap/DATS/bits_source_uint8_dats.c \
+	hashmap/DATS/bits_source_uint8.dats \
+	hashmap/DATS/bits_source_uint16_dats.c \
+	hashmap/DATS/bits_source_uint16.dats \
+	hashmap/DATS/bits_source_uint32_dats.c \
+	hashmap/DATS/bits_source_uint32.dats \
+	hashmap/DATS/bits_source_uint64_dats.c \
+	hashmap/DATS/bits_source_uint64.dats \
+	hashmap/SATS/hashmap_sats.c hashmap/DATS/hashmap_dats.c \
+	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = 
 AM_M4FLAGS = 
@@ -742,31 +761,9 @@ LDADD =
 #
 lib_LTLIBRARIES = libats2-hashmap.la
 nobase_dist_pkginclude_HEADERS = hashmap/SATS/bits_source.sats \
-	hashmap/CATS/bits_source.cats hashmap/SATS/hashmap.sats \
-	hashmap/DATS/hashmap.dats
-
-#libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
-#CLEANFILES += hashmap/SATS/array-proofs_sats.c
-#CLEANFILES += hashmap/DATS/array-proofs_dats.c
-#EXTRA_DIST += hashmap/SATS/array-proofs.sats
-#EXTRA_DIST += hashmap/DATS/array-proofs.dats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
-#CLEANFILES += hashmap/SATS/memory_sats.c
-#CLEANFILES += hashmap/DATS/memory_dats.c
-#EXTRA_DIST += hashmap/SATS/memory.sats
-#EXTRA_DIST += hashmap/DATS/memory.dats
-#EXTRA_DIST += hashmap/CATS/memory.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/print-bitmap_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/print-bitmap_dats.c
-#CLEANFILES += hashmap/SATS/print-bitmap_sats.c
-#CLEANFILES += hashmap/DATS/print-bitmap_dats.c
-#EXTRA_DIST += hashmap/SATS/print-bitmap.sats
-#EXTRA_DIST += hashmap/DATS/print-bitmap.dats
-nobase_nodist_pkginclude_HEADERS = hashmap/CATS/const.cats
+	hashmap/SATS/hashmap.sats hashmap/DATS/hashmap.dats
+nobase_nodist_pkginclude_HEADERS =  \
+	hashmap/SATS/bits_source-parameters.sats
 nodist_pkgconfig_DATA = 
 
 #---------------------------------------------------------------------
@@ -793,6 +790,47 @@ TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 
 #hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
+
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#libats2_hashmap_la_SOURCES += hashmap/SATS/atomic_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/atomic_dats.c
+#CLEANFILES += hashmap/SATS/atomic_sats.c
+#CLEANFILES += hashmap/DATS/atomic_dats.c
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/spinlock_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/spinlock_dats.c
+#CLEANFILES += hashmap/SATS/spinlock_sats.c
+#CLEANFILES += hashmap/DATS/spinlock_dats.c
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/initialize_once_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/initialize_once_dats.c
+#CLEANFILES += hashmap/SATS/initialize_once_sats.c
+#CLEANFILES += hashmap/DATS/initialize_once_dats.c
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+
+#libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
+#CLEANFILES += hashmap/SATS/array-proofs_sats.c
+#CLEANFILES += hashmap/DATS/array-proofs_dats.c
+#EXTRA_DIST += hashmap/SATS/array-proofs.sats
+#EXTRA_DIST += hashmap/DATS/array-proofs.dats
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
+#CLEANFILES += hashmap/SATS/memory_sats.c
+#CLEANFILES += hashmap/DATS/memory_dats.c
+#EXTRA_DIST += hashmap/SATS/memory.sats
+#EXTRA_DIST += hashmap/DATS/memory.dats
+#EXTRA_DIST += hashmap/CATS/memory.cats
+#
+#libats2_hashmap_la_SOURCES += hashmap/SATS/print-bitmap_sats.c
+#libats2_hashmap_la_SOURCES += hashmap/DATS/print-bitmap_dats.c
+#CLEANFILES += hashmap/SATS/print-bitmap_sats.c
+#CLEANFILES += hashmap/DATS/print-bitmap_dats.c
+#EXTRA_DIST += hashmap/SATS/print-bitmap.sats
+#EXTRA_DIST += hashmap/DATS/print-bitmap.dats
+
+#nobase_nodist_pkginclude_HEADERS += hashmap/CATS/const.cats # FIXME: PROBABLY NOT NEEDED : FIXME FIXME FIXME
 
 #libats2_hashmap_la_SOURCES += hashmap/SATS/bits-source_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/bits-source-uint8_dats.c
@@ -1036,13 +1074,14 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 #nobase_nodist_pkginclude_HEADERS += hashmap/SATS/uintptr-set.sats
 #nobase_nodist_pkginclude_HEADERS += hashmap/DATS/uintptr-set.dats
 #nobase_nodist_pkginclude_HEADERS += hashmap/CATS/uintptr-set-implementation.cats
-libats2_hashmap_la_SOURCES = hashmap/SATS/atomic_sats.c \
-	hashmap/DATS/atomic_dats.c hashmap/SATS/spinlock_sats.c \
-	hashmap/DATS/spinlock_dats.c \
-	hashmap/SATS/initialize_once_sats.c \
-	hashmap/DATS/initialize_once_dats.c \
-	hashmap/SATS/bits_source_sats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c
+libats2_hashmap_la_SOURCES =  \
+	hashmap/SATS/bits_source-parameters_sats.c \
+	hashmap/SATS/bits_source_sats.c \
+	hashmap/DATS/bits_source_uint8_dats.c \
+	hashmap/DATS/bits_source_uint16_dats.c \
+	hashmap/DATS/bits_source_uint32_dats.c \
+	hashmap/DATS/bits_source_uint64_dats.c \
+	hashmap/SATS/hashmap_sats.c hashmap/DATS/hashmap_dats.c
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
@@ -1091,23 +1130,17 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 common-macros.m4: $(top_builddir)/config.status $(srcdir)/common-macros.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/CATS/const.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/const.cats.in
+hashmap/SATS/bits_source-parameters.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/CATS/atomic.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/atomic.cats.in
+hashmap/DATS/bits_source_UINTnn.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/SATS/atomic.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/atomic.sats.in
+hashmap/DATS/bits_source_uint8.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/DATS/atomic.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/atomic.dats.in
+hashmap/DATS/bits_source_uint16.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/CATS/spinlock.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+hashmap/DATS/bits_source_uint32.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/SATS/spinlock.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/spinlock.sats.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/DATS/spinlock.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/spinlock.dats.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/SATS/initialize_once.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/initialize_once.sats.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-hashmap/DATS/initialize_once.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/initialize_once.dats.in
+hashmap/DATS/bits_source_uint64.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -1210,7 +1243,10 @@ hashmap/SATS/$(am__dirstamp):
 hashmap/SATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/SATS/$(DEPDIR)
 	@: > hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/atomic_sats.lo: hashmap/SATS/$(am__dirstamp) \
+hashmap/SATS/bits_source-parameters_sats.lo:  \
+	hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/bits_source_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS
@@ -1218,18 +1254,14 @@ hashmap/DATS/$(am__dirstamp):
 hashmap/DATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS/$(DEPDIR)
 	@: > hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/DATS/atomic_dats.lo: hashmap/DATS/$(am__dirstamp) \
+hashmap/DATS/bits_source_uint8_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/spinlock_sats.lo: hashmap/SATS/$(am__dirstamp) \
-	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/DATS/spinlock_dats.lo: hashmap/DATS/$(am__dirstamp) \
+hashmap/DATS/bits_source_uint16_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/initialize_once_sats.lo: hashmap/SATS/$(am__dirstamp) \
-	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/DATS/initialize_once_dats.lo: hashmap/DATS/$(am__dirstamp) \
+hashmap/DATS/bits_source_uint32_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/bits_source_sats.lo: hashmap/SATS/$(am__dirstamp) \
-	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_uint64_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/hashmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/hashmap_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1253,15 +1285,14 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/atomic_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_uint16_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_uint32_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_uint64_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/initialize_once_dats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/atomic_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/initialize_once_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -1840,15 +1871,14 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
-	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint16_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint32_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/initialize_once_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/initialize_once_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -1899,15 +1929,14 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
-	-rm -f hashmap/DATS/$(DEPDIR)/atomic_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint16_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint32_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint64_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/initialize_once_dats.Plo
-	-rm -f hashmap/DATS/$(DEPDIR)/spinlock_dats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/atomic_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/initialize_once_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/spinlock_sats.Plo
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1986,6 +2015,10 @@ ats-includes-clean:
 
 @DEPENDENCY_TRACKING_TRUE@@GNU@ include $(top_srcdir)/ats-deptracking-rules.mk
 @DEPENDENCY_TRACKING_FALSE@@GNU@ include $(top_srcdir)/ats-nodeptracking-rules.mk
+hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
 
 #--------------------------------------------------------------------------
 

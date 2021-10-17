@@ -31,6 +31,7 @@ along with this program. If not, see
 staload UN = "prelude/SATS/unsafe.sats"
 
 staload "hashmap/SATS/hashmap.sats"
+staload "hashmap/SATS/bits_source-parameters.sats"
 //staload "hashmap/SATS/bits-source.sats"
 staload "popcount/SATS/popcount.sats"
 
@@ -40,14 +41,6 @@ staload _ = "popcount/DATS/popcount.dats"
 #define :: list_vt_cons
 
 (********************************************************************)
-
-typedef
-population_map_t (population_map : int) =
-  size_t population_map
-typedef
-population_map_t =
-  [population_map : int]
-  size_t population_map
 
 vtypedef
 key_value_vt (key_vt   : vtype+,

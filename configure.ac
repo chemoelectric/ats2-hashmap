@@ -54,6 +54,25 @@ AC_SUBST([ATS_CATS_DIRECTORY],[hashmap/CATS])
 AC_SUBST([ATS_SATS_DIRECTORY],[hashmap/SATS])
 AC_SUBST([ATS_DATS_DIRECTORY],[hashmap/DATS])
 
+# The unsigned integer type to use for population maps.
+AC_SUBST([POPULATION_MAP_T],[uint64])
+
+# The maximum number of bits to take at a time from a hash.
+# Equals log2 of the number of bits in a POPULATION_MAP_T.
+AC_SUBST([BITS_SOURCE_NUM_BITS],[6])
+
+# The maximum numeric value of bits taken from a hash.
+# Equals 2**BITS_SOURCE_NUM_BITS - 1
+AC_SUBST([BITS_SOURCE_MAXVAL],[63])
+
+# A bit mask to use when extracting bits from a hash.
+# Equals 2**BITS_SOURCE_NUM_BITS - 1
+AC_SUBST([BITS_SOURCE_MASK],[63])
+
+# The number of bits in a uint64.
+# Equals 2**BITS_SOURCE_NUM_BITS
+AC_SUBST([BITS_SOURCE_EXPT2],[64])
+
 #AC_ARG_WITH([ats2-spookyhash],
 #  [AS_HELP_STRING([--without-ats2-spookyhash],
 #    [disable support for SpookyHash])],
@@ -231,9 +250,15 @@ StM_CONFIG_MAKEFILES
 
 AC_CONFIG_FILES([common-macros.m4])
 
-AC_CONFIG_FILES([hashmap/CATS/const.cats])
+#AC_CONFIG_FILES([hashmap/CATS/const.cats]) # FIXME: PROBABLY NOT NEEDED   FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
 
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
+AC_CONFIG_FILES([hashmap/SATS/bits_source-parameters.sats])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_UINTnn.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_uint8.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_uint16.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_uint32.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_uint64.dats.m4])
+
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
@@ -260,14 +285,16 @@ AC_CONFIG_FILES([hashmap/CATS/const.cats])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
 
-AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
-AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
-AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
-AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
-AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
-AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
-AC_CONFIG_FILES([hashmap/SATS/initialize_once.sats])
-AC_CONFIG_FILES([hashmap/DATS/initialize_once.dats])
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
+#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
+#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
+#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
+#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
+#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
+#AC_CONFIG_FILES([hashmap/SATS/initialize_once.sats])
+#AC_CONFIG_FILES([hashmap/DATS/initialize_once.dats])
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
 
 #AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 #AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])

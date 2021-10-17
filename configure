@@ -674,6 +674,11 @@ PKG_CONFIG_PATH
 PKG_CONFIG
 PATSOPT
 M4
+BITS_SOURCE_EXPT2
+BITS_SOURCE_MASK
+BITS_SOURCE_MAXVAL
+BITS_SOURCE_NUM_BITS
+POPULATION_MAP_T
 ATS_DATS_DIRECTORY
 ATS_SATS_DIRECTORY
 ATS_CATS_DIRECTORY
@@ -12718,6 +12723,30 @@ ATS_SATS_DIRECTORY=hashmap/SATS
 ATS_DATS_DIRECTORY=hashmap/DATS
 
 
+# The unsigned integer type to use for population maps.
+POPULATION_MAP_T=uint64
+
+
+# The maximum number of bits to take at a time from a hash.
+# Equals log2 of the number of bits in a POPULATION_MAP_T.
+BITS_SOURCE_NUM_BITS=6
+
+
+# The maximum numeric value of bits taken from a hash.
+# Equals 2**BITS_SOURCE_NUM_BITS - 1
+BITS_SOURCE_MAXVAL=63
+
+
+# A bit mask to use when extracting bits from a hash.
+# Equals 2**BITS_SOURCE_NUM_BITS - 1
+BITS_SOURCE_MASK=63
+
+
+# The number of bits in a uint64.
+# Equals 2**BITS_SOURCE_NUM_BITS
+BITS_SOURCE_EXPT2=64
+
+
 #AC_ARG_WITH([ats2-spookyhash],
 #  [AS_HELP_STRING([--without-ats2-spookyhash],
 #    [disable support for SpookyHash])],
@@ -14566,10 +14595,21 @@ printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
 ac_config_files="$ac_config_files common-macros.m4"
 
 
-ac_config_files="$ac_config_files hashmap/CATS/const.cats"
+#AC_CONFIG_FILES([hashmap/CATS/const.cats]) # FIXME: PROBABLY NOT NEEDED   FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+
+ac_config_files="$ac_config_files hashmap/SATS/bits_source-parameters.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits_source_UINTnn.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits_source_uint8.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits_source_uint16.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits_source_uint32.dats.m4"
+
+ac_config_files="$ac_config_files hashmap/DATS/bits_source_uint64.dats.m4"
 
 
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-UINTTYPE.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
@@ -14596,22 +14636,16 @@ ac_config_files="$ac_config_files hashmap/CATS/const.cats"
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
 #AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
 
-ac_config_files="$ac_config_files hashmap/CATS/atomic.cats"
-
-ac_config_files="$ac_config_files hashmap/SATS/atomic.sats"
-
-ac_config_files="$ac_config_files hashmap/DATS/atomic.dats"
-
-ac_config_files="$ac_config_files hashmap/CATS/spinlock.cats"
-
-ac_config_files="$ac_config_files hashmap/SATS/spinlock.sats"
-
-ac_config_files="$ac_config_files hashmap/DATS/spinlock.dats"
-
-ac_config_files="$ac_config_files hashmap/SATS/initialize_once.sats"
-
-ac_config_files="$ac_config_files hashmap/DATS/initialize_once.dats"
-
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
+#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
+#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
+#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
+#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
+#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
+#AC_CONFIG_FILES([hashmap/SATS/initialize_once.sats])
+#AC_CONFIG_FILES([hashmap/DATS/initialize_once.dats])
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
 
 #AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 #AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
@@ -15665,15 +15699,12 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "GNUmakefile") CONFIG_FILES="$CONFIG_FILES GNUmakefile:Makefile.in" ;;
     "common-macros.m4") CONFIG_FILES="$CONFIG_FILES common-macros.m4" ;;
-    "hashmap/CATS/const.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/const.cats" ;;
-    "hashmap/CATS/atomic.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/atomic.cats" ;;
-    "hashmap/SATS/atomic.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/atomic.sats" ;;
-    "hashmap/DATS/atomic.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/atomic.dats" ;;
-    "hashmap/CATS/spinlock.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/spinlock.cats" ;;
-    "hashmap/SATS/spinlock.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/spinlock.sats" ;;
-    "hashmap/DATS/spinlock.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/spinlock.dats" ;;
-    "hashmap/SATS/initialize_once.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/initialize_once.sats" ;;
-    "hashmap/DATS/initialize_once.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/initialize_once.dats" ;;
+    "hashmap/SATS/bits_source-parameters.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/bits_source-parameters.sats" ;;
+    "hashmap/DATS/bits_source_UINTnn.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_UINTnn.dats.m4" ;;
+    "hashmap/DATS/bits_source_uint8.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_uint8.dats.m4" ;;
+    "hashmap/DATS/bits_source_uint16.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_uint16.dats.m4" ;;
+    "hashmap/DATS/bits_source_uint32.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_uint32.dats.m4" ;;
+    "hashmap/DATS/bits_source_uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_uint64.dats.m4" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

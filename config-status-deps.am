@@ -22,7 +22,14 @@
 CONFIG_STATUS_DEPENDENCIES =
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/common-macros.m4.in
 
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/const.cats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/const.cats.in # FIXME: PROBABLY NOT NEEDED   FIXME FIXME FIXME FIXME
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in
 
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-UINTTYPE.dats.m4.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits-source-uint8.dats.m4.in
@@ -54,14 +61,16 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/const.cats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source.hats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/HATS/bits-source-include.hats.in
 
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/atomic.cats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/atomic.sats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/atomic.dats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/spinlock.cats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/spinlock.sats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize_once.sats.in
-CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize_once.dats.in
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/atomic.cats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/atomic.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/atomic.dats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/spinlock.cats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/spinlock.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/spinlock.dats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/initialize_once.sats.in
+#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/initialize_once.dats.in
+# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
 
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
