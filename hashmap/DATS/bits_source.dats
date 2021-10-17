@@ -28,22 +28,8 @@ along with this program. If not, see
 
 staload "hashmap/SATS/bits_source.sats"
 
-implement
-bits_source<uint8> {depth} (hash, depth) =
-  bits_source_uint8 {depth} (hash, depth)
-
-implement
-bits_source<uint16> {depth} (hash, depth) =
-  bits_source_uint16 {depth} (hash, depth)
-
-implement
-bits_source<uint32> {depth} (hash, depth) =
-  bits_source_uint32 {depth} (hash, depth)
-
-implement
-bits_source<uint64> {depth} (hash, depth) =
-  bits_source_uint64 {depth} (hash, depth)
-
-implement
-bits_source<@(uint64, uint64)> {depth} (hash, depth) =
-  bits_source_uint64_uint64 {depth} (hash, depth)
+implement bits_source<uint8> = bits_source_uint8
+implement bits_source<uint16> = bits_source_uint16
+implement bits_source<uint32> = bits_source_uint32
+implement bits_source<uint64> = bits_source_uint64
+implement bits_source<@(uint64, uint64)> = bits_source_uint64_uint64
