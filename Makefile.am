@@ -70,6 +70,7 @@ AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
 AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
 
 clean-local: ats-includes-clean
+clean-local: bits_source_bytes_clean
 
 #---------------------------------------------------------------------
 #
@@ -177,6 +178,23 @@ libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint16_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint32_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_dats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_uint64_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_nbytes_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_1byte_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_2bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_3bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_4bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_5bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_6bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_7bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_8bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_9bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_10bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_11bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_12bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_13bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_14bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_15bytes_implementation_dats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_16bytes_implementation_dats.c
 CLEANFILES += hashmap/SATS/bits_source-parameters_sats.c
 CLEANFILES += hashmap/SATS/bits_source_sats.c
 CLEANFILES += hashmap/DATS/bits_source_dats.c
@@ -190,13 +208,59 @@ CLEANFILES += hashmap/DATS/bits_source_uint64_dats.c
 CLEANFILES += hashmap/DATS/bits_source_uint64.dats
 CLEANFILES += hashmap/DATS/bits_source_uint64_uint64_dats.c
 CLEANFILES += hashmap/DATS/bits_source_uint64_uint64.dats
+CLEANFILES += hashmap/DATS/bits_source_nbytes_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source-parameters.sats
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/bits_source.dats
+EXTRA_DIST += hashmap/DATS/bits_source_nbytes.dats
 hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+
+BUILT_SOURCES += hashmap/DATS/bits_source_1byte_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_2bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_3bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_4bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_5bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_6bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_7bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_8bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_9bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_10bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_11bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_12bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_13bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_14bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_15bytes_implementation.dats
+BUILT_SOURCES += hashmap/DATS/bits_source_16bytes_implementation.dats
+
+.PHONY: bits_source_bytes_clean
+bits_source_bytes_clean:
+	-rm -f hashmap/DATS/bits_source_1byte_implementation{_dats.c,.dats}
+	-rm -f hashmap/DATS/bits_source_*bytes_implementation{_dats.c,.dats}
+
+hashmap/DATS/bits_source_1byte_implementation.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+		'#define ATS_PACKNAME "ats2-hashmap"' \
+		'#define ATS_EXTERN_PREFIX "ats2_hashmap_"' \
+		'#define ATS_DYNLOADFLAG 0' \
+		'staload "hashmap/SATS/bits_source.sats"' \
+		'implement' \
+	    'bits_source_1byte (hash, depth) =' \
+		'  bits_source_nbytes (i2sz 1, hash, depth)' \
+		> $(@)
+
+hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+		'#define ATS_PACKNAME "ats2-hashmap"' \
+		'#define ATS_EXTERN_PREFIX "ats2_hashmap_"' \
+		'#define ATS_DYNLOADFLAG 0' \
+		'staload "hashmap/SATS/bits_source.sats"' \
+		'implement' \
+	    'bits_source_$(*)bytes (hash, depth) =' \
+		'  bits_source_nbytes (i2sz $(*), hash, depth)' \
+		> $(@)
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
@@ -261,6 +325,13 @@ tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64_uint64
 CLEANFILES += tests/test-bits_source_uint64_uint64_dats.c
+
+check_PROGRAMS += tests/test-bits_source_8bytes
+tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
+tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_8bytes.dats
+CLEANFILES += tests/test-bits_source_8bytes
+CLEANFILES += tests/test-bits_source_8bytes_dats.c
 
 #--------------------------------------------------------------------------
 #

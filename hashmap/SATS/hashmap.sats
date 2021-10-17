@@ -21,6 +21,8 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
+staload "hashmap/SATS/bits_source.sats"
+
 (********************************************************************)
 
 absvtype hashmap_vt (key_vt   : vtype+,
@@ -60,13 +62,9 @@ hashmap$hash_function : (!key_vt >> _, &hash_vt? >> hash_vt) -> void
 fun {hash_vt : vt@ype}
 hashmap$hash_vt_free : (&hash_vt >> hash_vt?!) -> void
 
-// FIXME:
-// FIXME:
-// FIXME:
-// FIXME: I need a bits source function to go with the hash function.
-// FIXME:
-// FIXME:
-// FIXME:
+(* A function that returns bits from a hash. *)
+fun {hash_vt : vt@ype}
+hashmap$bits_source_vt : bits_source_vt (hash_vt)
 
 (* Key and value are assumed to be types that get translated to
    C pointers. They can be passed in the straightforward way. *)
