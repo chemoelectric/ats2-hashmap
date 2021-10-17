@@ -226,6 +226,22 @@ am_libats2_hashmap_la_OBJECTS =  \
 	hashmap/DATS/bits_source_14bytes_implementation_dats.lo \
 	hashmap/DATS/bits_source_15bytes_implementation_dats.lo \
 	hashmap/DATS/bits_source_16bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_17bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_18bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_19bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_20bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_21bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_22bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_23bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_24bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_25bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_26bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_27bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_28bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_29bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_30bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_31bytes_implementation_dats.lo \
+	hashmap/DATS/bits_source_32bytes_implementation_dats.lo \
 	hashmap/SATS/hashmap_sats.lo hashmap/DATS/hashmap_dats.lo
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -293,8 +309,24 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/bits_source_14bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_15bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_16bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_17bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_18bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_19bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_1byte_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_20bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_21bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_22bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_23bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_24bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_25bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_26bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_27bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_28bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_29bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_2bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_30bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_31bytes_implementation_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/bits_source_32bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_3bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_4bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_5bytes_implementation_dats.Plo \
@@ -823,7 +855,23 @@ BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
 	hashmap/DATS/bits_source_13bytes_implementation.dats \
 	hashmap/DATS/bits_source_14bytes_implementation.dats \
 	hashmap/DATS/bits_source_15bytes_implementation.dats \
-	hashmap/DATS/bits_source_16bytes_implementation.dats
+	hashmap/DATS/bits_source_16bytes_implementation.dats \
+	hashmap/DATS/bits_source_17bytes_implementation.dats \
+	hashmap/DATS/bits_source_18bytes_implementation.dats \
+	hashmap/DATS/bits_source_19bytes_implementation.dats \
+	hashmap/DATS/bits_source_20bytes_implementation.dats \
+	hashmap/DATS/bits_source_21bytes_implementation.dats \
+	hashmap/DATS/bits_source_22bytes_implementation.dats \
+	hashmap/DATS/bits_source_23bytes_implementation.dats \
+	hashmap/DATS/bits_source_24bytes_implementation.dats \
+	hashmap/DATS/bits_source_25bytes_implementation.dats \
+	hashmap/DATS/bits_source_26bytes_implementation.dats \
+	hashmap/DATS/bits_source_27bytes_implementation.dats \
+	hashmap/DATS/bits_source_28bytes_implementation.dats \
+	hashmap/DATS/bits_source_29bytes_implementation.dats \
+	hashmap/DATS/bits_source_30bytes_implementation.dats \
+	hashmap/DATS/bits_source_31bytes_implementation.dats \
+	hashmap/DATS/bits_source_32bytes_implementation.dats
 AM_M4FLAGS = 
 
 # We will not be using exceptions.
@@ -939,6 +987,22 @@ libats2_hashmap_la_SOURCES =  \
 	hashmap/DATS/bits_source_14bytes_implementation_dats.c \
 	hashmap/DATS/bits_source_15bytes_implementation_dats.c \
 	hashmap/DATS/bits_source_16bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_17bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_18bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_19bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_20bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_21bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_22bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_23bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_24bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_25bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_26bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_27bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_28bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_29bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_30bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_31bytes_implementation_dats.c \
+	hashmap/DATS/bits_source_32bytes_implementation_dats.c \
 	hashmap/SATS/hashmap_sats.c hashmap/DATS/hashmap_dats.c
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
@@ -1191,6 +1255,54 @@ hashmap/DATS/bits_source_15bytes_implementation_dats.lo:  \
 hashmap/DATS/bits_source_16bytes_implementation_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_17bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_18bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_19bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_20bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_21bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_22bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_23bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_24bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_25bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_26bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_27bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_28bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_29bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_30bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_31bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/bits_source_32bytes_implementation_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/hashmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/hashmap_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1270,8 +1382,24 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_14bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_15bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_16bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_17bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_18bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_19bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_1byte_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_20bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_21bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_22bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_23bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_24bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_25bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_26bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_27bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_28bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_29bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_2bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_30bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_31bytes_implementation_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_32bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_3bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_4bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_5bytes_implementation_dats.Plo@am__quote@ # am--include-marker
@@ -1934,8 +2062,24 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_14bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_15bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_16bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_17bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_18bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_19bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_1byte_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_20bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_21bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_22bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_23bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_24bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_25bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_26bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_27bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_28bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_29bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_2bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_30bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_31bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_32bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_3bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_4bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_5bytes_implementation_dats.Plo
@@ -2018,8 +2162,24 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_14bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_15bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_16bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_17bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_18bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_19bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_1byte_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_20bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_21bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_22bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_23bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_24bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_25bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_26bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_27bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_28bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_29bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_2bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_30bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_31bytes_implementation_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_32bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_3bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_4bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_5bytes_implementation_dats.Plo
