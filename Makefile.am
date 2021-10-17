@@ -227,74 +227,33 @@ TESTS += $(check_PROGRAMS)
 
 check_PROGRAMS =
 
-#check_PROGRAMS += tests/test-bits-source-uint16
-#tests_test_bits_source_uint16_SOURCES = tests/test-bits-source-uint16_dats.c
-#tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bits-source-uint16.dats
-#CLEANFILES += tests/test-bits-source-uint16
-#CLEANFILES += tests/test-bits-source-uint16_dats.c
-#
-#check_PROGRAMS += tests/test-bits-source-uint32
-#tests_test_bits_source_uint32_SOURCES = tests/test-bits-source-uint32_dats.c
-#tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bits-source-uint32.dats
-#CLEANFILES += tests/test-bits-source-uint32
-#CLEANFILES += tests/test-bits-source-uint32_dats.c
-#
-#check_PROGRAMS += tests/test-bits-source-uint64
-#tests_test_bits_source_uint64_SOURCES = tests/test-bits-source-uint64_dats.c
-#tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bits-source-uint64.dats
-#CLEANFILES += tests/test-bits-source-uint64
-#CLEANFILES += tests/test-bits-source-uint64_dats.c
-#
-#check_PROGRAMS += tests/test-bits-source-uint64-uint64
-#tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits-source-uint64-uint64_dats.c
-#tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
-#CLEANFILES += tests/test-bits-source-uint64-uint64.dats
-#CLEANFILES += tests/test-bits-source-uint64-uint64
-#CLEANFILES += tests/test-bits-source-uint64-uint64_dats.c
-#
-#if UINTPTR_IS_UINT64
-#check_PROGRAMS += tests/test-bits-source-uintptr
-#tests_test_bits_source_uintptr_SOURCES = tests/test-bits-source-uintptr_dats.c
-#tests_test_bits_source_uintptr_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bits-source-uintptr.dats
-#CLEANFILES += tests/test-bits-source-uintptr
-#CLEANFILES += tests/test-bits-source-uintptr_dats.c
-#endif UINTPTR_IS_UINT64
-#
-#check_PROGRAMS += tests/test-bswap
-#tests_test_bswap_SOURCES = tests/test-bswap_dats.c
-#tests_test_bswap_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bswap.dats
-#CLEANFILES += tests/test-bswap
-#CLEANFILES += tests/test-bswap_dats.c
-#
-#check_PROGRAMS += tests/test-bswap-on-little-endian
-#tests_test_bswap_on_little_endian_SOURCES = tests/test-bswap-on-little-endian_dats.c
-#tests_test_bswap_on_little_endian_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bswap-on-little-endian.dats
-#CLEANFILES += tests/test-bswap-on-little-endian
-#CLEANFILES += tests/test-bswap-on-little-endian_dats.c
-#
-#check_PROGRAMS += tests/test-bswap-on-big-endian
-#tests_test_bswap_on_big_endian_SOURCES = tests/test-bswap-on-big-endian_dats.c
-#tests_test_bswap_on_big_endian_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-bswap-on-big-endian.dats
-#CLEANFILES += tests/test-bswap-on-big-endian
-#CLEANFILES += tests/test-bswap-on-big-endian_dats.c
-#
-#check_PROGRAMS += tests/test-uintptr-set
-#tests_test_uintptr_set_SOURCES = tests/test-uintptr-set_dats.c
-#tests_test_uintptr_set_LDADD = $(lib_LTLIBRARIES)
-#EXTRA_DIST += tests/test-uintptr-set.dats
-#CLEANFILES += tests/test-uintptr-set
-#CLEANFILES += tests/test-uintptr-set_dats.c
-#
-#.PHONY: structure-test-clean
-#structure-test-clean:
-#	-rm -f tests/*.structure
+check_PROGRAMS += tests/test-bits_source_uint8
+tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
+tests_test_bits_source_uint8_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_uint8.dats
+CLEANFILES += tests/test-bits_source_uint8
+CLEANFILES += tests/test-bits_source_uint8_dats.c
+
+check_PROGRAMS += tests/test-bits_source_uint16
+tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
+tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_uint16.dats
+CLEANFILES += tests/test-bits_source_uint16
+CLEANFILES += tests/test-bits_source_uint16_dats.c
+
+check_PROGRAMS += tests/test-bits_source_uint32
+tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
+tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_uint32.dats
+CLEANFILES += tests/test-bits_source_uint32
+CLEANFILES += tests/test-bits_source_uint32_dats.c
+
+check_PROGRAMS += tests/test-bits_source_uint64
+tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
+tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_uint64.dats
+CLEANFILES += tests/test-bits_source_uint64
+CLEANFILES += tests/test-bits_source_uint64_dats.c
 
 #--------------------------------------------------------------------------
 #
