@@ -23,9 +23,6 @@ along with this program. If not, see
 
 #define ATS_DYNLOADFLAG 0
 
-#include "share/atspre_define.hats"
-#include "share/atspre_staload.hats"
-
 staload "hashmap/SATS/bits_source.sats"
 
 implement bits_source<uint8> = bits_source_uint8

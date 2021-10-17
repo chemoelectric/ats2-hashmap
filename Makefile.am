@@ -255,6 +255,13 @@ EXTRA_DIST += tests/test-bits_source_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64
 CLEANFILES += tests/test-bits_source_uint64_dats.c
 
+check_PROGRAMS += tests/test-bits_source_uint64_uint64
+tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
+tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
+CLEANFILES += tests/test-bits_source_uint64_uint64
+CLEANFILES += tests/test-bits_source_uint64_uint64_dats.c
+
 #--------------------------------------------------------------------------
 #
 # Computation of dependencies.
