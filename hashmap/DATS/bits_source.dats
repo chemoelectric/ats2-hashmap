@@ -18,31 +18,32 @@ along with this program. If not, see
 
 *)
 
-#undef ATS_PACKNAME
-#define ATS_PACKNAME "@ATS_PACKNAME@"
-
-#undef ATS_EXTERN_PREFIX
-#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+#define ATS_PACKNAME "ats2-hashmap"
+#define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
 #define ATS_DYNLOADFLAG 0
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "@ATS_SATS_DIRECTORY@/atomic.sats"
+staload "hashmap/SATS/bits_source.sats"
 
-implement {}
-atomic_load_acquire_int_ref (a) =
-  let
-    val p = atomic_int_ref2ptr a
-  in
-    atomic_load_acquire_int_ptr p
-  end
+implement
+bits_source<uint8> {depth} (hash, depth) =
+  bits_source_uint8 {depth} (hash, depth)
 
-implement {}
-atomic_store_release_int_ref (a, value) =
-  let
-    val p = atomic_int_ref2ptr a
-  in
-    atomic_store_release_int_ptr (p, value)
-  end
+implement
+bits_source<uint16> {depth} (hash, depth) =
+  bits_source_uint16 {depth} (hash, depth)
+
+implement
+bits_source<uint32> {depth} (hash, depth) =
+  bits_source_uint32 {depth} (hash, depth)
+
+implement
+bits_source<uint64> {depth} (hash, depth) =
+  bits_source_uint64 {depth} (hash, depth)
+
+implement
+bits_source<@(uint64, uint64)> {depth} (hash, depth) =
+  bits_source_uint64_uint64 {depth} (hash, depth)

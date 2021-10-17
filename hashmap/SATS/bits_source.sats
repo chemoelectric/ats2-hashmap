@@ -23,23 +23,6 @@ along with this program. If not, see
 
 staload "hashmap/SATS/bits_source-parameters.sats"
 
-(*
-%{#
-/* #include <hashmap/CATS/bits_source.cats> */ // FIXME GET RID OF THIS // FIXME // FIXME // FIXME // FIXME
-%}
-*)
-
-(********************************************************************)
-
-(*
-stadef bits_source_bits_maxval (num_bits : int, bits : int) : bool =
-  (num_bits == 4 && bits <= 15) ||
-  (num_bits == 5 && bits <= 31) ||
-  (num_bits == 6 && bits <= 63) ||
-  (num_bits == 7 && bits <= 127) ||
-  (num_bits == 8 && bits <= 255)
-*)
-
 (********************************************************************)
 
 (*

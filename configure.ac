@@ -129,48 +129,9 @@ AC_SUBST([REQUIRES_PRIVATE_PKGS])
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
-#AC_CHECK_SIZEOF([unsigned short int])
-#AC_CHECK_SIZEOF([unsigned int])
-#AC_CHECK_SIZEOF([unsigned long int])
-#AC_CHECK_SIZEOF([unsigned long long int])
-#AC_CHECK_SIZEOF([size_t])
-#AC_CHECK_SIZEOF([uintptr_t])
-#AC_CHECK_SIZEOF([uint8_t])
-#AC_CHECK_SIZEOF([uint16_t])
-#AC_CHECK_SIZEOF([uint32_t])
-#AC_CHECK_SIZEOF([uint64_t])
-#
-#AC_CHECK_TYPE([unsigned __int128])
-#if test x"${ac_cv_type_unsigned___int128}" = xyes ; then
-#  HAVE_UINT128=1
-#  AC_CHECK_SIZEOF([unsigned __int128])
-#else
-#  HAVE_UINT128=0
-#fi
-#AC_SUBST([HAVE_UINT128])
-#
-#AM_CONDITIONAL([UINTPTR_IS_UINT64],
-#  [test ${ac_cv_sizeof_uintptr_t} -eq ${ac_cv_sizeof_uint64_t}])
-#
-#BIGENDIAN=0
-#LITTLEENDIAN=1
-#UNIVERSALENDIAN=2
-#AC_C_BIGENDIAN([ENDIANNESS=${BIGENDIAN}],
-#               [ENDIANNESS=${LITTLEENDIAN}],
-#               [AC_MSG_FAILURE([I cannot determine the platform's endianness])],
-#               [ENDIANNESS=${UNIVERSALENDIAN}])
-#AC_SUBST([BIGENDIAN])
-#AC_SUBST([LITTLEENDIAN])
-#AC_SUBST([UNIVERSALENDIAN])
-#AC_SUBST([ENDIANNESS])
-
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
-
-#AX_GCC_BUILTIN([__builtin_bswap16])
-#AX_GCC_BUILTIN([__builtin_bswap32])
-#AX_GCC_BUILTIN([__builtin_bswap64])
 
 #--------------------------------------------------------------------------
 
@@ -185,72 +146,7 @@ StM_CONFIG_MAKEFILES
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
 
-#AC_SUBST([SIZEOF_USINT],[${ac_cv_sizeof_unsigned_short_int}])
-#AC_SUBST([SIZEOF_UINT],[${ac_cv_sizeof_unsigned_int}])
-#AC_SUBST([SIZEOF_ULINT],[${ac_cv_sizeof_unsigned_long_int}])
-#AC_SUBST([SIZEOF_ULLINT],[${ac_cv_sizeof_unsigned_long_long_int}])
-#AC_SUBST([SIZEOF_SIZE],[${ac_cv_sizeof_size_t}])
-#AC_SUBST([SIZEOF_UINTPTR],[${ac_cv_sizeof_uintptr_t}])
-#AC_SUBST([SIZEOF_UINT8],[${ac_cv_sizeof_uint8_t}])
-#AC_SUBST([SIZEOF_UINT16],[${ac_cv_sizeof_uint16_t}])
-#AC_SUBST([SIZEOF_UINT32],[${ac_cv_sizeof_uint32_t}])
-#AC_SUBST([SIZEOF_UINT64],[${ac_cv_sizeof_uint64_t}])
-#
-#AC_SUBST([BITSIZEOF_USINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int}`])
-#AC_SUBST([BITSIZEOF_UINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int}`])
-#AC_SUBST([BITSIZEOF_ULINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int}`])
-#AC_SUBST([BITSIZEOF_ULLINT],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int}`])
-#AC_SUBST([BITSIZEOF_SIZE],[`expr 8 '*' ${ac_cv_sizeof_size_t}`])
-#AC_SUBST([BITSIZEOF_UINTPTR],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t}`])
-#AC_SUBST([BITSIZEOF_UINT8],[`expr 8 '*' ${ac_cv_sizeof_uint8_t}`])
-#AC_SUBST([BITSIZEOF_UINT16],[`expr 8 '*' ${ac_cv_sizeof_uint16_t}`])
-#AC_SUBST([BITSIZEOF_UINT32],[`expr 8 '*' ${ac_cv_sizeof_uint32_t}`])
-#AC_SUBST([BITSIZEOF_UINT64],[`expr 8 '*' ${ac_cv_sizeof_uint64_t}`])
-#
-#AC_SUBST([BITSIZEOF_USINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_short_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_ULINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_ULLINT_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_unsigned_long_long_int} '+' 1`])
-#AC_SUBST([BITSIZEOF_SIZE_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_size_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINTPTR_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uintptr_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT8_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint8_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT16_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint16_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT32_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint32_t} '+' 1`])
-#AC_SUBST([BITSIZEOF_UINT64_PLUS_ONE],[`expr 8 '*' ${ac_cv_sizeof_uint64_t} '+' 1`])
-#
-#AC_SUBST([MIN_SIZEOF_BITINDEX],[4])
-#AC_SUBST([MAX_SIZEOF_BITINDEX],[8])
-#
-#AC_SUBST([MAXVALOF_BITINDEX_4],[15])
-#AC_SUBST([MAXVALOF_BITINDEX_5],[31])
-#AC_SUBST([MAXVALOF_BITINDEX_6],[63])
-#AC_SUBST([MAXVALOF_BITINDEX_7],[127])
-#AC_SUBST([MAXVALOF_BITINDEX_8],[255])
-#
-#bits_in_index_of ()
-#{
-#  if test 32 -le $1 ; then
-#    echo 8
-#  elif test 16 -le $1 ; then
-#    echo 7
-#  elif test 8 -le $1 ; then
-#    echo 6
-#  elif test 4 -le $1 ; then
-#    echo 5
-#  elif test 2 -le $1 ; then
-#    echo 4
-#  else
-#    AC_MSG_ERROR([uintptr_t must be at least 2 bytes long])
-#  fi
-#}
-#AC_SUBST([SIZEOF_BITINDEXOF_UINTPTR],[`bits_in_index_of ${ac_cv_sizeof_uintptr_t}`])
-#
-#AC_CONFIG_FILES([hashmap/HATS/config.hats])
-#AC_CONFIG_FILES([hashmap/HATS/bits-source-include.hats])
-
 AC_CONFIG_FILES([common-macros.m4])
-
-#AC_CONFIG_FILES([hashmap/CATS/const.cats]) # FIXME: PROBABLY NOT NEEDED   FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
 
 AC_CONFIG_FILES([hashmap/SATS/bits_source-parameters.sats])
 AC_CONFIG_FILES([hashmap/DATS/bits_source_UINTnn.dats.m4])
@@ -258,44 +154,8 @@ AC_CONFIG_FILES([hashmap/DATS/bits_source_uint8.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits_source_uint16.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits_source_uint32.dats.m4])
 AC_CONFIG_FILES([hashmap/DATS/bits_source_uint64.dats.m4])
-
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-size.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-usint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint.dats.m4])
+AC_CONFIG_FILES([hashmap/DATS/bits_source_uint64_uint64.dats.m4])
 #
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-TYPE-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint8-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint16-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint32-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint128-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uintptr-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-size-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-usint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ulint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-ullint-one-time.dats.m4])
-#AC_CONFIG_FILES([hashmap/DATS/bits-source-uint64-uint64-one-time.dats.m4])
-
-# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
-#AC_CONFIG_FILES([hashmap/CATS/atomic.cats])
-#AC_CONFIG_FILES([hashmap/SATS/atomic.sats])
-#AC_CONFIG_FILES([hashmap/DATS/atomic.dats])
-#AC_CONFIG_FILES([hashmap/CATS/spinlock.cats])
-#AC_CONFIG_FILES([hashmap/SATS/spinlock.sats])
-#AC_CONFIG_FILES([hashmap/DATS/spinlock.dats])
-#AC_CONFIG_FILES([hashmap/SATS/initialize_once.sats])
-#AC_CONFIG_FILES([hashmap/DATS/initialize_once.dats])
-# FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: REMOVE THESE : FIXME FIXME FIXME FIXME FIXME FIXME
-
 #AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 #AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 #
