@@ -358,6 +358,13 @@ EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64_uint64
 CLEANFILES += tests/test-bits_source_uint64_uint64_dats.c
 
+check_PROGRAMS += tests/test-bits_source_1byte
+tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
+tests_test_bits_source_1byte_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-bits_source_1byte.dats
+CLEANFILES += tests/test-bits_source_1byte
+CLEANFILES += tests/test-bits_source_1byte_dats.c
+
 check_PROGRAMS += tests/test-bits_source_8bytes
 tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)

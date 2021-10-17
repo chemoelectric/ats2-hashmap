@@ -46,9 +46,6 @@ staload "hashmap/SATS/bits_source.sats"
 
 #undef ats2_hashmap_bits_source_land
 #define ats2_hashmap_bits_source_land(u, v) ((u) & (v))
-
-#undef ats2_hashmap_bits_source_mul
-#define ats2_hashmap_bits_source_mul(u, v) ((u) & (v))
 %}
 
 (* CHAR_BIT will equal 8. *)
@@ -78,15 +75,6 @@ land_uint {u, v : int}
     uint w = "mac#ats2_hashmap_bits_source_land"
 infix &
 overload & with land_uint of 1000
-
-extern fn
-mul2_size {u, v : int}
-          (u    : size_t u,
-           v    : size_t v) :<>
-    [uv : int]
-    @(MUL(u, v, uv) | size_t uv) = "mac#ats2_hashmap_bits_source_mul"
-implement
-g1uint_mul2<sizeknd> = mul2_size
 
 (********************************************************************)
 
@@ -127,13 +115,8 @@ bits_source_nbytes {n} {depth} (n, hash, depth) =
 
         val u0 : [u0 : int] uint u0 = $UNSAFE.cast (hash[i])
 
-        val [start_truncated : int] (pf_mul | start_truncated) =
-          g1uint_mul2 (char_bit, i)
-        prval _ = mul_elim pf_mul
-
         (* FIXME: Prove this. *)
-        val _ = $effmask_exn assertloc (start_truncated <= start)
-        prval _ = prop_verify {start_truncated <= start} ()
+        val _ = $effmask_exn assertloc (char_bit * i <= start)
 
         val rshift_amount = start - (char_bit * i)
       in
