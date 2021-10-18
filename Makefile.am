@@ -294,6 +294,13 @@ hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
 		'  bits_source_nbytes (i2sz $(*), hash, depth)' \
 		> $(@)
 
+libats2_hashmap_la_SOURCES += hashmap/SATS/population_map_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/population_map_dats.c
+CLEANFILES += hashmap/SATS/population_map_sats.c
+CLEANFILES += hashmap/DATS/population_map_dats.c
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/population_map.sats
+nobase_dist_pkginclude_HEADERS += hashmap/DATS/population_map.dats
+
 libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
 CLEANFILES += hashmap/SATS/hashmap_sats.c
@@ -378,6 +385,13 @@ tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_16bytes.dats
 CLEANFILES += tests/test-bits_source_16bytes
 CLEANFILES += tests/test-bits_source_16bytes_dats.c
+
+check_PROGRAMS += tests/test-population_map
+tests_test_population_map_SOURCES = tests/test-population_map_dats.c
+tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-population_map.dats
+CLEANFILES += tests/test-population_map
+CLEANFILES += tests/test-population_map_dats.c
 
 #--------------------------------------------------------------------------
 #

@@ -113,3 +113,21 @@ lemma_hashmap_vt_param (map) =
   | map_vt_tree _ => ()
 
 (********************************************************************)
+
+implement {hash_vt} {key_vt, value_vt}
+hashmap_include {size} (map, key, value) =
+  case+ map of
+  | ~ map_vt_nil () =>
+    let
+      var hash : hash_vt
+      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+      val bits = hashmap$bits_source<hash_vt> (hash, 0U)
+//      val population_map = ????????
+      val () = hashmap$hash_vt_free<hash_vt> (hash)
+    in
+      map_vt_nil () // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    end
+  | ~ map_vt_tree @{size = size, tree = tree} =>
+    map_vt_tree @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+
+(********************************************************************)

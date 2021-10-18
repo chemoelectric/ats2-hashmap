@@ -112,4 +112,3 @@ fun bits_source_31bytes : bits_source_vt (@[byte][31])
 fun bits_source_32bytes : bits_source_vt (@[byte][32])
 
 (********************************************************************)
-

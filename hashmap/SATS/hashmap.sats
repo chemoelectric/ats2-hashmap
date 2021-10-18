@@ -49,11 +49,12 @@ lemma_hashmap_vt_param :
 
 (********************************************************************)
 
-(* The hash function sets the hash value by reference so a C function
-   can be used without the need for structure return, which has poorly
-   regulated ABI. See also hashmap$hash_vt_free. *)
-fun {key_vt  : vtype}
-    {hash_vt : vt@ype}
+(* The hash function sets the hash value by reference, so that (for
+   example) a C function can be used without the need for structure
+   return, which has poorly regulated ABI; so the hash can be an
+   array; and so on. See also hashmap$hash_vt_free. *)
+fun {hash_vt : vt@ype}
+    {key_vt  : vtype}
 hashmap$hash_function : (!key_vt >> _, &hash_vt? >> hash_vt) -> void
 
 (* This interface for the hash-free function is designed not to
@@ -82,7 +83,8 @@ hashmap$key_eq (key_arg    : !key_vt >> _,
 fun {}
 hashmap () : hashmap_vt (0)
 
-fun {key_vt, value_vt : vtype}
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vtype}
 hashmap_include
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
@@ -92,16 +94,18 @@ hashmap_include
     hashmap_vt (key_vt, value_vt, new_size)
 overload + with hashmap_include of 0
 
-fun {key_vt, value_vt : vtype}
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vtype}
 hashmap_remove
-        {size  : int}
-        (map   : hashmap_vt (key_vt, value_vt, size),
-         key   : !key_vt >> _) :
+        {size : int}
+        (map  : hashmap_vt (key_vt, value_vt, size),
+         key  : !key_vt >> _) :
     #[new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
 overload - with hashmap_remove of 0
 
-fun {key_vt, value_vt : vtype}
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vtype}
 hashmap_find
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
