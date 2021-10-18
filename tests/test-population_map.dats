@@ -36,6 +36,7 @@ macdef bits2map = bits_to_population_map
 
 fn
 test_bits_to_population_map () : void =
+  (* The following also tests "=" *)
   {
     val _ = assertloc (i2sz 8 <= sizeof<population_map_t>)
     val _ = assertloc (bits2map (0) = castpop 0x0000000000000001ULL)
@@ -104,8 +105,110 @@ test_bits_to_population_map () : void =
     val _ = assertloc (bits2map (63) = castpop 0x8000000000000000ULL)
   }
 
+fn
+test_neq () : void =
+  (* This also does some testing of "=" *)
+  let
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        var j : uint
+      in
+        for (j := 0U; j <= 10000U; j := succ j)
+          begin
+            if i = j then
+              assertloc (castpop i = castpop j)
+            else
+              begin
+                assertloc (castpop i <> castpop j);
+                assertloc (castpop i != castpop j)
+              end
+          end
+      end
+  end
+
+fn
+test_lnot () : void =
+  (* This also does some checking of "land". *)
+  let
+    val mask = 0xFFFFU
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        val ii : population_map_t = castpop i
+        val maskmask : population_map_t = castpop mask
+      in
+        assertloc (castpop ((lnot i) land mask)
+                      = ((lnot ii) land maskmask))
+      end
+  end
+
+fn
+test_land () : void =
+  let
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        var j : uint
+      in
+        for (j := 0U; j <= 10000U; j := succ j)
+          let
+            val ii : population_map_t = castpop i
+            val jj : population_map_t = castpop j
+          in
+            assertloc (castpop (i land j) = (ii land jj))
+          end
+      end
+  end
+
+fn
+test_lor () : void =
+  let
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        var j : uint
+      in
+        for (j := 0U; j <= 10000U; j := succ j)
+          let
+            val ii : population_map_t = castpop i
+            val jj : population_map_t = castpop j
+          in
+            assertloc (castpop (i lor j) = (ii lor jj))
+          end
+      end
+  end
+
+fn
+test_lxor () : void =
+  let
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        var j : uint
+      in
+        for (j := 0U; j <= 10000U; j := succ j)
+          let
+            val ii : population_map_t = castpop i
+            val jj : population_map_t = castpop j
+          in
+            assertloc (castpop (i lxor j) = (ii lxor jj))
+          end
+      end
+  end
+
 implement
 main0 () =
   {
     val _ = test_bits_to_population_map ()
+    val _ = test_neq ()
+    val _ = test_lnot ()
+    val _ = test_land ()
+    val _ = test_lor ()
+    val _ = test_lxor ()
   }

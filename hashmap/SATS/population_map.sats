@@ -59,6 +59,7 @@ population_map_lnot
         {map : int}
         (map : population_map_t map) :<>
     population_map_t
+overload lnot with population_map_lnot of 100
 
 (* Bitwise AND. *)
 fun {}
@@ -67,6 +68,7 @@ population_map_land
         (map1 : population_map_t map1,
          map2 : population_map_t map2) :<>
     population_map_t
+overload land with population_map_land of 100
 
 (* Bitwise inclusive OR. *)
 fun {}
@@ -75,6 +77,7 @@ population_map_lor
         (map1 : population_map_t map1,
          map2 : population_map_t map2) :<>
     population_map_t
+overload lor with population_map_lor of 100
 
 (* Bitwise XOR. *)
 fun {}
@@ -83,5 +86,6 @@ population_map_lxor
         (map1 : population_map_t map1,
          map2 : population_map_t map2) :<>
     population_map_t
+overload lxor with population_map_lxor of 100
 
 (********************************************************************)

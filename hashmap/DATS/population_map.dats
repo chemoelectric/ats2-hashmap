@@ -44,6 +44,9 @@ staload "hashmap/SATS/population_map.sats"
 #undef ats2_hashmap_population_map_neq
 #define ats2_hashmap_population_map_neq(u, v) ((u) != (v))
 
+#undef ats2_hashmap_population_map_lnot
+#define ats2_hashmap_population_map_lnot(u) (~(u))
+
 #undef ats2_hashmap_population_map_land
 #define ats2_hashmap_population_map_land(u, v) ((u) & (v))
 
