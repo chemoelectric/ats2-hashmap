@@ -42,10 +42,10 @@ vtypedef hashmap_vt =
   [size : int]
   hashmap_vt (key_vt, value_vt, size)
 
-prfn                            (* FIXME: PROVE THIS *)
+prfn
 lemma_hashmap_vt_param :
   {size : int}
-  hashmap_vt (size) -<prf> [0 <= size] void
+  (!hashmap_vt (size) >> _) -<prf> [0 <= size] void
 
 (********************************************************************)
 
@@ -64,7 +64,7 @@ hashmap$hash_vt_free : (&hash_vt >> hash_vt?!) -> void
 
 (* A function that returns bits from a hash. *)
 fun {hash_vt : vt@ype}
-hashmap$bits_source_vt : bits_source_vt (hash_vt)
+hashmap$bits_source : bits_source_vt (hash_vt)
 
 (* Key and value are assumed to be types that get translated to
    C pointers. They can be passed in the straightforward way. *)
@@ -83,31 +83,51 @@ fun {}
 hashmap () : hashmap_vt (0)
 
 fun {key_vt, value_vt : vtype}
-hashmap_include_element
+hashmap_include
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
          key   : !key_vt >> _,
          value : !value_vt >> _) :
     [new_size : int | new_size == size || new_size == size + 1]
     hashmap_vt (key_vt, value_vt, new_size)
-overload + with hashmap_include_element of 0
+overload + with hashmap_include of 0
 
 fun {key_vt, value_vt : vtype}
-hashmap_remove_element
+hashmap_remove
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
          key   : !key_vt >> _) :
     #[new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
-overload - with hashmap_remove_element of 0
+overload - with hashmap_remove of 0
 
 fun {key_vt, value_vt : vtype}
-hashmap_find_element
+hashmap_find
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
          key  : !key_vt >> _) :
     Option_vt (value_vt)
-overload [] with hashmap_find_element of 0
+overload [] with hashmap_find of 0
+
+fun {key_vt, value_vt : vtype}
+hashmap_pairs
+        {size : int}
+        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    list_vt (@(key_vt, value_vt), size)
+
+fun {key_vt : vtype}
+hashmap_keys
+        {size     : int}
+        {value_vt : vtype}
+        (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    list_vt (key_vt, size)
+
+fun {value_vt : vtype}
+hashmap_values
+        {size   : int}
+        {key_vt : vtype}
+        (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    list_vt (value_vt, size)
 
 fun {}
 hashmap_free (map : hashmap_vt) : void

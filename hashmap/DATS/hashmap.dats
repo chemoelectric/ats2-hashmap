@@ -105,3 +105,11 @@ hashmap_vt (key_vt, value_vt, size) =
   map_vt (key_vt, value_vt, size)
 
 (********************************************************************)
+
+primplement
+lemma_hashmap_vt_param (map) =
+  case+ map of
+  | map_vt_nil () => ()
+  | map_vt_tree _ => ()
+
+(********************************************************************)
