@@ -23,8 +23,6 @@ along with this program. If not, see
 
 #define ATS_DYNLOADFLAG 0
 
-(* The following code assumes bytes are 8 bits. *)
-
 (********************************************************************)
 
 #include "share/atspre_define.hats"
