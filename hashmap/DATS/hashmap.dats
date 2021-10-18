@@ -108,7 +108,7 @@ map_vt (key_vt            : vtype+,
         size              : int) =
 | map_vt_nil (key_vt, value_vt, 0) of ()
 | {1 <= size}
-  map_vt_tree (key_vt, value_vt, size) of
+  map_vt_root (key_vt, value_vt, size) of
     @{
       size = size_t size,
       tree = node_array_vt (key_vt, value_vt)
@@ -124,7 +124,7 @@ primplement
 lemma_hashmap_vt_param (map) =
   case+ map of
   | map_vt_nil () => ()
-  | map_vt_tree _ => ()
+  | map_vt_root _ => ()
 
 (********************************************************************)
 
@@ -138,19 +138,19 @@ implement {}
 hashmap_size (map) =
   case+ map of
   | map_vt_nil () => i2sz 0
-  | map_vt_tree @{size = size, tree = _} => size
+  | map_vt_root @{size = size, tree = _} => size
 
 implement {}
 hashmap_is_empty (map) =
   case+ map of
   | map_vt_nil () => true
-  | map_vt_tree _ => false
+  | map_vt_root _ => false
 
 implement {}
 hashmap_isnot_empty (map) =
   case+ map of
   | map_vt_nil () => false
-  | map_vt_tree _ => true
+  | map_vt_root _ => true
 
 (********************************************************************)
 
@@ -214,27 +214,180 @@ hashmap_include {size} (map, key, value) =
           p_array = p_array
         }
     in
-      map_vt_tree @{size = i2sz 1, tree = tree}
+      map_vt_root @{size = i2sz 1, tree = tree}
     end
-  | ~ map_vt_tree @{size = size, tree = tree} =>
+  | ~ map_vt_root @{size = size, tree = tree} =>
     let
 val _ = $UN.castvwtp0{void} key
 val _ = $UN.castvwtp0{void} value
     in
-      map_vt_tree @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      map_vt_root @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
     end
 
 (********************************************************************)
 
+(*
+fn {}
+get_leaf_value
+        {length    : int | length <= bitsizeof (uintptr)}
+        {key       : int}
+        {bits      : int | valid_unexhausted_bits (NUM_BITS, bits)}
+        (node      : !node_vt (length) >> _,
+         bits      : int bits,
+         key_test  : !key_test_vt >> _,
+         key       : uintptr key,
+         is_stored : &bool? >> bool is_stored,
+         is_last   : &bool? >> bool is_last,
+         value     : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[is_last : bool | is_stored || is_last]
+    #[key_value : int | is_stored || key_value == 0]
+    void =
+  let
+    prval _ = lemma_node_vt_param {length} node
+    prval _ = prop_verify {0 < length} ()
+
+    val population_map = get_population_map<> (node)
+    val bit_selection_mask = (one << bits)
+    val entry_is_stored =
+      bit_is_set<> (population_map, bit_selection_mask)
+  in
+    if entry_is_stored then
+      let
+        val leaf_map = get_leaf_map<> (node)
+        val entry_is_leaf =
+          bit_is_set<> (leaf_map, bit_selection_mask)
+
+        val [index : int] @(_ | index) =
+          get_popcount_low_bits (g1ofg0 population_map, i2u bits)
+        prval _ = $UN.prop_assert {index < length} ()
+
+        val entry = node[index]
+      in
+        if entry_is_leaf then
+          let
+            val chaining_map = get_chaining_map<> (node)
+            val entry_is_chain =
+              bit_is_set<> (chaining_map, bit_selection_mask)
+          in
+            if entry_is_chain then
+              let
+                fun
+                search {n : int | 0 <= n} .<n>.
+                       (key_test : !key_test_vt >> _,
+                        key      : uintptr key,
+                        lst      : !list_vt (uintptr, n) >> _) :
+                    @(bool, uintptr) =
+                  case+ lst of
+                  | NIL => @(false, zero)
+                  | @ head :: tail =>
+                    let
+                      val key_matches = key_test (key, head)
+                    in
+                      if key_matches then
+                        let
+                          val value = head
+                          prval _ = fold@ lst
+                        in
+                          @(true, value)
+                        end
+                      else
+                        let
+                          val result =
+                            search {n - 1} (key_test, key, tail)
+                          prval _ = fold@ lst
+                        in
+                          result
+                        end
+                    end
+                val lst =
+                  $UN.castvwtp0{List_vt uintptr} (uintptr2ptr entry)
+                prval _ = lemma_list_vt_param lst
+                val @(is_found, pointer) = search (key_test, key, lst)
+                prval _ = $UN.castvwtp0{Ptr} lst
+              in
+                if is_found then
+                  (* Success. *)
+                  begin
+                    is_last := true;
+                    is_stored := true;
+                    value := g1ofg0 pointer
+                  end
+                else
+                  (* No match for the key is found. *)
+                  begin
+                    is_last := true;
+                    is_stored := false;
+                    value := zero
+                  end
+              end
+            else
+              let
+                val key_matches = key_test (key, entry)
+              in
+                if key_matches then
+                  (* Success. *)
+                  begin
+                    is_last := true;
+                    is_stored := true;
+                    value := g1ofg0 entry
+                  end
+                else
+                  (* The entry does not match the key. *)
+                  begin
+                    is_last := true;
+                    is_stored := false;
+                    value := zero
+                  end
+              end
+          end
+        else
+          (* The entry is a link to a subnode. *)
+          begin
+            is_last := false;
+            is_stored := true;
+            value := g1ofg0 entry
+          end
+      end
+    else
+      (* There is no such entry. *)
+      begin
+        is_last := true;
+        is_stored := false;
+        value := zero
+      end
+  end
+  *)
+
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vtype}
-find_entry {depth     : int}
-           (hash      : &hash_vt >> _,
-            key       : !key_vt >> _,
-            depth     : uint depth) : Option_vt (value_vt) =
+find_entry {bits  : int | bits_source_valid_value bits}
+           {depth : int}
+           (hash  : &hash_vt >> _,
+            bits  : int bits,
+            tree  : !node_array_vt (key_vt, value_vt) >> _,
+            key   : !key_vt >> _,
+            depth : uint depth) : Option_vt (value_vt) =
   let
+    val [bits : int] bits = hashmap$bits_source<hash_vt> (hash, 0U)
   in
-    None_vt () // // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    if bits = BITS_SOURCE_EXHAUSTED then
+      None_vt ()
+    else
+      let
+        prval _ = prop_verify {bits_source_valid_bits bits} ()
+        val mask = bits_to_population_map bits
+        val there_is_an_entry =
+          ((tree.population_map) land mask) <> i2popmap 0
+      in
+        if there_is_an_entry then
+          let
+          in
+            None_vt () // // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
+        else
+          None_vt ()
+      end
   end
 (*
 {length       : int | length <= bitsizeof (uintptr)}
@@ -285,19 +438,23 @@ find_entry {depth     : int}
 *)
 
 implement {hash_vt} {key_vt, value_vt}
-hashmap_find {size} (map, key) =
-  let
-    var hash : hash_vt
+hashmap_find (map, key) =
+  case+ map of
+  | map_vt_nil () => None_vt ()
+  | map_vt_root root =>
+    let
+      var hash : hash_vt
 
-    val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
-    val bits = hashmap$bits_source<hash_vt> (hash, 0U)
+      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+      val bits = hashmap$bits_source<hash_vt> (hash, 0U)
 
-    val result =
-      find_entry<hash_vt><key_vt, value_vt> (hash, key, 0U)
+      val result =
+        find_entry<hash_vt><key_vt, value_vt>
+          (hash, bits, root.tree, key, 0U)
 
-    val () = hashmap$hash_vt_free<hash_vt> (hash)
-  in
-    result
-  end
+      val () = hashmap$hash_vt_free<hash_vt> (hash)
+    in
+      result
+    end
 
 (********************************************************************)

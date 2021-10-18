@@ -97,6 +97,14 @@ population_map_neq (map1, map2) =
   end
 
 implement {}
+population_map_iseqz (map) =
+  map = (i2popmap 0)
+
+implement {}
+population_map_isneqz (map) =
+  map <> (i2popmap 0)
+
+implement {}
 population_map_lnot (map) =
   let
     extern fun

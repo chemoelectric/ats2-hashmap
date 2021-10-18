@@ -26,6 +26,18 @@ staload "hashmap/SATS/bits_source.sats"
 
 (********************************************************************)
 
+castfn
+int2population_map :
+  {i : int | 0 <= i} int i -<> population_map_t i
+overload i2popmap with int2population_map of 0
+
+castfn
+uint2population_map :
+  {i : int} uint i -<> population_map_t i
+overload u2popmap with uint2population_map of 0
+
+(********************************************************************)
+
 (* bits_to_population_map:
    Make a popcount=1 mask from hash bits. *)
 fun {}
@@ -52,6 +64,22 @@ population_map_neq
     bool (map1 != map2)
 overload <> with population_map_neq of 100
 overload != with population_map_neq of 100
+
+(* Equality to zero. *)
+fun {}
+population_map_iseqz
+        {map : int}
+        (map : population_map_t map) :<>
+    bool (map == 0)
+overload iseqz with population_map_iseqz of 100
+
+(* Inequality to zero. *)
+fun {}
+population_map_isneqz
+        {map : int}
+        (map : population_map_t map) :<>
+    bool (map != 0)
+overload isneqz with population_map_isneqz of 100
 
 (* Bitwise NOT. *)
 fun {}

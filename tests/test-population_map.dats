@@ -129,6 +129,28 @@ test_neq () : void =
   end
 
 fn
+test_iseqz_and_isneqz () : void =
+  let
+    var i : uint
+  in
+    for (i := 0U; i <= 10000U; i := succ i)
+      let
+        val ii : population_map_t = castpop i
+      in
+        if i = 0U then
+          begin
+            assertloc (iseqz ii);
+            assertloc (not (isneqz ii))
+          end
+        else
+          begin
+            assertloc (not (iseqz ii));
+            assertloc (isneqz ii)
+          end
+      end
+  end
+
+fn
 test_lnot () : void =
   (* This also does some checking of "land". *)
   let
@@ -207,6 +229,7 @@ main0 () =
   {
     val _ = test_bits_to_population_map ()
     val _ = test_neq ()
+    val _ = test_iseqz_and_isneqz ()
     val _ = test_lnot ()
     val _ = test_land ()
     val _ = test_lor ()
