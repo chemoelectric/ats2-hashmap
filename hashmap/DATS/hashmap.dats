@@ -128,6 +128,32 @@ lemma_hashmap_vt_param (map) =
 
 (********************************************************************)
 
+implement {}
+hashmap () =
+  map_vt_nil ()
+
+(********************************************************************)
+
+implement {}
+hashmap_size (map) =
+  case+ map of
+  | map_vt_nil () => i2sz 0
+  | map_vt_tree @{size = size, tree = _} => size
+
+implement {}
+hashmap_is_empty (map) =
+  case+ map of
+  | map_vt_nil () => true
+  | map_vt_tree _ => false
+
+implement {}
+hashmap_isnot_empty (map) =
+  case+ map of
+  | map_vt_nil () => false
+  | map_vt_tree _ => true
+
+(********************************************************************)
+
 fn {key_vt, value_vt : vtype}
 make_new_array {population_map : int}
                (pf_popcount    : POPCOUNT (population_map, 1) |
@@ -162,9 +188,8 @@ hashmap_include {size} (map, key, value) =
   case+ map of
   | ~ map_vt_nil () =>
     let
-      vtypedef t = node_vt (key_vt, value_vt)
-
       var hash : hash_vt
+
       val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
       val bits = hashmap$bits_source<hash_vt> (hash, 0U)
       val () = hashmap$hash_vt_free<hash_vt> (hash)
@@ -198,5 +223,81 @@ val _ = $UN.castvwtp0{void} value
     in
       map_vt_tree @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
     end
+
+(********************************************************************)
+
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vtype}
+find_entry {depth     : int}
+           (hash      : &hash_vt >> _,
+            key       : !key_vt >> _,
+            depth     : uint depth) : Option_vt (value_vt) =
+  let
+  in
+    None_vt () // // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+  end
+(*
+{length       : int | length <= bitsizeof (uintptr)}
+        {key          : int}
+        {depth        : int}
+        (node         : !node_vt (length) >> _,
+         bits_source  : !bits_source_cloptr (hash_vt, NUM_BITS) >> _,
+         hash_storage : &hash_vt >> _,
+         key_test     : !key_test_vt >> _,
+         key          : uintptr key,
+         depth        : uint depth,
+         is_stored    : &bool? >> bool is_stored,
+         key_value    : &uintptr? >> uintptr key_value) :
+    #[is_stored : bool]
+    #[key_value : int | is_stored || key_value == 0]
+    void =
+  let
+    val [bits : int] (pf_bits | bits) =
+      bits_source (hash_storage, depth)
+    prval _ = bits_source_bits_bounds pf_bits
+    prval _ = prop_verify {valid_bits (NUM_BITS, bits)} ()
+  in
+    if bits = BITS_SOURCE_EXHAUSTED then
+      begin
+        is_stored := false;
+        key_value := zero
+      end
+    else
+      let
+        var is_last : bool
+      in
+        get_leaf_value<>
+          {length} {key} {bits} (node, bits, key_test, key,
+                                 is_stored, is_last, key_value);
+        if not is_last then
+          {
+            val [length1 : int] [p1 : addr] next_node =
+              uintptr2node key_value
+            prval _ = lemma_node_vt_param {length1} {p1} (next_node)
+            val _ =
+              get_subtree_entry__loop<hash_vt>
+                (next_node, bits_source, hash_storage, key_test, key,
+                 succ depth, is_stored, key_value)
+            prval _ = $UN.castvwtp0{uptr} next_node
+          }
+      end
+  end
+*)
+
+implement {hash_vt} {key_vt, value_vt}
+hashmap_find {size} (map, key) =
+  let
+    var hash : hash_vt
+
+    val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+    val bits = hashmap$bits_source<hash_vt> (hash, 0U)
+
+    val result =
+      find_entry<hash_vt><key_vt, value_vt> (hash, key, 0U)
+
+    val () = hashmap$hash_vt_free<hash_vt> (hash)
+  in
+    result
+  end
 
 (********************************************************************)

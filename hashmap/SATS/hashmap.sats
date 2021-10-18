@@ -83,6 +83,30 @@ hashmap$key_eq (key_arg    : !key_vt >> _,
 fun {}
 hashmap () : hashmap_vt (0)
 
+fun {}
+hashmap_size
+        {size : int}
+        {key_vt, value_vt : vtype}
+        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    size_t size
+overload size with hashmap_size of 0
+
+fun {}
+hashmap_is_empty
+        {size : int}
+        {key_vt, value_vt : vtype}
+        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    bool (size == 0)
+overload iseqz with hashmap_is_empty of 0
+
+fun {}
+hashmap_isnot_empty
+        {size : int}
+        {key_vt, value_vt : vtype}
+        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+    bool (size != 0)
+overload isneqz with hashmap_isnot_empty of 0
+
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vtype}
 hashmap_include
@@ -118,6 +142,7 @@ hashmap_pairs
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (@(key_vt, value_vt), size)
+overload pairs with hashmap_pairs of 0
 
 fun {key_vt : vtype}
 hashmap_keys
@@ -125,6 +150,7 @@ hashmap_keys
         {value_vt : vtype}
         (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (key_vt, size)
+overload keys with hashmap_keys of 0
 
 fun {value_vt : vtype}
 hashmap_values
@@ -132,6 +158,7 @@ hashmap_values
         {key_vt : vtype}
         (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (value_vt, size)
+overload values with hashmap_values of 0
 
 fun {}
 hashmap_free (map : hashmap_vt) : void
