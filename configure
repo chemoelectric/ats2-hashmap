@@ -678,6 +678,7 @@ BITS_SOURCE_EXPT2
 BITS_SOURCE_MASK
 BITS_SOURCE_MAXVAL
 BITS_SOURCE_NUM_BITS
+POPULATION_MAP_KIND
 POPULATION_MAP_T
 ATS_DATS_DIRECTORY
 ATS_SATS_DIRECTORY
@@ -12725,6 +12726,8 @@ ATS_DATS_DIRECTORY=hashmap/DATS
 
 # The unsigned integer type to use for population maps.
 POPULATION_MAP_T=uint64
+
+POPULATION_MAP_KIND=uint64_kind
 
 
 # The maximum number of bits to take at a time from a hash.

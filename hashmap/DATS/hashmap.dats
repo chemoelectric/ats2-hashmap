@@ -54,6 +54,13 @@ staload _ = "popcount/DATS/popcount.dats"
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
 
+#define CHAR_BIT 8              (* The size of a byte, in bits. *)
+
+prval _ =
+  $UN.prop_assert
+    {BITS_SOURCE_MAXVAL == CHAR_BIT * sizeof (population_map_t) - 1}
+    ()
+
 (********************************************************************)
 
 vtypedef
@@ -155,11 +162,12 @@ hashmap_isnot_empty (map) =
 (********************************************************************)
 
 fn {key_vt, value_vt : vtype}
-make_new_array {population_map : int}
-               (pf_popcount    : POPCOUNT (population_map, 1) |
-                population_map : population_map_t population_map,
-                key            : key_vt,
-                value          : value_vt) :
+make_new_array
+        {population_map : int}
+        (pf_popcount    : POPCOUNT (population_map, 1) |
+         population_map : population_map_t population_map,
+         key            : key_vt,
+         value          : value_vt) :
     [p : addr | null < p]
     (@[node_vt (key_vt, value_vt)][1] @ p, mfree_gc_v p | ptr p) =
   let
@@ -361,14 +369,20 @@ get_leaf_value
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vtype}
-find_entry {bits  : int | bits_source_valid_value bits}
-           {depth : int}
-           (hash  : &hash_vt >> _,
-            bits  : int bits,
-            tree  : !node_array_vt (key_vt, value_vt) >> _,
-            key   : !key_vt >> _,
-            depth : uint depth) : Option_vt (value_vt) =
+find_entry {bits    : int | bits_source_valid_value bits}
+           {population_map : int}
+           {length  : int}
+           {p_array : addr}
+           {depth   : int}
+           (hash    : &hash_vt >> _,
+            bits    : int bits,
+            tree    : !node_array_vt (key_vt, value_vt,
+                                      population_map,
+                                      length, p_array) >> _,
+            key     : !key_vt >> _,
+            depth   : uint depth) : Option_vt (value_vt) =
   let
+    vtypedef t = node_vt (key_vt, value_vt)
     val [bits : int] bits = hashmap$bits_source<hash_vt> (hash, 0U)
   in
     if bits = BITS_SOURCE_EXHAUSTED then
@@ -377,13 +391,21 @@ find_entry {bits  : int | bits_source_valid_value bits}
       let
         prval _ = prop_verify {bits_source_valid_bits bits} ()
         val mask = bits_to_population_map bits
-        val there_is_an_entry =
-          ((tree.population_map) land mask) <> i2popmap 0
+        val population_map = (tree.population_map)
+        val array_has_an_entry = isneqz (population_map land mask)
       in
-        if there_is_an_entry then
+        if array_has_an_entry then
           let
+            val [array_index : int] @(pf_array_index | array_index) =
+              popcount_low_bits_with_proof<population_map_kind>
+                (population_map, i2u bits)
+            prval _ = popcount_low_bits_is_nonnegative pf_array_index
+            prval _ = $UN.prop_assert {array_index < length} ()
+            val p_entry : P2tr (node_vt (key_vt, value_vt)) =
+              array_getref_at<t> (!(tree.p_array), i2sz array_index)
+            // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
           in
-            None_vt () // // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            None_vt () // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
           end
         else
           None_vt ()

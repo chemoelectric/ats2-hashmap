@@ -29,6 +29,8 @@ population_map_t =
   [population_map : int]
   @POPULATION_MAP_T@ population_map
 
+stadef population_map_kind = @POPULATION_MAP_KIND@
+
 (* The maximum number of bits to take at a time from a hash. *)
 #define BITS_SOURCE_NUM_BITS @BITS_SOURCE_NUM_BITS@
 

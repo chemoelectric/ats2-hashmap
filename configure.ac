@@ -56,6 +56,7 @@ AC_SUBST([ATS_DATS_DIRECTORY],[hashmap/DATS])
 
 # The unsigned integer type to use for population maps.
 AC_SUBST([POPULATION_MAP_T],[uint64])
+AC_SUBST([POPULATION_MAP_KIND],[uint64_kind])
 
 # The maximum number of bits to take at a time from a hash.
 # Equals log2 of the number of bits in a POPULATION_MAP_T.
