@@ -18,6 +18,18 @@ along with this program. If not, see
 
 *)
 
+(********************************************************************)
+(*                                                                  *)
+(* Hash maps implemented as array mapped trees.                     *)
+(*                                                                  *)
+(* References:                                                      *)
+(*   [1] Phil Bagwell, "Fast and space efficient trie searches",    *)
+(*       2000.                                                      *)
+(*   [2] Phil Bagwell, "Ideal hash trees", 2001.                    *)
+(*                                                                  *)
+(*                                                                  *)
+(********************************************************************)
+
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
@@ -32,9 +44,11 @@ staload UN = "prelude/SATS/unsafe.sats"
 
 staload "hashmap/SATS/hashmap.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
-//staload "hashmap/SATS/bits-source.sats"
+staload "hashmap/SATS/bits_source.sats"
+staload "hashmap/SATS/population_map.sats"
 staload "popcount/SATS/popcount.sats"
 
+staload _ = "hashmap/DATS/population_map.dats"
 staload _ = "popcount/DATS/popcount.dats"
 
 #define NIL list_vt_nil ()
@@ -114,20 +128,75 @@ lemma_hashmap_vt_param (map) =
 
 (********************************************************************)
 
+fn {key_vt, value_vt : vtype}
+make_new_array {population_map : int}
+               (pf_popcount    : POPCOUNT (population_map, 1) |
+                population_map : population_map_t population_map,
+                key            : key_vt,
+                value          : value_vt) :
+    [p : addr | null < p]
+    (@[node_vt (key_vt, value_vt)][1] @ p, mfree_gc_v p | ptr p) =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+
+    (* The only leaf node that will be in the array. *)
+    val new_leaf = node_vt_key_value @(key, value)
+
+    (* Allocate the array. *)
+    val [p_array : addr] @(pf_array, pf_mfree | p_array) =
+      array_ptr_alloc<t> (i2sz 1)
+
+    (* Put the leaf in it. *)
+    prval @(pf_entry, pf_nil_array) = array_v_uncons pf_array
+    val _ = ptr_set<t> {p_array} (pf_entry | p_array, new_leaf)
+    prval pf_nil_array = array_v_unnil_nil {t?, t} pf_nil_array
+    prval pf_array = array_v_cons (pf_entry, pf_nil_array)
+  in
+    @(pf_array, pf_mfree | p_array)
+  end
+
+(********************************************************************)
+
 implement {hash_vt} {key_vt, value_vt}
 hashmap_include {size} (map, key, value) =
   case+ map of
   | ~ map_vt_nil () =>
     let
+      vtypedef t = node_vt (key_vt, value_vt)
+
       var hash : hash_vt
       val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
       val bits = hashmap$bits_source<hash_vt> (hash, 0U)
-//      val population_map = ????????
       val () = hashmap$hash_vt_free<hash_vt> (hash)
+
+      val [population_map : int] population_map =
+        bits_to_population_map (bits)
+      prval _ =
+        $UN.prop_assert {popcount_relation (population_map, 1)} ()
+      prval pf_popcount =
+        popcount_relation_to_proof {population_map} {1} ()
+
+      val @(pf_array, pf_mfree | p_array) =
+        make_new_array<key_vt, value_vt>
+          (pf_popcount | population_map, key, value)
+
+      val tree =
+        @{
+          population_map_view = pf_popcount,
+          array_view = pf_array,
+          mfree_view = pf_mfree |
+          population_map = population_map,
+          p_array = p_array
+        }
     in
-      map_vt_nil () // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      map_vt_tree @{size = i2sz 1, tree = tree}
     end
   | ~ map_vt_tree @{size = size, tree = tree} =>
-    map_vt_tree @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    let
+val _ = $UN.castvwtp0{void} key
+val _ = $UN.castvwtp0{void} value
+    in
+      map_vt_tree @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    end
 
 (********************************************************************)

@@ -101,7 +101,12 @@ bits_source_nbytes {n} {depth} (n, hash, depth) =
     val start : size_t start = num_bits * (g1u2u depth)
   in
     if total_num_bits <= start then
-      BITS_SOURCE_EXHAUSTED
+      let
+        (* FIXME: Prove this. *)
+        val _ = $effmask_exn assertloc (depth <> 0U)
+      in
+        BITS_SOURCE_EXHAUSTED
+      end
     else
       let
         stadef i = ndiv_int_int (start, char_bit)

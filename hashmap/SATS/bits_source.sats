@@ -46,7 +46,8 @@ vtypedef
 bits_source_vt (hash_vt : vt@ype+) =
   {depth : int}
   (&hash_vt >> _, uint depth) ->
-    [bits : int | bits_source_valid_value bits]
+    [bits : int | bits_source_valid_value bits;
+                  depth != 0 || bits != BITS_SOURCE_EXHAUSTED]
     int bits
 
 fun {hash_vt : vt@ype}
@@ -70,12 +71,13 @@ fun bits_source_uint64_uint64 : bits_source_vt (@(uint64, uint64))
 (* Bits sources that return bits in memory order. *)
 
 fun
-bits_source_nbytes {n     : int}
+bits_source_nbytes {n     : int | 1 <= n}
                    {depth : int}
                    (n     : size_t n,
                     hash  : &(@[byte][n]) >> _,
                     depth : uint depth) :
-    [bits : int | bits_source_valid_value bits]
+    [bits : int | bits_source_valid_value bits;
+                  depth != 0 || bits != BITS_SOURCE_EXHAUSTED]
     int bits
 
 fun bits_source_1byte : bits_source_vt (@[byte][1])

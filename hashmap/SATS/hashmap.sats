@@ -88,8 +88,8 @@ fun {hash_vt : vt@ype}
 hashmap_include
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
-         key   : !key_vt >> _,
-         value : !value_vt >> _) :
+         key   : key_vt,
+         value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
     hashmap_vt (key_vt, value_vt, new_size)
 overload + with hashmap_include of 0
