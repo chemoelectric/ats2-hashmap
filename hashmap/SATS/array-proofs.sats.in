@@ -65,7 +65,7 @@ array_v_join3 {t : vt@ype} {p : addr} {n1, n2, n3 : nat}
 
 (* Subdivide an array into an entry surrounded by two arrays. *)
 prfun
-array_v_isolate
+array_v_isolate_entry
         {t  : vt@ype}
         {p  : addr}
         {n  : int}
@@ -75,9 +75,9 @@ array_v_isolate
       t @ (p + (i * sizeof (t))),
       @[t][n - 1 - i] @ (p + (i * sizeof (t)) + sizeof (t)))
 
-(* The reverse of array_v_isolate. *)
+(* The reverse of array_v_isolate_entry. *)
 prfun
-array_v_remerge
+array_v_merge_entry
         {t        : vt@ype}
         {p        : addr}
         {n        : int}

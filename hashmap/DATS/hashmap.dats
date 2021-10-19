@@ -280,8 +280,8 @@ find_entry {population_map : int}
 
             val p_entry = ptr_add<t> (tree.p_array, array_index)
             prval @(pf_left, pf_entry, pf_right) =
-              array_v_isolate {t} {..} {length} {array_index}
-                              (tree.array_view)
+              array_v_isolate_entry {t} {..} {length} {array_index}
+                                    (tree.array_view)
           in
             case+ !p_entry of
             | node_vt_key_value key_value =>
@@ -291,7 +291,7 @@ find_entry {population_map : int}
                   val value =
                     hashmap$value_vt_copy<value_vt> (key_value.value)
                   prval _ = tree.array_view :=
-                    array_v_remerge (pf_left, pf_entry, pf_right)
+                    array_v_merge_entry (pf_left, pf_entry, pf_right)
                 in
                   Some_vt value
                 end
@@ -299,7 +299,7 @@ find_entry {population_map : int}
                 (* The key is not in the tree. *)
                 let
                   prval _ = tree.array_view :=
-                    array_v_remerge (pf_left, pf_entry, pf_right)
+                    array_v_merge_entry (pf_left, pf_entry, pf_right)
                 in
                   None_vt ()
                 end
@@ -340,7 +340,7 @@ find_entry {population_map : int}
                 val result = search_list (lst, key)
 
                 prval _ = tree.array_view :=
-                  array_v_remerge (pf_left, pf_entry, pf_right)
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
               in
                 result
               end
@@ -351,7 +351,7 @@ find_entry {population_map : int}
                   find_entry<hash_vt><key_vt, value_vt>
                     (hash, subtree, key, succ depth)
                 prval _ = tree.array_view :=
-                  array_v_remerge (pf_left, pf_entry, pf_right)
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
               in
                 result
               end

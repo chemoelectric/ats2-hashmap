@@ -61,7 +61,7 @@ array_v_join3 {t} {p} {n1, n2, n3} (pf1, pf2, pf3) =
   end
 
 primplement
-array_v_isolate {t} {p} {n} {i} (pf) =
+array_v_isolate_entry {t} {p} {n} {i} (pf) =
   let
     prval @(pf_left, pf_rest) = array_v_split {t} {p} {n} {i} pf
     prval @(pf_entry, pf_right) = array_v_uncons pf_rest
@@ -70,7 +70,7 @@ array_v_isolate {t} {p} {n} {i} (pf) =
   end
 
 primplement
-array_v_remerge (pf_left, pf_entry, pf_right) =
+array_v_merge_entry (pf_left, pf_entry, pf_right) =
   let
     prval pf_rest = array_v_cons (pf_entry, pf_right)
     prval pf = array_v_unsplit (pf_left, pf_rest)
