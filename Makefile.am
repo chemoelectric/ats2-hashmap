@@ -146,15 +146,13 @@ libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
 
-#hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
+libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
+CLEANFILES += hashmap/SATS/array-proofs_sats.c
+CLEANFILES += hashmap/DATS/array-proofs_dats.c
+EXTRA_DIST += hashmap/SATS/array-proofs.sats
+EXTRA_DIST += hashmap/DATS/array-proofs.dats
 
-#libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
-#CLEANFILES += hashmap/SATS/array-proofs_sats.c
-#CLEANFILES += hashmap/DATS/array-proofs_dats.c
-#EXTRA_DIST += hashmap/SATS/array-proofs.sats
-#EXTRA_DIST += hashmap/DATS/array-proofs.dats
-#
 #libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
 #CLEANFILES += hashmap/SATS/memory_sats.c

@@ -166,6 +166,7 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	hashmap/DATS/bits_source_uint32.dats.m4 \
 	hashmap/DATS/bits_source_uint64.dats.m4 \
 	hashmap/DATS/bits_source_uint64_uint64.dats.m4 \
+	hashmap/SATS/array-proofs.sats hashmap/DATS/array-proofs.dats \
 	list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
@@ -202,7 +203,8 @@ am__uninstall_files_from_dir = { \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libats2_hashmap_la_OBJECTS =  \
+am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
+	hashmap/DATS/array-proofs_dats.lo \
 	hashmap/SATS/bits_source-parameters_sats.lo \
 	hashmap/SATS/bits_source_sats.lo \
 	hashmap/DATS/bits_source_dats.lo \
@@ -316,6 +318,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po \
+	hashmap/DATS/$(DEPDIR)/array-proofs_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_10bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_11bytes_implementation_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/bits_source_12bytes_implementation_dats.Plo \
@@ -357,6 +360,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/population_map_dats.Plo \
+	hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
@@ -625,12 +629,14 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
+	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in \
+	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
@@ -803,14 +809,9 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
 
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
-#
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/memory.cats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
-#
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
@@ -819,10 +820,13 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint32.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in \
+	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
+	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
-	ats-nodeptracking-rules.mk \
+	ats-nodeptracking-rules.mk hashmap/SATS/array-proofs.sats \
+	hashmap/DATS/array-proofs.dats \
 	hashmap/DATS/bits_source_nbytes.dats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
@@ -834,7 +838,9 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-bits_source_16bytes.dats \
 	tests/test-population_map.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-CLEANFILES = hashmap/SATS/bits_source-parameters_sats.c \
+CLEANFILES = hashmap/SATS/array-proofs_sats.c \
+	hashmap/DATS/array-proofs_dats.c \
+	hashmap/SATS/bits_source-parameters_sats.c \
 	hashmap/SATS/bits_source_sats.c \
 	hashmap/DATS/bits_source_dats.c \
 	hashmap/DATS/bits_source_uint8_dats.c \
@@ -968,15 +974,6 @@ TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 
-#hashmap/HATS/config.hats: hashmap/HATS/config.hats.in
-
-#libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
-#CLEANFILES += hashmap/SATS/array-proofs_sats.c
-#CLEANFILES += hashmap/DATS/array-proofs_dats.c
-#EXTRA_DIST += hashmap/SATS/array-proofs.sats
-#EXTRA_DIST += hashmap/DATS/array-proofs.dats
-#
 #libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
 #libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
 #CLEANFILES += hashmap/SATS/memory_sats.c
@@ -991,7 +988,8 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 #CLEANFILES += hashmap/DATS/print-bitmap_dats.c
 #EXTRA_DIST += hashmap/SATS/print-bitmap.sats
 #EXTRA_DIST += hashmap/DATS/print-bitmap.dats
-libats2_hashmap_la_SOURCES =  \
+libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
+	hashmap/DATS/array-proofs_dats.c \
 	hashmap/SATS/bits_source-parameters_sats.c \
 	hashmap/SATS/bits_source_sats.c \
 	hashmap/DATS/bits_source_dats.c \
@@ -1116,6 +1114,10 @@ hashmap/DATS/bits_source_uint64.dats.m4: $(top_builddir)/config.status $(top_src
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/bits_source_uint64_uint64.dats.m4: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/array-proofs.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/array-proofs.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
@@ -1217,10 +1219,7 @@ hashmap/SATS/$(am__dirstamp):
 hashmap/SATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/SATS/$(DEPDIR)
 	@: > hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/bits_source-parameters_sats.lo:  \
-	hashmap/SATS/$(am__dirstamp) \
-	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/bits_source_sats.lo: hashmap/SATS/$(am__dirstamp) \
+hashmap/SATS/array-proofs_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS
@@ -1228,6 +1227,13 @@ hashmap/DATS/$(am__dirstamp):
 hashmap/DATS/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) hashmap/DATS/$(DEPDIR)
 	@: > hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/array-proofs_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/bits_source-parameters_sats.lo:  \
+	hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/bits_source_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits_source_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/bits_source_uint8_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -1427,6 +1433,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/array-proofs_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_10bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_11bytes_implementation_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_12bytes_implementation_dats.Plo@am__quote@ # am--include-marker
@@ -1468,6 +1475,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/population_map_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
@@ -2125,6 +2133,7 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/array-proofs_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_10bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_11bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_12bytes_implementation_dats.Plo
@@ -2166,6 +2175,7 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/population_map_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
@@ -2229,6 +2239,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_depsprog.Po
+	-rm -f hashmap/DATS/$(DEPDIR)/array-proofs_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_10bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_11bytes_implementation_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_12bytes_implementation_dats.Plo
@@ -2270,6 +2281,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/bits_source_uint8_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/population_map_dats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo

@@ -30,13 +30,11 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint32.dats
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in
 
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
-#
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/memory.cats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
 #CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
-#
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/test-bits-source-uint64-uint64.dats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/list-ats-dependencies.dats.in

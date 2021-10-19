@@ -74,9 +74,16 @@ hashmap$key_vt_free : key_vt -> void
 fun {value_vt : vtype}
 hashmap$value_vt_free : value_vt -> void
 
+(* Keys and values need to be copied sometimes. *)
 fun {key_vt : vtype}
-hashmap$key_eq (key_arg    : !key_vt >> _,
-                key_stored : !key_vt >> _) : bool
+hashmap$key_vt_copy : (!key_vt >> _) -> key_vt
+fun {value_vt : vtype}
+hashmap$value_vt_copy : (!value_vt >> _) -> value_vt
+
+(* Keys, of course, have to be tested for equality. *)
+fun {key_vt : vtype}
+hashmap$key_vt_eq (key_arg    : !key_vt >> _,
+                   key_stored : !key_vt >> _) : bool
 
 (********************************************************************)
 

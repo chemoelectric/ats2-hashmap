@@ -43,13 +43,15 @@ along with this program. If not, see
 staload UN = "prelude/SATS/unsafe.sats"
 
 staload "hashmap/SATS/hashmap.sats"
-staload "hashmap/SATS/bits_source-parameters.sats"
-staload "hashmap/SATS/bits_source.sats"
-staload "hashmap/SATS/population_map.sats"
-staload "popcount/SATS/popcount.sats"
 
-staload _ = "hashmap/DATS/population_map.dats"
+staload "hashmap/SATS/array-proofs.sats"
+staload "hashmap/SATS/bits_source.sats"
+staload "hashmap/SATS/bits_source-parameters.sats"
+staload "popcount/SATS/popcount.sats"
+staload "hashmap/SATS/population_map.sats"
+
 staload _ = "popcount/DATS/popcount.dats"
+staload _ = "hashmap/DATS/population_map.dats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
@@ -66,7 +68,10 @@ prval _ =
 vtypedef
 key_value_vt (key_vt   : vtype+,
               value_vt : vtype+) =
-  @(key_vt, value_vt)
+  @{
+    key = key_vt,
+    value = value_vt
+  }
 
 vtypedef
 key_value_list_vt (key_vt   : vtype+,
@@ -84,10 +89,11 @@ node_vt (key_vt   : vtype+,
          value_vt : vtype+) =
 | node_vt_key_value (key_vt, value_vt) of
     key_value_vt (key_vt, value_vt)
+| node_vt_list (key_vt, value_vt) of
+    (* For separate chaining. *)
+    key_value_list_vt (key_vt, value_vt)
 | node_vt_array (key_vt, value_vt) of
     node_array_vt (key_vt, value_vt)
-| node_vt_list (key_vt, value_vt) of
-    key_value_list_vt (key_vt, value_vt)
 where
 node_array_vt (key_vt            : vtype+,
                value_vt          : vtype+,
@@ -174,7 +180,7 @@ make_new_array
     vtypedef t = node_vt (key_vt, value_vt)
 
     (* The only leaf node that will be in the array. *)
-    val new_leaf = node_vt_key_value @(key, value)
+    val new_leaf = node_vt_key_value @{key = key, value = value}
 
     (* Allocate the array. *)
     val [p_array : addr] @(pf_array, pf_mfree | p_array) =
@@ -400,12 +406,48 @@ find_entry {bits    : int | bits_source_valid_value bits}
               popcount_low_bits_with_proof<population_map_kind>
                 (population_map, i2u bits)
             prval _ = popcount_low_bits_is_nonnegative pf_array_index
+
+            (* FIXME: Prove this. *)
             prval _ = $UN.prop_assert {array_index < length} ()
-            val p_entry : P2tr (node_vt (key_vt, value_vt)) =
-              array_getref_at<t> (!(tree.p_array), i2sz array_index)
-            // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+
+            val p_entry = ptr_add<t> (tree.p_array, array_index)
+            prval @(pf_left, pf_entry, pf_right) =
+              array_v_isolate {t} {..} {length} {array_index}
+                              (tree.array_view)
           in
-            None_vt () // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            case+ !p_entry of
+            | node_vt_key_value key_value =>
+              if hashmap$key_vt_eq<key_vt> (key, key_value.key) then
+                let
+                  val result =
+                    hashmap$value_vt_copy<value_vt> (key_value.value)
+                  prval _ = tree.array_view :=
+                    array_v_remerge (pf_left, pf_entry, pf_right)
+                in
+                  Some_vt result
+                end
+              else
+                let
+                  prval _ = tree.array_view :=
+                    array_v_remerge (pf_left, pf_entry, pf_right)
+                in
+                  (* The key is not in the tree. *)
+                  None_vt ()
+                end
+            | node_vt_list _ =>
+              let
+                prval _ = tree.array_view :=
+                  array_v_remerge (pf_left, pf_entry, pf_right)
+              in
+                None_vt () // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
+            | node_vt_array _ =>
+              let
+                prval _ = tree.array_view :=
+                  array_v_remerge (pf_left, pf_entry, pf_right)
+              in
+                None_vt () // FIXME // FIXME FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
           end
         else
           None_vt ()
