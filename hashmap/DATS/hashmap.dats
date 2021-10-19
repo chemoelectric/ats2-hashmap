@@ -47,11 +47,12 @@ staload "hashmap/SATS/hashmap.sats"
 staload "hashmap/SATS/array-proofs.sats"
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
-staload "popcount/SATS/popcount.sats"
 staload "hashmap/SATS/population_map.sats"
+staload "popcount/SATS/popcount.sats"
 
-staload _ = "popcount/DATS/popcount.dats"
+staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/population_map.dats"
+staload _ = "popcount/DATS/popcount.dats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
@@ -142,8 +143,7 @@ lemma_hashmap_vt_param (map) =
 (********************************************************************)
 
 implement {}
-hashmap () =
-  map_vt_nil ()
+hashmap () = map_vt_nil ()
 
 (********************************************************************)
 

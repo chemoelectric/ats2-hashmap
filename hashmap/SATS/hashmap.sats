@@ -55,7 +55,7 @@ fun {hash_vt : vt@ype}
     {key_vt  : vt@ype}
 hashmap$hash_function : (!key_vt >> _, &hash_vt? >> hash_vt) -> void
 fun {hash_vt : vt@ype}
-hashmap$hash_vt_free : (&hash_vt >> hash_vt?!) -> void
+hashmap$hash_vt_free : (&hash_vt >> hash_vt?) -> void
 
 (* A function that returns bits from a hash. *)
 fun {hash_vt : vt@ype}
@@ -80,7 +80,9 @@ hashmap$key_vt_eq (key_arg    : !key_vt >> _,
 (********************************************************************)
 
 fun {}
-hashmap () : hashmap_vt (0)
+hashmap {key_vt, value_vt : vt@ype}
+        () :
+    hashmap_vt (key_vt, value_vt, 0)
 
 fun {}
 hashmap_size
@@ -115,7 +117,7 @@ hashmap_include
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
     hashmap_vt (key_vt, value_vt, new_size)
-overload + with hashmap_include of 0
+// overload + with hashmap_include of 0    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
@@ -123,9 +125,9 @@ hashmap_remove
         {size : int}
         (map  : hashmap_vt (key_vt, value_vt, size),
          key  : !key_vt >> _) :
-    #[new_size : int | new_size == size || new_size == size - 1]
+    [new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
-overload - with hashmap_remove of 0
+// overload - with hashmap_remove of 0     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
@@ -160,7 +162,9 @@ hashmap_values
 overload values with hashmap_values of 0
 
 fun {}
-hashmap_free (map : hashmap_vt) : void
+hashmap_free {size : int}
+             {key_vt, value_vt : vt@ype}
+             (map  : hashmap_vt (key_vt, value_vt, size)) : void
 overload free with hashmap_free of 0
 
 (********************************************************************)

@@ -59,7 +59,6 @@ DISTCLEANFILES += GNUmakefile
 # We will not be using exceptions.
 AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
 
-#AM_CPPFLAGS += -DATS_MEMALLOC_LIBC  # <- FIXME: Try to do this only when building tests.
 AM_CPPFLAGS += -I$(builddir)
 AM_CPPFLAGS += -I$(srcdir)
 AM_CPPFLAGS += -I$(builddir)/lib
@@ -393,7 +392,9 @@ CLEANFILES += tests/test-population_map_dats.c
 
 check_PROGRAMS += tests/test-a-uint8-map
 tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
+tests_test_a_uint8_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES)
+tests_test_a_uint8_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-a-uint8-map.dats
 CLEANFILES += tests/test-a-uint8-map
 CLEANFILES += tests/test-a-uint8-map_dats.c

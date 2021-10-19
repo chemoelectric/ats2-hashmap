@@ -258,7 +258,7 @@ am__v_lt_1 =
 am_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
 list_ats_dependencies_OBJECTS = $(am_list_ats_dependencies_OBJECTS)
 am_tests_test_a_uint8_map_OBJECTS =  \
-	tests/test-a-uint8-map_dats.$(OBJEXT)
+	tests/test_a_uint8_map-test-a-uint8-map_dats.$(OBJEXT)
 tests_test_a_uint8_map_OBJECTS = $(am_tests_test_a_uint8_map_OBJECTS)
 tests_test_a_uint8_map_DEPENDENCIES = $(lib_LTLIBRARIES)
 am_tests_test_bits_source_16bytes_OBJECTS =  \
@@ -370,7 +370,6 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/population_map_sats.Plo \
-	tests/$(DEPDIR)/test-a-uint8-map_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_1byte_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po \
@@ -379,7 +378,8 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-bits_source_uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint8_dats.Po \
-	tests/$(DEPDIR)/test-population_map_dats.Po
+	tests/$(DEPDIR)/test-population_map_dats.Po \
+	tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -920,8 +920,6 @@ BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
 AM_M4FLAGS = 
 
 # We will not be using exceptions.
-
-#AM_CPPFLAGS += -DATS_MEMALLOC_LIBC  # <- FIXME: Try to do this only when building tests.
 AM_CPPFLAGS = -D_ATS_CCOMP_EXCEPTION_NONE -I$(builddir) -I$(srcdir) \
 	-I$(builddir)/lib -I$(srcdir)/lib -I$(PATSHOME) \
 	-I$(PATSHOME)/ccomp/runtime/
@@ -1065,7 +1063,9 @@ tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 tests_test_population_map_SOURCES = tests/test-population_map_dats.c
 tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
 tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
-tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES)
+tests_test_a_uint8_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES) \
+	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1378,8 +1378,8 @@ tests/$(am__dirstamp):
 tests/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tests/$(DEPDIR)
 	@: > tests/$(DEPDIR)/$(am__dirstamp)
-tests/test-a-uint8-map_dats.$(OBJEXT): tests/$(am__dirstamp) \
-	tests/$(DEPDIR)/$(am__dirstamp)
+tests/test_a_uint8_map-test-a-uint8-map_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-a-uint8-map$(EXEEXT): $(tests_test_a_uint8_map_OBJECTS) $(tests_test_a_uint8_map_DEPENDENCIES) $(EXTRA_tests_test_a_uint8_map_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-a-uint8-map$(EXEEXT)
@@ -1498,7 +1498,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/population_map_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-a-uint8-map_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_1byte_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po@am__quote@ # am--include-marker
@@ -1508,6 +1507,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint8_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-population_map_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -1552,6 +1552,20 @@ list_ats_dependencies-list-ats-dependencies_depsprog.obj: list-ats-dependencies_
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='list-ats-dependencies_depsprog.c' object='list_ats_dependencies-list-ats-dependencies_depsprog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(list_ats_dependencies_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list_ats_dependencies-list-ats-dependencies_depsprog.obj `if test -f 'list-ats-dependencies_depsprog.c'; then $(CYGPATH_W) 'list-ats-dependencies_depsprog.c'; else $(CYGPATH_W) '$(srcdir)/list-ats-dependencies_depsprog.c'; fi`
+
+tests/test_a_uint8_map-test-a-uint8-map_dats.o: tests/test-a-uint8-map_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_a_uint8_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_a_uint8_map-test-a-uint8-map_dats.o -MD -MP -MF tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Tpo -c -o tests/test_a_uint8_map-test-a-uint8-map_dats.o `test -f 'tests/test-a-uint8-map_dats.c' || echo '$(srcdir)/'`tests/test-a-uint8-map_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Tpo tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-a-uint8-map_dats.c' object='tests/test_a_uint8_map-test-a-uint8-map_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_a_uint8_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_a_uint8_map-test-a-uint8-map_dats.o `test -f 'tests/test-a-uint8-map_dats.c' || echo '$(srcdir)/'`tests/test-a-uint8-map_dats.c
+
+tests/test_a_uint8_map-test-a-uint8-map_dats.obj: tests/test-a-uint8-map_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_a_uint8_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_a_uint8_map-test-a-uint8-map_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Tpo -c -o tests/test_a_uint8_map-test-a-uint8-map_dats.obj `if test -f 'tests/test-a-uint8-map_dats.c'; then $(CYGPATH_W) 'tests/test-a-uint8-map_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-a-uint8-map_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Tpo tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-a-uint8-map_dats.c' object='tests/test_a_uint8_map-test-a-uint8-map_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_a_uint8_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_a_uint8_map-test-a-uint8-map_dats.obj `if test -f 'tests/test-a-uint8-map_dats.c'; then $(CYGPATH_W) 'tests/test-a-uint8-map_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-a-uint8-map_dats.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -2206,7 +2220,6 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
-	-rm -f tests/$(DEPDIR)/test-a-uint8-map_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
@@ -2216,6 +2229,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po
 	-rm -f tests/$(DEPDIR)/test-population_map_dats.Po
+	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -2313,7 +2327,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
-	-rm -f tests/$(DEPDIR)/test-a-uint8-map_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
@@ -2323,6 +2336,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po
 	-rm -f tests/$(DEPDIR)/test-population_map_dats.Po
+	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
