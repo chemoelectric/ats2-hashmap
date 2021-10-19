@@ -25,20 +25,20 @@ staload "hashmap/SATS/bits_source.sats"
 
 (********************************************************************)
 
-absvtype hashmap_vt (key_vt   : vtype+,
-                     value_vt : vtype+,
+absvtype hashmap_vt (key_vt   : vt@ype+,
+                     value_vt : vt@ype+,
                      size     : int)
-vtypedef hashmap_vt (key_vt   : vtype+,
-                     value_vt : vtype+) =
+vtypedef hashmap_vt (key_vt   : vt@ype+,
+                     value_vt : vt@ype+) =
   [size : int] hashmap_vt (key_vt, value_vt, size)
 vtypedef hashmap_vt (size : int) =
-  [key_vt, value_vt : vtype]
+  [key_vt, value_vt : vt@ype]
   hashmap_vt (key_vt, value_vt, size)
-vtypedef hashmap_vt (key_vt : vtype, value_vt : vtype) =
+vtypedef hashmap_vt (key_vt : vt@ype, value_vt : vt@ype) =
   [size : int]
   hashmap_vt (key_vt, value_vt, size)
 vtypedef hashmap_vt =
-  [key_vt, value_vt : vtype]
+  [key_vt, value_vt : vt@ype]
   [size : int]
   hashmap_vt (key_vt, value_vt, size)
 
@@ -49,17 +49,11 @@ lemma_hashmap_vt_param :
 
 (********************************************************************)
 
-(* The hash function sets the hash value by reference, so that (for
-   example) a C function can be used without the need for structure
-   return, which has poorly regulated ABI; so the hash can be an
-   array; and so on. See also hashmap$hash_vt_free. *)
+(* The hash value is accessed by reference, so that (for example) the
+   hash value can be an array. See also hashmap$hash_vt_free. *)
 fun {hash_vt : vt@ype}
-    {key_vt  : vtype}
+    {key_vt  : vt@ype}
 hashmap$hash_function : (!key_vt >> _, &hash_vt? >> hash_vt) -> void
-
-(* This interface for the hash-free function is designed not to
-   require passing a structure by value. See also
-   hashmap$hash_function. *)
 fun {hash_vt : vt@ype}
 hashmap$hash_vt_free : (&hash_vt >> hash_vt?!) -> void
 
@@ -67,21 +61,19 @@ hashmap$hash_vt_free : (&hash_vt >> hash_vt?!) -> void
 fun {hash_vt : vt@ype}
 hashmap$bits_source : bits_source_vt (hash_vt)
 
-(* Key and value are assumed to be types that get translated to
-   C pointers. They can be passed in the straightforward way. *)
-fun {key_vt : vtype}
+fun {key_vt : vt@ype}
 hashmap$key_vt_free : key_vt -> void
-fun {value_vt : vtype}
+fun {value_vt : vt@ype}
 hashmap$value_vt_free : value_vt -> void
 
 (* Keys and values need to be copied sometimes. *)
-fun {key_vt : vtype}
+fun {key_vt : vt@ype}
 hashmap$key_vt_copy : (!key_vt >> _) -> key_vt
-fun {value_vt : vtype}
+fun {value_vt : vt@ype}
 hashmap$value_vt_copy : (!value_vt >> _) -> value_vt
 
 (* Keys, of course, have to be tested for equality. *)
-fun {key_vt : vtype}
+fun {key_vt : vt@ype}
 hashmap$key_vt_eq (key_arg    : !key_vt >> _,
                    key_stored : !key_vt >> _) : bool
 
@@ -93,7 +85,7 @@ hashmap () : hashmap_vt (0)
 fun {}
 hashmap_size
         {size : int}
-        {key_vt, value_vt : vtype}
+        {key_vt, value_vt : vt@ype}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     size_t size
 overload size with hashmap_size of 0
@@ -101,7 +93,7 @@ overload size with hashmap_size of 0
 fun {}
 hashmap_is_empty
         {size : int}
-        {key_vt, value_vt : vtype}
+        {key_vt, value_vt : vt@ype}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     bool (size == 0)
 overload iseqz with hashmap_is_empty of 0
@@ -109,13 +101,13 @@ overload iseqz with hashmap_is_empty of 0
 fun {}
 hashmap_isnot_empty
         {size : int}
-        {key_vt, value_vt : vtype}
+        {key_vt, value_vt : vt@ype}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     bool (size != 0)
 overload isneqz with hashmap_isnot_empty of 0
 
 fun {hash_vt : vt@ype}
-    {key_vt, value_vt : vtype}
+    {key_vt, value_vt : vt@ype}
 hashmap_include
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
@@ -126,7 +118,7 @@ hashmap_include
 overload + with hashmap_include of 0
 
 fun {hash_vt : vt@ype}
-    {key_vt, value_vt : vtype}
+    {key_vt, value_vt : vt@ype}
 hashmap_remove
         {size : int}
         (map  : hashmap_vt (key_vt, value_vt, size),
@@ -136,7 +128,7 @@ hashmap_remove
 overload - with hashmap_remove of 0
 
 fun {hash_vt : vt@ype}
-    {key_vt, value_vt : vtype}
+    {key_vt, value_vt : vt@ype}
 hashmap_find
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
@@ -144,25 +136,25 @@ hashmap_find
     Option_vt (value_vt)
 overload [] with hashmap_find of 0
 
-fun {key_vt, value_vt : vtype}
+fun {key_vt, value_vt : vt@ype}
 hashmap_pairs
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (@(key_vt, value_vt), size)
 overload pairs with hashmap_pairs of 0
 
-fun {key_vt : vtype}
+fun {key_vt : vt@ype}
 hashmap_keys
         {size     : int}
-        {value_vt : vtype}
+        {value_vt : vt@ype}
         (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (key_vt, size)
 overload keys with hashmap_keys of 0
 
-fun {value_vt : vtype}
+fun {value_vt : vt@ype}
 hashmap_values
         {size   : int}
-        {key_vt : vtype}
+        {key_vt : vt@ype}
         (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (value_vt, size)
 overload values with hashmap_values of 0

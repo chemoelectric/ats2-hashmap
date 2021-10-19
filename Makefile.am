@@ -391,6 +391,13 @@ EXTRA_DIST += tests/test-population_map.dats
 CLEANFILES += tests/test-population_map
 CLEANFILES += tests/test-population_map_dats.c
 
+check_PROGRAMS += tests/test-a-uint8-map
+tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
+tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES)
+EXTRA_DIST += tests/test-a-uint8-map.dats
+CLEANFILES += tests/test-a-uint8-map
+CLEANFILES += tests/test-a-uint8-map_dats.c
+
 #--------------------------------------------------------------------------
 #
 # Computation of dependencies.

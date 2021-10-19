@@ -66,27 +66,27 @@ prval _ =
 (********************************************************************)
 
 vtypedef
-key_value_vt (key_vt   : vtype+,
-              value_vt : vtype+) =
+key_value_vt (key_vt   : vt@ype+,
+              value_vt : vt@ype+) =
   @{
     key = key_vt,
     value = value_vt
   }
 
 vtypedef
-key_value_list_vt (key_vt   : vtype+,
-                   value_vt : vtype+,
+key_value_list_vt (key_vt   : vt@ype+,
+                   value_vt : vt@ype+,
                    length   : int) =
   list_vt (key_value_vt (key_vt, value_vt), length)
 vtypedef
-key_value_list_vt (key_vt   : vtype+,
-                   value_vt : vtype+) =
+key_value_list_vt (key_vt   : vt@ype+,
+                   value_vt : vt@ype+) =
   [length : int]
   list_vt (key_value_vt (key_vt, value_vt), length)
 
 datavtype
-node_vt (key_vt   : vtype+,
-         value_vt : vtype+) =
+node_vt (key_vt   : vt@ype+,
+         value_vt : vt@ype+) =
 | node_vt_key_value (key_vt, value_vt) of
     key_value_vt (key_vt, value_vt)
 | node_vt_list (key_vt, value_vt) of
@@ -95,8 +95,8 @@ node_vt (key_vt   : vtype+,
 | node_vt_array (key_vt, value_vt) of
     node_array_vt (key_vt, value_vt)
 where
-node_array_vt (key_vt            : vtype+,
-               value_vt          : vtype+,
+node_array_vt (key_vt            : vt@ype+,
+               value_vt          : vt@ype+,
                population_map    : int,
                length            : int,
                p_array           : addr) =
@@ -108,16 +108,16 @@ node_array_vt (key_vt            : vtype+,
     p_array = ptr p_array
   }
 and
-node_array_vt (key_vt            : vtype+,
-               value_vt          : vtype+) =
+node_array_vt (key_vt            : vt@ype+,
+               value_vt          : vt@ype+) =
   [population_map : int]
   [length         : int]
   [p              : addr]
   node_array_vt (key_vt, value_vt, population_map, length, p)
 
 datavtype
-map_vt (key_vt            : vtype+,
-        value_vt          : vtype+,
+map_vt (key_vt            : vt@ype+,
+        value_vt          : vt@ype+,
         size              : int) =
 | map_vt_nil (key_vt, value_vt, 0) of ()
 | {1 <= size}
@@ -167,7 +167,7 @@ hashmap_isnot_empty (map) =
 
 (********************************************************************)
 
-fn {key_vt, value_vt : vtype}
+fn {key_vt, value_vt : vt@ype}
 make_new_array
         {population_map : int}
         (pf_popcount    : POPCOUNT (population_map, 1) |
@@ -241,7 +241,7 @@ val _ = $UN.castvwtp0{void} value
 (********************************************************************)
 
 fun {hash_vt : vt@ype}
-    {key_vt, value_vt : vtype}
+    {key_vt, value_vt : vt@ype}
 find_entry {population_map : int}
            {length  : int}
            {p_array : addr}
