@@ -503,10 +503,8 @@ free_tree {population_map : int}
 
     val [popcount : int] @(pf_popcount | popcount) =
       popcount_with_proof (tree.population_map)
-
     prval _ = popcount_isfun (tree.population_map_view, pf_popcount)
     prval _ = prop_verify {length == popcount} ()
-
     prval _ = popcount_is_nonnegative pf_popcount
     val length = i2sz popcount
   in
