@@ -452,11 +452,27 @@ free_tree {population_map : int}
                         length, succ index, p_array, stack)
             end
           | ~ node_vt_list lst =>
-{prval _ = $UN.castvwtp0{void} lst
-extern praxi foo : {t:vt@ype}{p:addr}(t @ p) -<prf> void
-prval _ = foo(pf_left) prval _ = foo(pf_entry) prval _ = foo(pf_right1)
-extern praxi foo : mfree_gc_v p_array -<prf> void prval _ = foo(pf_mfree)
-prval _ = $UN.castvwtp0{void} stack}// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            let
+              fun
+              loop {n   : int | 0 <= n} .<n>.
+                   (lst : list_vt (key_value_vt (k, v), n)) :
+                  void =
+                case+ lst of
+                | ~ NIL => ()
+                | ~ head :: tail =>
+                  let
+                    val _ = hashmap$key_vt_free<k> (head.key)
+                    val _ = hashmap$value_vt_free<v> (head.value)
+                  in
+                    loop (tail)
+                  end
+              prval _ = lemma_list_vt_param lst
+              val _ = loop (lst)
+              prval pf_left1 = array_v_extend (pf_left, pf_entry)
+            in
+              big_loop (pf_left1, pf_right1, pf_mfree |
+                        length, succ index, p_array, stack)
+            end
           | ~ node_vt_array subtree =>
 {prval _ = $UN.castvwtp0{void} subtree
 extern praxi foo : {t:vt@ype}{p:addr}(t @ p) -<prf> void
