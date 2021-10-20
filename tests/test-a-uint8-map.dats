@@ -139,6 +139,16 @@ test1 () : void =
     val- ~Some_vt value = my_map_find (map, cast8 2)
     val- 36 = value
     val- ~None_vt () = my_map_find (map, cast8 3)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] uint i
+      in
+        for (i := 0U; i <= 255U; i := succ i)
+          if i = 2U then
+            { val- ~Some_vt 36 = my_map_find (map, cast8 i) }
+          else
+            { val- ~None_vt () = my_map_find (map, cast8 i) }
+      end
 
 (* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
     val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
@@ -148,7 +158,11 @@ test1 () : void =
 fn
 test2 () : void =
   {
+    (* Making map a "var" has the disadvantage references to it
+       must be passed around. I cannot recommend making a general
+       practice of this "imperative" style. *)
     var map = hashmap ()
+
     val- 0 = sz2i (size map)
     val- true = iseqz map
     val- false = isneqz map
