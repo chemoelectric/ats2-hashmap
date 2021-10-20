@@ -117,7 +117,6 @@ hashmap_include
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
     hashmap_vt (key_vt, value_vt, new_size)
-// overload + with hashmap_include of 0    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
@@ -127,7 +126,6 @@ hashmap_remove
          key  : !key_vt >> _) :
     [new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
-// overload - with hashmap_remove of 0     // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
@@ -136,14 +134,12 @@ hashmap_find
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
          key  : !key_vt >> _) :
     Option_vt (value_vt)
-overload [] with hashmap_find of 0
 
 fun {key_vt, value_vt : vt@ype}
 hashmap_pairs
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (@(key_vt, value_vt), size)
-overload pairs with hashmap_pairs of 0
 
 fun {key_vt : vt@ype}
 hashmap_keys
@@ -151,7 +147,6 @@ hashmap_keys
         {value_vt : vt@ype}
         (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (key_vt, size)
-overload keys with hashmap_keys of 0
 
 fun {value_vt : vt@ype}
 hashmap_values
@@ -159,7 +154,6 @@ hashmap_values
         {key_vt : vt@ype}
         (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (value_vt, size)
-overload values with hashmap_values of 0
 
 fun {}
 hashmap_free {size : int}
