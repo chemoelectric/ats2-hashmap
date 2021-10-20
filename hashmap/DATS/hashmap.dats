@@ -421,8 +421,8 @@ free_tree {population_map : int}
       (* Depth-first traversal by tail recursion. *)
       if index = length then
         let
-          prval _ = array_v_unnil pf_right
           val _ = array_ptr_free (pf_left, pf_mfree | p_array)
+          prval _ = array_v_unnil pf_right
         in
           case+ stack of
           | ~ NIL => ()
@@ -437,17 +437,33 @@ free_tree {population_map : int}
             end
         end
       else
-        {
-          val p = ptr_add<node_vt> (p_array, index)
-
-
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-extern praxi foo : @[node_vt?!][index] @ p_array -<prf> void prval _ = foo(pf_left)
-extern praxi foo : @[node_vt][length - index] @ (p_array + index * sizeof (node_vt)) -<prf> void prval _ = foo(pf_right)
+        let
+          val p_entry = ptr_add<node_vt> (p_array, index)
+          prval @(pf_entry, pf_right1) = array_v_uncons (pf_right)
+        in
+          case+ !p_entry of
+          | ~ node_vt_key_value key_value =>
+            let
+              val _ = hashmap$key_vt_free<k> (key_value.key)
+              val _ = hashmap$value_vt_free<v> (key_value.value)
+              prval pf_left1 = array_v_extend (pf_left, pf_entry)
+            in
+              big_loop (pf_left1, pf_right1, pf_mfree |
+                        length, succ index, p_array, stack)
+            end
+          | ~ node_vt_list lst =>
+{prval _ = $UN.castvwtp0{void} lst
+extern praxi foo : {t:vt@ype}{p:addr}(t @ p) -<prf> void
+prval _ = foo(pf_left) prval _ = foo(pf_entry) prval _ = foo(pf_right1)
 extern praxi foo : mfree_gc_v p_array -<prf> void prval _ = foo(pf_mfree)
-prval _ = $UN.castvwtp0{void} stack
-// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-        }
+prval _ = $UN.castvwtp0{void} stack}// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          | ~ node_vt_array subtree =>
+{prval _ = $UN.castvwtp0{void} subtree
+extern praxi foo : {t:vt@ype}{p:addr}(t @ p) -<prf> void
+prval _ = foo(pf_left) prval _ = foo(pf_entry) prval _ = foo(pf_right1)
+extern praxi foo : mfree_gc_v p_array -<prf> void prval _ = foo(pf_mfree)
+prval _ = $UN.castvwtp0{void} stack} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        end
 
     val [popcount : int] @(pf_popcount | popcount) =
       popcount_with_proof (tree.population_map)
