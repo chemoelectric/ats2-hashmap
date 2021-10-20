@@ -34,6 +34,8 @@ staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/population_map.dats"
 staload _ = "popcount/DATS/popcount.dats"
 
+macdef cast8 = $UNSAFE.cast{uint8}
+
 local
 
   typedef hash_t = uint8
@@ -95,25 +97,80 @@ in
       Option_vt (value_t) =
     hashmap_find<hash_t><key_t, value_t> {size} (map, key)
 
+  (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
+  (* Support for "imperative" style. *)
+
+  fn
+  my_map_var_include
+          {size  : int}
+          (map   : &my_map_vt size >> my_map_vt new_size,
+           key   : key_t,
+           value : value_t) :
+      #[new_size : int | new_size == size || new_size == size + 1]
+      void =
+    map := my_map_include {size} (map, key, value)
+
+  (* map[key] := value *)
+  overload [] with my_map_var_include
+
+  (* val- Some_vt value = map[key1] *)
+  (* val- None_vt () = map[key2]    *)
+  (* Etc.                           *)
+  overload [] with my_map_find
+
+  (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
+
 end
 
-implement
-main0 () =
+fn
+test1 () : void =
   {
     val map = hashmap ()
     val- 0 = sz2i (size map)
     val- true = iseqz map
     val- false = isneqz map
 
-    val map = my_map_include (map, $UNSAFE.cast{uint8} 2, 36)
+    val map = my_map_include (map, cast8 2, 36)
     val- 1 = sz2i (size map)
     val- false = iseqz map
     val- true = isneqz map
 
-    val- ~Some_vt 36 = my_map_find (map, $UNSAFE.cast{uint8} 2)
-    val- ~None_vt () = my_map_find (map, $UNSAFE.cast{uint8} 3)
+    val- ~Some_vt 36 = my_map_find (map, cast8 2)
+    val- ~Some_vt value = my_map_find (map, cast8 2)
+    val- 36 = value
+    val- ~None_vt () = my_map_find (map, cast8 3)
 
 (* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
     val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
 *)  prval _ = $UNSAFE.castvwtp0{void} map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+  }
+
+fn
+test2 () : void =
+  {
+    var map = hashmap ()
+    val- 0 = sz2i (size map)
+    val- true = iseqz map
+    val- false = isneqz map
+
+    val _ = map[cast8 2] := 36
+    val- 1 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+    val- ~Some_vt 36 = map[cast8 2]
+    val- ~Some_vt value = map[cast8 2]
+    val- 36 = value
+    val- ~None_vt () = map[cast8 3]
+
+(* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+    val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
+*)  prval _ = $UNSAFE.castvwtp0{void} map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+  }
+
+implement
+main0 () =
+  {
+    val _ = test1 ()
+    val _ = test2 ()
   }
