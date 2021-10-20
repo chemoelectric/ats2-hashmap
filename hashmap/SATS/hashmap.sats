@@ -158,6 +158,5 @@ hashmap_values
 fun {key_vt, value_vt : vt@ype}
 hashmap_free {size : int}
              (map  : hashmap_vt (key_vt, value_vt, size)) : void
-overload free with hashmap_free of 0
 
 (********************************************************************)

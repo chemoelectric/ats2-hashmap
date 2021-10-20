@@ -97,6 +97,13 @@ in
       Option_vt (value_t) =
     hashmap_find<hash_t><key_t, value_t> {size} (map, key)
 
+  fn
+  my_map_free
+          {size : int}
+          (map  : my_map_vt size) : void =
+    hashmap_free<key_t, value_t> (map)
+  overload free with my_map_free of 10
+
   (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
   (* Support for "imperative" style. *)
 
@@ -150,9 +157,7 @@ test1 () : void =
             { val- ~None_vt () = my_map_find (map, cast8 i) }
       end
 
-(* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
-    val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
-*)  prval _ = $UNSAFE.castvwtp0{void} map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+    val _ = free map
   }
 
 fn
@@ -177,9 +182,7 @@ test2 () : void =
     val- 36 = value
     val- ~None_vt () = map[cast8 3]
 
-(* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
-    val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
-*)  prval _ = $UNSAFE.castvwtp0{void} map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+    val _ = free map
   }
 
 implement
