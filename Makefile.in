@@ -2416,10 +2416,15 @@ ats-includes-clean:
 
 @DEPENDENCY_TRACKING_TRUE@@GNU@ include $(top_srcdir)/ats-deptracking-rules.mk
 @DEPENDENCY_TRACKING_FALSE@@GNU@ include $(top_srcdir)/ats-nodeptracking-rules.mk
-hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_uint8.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_uint16.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_uint32.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_uint64.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64_uint64.dats: hashmap/DATS/bits_source_uint64_uint64.dats.m4
 
 .PHONY: bits_source_bytes_clean
 bits_source_bytes_clean:

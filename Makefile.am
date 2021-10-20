@@ -226,10 +226,15 @@ nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source-parameters.sats
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/bits_source.dats
 EXTRA_DIST += hashmap/DATS/bits_source_nbytes.dats
-hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
-hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_uint8.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_uint16.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_uint32.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_uint64.dats.m4 \
+									hashmap/DATS/bits_source_UINTnn.dats.m4
+hashmap/DATS/bits_source_uint64_uint64.dats: hashmap/DATS/bits_source_uint64_uint64.dats.m4
 
 BUILT_SOURCES += hashmap/DATS/bits_source_1byte_implementation.dats
 BUILT_SOURCES += hashmap/DATS/bits_source_2bytes_implementation.dats
