@@ -34,65 +34,84 @@ staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/population_map.dats"
 staload _ = "popcount/DATS/popcount.dats"
 
-typedef hash_vt = uint8
-typedef key_vt = uint8
-typedef value_vt = int
+local
 
-implement
-hashmap$hash_function<hash_vt><key_vt> (key, hash) =
-  hash := key
+  typedef hash_t = uint8
+  typedef key_t = uint8
+  typedef value_t = int
 
-implement
-hashmap$hash_vt_free<hash_vt> (hash) =
-  ()
+  implement
+  hashmap$hash_function<hash_t><key_t> (key, hash) =
+    hash := key
 
-implement
-hashmap$bits_source<hash_vt> (hash, depth) =
-  bits_source_uint8 (hash, depth)
+  implement
+  hashmap$hash_vt_free<hash_t> (hash) =
+    ()
 
-implement
-hashmap$key_vt_free<key_vt> (key) =
-  ()
+  implement
+  hashmap$bits_source<hash_t> (hash, depth) =
+    bits_source_uint8 (hash, depth)
 
-implement
-hashmap$value_vt_free<value_vt> (value) =
-  ()
+  implement
+  hashmap$key_vt_free<key_t> (key) =
+    ()
 
-implement
-hashmap$key_vt_copy<key_vt> (key) =
-  key
+  implement
+  hashmap$value_vt_free<value_t> (value) =
+    ()
 
-implement
-hashmap$value_vt_copy<value_vt> (value) =
-  value
+  implement
+  hashmap$key_vt_copy<key_t> (key) =
+    key
 
-implement
-hashmap$key_vt_eq<key_vt> (key_arg, key_stored) =
-  key_arg = key_stored
+  implement
+  hashmap$value_vt_copy<value_t> (value) =
+    value
+
+  implement
+  hashmap$key_vt_eq<key_t> (key_arg, key_stored) =
+    key_arg = key_stored
+
+in
+
+  vtypedef my_map_vt (size : int) = hashmap_vt (key_t, value_t, size)
+  vtypedef my_map_vt = [size : int] my_map_vt (size)
+
+  fn
+  my_map_include
+          {size  : int}
+          (map   : my_map_vt size,
+           key   : key_t,
+           value : value_t) :
+      [new_size : int | new_size == size || new_size == size + 1]
+      my_map_vt new_size =
+    hashmap_include<hash_t><key_t, value_t> {size} (map, key, value)
+
+  fn
+  my_map_find
+          {size : int}
+          (map  : !my_map_vt size >> _,
+           key  : !key_t >> _) :
+      Option_vt (value_t) =
+    hashmap_find<hash_t><key_t, value_t> {size} (map, key)
+
+end
 
 implement
 main0 () =
   {
     val map = hashmap ()
-    val map =
-      hashmap_include<hash_vt><key_vt, value_vt>
-        (map, $UNSAFE.cast{uint8} 2, 36)
+    val- 0 = sz2i (size map)
+    val- true = iseqz map
+    val- false = isneqz map
 
-    val result =
-      hashmap_find<hash_vt><key_vt, value_vt>
-        (map, $UNSAFE.cast{uint8} 2)
-    val _ =
-      case+ result of
-      | ~ None_vt () => println! ("None_vt ()")
-      | ~ Some_vt value => println! ("Some_vt (", value : int, ")")
+    val map = my_map_include (map, $UNSAFE.cast{uint8} 2, 36)
+    val- 1 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
 
-    val result =
-      hashmap_find<hash_vt><key_vt, value_vt>
-        (map, $UNSAFE.cast{uint8} 3)
-    val _ =
-      case+ result of
-      | ~ None_vt () => println! ("None_vt ()")
-      | ~ Some_vt value => println! ("Some_vt (", value : int, ")")
+    val- ~Some_vt 36 = my_map_find (map, $UNSAFE.cast{uint8} 2)
+    val- ~None_vt () = my_map_find (map, $UNSAFE.cast{uint8} 3)
 
 (* FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
     val _ = free map // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME: ****** NOT YET IMPLEMENTED ******
