@@ -38,8 +38,6 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-//#include "hashmap/HATS/bits-source-include.hats"
-
 staload UN = "prelude/SATS/unsafe.sats"
 
 staload "hashmap/SATS/hashmap.sats"
@@ -251,7 +249,7 @@ find_entry {population_map : int}
                                       population_map,
                                       length, p_array) >> _,
             key     : !key_vt >> _,
-            depth   : uint depth) : Option_vt (value_vt) =
+            depth   : size_t depth) : Option_vt (value_vt) =
   let
     vtypedef t = node_vt (key_vt, value_vt)
     vtypedef kv_t = key_value_vt (key_vt, value_vt)
@@ -374,11 +372,101 @@ hashmap_find (map, key) =
 
       val result =
         find_entry<hash_vt><key_vt, value_vt>
-          (hash, root.tree, key, 0U)
+          (hash, root.tree, key, i2sz 0)
 
       val () = hashmap$hash_vt_free<hash_vt> (hash)
     in
       result
     end
+
+(********************************************************************)
+
+fn {key_vt, value_vt : vt@ype}
+free_tree {population_map : int}
+          {length         : int}
+          {p_array        : addr}
+          (tree : node_array_vt (key_vt, value_vt, population_map,
+                                 length, p_array)) : void =
+  let
+    vtypedef k = key_vt
+    vtypedef v = value_vt
+    vtypedef node_vt = node_vt (k, v)
+
+    vtypedef stkentry_vt (n : int, i : int, p : addr) =
+      @(@[node_vt?!][i] @ p,
+        @[node_vt][n - i] @ (p + i * sizeof (node_vt)),
+        mfree_gc_v p |
+        size_t n,
+        size_t i,
+        ptr p)
+    vtypedef stkentry_vt =
+      [n : int]
+      [i : int | i <= n]
+      [p : addr]
+      stkentry_vt (n, i, p)
+
+    fun
+    big_loop {length   : int | 0 <= length}
+             {index    : int | 0 <= index; index <= length}
+             {p_array  : addr}
+             {stacksz  : int | 0 <= stacksz}
+             (pf_left  : @[node_vt?!][index] @ p_array,
+              pf_right : @[node_vt][length - index]
+                            @ (p_array + index * sizeof (node_vt)),
+              pf_mfree : mfree_gc_v p_array |
+              length   : size_t length,
+              index    : size_t index,
+              p_array  : ptr p_array,
+              stack    : list_vt (stkentry_vt, stacksz)) : void =
+      (* Depth-first traversal by tail recursion. *)
+      if index = length then
+        let
+          prval _ = array_v_unnil pf_right
+          val _ = array_ptr_free (pf_left, pf_mfree | p_array)
+        in
+          case+ stack of
+          | ~ NIL => ()
+          | ~ head :: tail =>
+            let
+              val @(pf_left, pf_right, pf_mfree |
+                    length, index, p_array) = head
+              prval _ = lemma_g1uint_param index
+            in
+              big_loop (pf_left, pf_right, pf_mfree |
+                        length, index, p_array, tail)
+            end
+        end
+      else
+        {
+          val p = ptr_add<node_vt> (p_array, index)
+
+
+// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+extern praxi foo : @[node_vt?!][index] @ p_array -<prf> void prval _ = foo(pf_left)
+extern praxi foo : @[node_vt][length - index] @ (p_array + index * sizeof (node_vt)) -<prf> void prval _ = foo(pf_right)
+extern praxi foo : mfree_gc_v p_array -<prf> void prval _ = foo(pf_mfree)
+prval _ = $UN.castvwtp0{void} stack
+// FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        }
+
+    val [popcount : int] @(pf_popcount | popcount) =
+      popcount_with_proof (tree.population_map)
+
+    prval _ = popcount_isfun (tree.population_map_view, pf_popcount)
+    prval _ = prop_verify {length == popcount} ()
+
+    prval _ = popcount_is_nonnegative pf_popcount
+    val length = i2sz popcount
+  in
+    big_loop (array_v_nil (), tree.array_view, tree.mfree_view |
+              length, i2sz 0, tree.p_array, NIL)
+  end
+
+implement {key_vt, value_vt}
+hashmap_free (map) =
+  case+ map of
+  | ~ map_vt_nil () => ()
+  | ~ map_vt_root @{size = _, tree = tree} =>
+    free_tree<key_vt, value_vt> (tree)
 
 (********************************************************************)

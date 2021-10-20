@@ -155,9 +155,8 @@ hashmap_values
         (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (value_vt, size)
 
-fun {}
+fun {key_vt, value_vt : vt@ype}
 hashmap_free {size : int}
-             {key_vt, value_vt : vt@ype}
              (map  : hashmap_vt (key_vt, value_vt, size)) : void
 overload free with hashmap_free of 0
 
