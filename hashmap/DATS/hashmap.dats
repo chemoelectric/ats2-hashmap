@@ -427,6 +427,8 @@ free_tree {population_map : int}
           case+ stack of
           | ~ NIL => ()
           | ~ head :: tail =>
+            (* Pop a stack entry and continue where we left off
+               in an array. *)
             let
               val @(pf_left, pf_right, pf_mfree |
                     length, index, p_array) = head
@@ -443,6 +445,7 @@ free_tree {population_map : int}
         in
           case+ !p_entry of
           | ~ node_vt_key_value key_value =>
+            (* Free a key-value pair. *)
             let
               val _ = hashmap$key_vt_free<k> (key_value.key)
               val _ = hashmap$value_vt_free<v> (key_value.value)
@@ -452,6 +455,7 @@ free_tree {population_map : int}
                         length, succ index, p_array, stack)
             end
           | ~ node_vt_list lst =>
+            (* Free a list of key-value pairs. *)
             let
               fun
               loop {n   : int | 0 <= n} .<n>.
@@ -474,11 +478,27 @@ free_tree {population_map : int}
                         length, succ index, p_array, stack)
             end
           | ~ node_vt_array subtree =>
-{prval _ = $UN.castvwtp0{void} subtree
-extern praxi foo : {t:vt@ype}{p:addr}(t @ p) -<prf> void
-prval _ = foo(pf_left) prval _ = foo(pf_entry) prval _ = foo(pf_right1)
-extern praxi foo : mfree_gc_v p_array -<prf> void prval _ = foo(pf_mfree)
-prval _ = $UN.castvwtp0{void} stack} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            (* The node is a subtree. Push a stack entry for
+               the next position in the current array; then loop to
+               handle the subtree. *)
+            let
+              val stack_entry =
+                @(array_v_extend (pf_left, pf_entry),
+                  pf_right1, pf_mfree |
+                  length, succ index, p_array)
+              val stack = stack_entry :: stack
+
+              val [popcount : int] @(pf_popcount | popcount) =
+                popcount_with_proof (subtree.population_map)
+              prval _ = popcount_isfun (subtree.population_map_view,
+                                        pf_popcount)
+              prval _ = popcount_is_nonnegative pf_popcount
+              val length = i2sz popcount
+            in
+              big_loop (array_v_nil (), subtree.array_view,
+                        subtree.mfree_view |
+                        length, i2sz 0, subtree.p_array, stack)
+            end
         end
 
     val [popcount : int] @(pf_popcount | popcount) =
