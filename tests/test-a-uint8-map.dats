@@ -161,6 +161,16 @@ test1 () : void =
     val- true = iseqz map
     val- false = isneqz map
 
+    val pairs = my_map_pairs map
+    val keys = my_map_keys map
+    val values = my_map_values map
+    val _ = assertloc (length pairs = 0)
+    val _ = assertloc (length keys = 0)
+    val _ = assertloc (length values = 0)
+    val+ ~ NIL = pairs
+    val+ ~ NIL = keys
+    val+ ~ NIL = values
+
     val map = my_map_include (map, cast8 2, 36)
     val- 1 = sz2i (size map)
     val- false = iseqz map
@@ -191,37 +201,21 @@ test1 () : void =
     val _ = loop (map, 0U)
 
     val pairs = my_map_pairs map
-    val _ = assertloc (length pairs = 1)
-    val _ =
-      case+ pairs of
-      | ~ @(key, value) :: tail =>
-        begin
-          assertloc (key = cast8 2);
-          assertloc (value = 36);
-          free tail
-        end
-
     val keys = my_map_keys map
-    val _ = assertloc (length keys = 1)
-    val _ =
-      case+ keys of
-      | ~ key :: tail =>
-        begin
-          assertloc (key = cast8 2);
-          free tail
-        end
-
     val values = my_map_values map
+    val _ = assertloc (length pairs = 1)
+    val _ = assertloc (length keys = 1)
     val _ = assertloc (length values = 1)
-    val _ =
-      case+ values of
-      | ~ value :: tail =>
-        begin
-          assertloc (value = 36);
-          free tail
-        end
-
-    val- ~Some_vt 36 = my_map_find (map, cast8 2)
+    val+ ~ @(key, value) :: tail = pairs
+    val+ ~ NIL = tail
+    val _ = assertloc (key = cast8 2)
+    val _ = assertloc (value = 36)
+    val+ ~ key :: tail = keys
+    val+ ~ NIL = tail
+    val _ = assertloc (key = cast8 2)
+    val+ ~ value :: tail = values
+    val+ ~ NIL = tail
+    val _ = assertloc (value = 36)
 
     val _ = free map
   }
