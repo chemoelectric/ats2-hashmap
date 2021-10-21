@@ -384,8 +384,8 @@ hashmap_find (map, key) =
 extern fn {list_entry_vt    : vt@ype}
           {key_vt, value_vt : vt@ype}
 make_list$make_list_entry
-        (key   : !key_vt >> _,
-         value : !value_vt >> _) : list_entry_vt
+        (key_value : !key_value_vt (key_vt, value_vt) >> _) :
+    list_entry_vt
 
 fn {list_entry_vt    : vt@ype}
    {key_vt, value_vt : vt@ype}
@@ -453,10 +453,8 @@ make_list {size    : int}
                     p_array = p_array
                   } = head
               prval _ = lemma_g1uint_param index
-              val results = big_loop (length, index, p_array,
-                                      tail, result, nresult)
             in
-              results
+              big_loop (length, index, p_array, tail, result, nresult)
             end
         end
       else
@@ -475,7 +473,7 @@ make_list {size    : int}
           val entry = !p_entry
 
           (* Restore the view. *)
-          prval _ = $UN.castview2void_at{node_vt} pf_entry
+          prval _ = $UNSAFE.castview2void_at{node_vt} pf_entry
 
           prval pf_array =
             array_v_merge_entry
@@ -489,8 +487,8 @@ make_list {size    : int}
             let
               val list_entry =
                 make_list$make_list_entry<list_entry_vt><k,v>
-                  (key_value.key, key_value.value)
-              val _ = $UN.castvwtp0{void} entry
+                  (key_value)
+              val _ = $UNSAFE.castvwtp0{void} entry
             in
               big_loop (length, succ index, p_array, stack,
                         list_entry :: result, succ nresult)
@@ -513,7 +511,7 @@ make_list {size    : int}
                   let
                     val list_entry =
                       make_list$make_list_entry<list_entry_vt><k,v>
-                        (head.key, head.value)
+                        (head)
                     val result_pair =
                       loop (tail, list_entry :: result, succ nresult)
                     prval _ = fold@ lst
@@ -523,7 +521,7 @@ make_list {size    : int}
 
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
-              val _ = $UN.castvwtp0{void} entry
+              val _ = $UNSAFE.castvwtp0{void} entry
 
               prval _ = lemma_g1uint_param nresult
             in
@@ -553,7 +551,7 @@ make_list {size    : int}
                 big_loop (length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
               prval _ = fold@ entry
-              val _ = $UN.castvwtp0{void} entry
+              val _ = $UNSAFE.castvwtp0{void} entry
             in
               results
             end
@@ -587,9 +585,9 @@ hashmap_pairs {size} (map) =
       vtypedef list_entry_vt = @(key_vt, value_vt)
 
       implement
-      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
-        @(hashmap$key_vt_copy key,
-          hashmap$value_vt_copy value)
+      make_list$make_list_entry<list_entry_vt><k,v> (key_value) =
+        @(hashmap$key_vt_copy (key_value.key),
+          hashmap$value_vt_copy (key_value.value))
 
       val result =
         make_list<list_entry_vt><k,v> {size} (root.size, root.tree)
@@ -597,8 +595,8 @@ hashmap_pairs {size} (map) =
       result
     end
 
-implement {key_vt}
-hashmap_keys {size} {value_vt} (map) =
+implement {key_vt, value_vt}
+hashmap_keys {size} (map) =
   case+ map of
   | map_vt_nil () => NIL
   | map_vt_root root =>
@@ -608,8 +606,8 @@ hashmap_keys {size} {value_vt} (map) =
       vtypedef list_entry_vt = key_vt
 
       implement
-      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
-        hashmap$key_vt_copy key
+      make_list$make_list_entry<list_entry_vt><k,v> (key_value) =
+        hashmap$key_vt_copy (key_value.key)
 
       val result =
         make_list<list_entry_vt><k,v> {size} (root.size, root.tree)
@@ -617,8 +615,8 @@ hashmap_keys {size} {value_vt} (map) =
       result
     end
 
-implement {value_vt}
-hashmap_values {size} {key_vt} (map) =
+implement {key_vt, value_vt}
+hashmap_values {size} (map) =
   case+ map of
   | map_vt_nil () => NIL
   | map_vt_root root =>
@@ -628,8 +626,8 @@ hashmap_values {size} {key_vt} (map) =
       vtypedef list_entry_vt = value_vt
 
       implement
-      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
-        hashmap$value_vt_copy value
+      make_list$make_list_entry<list_entry_vt><k,v> (key_value) =
+        hashmap$value_vt_copy (key_value.value)
 
       val result =
         make_list<list_entry_vt><k,v> {size} (root.size, root.tree)

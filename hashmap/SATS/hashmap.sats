@@ -141,17 +141,15 @@ hashmap_pairs
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (@(key_vt, value_vt), size)
 
-fun {key_vt : vt@ype}
+fun {key_vt, value_vt : vt@ype}
 hashmap_keys
         {size     : int}
-        {value_vt : vt@ype}
         (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (key_vt, size)
 
-fun {value_vt : vt@ype}
+fun {key_vt, value_vt : vt@ype}
 hashmap_values
         {size   : int}
-        {key_vt : vt@ype}
         (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
     list_vt (value_vt, size)
 

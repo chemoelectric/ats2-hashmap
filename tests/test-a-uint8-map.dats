@@ -34,6 +34,9 @@ staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/population_map.dats"
 staload _ = "popcount/DATS/popcount.dats"
 
+#define NIL list_vt_nil ()
+#define :: list_vt_cons
+
 macdef cast8 = $UNSAFE.cast{uint8}
 
 local
@@ -98,6 +101,27 @@ in
     hashmap_find<hash_t><key_t, value_t> {size} (map, key)
 
   fn
+  my_map_pairs
+          {size : int}
+          (map  : !my_map_vt size >> _) :
+      list_vt (@(key_t, value_t), size) =
+    hashmap_pairs<key_t, value_t> {size} map
+
+  fn
+  my_map_keys
+          {size : int}
+          (map  : !my_map_vt size >> _) :
+      list_vt (key_t, size) =
+    hashmap_keys<key_t, value_t> {size} map
+
+  fn
+  my_map_values
+          {size : int}
+          (map  : !my_map_vt size >> _) :
+      list_vt (value_t, size) =
+    hashmap_values<key_t, value_t> {size} map
+
+  fn
   my_map_free
           {size : int}
           (map  : my_map_vt size) : void =
@@ -146,16 +170,58 @@ test1 () : void =
     val- ~Some_vt value = my_map_find (map, cast8 2)
     val- 36 = value
     val- ~None_vt () = my_map_find (map, cast8 3)
+
+    fun
+    loop {i   : int | 0 <= i; i <= 256} .<256 - i>.
+         (map : !my_map_vt 1 >> _,
+          i   : uint i) : void =
+      if i <> 256U then
+        case+ my_map_find (map, cast8 i) of
+        | ~ Some_vt n =>
+          begin
+            assertloc (i = 2U);
+            assertloc (n = 36);
+            loop (map, succ i)
+          end
+        | ~ None_vt () =>
+          begin
+            assertloc (i <> 2U);
+            loop (map, succ i)
+          end
+    val _ = loop (map, 0U)
+
+    val pairs = my_map_pairs map
+    val _ = assertloc (length pairs = 1)
     val _ =
-      let
-        var i : [i : int | 0 <= i; i <= 256] uint i
-      in
-        for (i := 0U; i <= 255U; i := succ i)
-          if i = 2U then
-            { val- ~Some_vt 36 = my_map_find (map, cast8 i) }
-          else
-            { val- ~None_vt () = my_map_find (map, cast8 i) }
-      end
+      case+ pairs of
+      | ~ @(key, value) :: tail =>
+        begin
+          assertloc (key = cast8 2);
+          assertloc (value = 36);
+          free tail
+        end
+
+    val keys = my_map_keys map
+    val _ = assertloc (length keys = 1)
+    val _ =
+      case+ keys of
+      | ~ key :: tail =>
+        begin
+          assertloc (key = cast8 2);
+          free tail
+        end
+
+    val values = my_map_values map
+    val _ = assertloc (length values = 1)
+    val _ =
+      case+ values of
+      | ~ value :: tail =>
+        begin
+          assertloc (value = 36);
+          free tail
+        end
+
+    val- ~Some_vt 36 = my_map_find (map, cast8 2)
 
     val _ = free map
   }
