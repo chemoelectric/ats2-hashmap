@@ -381,6 +381,264 @@ hashmap_find (map, key) =
 
 (********************************************************************)
 
+extern fn {list_entry_vt    : vt@ype}
+          {key_vt, value_vt : vt@ype}
+make_list$make_list_entry
+        (key   : !key_vt >> _,
+         value : !value_vt >> _) : list_entry_vt
+
+fn {list_entry_vt    : vt@ype}
+   {key_vt, value_vt : vt@ype}
+make_list {size    : int}
+          {population_map : int}
+          {length  : int}
+          {p_array : addr}
+          (size    : size_t size,
+           tree    : !node_array_vt (key_vt, value_vt, population_map,
+                                     length, p_array) >> _) :
+    list_vt (list_entry_vt, size) =
+  let
+    vtypedef k = key_vt
+    vtypedef v = value_vt
+    vtypedef node_vt = node_vt (k, v)
+
+    extern praxi
+    UNSAFELY_make_array_v :
+      {n : int} {p : addr} () -<prf> @[node_vt][n] @ p
+
+    extern praxi
+    UNSAFELY_consume_array_v :
+      {n : int} {p : addr} @[node_vt][n] @ p -<prf> void
+
+    vtypedef stkentry_vt (n : int, i : int, p : addr) =
+      @{
+        length = size_t n,
+        index = size_t i,
+        p_array = ptr p
+      }
+    vtypedef stkentry_vt =
+      [n : int]
+      [i : int | i <= n]
+      [p : addr]
+      stkentry_vt (n, i, p)
+
+    fun
+    big_loop {length   : int | 0 <= length}
+             {p_array  : addr}
+             {index    : int | 0 <= index; index <= length}
+             {stacksz  : int | 0 <= stacksz}
+             {nresult  : int | 0 <= nresult}
+             (length   : size_t length,
+              index    : size_t index,
+              p_array  : ptr p_array,
+              stack    : list_vt (stkentry_vt, stacksz),
+              result   : list_vt (list_entry_vt, nresult),
+              nresult  : size_t nresult) :
+        [nresult : int]
+        @(list_vt (list_entry_vt, nresult),
+          size_t nresult) =
+      (* Depth-first traversal by tail recursion.      
+         Some "mildly unsafe" operations are employed. *)
+      if index = length then
+        begin
+          case+ stack of
+          | ~ NIL => @(result, nresult)
+          | ~ head :: tail =>
+            (* Pop a stack entry and continue where we left off
+               in an array. *)
+            let
+              val @{
+                    length = length,
+                    index = index,
+                    p_array = p_array
+                  } = head
+              prval _ = lemma_g1uint_param index
+              val results = big_loop (length, index, p_array,
+                                      tail, result, nresult)
+            in
+              results
+            end
+        end
+      else
+        let
+          val p_entry = ptr_add<node_vt> (p_array, index)
+
+          prval pf_array =
+            UNSAFELY_make_array_v {length} {p_array} ()
+          prval @(pf_left, pf_entry, pf_right) =
+            array_v_isolate_entry
+              {node_vt} {p_array} {length} {index}
+              pf_array
+
+          (* Copy the entry. Doing this converts the view
+             to @[node_vt?!][..] @ (..) *)
+          val entry = !p_entry
+
+          (* Restore the view. *)
+          prval _ = $UN.castview2void_at{node_vt} pf_entry
+
+          prval pf_array =
+            array_v_merge_entry
+              {node_vt} {p_array} {length} {index}
+              (pf_left, pf_entry, pf_right)
+          prval () = UNSAFELY_consume_array_v pf_array
+        in
+          case+ entry of
+          | node_vt_key_value key_value =>
+            (* Cons a list entry. *)
+            let
+              val list_entry =
+                make_list$make_list_entry<list_entry_vt><k,v>
+                  (key_value.key, key_value.value)
+              val _ = $UN.castvwtp0{void} entry
+            in
+              big_loop (length, succ index, p_array, stack,
+                        list_entry :: result, succ nresult)
+            end
+          | node_vt_list lst =>
+            (* Cons multiple list entries. *)
+            let
+              fun
+              loop {n       : int | 0 <= n}
+                   {nresult : int | 0 <= nresult} .<n>.
+                   (lst     : !list_vt (key_value_vt (k, v), n) >> _,
+                    result  : list_vt (list_entry_vt, nresult),
+                    nresult : size_t nresult) :
+                  [nresult : int]
+                  @(list_vt (list_entry_vt, nresult),
+                    size_t nresult) =
+                case+ lst of
+                | NIL => @(result, nresult)
+                | @ head :: tail =>
+                  let
+                    val list_entry =
+                      make_list$make_list_entry<list_entry_vt><k,v>
+                        (head.key, head.value)
+                    val result_pair =
+                      loop (tail, list_entry :: result, succ nresult)
+                    prval _ = fold@ lst
+                  in
+                    result_pair
+                  end
+
+              prval _ = lemma_list_vt_param lst
+              val @(result, nresult) = loop (lst, result, nresult)
+              val _ = $UN.castvwtp0{void} entry
+
+              prval _ = lemma_g1uint_param nresult
+            in
+              big_loop (length, succ index, p_array, stack,
+                        result, nresult)
+            end
+          | @ node_vt_array subtree =>
+            (* The node is a subtree. Push a stack entry for
+               the next position in the current array; then loop to
+               handle the subtree. *)
+            let
+              val stack_entry =
+                @{
+                  length = length,
+                  index = succ index,
+                  p_array = p_array
+                }
+              val stack = stack_entry :: stack
+
+              val [popcount : int] @(pf_popcount | popcount) =
+                popcount_with_proof (subtree.population_map)
+              prval _ = popcount_isfun (subtree.population_map_view,
+                                        pf_popcount)
+              prval _ = popcount_is_nonnegative pf_popcount
+              val length = i2sz popcount
+              val results =
+                big_loop (length, i2sz 0, subtree.p_array, stack,
+                          result, nresult)
+              prval _ = fold@ entry
+              val _ = $UN.castvwtp0{void} entry
+            in
+              results
+            end
+        end
+
+    val [popcount : int] @(pf_popcount | popcount) =
+      popcount_with_proof (tree.population_map)
+    prval _ = popcount_isfun (tree.population_map_view, pf_popcount)
+    prval _ = prop_verify {length == popcount} ()
+    prval _ = popcount_is_nonnegative pf_popcount
+    val length = i2sz popcount
+
+    val @(result, nresult) =
+      big_loop (length, i2sz 0, tree.p_array, NIL, NIL, i2sz 0)
+
+    (* Equality of the sizes of the hashmap and the result list
+       is checked at runtime, rather than proven. *)
+    val _ = assertloc (size = nresult)
+  in
+    result
+  end
+
+implement {key_vt, value_vt}
+hashmap_pairs {size} (map) =
+  case+ map of
+  | map_vt_nil () => NIL
+  | map_vt_root root =>
+    let
+      vtypedef k = key_vt
+      vtypedef v = value_vt
+      vtypedef list_entry_vt = @(key_vt, value_vt)
+
+      implement
+      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
+        @(hashmap$key_vt_copy key,
+          hashmap$value_vt_copy value)
+
+      val result =
+        make_list<list_entry_vt><k,v> {size} (root.size, root.tree)
+    in
+      result
+    end
+
+implement {key_vt}
+hashmap_keys {size} {value_vt} (map) =
+  case+ map of
+  | map_vt_nil () => NIL
+  | map_vt_root root =>
+    let
+      vtypedef k = key_vt
+      vtypedef v = value_vt
+      vtypedef list_entry_vt = key_vt
+
+      implement
+      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
+        hashmap$key_vt_copy key
+
+      val result =
+        make_list<list_entry_vt><k,v> {size} (root.size, root.tree)
+    in
+      result
+    end
+
+implement {value_vt}
+hashmap_values {size} {key_vt} (map) =
+  case+ map of
+  | map_vt_nil () => NIL
+  | map_vt_root root =>
+    let
+      vtypedef k = key_vt
+      vtypedef v = value_vt
+      vtypedef list_entry_vt = value_vt
+
+      implement
+      make_list$make_list_entry<list_entry_vt><k,v> (key, value) =
+        hashmap$value_vt_copy value
+
+      val result =
+        make_list<list_entry_vt><k,v> {size} (root.size, root.tree)
+    in
+      result
+    end
+
+(********************************************************************)
+
 fn {key_vt, value_vt : vt@ype}
 free_tree {population_map : int}
           {length         : int}
