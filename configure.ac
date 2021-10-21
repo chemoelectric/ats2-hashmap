@@ -130,6 +130,16 @@ AC_SUBST([REQUIRES_PRIVATE_PKGS])
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+AC_SUBST([WARNING_CFLAGS])
+if test -z "${WARNING_CFLAGS}"; then
+   StM_GNU_C_FLAGS([WARNING_CFLAGS],
+      [-Wpointer-arith],
+      [-Wl[,]--warn-common])
+fi
+if test -n "${WARNING_CFLAGS}"; then
+  CFLAGS="${CFLAGS}${CFLAGS+ }${WARNING_CFLAGS}"
+fi
+
 #--------------------------------------------------------------------------
 #
 # Checks for library functions.
