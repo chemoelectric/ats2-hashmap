@@ -468,18 +468,7 @@ make_list {size    : int}
               {node_vt} {p_array} {length} {index}
               pf_array
 
-          (* Copy the entry. Doing this converts the view
-             to @[node_vt?!][..] @ (..) *)
-          val entry = !p_entry
-
-          (* Restore the view. *)
-          prval _ = $UNSAFE.castview2void_at{node_vt} pf_entry
-
-          prval pf_array =
-            array_v_merge_entry
-              {node_vt} {p_array} {length} {index}
-              (pf_left, pf_entry, pf_right)
-          prval () = UNSAFELY_consume_array_v pf_array
+          macdef entry = !p_entry
         in
           case+ entry of
           | node_vt_key_value key_value =>
@@ -488,7 +477,12 @@ make_list {size    : int}
               val list_entry =
                 make_list$make_list_entry<list_entry_vt><k,v>
                   (key_value)
-              val _ = $UNSAFE.castvwtp0{void} entry
+
+              prval pf_array =
+                array_v_merge_entry
+                  {node_vt} {p_array} {length} {index}
+                  (pf_left, pf_entry, pf_right)
+              prval () = UNSAFELY_consume_array_v pf_array
             in
               big_loop (length, succ index, p_array, stack,
                         list_entry :: result, succ nresult)
@@ -521,7 +515,12 @@ make_list {size    : int}
 
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
-              val _ = $UNSAFE.castvwtp0{void} entry
+
+              prval pf_array =
+                array_v_merge_entry
+                  {node_vt} {p_array} {length} {index}
+                  (pf_left, pf_entry, pf_right)
+              prval () = UNSAFELY_consume_array_v pf_array
 
               prval _ = lemma_g1uint_param nresult
             in
@@ -551,7 +550,12 @@ make_list {size    : int}
                 big_loop (length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
               prval _ = fold@ entry
-              val _ = $UNSAFE.castvwtp0{void} entry
+
+              prval pf_array =
+                array_v_merge_entry
+                  {node_vt} {p_array} {length} {index}
+                  (pf_left, pf_entry, pf_right)
+              prval () = UNSAFELY_consume_array_v pf_array
             in
               results
             end
