@@ -441,8 +441,7 @@ make_list {size    : int}
         [nresult : int]
         @(list_vt (list_entry_vt, nresult),
           size_t nresult) =
-      (* Depth-first traversal by tail recursion.      
-         Some "mildly unsafe" operations are employed. *)
+      (* Depth-first traversal by tail recursion. *)
       if index = length then
         begin
           case+ stack of
@@ -457,14 +456,11 @@ make_list {size    : int}
                     p_array = p_array
                   } = head
               prval _ = lemma_g1uint_param index
-
               prval pf_array1 =
                 UNSAFELY_make_array_v (length, p_array)
-  
               val results =
                 big_loop (pf_array1 | length, index, p_array, tail,
                           result, nresult)
-
               prval _ = UNSAFELY_consume_array_v pf_array1
             in
               results
@@ -473,11 +469,9 @@ make_list {size    : int}
       else
         let
           val p_entry = ptr_add<node_vt> (p_array, index)
-
           prval @(pf_entry, fpf_restore_array) =
             array_v_takeout {node_vt} {p_array} {length} {index}
                             pf_array
-
           macdef entry = !p_entry
         in
           case+ entry of
@@ -518,12 +512,9 @@ make_list {size    : int}
                   in
                     result_pair
                   end
-
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
-
               prval _ = pf_array := fpf_restore_array pf_entry
-
               prval _ = lemma_g1uint_param nresult
             in
               big_loop (pf_array | length, succ index, p_array, stack,
@@ -550,14 +541,12 @@ make_list {size    : int}
               val length = i2sz popcount
 
               prval pf_array_subtree =
-                UNSAFELY_make_array_v (length, subtree.p_array) 
-
+                UNSAFELY_make_array_v (length, subtree.p_array)
               val results =
                 big_loop
                   (pf_array_subtree |
                    length, i2sz 0, subtree.p_array, stack,
                    result, nresult)
-
               prval _ = UNSAFELY_consume_array_v pf_array_subtree
 
               prval _ = fold@ entry
