@@ -110,7 +110,7 @@ overload isneqz with hashmap_isnot_empty of 0
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
-hashmap_include
+hashmap_set
         {size  : int}
         (map   : hashmap_vt (key_vt, value_vt, size),
          key   : key_vt,
@@ -120,7 +120,7 @@ hashmap_include
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
-hashmap_remove
+hashmap_del
         {size : int}
         (map  : hashmap_vt (key_vt, value_vt, size),
          key  : !key_vt >> _) :
@@ -129,7 +129,7 @@ hashmap_remove
 
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
-hashmap_find
+hashmap_get_opt
         {size : int}
         (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
          key  : !key_vt >> _) :

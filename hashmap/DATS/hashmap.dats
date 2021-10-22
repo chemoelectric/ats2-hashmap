@@ -196,7 +196,7 @@ make_new_array
 (********************************************************************)
 
 implement {hash_vt} {key_vt, value_vt}
-hashmap_include {size} (map, key, value) =
+hashmap_set {size} (map, key, value) =
   case+ map of
   | ~ map_vt_nil () =>
     let
@@ -361,7 +361,7 @@ find_entry {population_map : int}
   end
 
 implement {hash_vt} {key_vt, value_vt}
-hashmap_find (map, key) =
+hashmap_get_opt (map, key) =
   case+ map of
   | map_vt_nil () => None_vt ()
   | map_vt_root root =>
