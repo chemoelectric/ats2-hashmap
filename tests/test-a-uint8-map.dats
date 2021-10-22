@@ -132,7 +132,7 @@ in
   (* Support for "imperative" style. *)
 
   fn
-  my_map_var_include
+  my_map_var_set
           {size  : int}
           (map   : &my_map_vt size >> my_map_vt new_size,
            key   : key_t,
@@ -142,7 +142,7 @@ in
     map := my_map_set {size} (map, key, value)
 
   (* map[key] := value *)
-  overload [] with my_map_var_include
+  overload [] with my_map_var_set
 
   (* val- Some_vt value = map[key1] *)
   (* val- None_vt () = map[key2]    *)
