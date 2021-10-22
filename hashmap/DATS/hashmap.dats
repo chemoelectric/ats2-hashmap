@@ -540,14 +540,10 @@ make_list {size    : int}
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
 
-              prval pf_array_subtree =
-                UNSAFELY_make_array_v (length, subtree.p_array)
               val results =
-                big_loop
-                  (pf_array_subtree |
-                   length, i2sz 0, subtree.p_array, stack,
-                   result, nresult)
-              prval _ = UNSAFELY_consume_array_v pf_array_subtree
+                big_loop (subtree.array_view |
+                          length, i2sz 0, subtree.p_array, stack,
+                          result, nresult)
 
               prval _ = fold@ entry
               prval _ = pf_array := fpf_restore_array pf_entry
