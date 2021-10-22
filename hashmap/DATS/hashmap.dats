@@ -457,8 +457,8 @@ make_list {size    : int}
               prval _ = lemma_g1uint_param index
 
               (* The following call to UNSAFELY_make_array_v is
-                 "safe", because we know the array is not freed
-                 or resized by the call to big_loop. *)
+                 "safe", because we know the array is not modified
+                 by the call to big_loop. *)
               prval @(pf_array1, fpf_consume_array1) =
                 UNSAFELY_make_array_v (length, p_array)
 
