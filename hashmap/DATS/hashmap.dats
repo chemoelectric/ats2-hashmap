@@ -406,7 +406,8 @@ make_list {size    : int}
 
     extern praxi
     UNSAFELY_make_array_v :
-      {n : int} {p : addr} () -<prf> @[node_vt][n] @ p
+      {n : int} {p : addr}
+      (size_t n, ptr p) -<prf> @[node_vt][n] @ p
 
     extern praxi
     UNSAFELY_consume_array_v :
@@ -430,7 +431,8 @@ make_list {size    : int}
              {index    : int | 0 <= index; index <= length}
              {stacksz  : int | 0 <= stacksz}
              {nresult  : int | 0 <= nresult}
-             (length   : size_t length,
+             (pf_array : !(@[node_vt][length] @ p_array) >> _ |
+              length   : size_t length,
               index    : size_t index,
               p_array  : ptr p_array,
               stack    : list_vt (stkentry_vt, stacksz),
@@ -455,16 +457,22 @@ make_list {size    : int}
                     p_array = p_array
                   } = head
               prval _ = lemma_g1uint_param index
+
+              prval pf_array1 =
+                UNSAFELY_make_array_v (length, p_array)
+  
+              val results =
+                big_loop (pf_array1 | length, index, p_array, tail,
+                          result, nresult)
+
+              prval _ = UNSAFELY_consume_array_v pf_array1
             in
-              big_loop (length, index, p_array, tail, result, nresult)
+              results
             end
         end
       else
         let
           val p_entry = ptr_add<node_vt> (p_array, index)
-
-          prval pf_array =
-            UNSAFELY_make_array_v {length} {p_array} ()
 
           prval @(pf_entry, fpf_restore_array) =
             array_v_takeout {node_vt} {p_array} {length} {index}
@@ -480,11 +488,9 @@ make_list {size    : int}
                 make_list$make_list_entry<list_entry_vt><k,v>
                   (key_value)
 
-              prval pf_array = fpf_restore_array pf_entry
-
-              prval () = UNSAFELY_consume_array_v pf_array
+              prval _ = pf_array := fpf_restore_array pf_entry
             in
-              big_loop (length, succ index, p_array, stack,
+              big_loop (pf_array | length, succ index, p_array, stack,
                         list_entry :: result, succ nresult)
             end
           | node_vt_list lst =>
@@ -516,13 +522,11 @@ make_list {size    : int}
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
 
-              prval pf_array = fpf_restore_array pf_entry
-
-              prval () = UNSAFELY_consume_array_v pf_array
+              prval _ = pf_array := fpf_restore_array pf_entry
 
               prval _ = lemma_g1uint_param nresult
             in
-              big_loop (length, succ index, p_array, stack,
+              big_loop (pf_array | length, succ index, p_array, stack,
                         result, nresult)
             end
           | @ node_vt_array subtree =>
@@ -544,15 +548,20 @@ make_list {size    : int}
                                         pf_popcount)
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
+
+              prval pf_array_subtree =
+                UNSAFELY_make_array_v (length, subtree.p_array) 
+
               val results =
-                big_loop (length, i2sz 0, subtree.p_array, stack,
-                          result, nresult)
+                big_loop
+                  (pf_array_subtree |
+                   length, i2sz 0, subtree.p_array, stack,
+                   result, nresult)
+
+              prval _ = UNSAFELY_consume_array_v pf_array_subtree
 
               prval _ = fold@ entry
-
-              prval pf_array = fpf_restore_array pf_entry
-
-              prval () = UNSAFELY_consume_array_v pf_array
+              prval _ = pf_array := fpf_restore_array pf_entry
             in
               results
             end
@@ -566,7 +575,8 @@ make_list {size    : int}
     val length = i2sz popcount
 
     val @(result, nresult) =
-      big_loop (length, i2sz 0, tree.p_array, NIL, NIL, i2sz 0)
+      big_loop (tree.array_view | length, i2sz 0, tree.p_array,
+                                  NIL, NIL, i2sz 0)
 
     (* Equality of the sizes of the hashmap and the result list
        is checked at runtime, rather than proven. *)
