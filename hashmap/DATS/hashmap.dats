@@ -465,10 +465,9 @@ make_list {size    : int}
 
           prval pf_array =
             UNSAFELY_make_array_v {length} {p_array} ()
-          prval @(pf_left, pf_entry, pf_right) =
-            array_v_isolate_entry
-              {node_vt} {p_array} {length} {index}
-              pf_array
+          prval @(pf_entry, fpf_restore_array) =
+            array_v_takeout {node_vt} {p_array} {length} {index}
+                            pf_array
 
           macdef entry = !p_entry
         in
@@ -480,10 +479,7 @@ make_list {size    : int}
                 make_list$make_list_entry<list_entry_vt><k,v>
                   (key_value)
 
-              prval pf_array =
-                array_v_merge_entry
-                  {node_vt} {p_array} {length} {index}
-                  (pf_left, pf_entry, pf_right)
+              prval pf_array = fpf_restore_array pf_entry
               prval () = UNSAFELY_consume_array_v pf_array
             in
               big_loop (length, succ index, p_array, stack,
@@ -518,10 +514,7 @@ make_list {size    : int}
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
 
-              prval pf_array =
-                array_v_merge_entry
-                  {node_vt} {p_array} {length} {index}
-                  (pf_left, pf_entry, pf_right)
+              prval pf_array = fpf_restore_array pf_entry
               prval () = UNSAFELY_consume_array_v pf_array
 
               prval _ = lemma_g1uint_param nresult
@@ -551,12 +544,10 @@ make_list {size    : int}
               val results =
                 big_loop (length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
+
               prval _ = fold@ entry
 
-              prval pf_array =
-                array_v_merge_entry
-                  {node_vt} {p_array} {length} {index}
-                  (pf_left, pf_entry, pf_right)
+              prval pf_array = fpf_restore_array pf_entry
               prval () = UNSAFELY_consume_array_v pf_array
             in
               results
