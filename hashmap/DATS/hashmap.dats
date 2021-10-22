@@ -407,11 +407,9 @@ make_list {size    : int}
     extern praxi
     UNSAFELY_make_array_v :
       {n : int} {p : addr}
-      (size_t n, ptr p) -<prf> @[node_vt][n] @ p
-
-    extern praxi
-    UNSAFELY_consume_array_v :
-      {n : int} {p : addr} @[node_vt][n] @ p -<prf> void
+      (size_t n, ptr p) -<prf>
+        @(@[node_vt][n] @ p,
+          @[node_vt][n] @ p -<lin,prf> void)
 
     vtypedef stkentry_vt (n : int, i : int, p : addr) =
       @{
@@ -455,13 +453,15 @@ make_list {size    : int}
                     index = index,
                     p_array = p_array
                   } = head
+
               prval _ = lemma_g1uint_param index
-              prval pf_array1 =
+
+              prval @(pf_array1, fpf_consume_array1) =
                 UNSAFELY_make_array_v (length, p_array)
               val results =
                 big_loop (pf_array1 | length, index, p_array, tail,
                           result, nresult)
-              prval _ = UNSAFELY_consume_array_v pf_array1
+              prval _ = fpf_consume_array1 pf_array1
             in
               results
             end
