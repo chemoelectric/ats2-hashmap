@@ -130,6 +130,8 @@ assume
 hashmap_vt (key_vt, value_vt, size) =
   map_vt (key_vt, value_vt, size)
 
+#define NODESZ (sizeof (node_vt))
+
 (********************************************************************)
 
 primplement
@@ -654,7 +656,7 @@ free_tree {population_map : int}
 
     vtypedef stkentry_vt (n : int, i : int, p : addr) =
       @(@[node_vt?!][i] @ p,
-        @[node_vt][n - i] @ (p + i * sizeof (node_vt)),
+        @[node_vt][n - i] @ (p + i * NODESZ),
         mfree_gc_v p |
         size_t n,
         size_t i,
@@ -672,7 +674,7 @@ free_tree {population_map : int}
              {stacksz  : int | 0 <= stacksz}
              (pf_left  : @[node_vt?!][index] @ p_array,
               pf_right : @[node_vt][length - index]
-                            @ (p_array + index * sizeof (node_vt)),
+                            @ (p_array + index * NODESZ),
               pf_mfree : mfree_gc_v p_array |
               length   : size_t length,
               index    : size_t index,
