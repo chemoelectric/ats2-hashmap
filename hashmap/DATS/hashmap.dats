@@ -465,6 +465,7 @@ make_list {size    : int}
 
           prval pf_array =
             UNSAFELY_make_array_v {length} {p_array} ()
+
           prval @(pf_entry, fpf_restore_array) =
             array_v_takeout {node_vt} {p_array} {length} {index}
                             pf_array
@@ -480,6 +481,7 @@ make_list {size    : int}
                   (key_value)
 
               prval pf_array = fpf_restore_array pf_entry
+
               prval () = UNSAFELY_consume_array_v pf_array
             in
               big_loop (length, succ index, p_array, stack,
@@ -515,6 +517,7 @@ make_list {size    : int}
               val @(result, nresult) = loop (lst, result, nresult)
 
               prval pf_array = fpf_restore_array pf_entry
+
               prval () = UNSAFELY_consume_array_v pf_array
 
               prval _ = lemma_g1uint_param nresult
@@ -548,6 +551,7 @@ make_list {size    : int}
               prval _ = fold@ entry
 
               prval pf_array = fpf_restore_array pf_entry
+
               prval () = UNSAFELY_consume_array_v pf_array
             in
               results
