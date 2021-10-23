@@ -478,17 +478,24 @@ make_list {size    : int}
           prval @(pf_entry, fpf_restore_array) =
             array_v_takeout {node_vt} {p_array} {length} {index}
                             pf_array
-          macdef entry = !p_entry
+
+          (* Move the view to entry_value. This way we do not have
+             to use fold@ *)
+          val entry_value = ptr_get<node_vt> (pf_entry | p_entry)
         in
-          case+ entry of
+          case+ entry_value of
           | node_vt_key_value key_value =>
             (* Cons a list entry. *)
             let
+              (* Restore the array. *)
+              prval _ =
+                $effmask_wrt
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval _ = pf_array := fpf_restore_array pf_entry
+
               val list_entry =
                 make_list$make_list_entry<list_entry_vt><k,v>
                   (key_value)
-
-              prval _ = pf_array := fpf_restore_array pf_entry
             in
               big_loop (pf_array | length, succ index, p_array, stack,
                         list_entry :: result, succ nresult)
@@ -496,6 +503,12 @@ make_list {size    : int}
           | node_vt_list lst =>
             (* Cons multiple list entries. *)
             let
+              (* Restore the array. *)
+              prval _ =
+                $effmask_wrt
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval _ = pf_array := fpf_restore_array pf_entry
+
               fun
               loop {n       : int | 0 <= n}
                    {nresult : int | 0 <= nresult} .<n>.
@@ -520,17 +533,24 @@ make_list {size    : int}
                   end
               prval _ = lemma_list_vt_param lst
               val @(result, nresult) = loop (lst, result, nresult)
-              prval _ = pf_array := fpf_restore_array pf_entry
+
               prval _ = lemma_g1uint_param nresult
             in
               big_loop (pf_array | length, succ index, p_array, stack,
                         result, nresult)
             end
-          | @ node_vt_array subtree =>
+          | node_vt_array subtree =>
             (* The node is a subtree. Push a stack entry for
                the next position in the current array; then loop to
                handle the subtree. *)
             let
+              (* Restore the parent tree's array. This way, one avoids
+                 the need for fold@. *)
+              prval _ =
+                $effmask_wrt 
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval _ = pf_array := fpf_restore_array pf_entry
+
               val stack_entry =
                 @{
                   length = length,
@@ -550,9 +570,6 @@ make_list {size    : int}
                 big_loop (subtree.array_view |
                           length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
-
-              prval _ = fold@ entry
-              prval _ = pf_array := fpf_restore_array pf_entry
             in
               results
             end
