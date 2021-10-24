@@ -64,18 +64,16 @@ prval _ =
 
 (*
   FIXME:
-  This "array magic" is "safe" as long as you use the consumer before
+  This "object magic" is "safe" as long as you use the consumer before
   you use the restorer. But is there a *nice* way to ensure that?
 *)
 extern praxi
-make_array_magic :
-  {vt : vt@ype}
-  {n  : int}
-  {p  : addr}
-  (!(@[vt][n] @ p) >> _) -<prf>
+make_view_magic :
+  {v : view}
+  (!v >> _) -<prf>
     @{
-      consumer = @[vt][n] @ p -<lin,prf> void,
-      restorer = () -<lin,prf> @[vt][n] @ p
+      consumer = v -<lin,prf> void,
+      restorer = () -<lin,prf> v
     }
 
 (********************************************************************)
@@ -562,7 +560,7 @@ make_list {size    : int}
               prval @{
                       consumer = fpf_consumer,
                       restorer = fpf_restorer
-                    } = make_array_magic pf_array
+                    } = make_view_magic pf_array
 
               val stack_entry =
                 @{
