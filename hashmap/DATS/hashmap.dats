@@ -489,7 +489,7 @@ make_list {size    : int}
               prval _ =
                 $effmask_wrt
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
-              prval _ = pf_array := fpf_restore_array pf_entry
+              prval pf_array = fpf_restore_array pf_entry
 
               val list_entry =
                 make_list$make_list_entry<list_entry_vt><k,v>
@@ -506,7 +506,7 @@ make_list {size    : int}
               prval _ =
                 $effmask_wrt
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
-              prval _ = pf_array := fpf_restore_array pf_entry
+              prval pf_array = fpf_restore_array pf_entry
 
               fun
               loop {n       : int | 0 <= n}
@@ -548,10 +548,11 @@ make_list {size    : int}
               prval _ =
                 $effmask_wrt 
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval pf_array = fpf_restore_array pf_entry
 
               val stack_entry =
                 @{
-                  pf_array = fpf_restore_array pf_entry |
+                  pf_array = pf_array |
                   length = length,
                   index = succ index,
                   p_array = p_array
