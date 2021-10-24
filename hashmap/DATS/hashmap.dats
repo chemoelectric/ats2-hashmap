@@ -413,6 +413,7 @@ make_list {size    : int}
 
     vtypedef stkentry_vt (n : int, i : int, p : addr) =
       @{
+        pf_array = @[node_vt][n] @ p |
         length = size_t n,
         index = size_t i,
         p_array = ptr p
@@ -422,6 +423,18 @@ make_list {size    : int}
       [i : int | i <= n]
       [p : addr]
       stkentry_vt (n, i, p)
+
+(*
+    dataview vstk_v (v : view+, n : int) =
+    | {n == 0}
+      vstk_v_nil (v, n) of ()
+    | {0 <= n}
+      vstk_v_cons (v, n + 1) of (v, vstk_v (v, n))
+    stadef vstk_v (n : int) =
+      vstk_v ([m : int] [q : addr] @[node_vt][m] @ q, n)
+    stadef vstk_v =
+      [n : int] vstk_v (n)
+*)
 
     fun
     big_loop {length   : int | 0 <= length}
@@ -449,6 +462,7 @@ make_list {size    : int}
                in an array. *)
             let
               val @{
+                    pf_array = pf_parent_array |
                     length = length,
                     index = index,
                     p_array = p_array
@@ -456,18 +470,14 @@ make_list {size    : int}
 
               prval _ = lemma_g1uint_param index
 
-              (* The following call to UNSAFELY_make_array_v is
-                 "safe", because we know the array is not modified
-                 by the call to big_loop. *)
-              prval @(pf_array1, fpf_consume_array1) =
-                UNSAFELY_make_array_v (length, p_array)
-
               val results =
-                big_loop (pf_array1 | length, index, p_array, tail,
+                big_loop (pf_parent_array |
+                          length, index, p_array, tail,
                           result, nresult)
 
-              (* The temporary view is now destroyed. *)
-              prval _ = fpf_consume_array1 pf_array1
+              extern praxi FIXME :
+                {m : int} {q : addr} @[node_vt][m] @ q -<prf> void
+              prval _ = FIXME (pf_parent_array)
             in
               results
             end
@@ -497,7 +507,8 @@ make_list {size    : int}
                 make_list$make_list_entry<list_entry_vt><k,v>
                   (key_value)
             in
-              big_loop (pf_array | length, succ index, p_array, stack,
+              big_loop (pf_array |
+                        length, succ index, p_array, stack,
                         list_entry :: result, succ nresult)
             end
           | node_vt_list lst =>
@@ -549,10 +560,10 @@ make_list {size    : int}
               prval _ =
                 $effmask_wrt 
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
-              prval _ = pf_array := fpf_restore_array pf_entry
 
               val stack_entry =
                 @{
+                  pf_array = fpf_restore_array pf_entry |
                   length = length,
                   index = succ index,
                   p_array = p_array
@@ -570,6 +581,10 @@ make_list {size    : int}
                 big_loop (subtree.array_view |
                           length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
+
+              extern praxi FIXME :
+                () -<prf> @[node_vt][length] @ p_array
+              prval _ = pf_array := FIXME ()
             in
               results
             end
