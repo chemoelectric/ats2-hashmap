@@ -424,25 +424,13 @@ make_list {size    : int}
       [p : addr]
       stkentry_vt (n, i, p)
 
-(*
-    dataview vstk_v (v : view+, n : int) =
-    | {n == 0}
-      vstk_v_nil (v, n) of ()
-    | {0 <= n}
-      vstk_v_cons (v, n + 1) of (v, vstk_v (v, n))
-    stadef vstk_v (n : int) =
-      vstk_v ([m : int] [q : addr] @[node_vt][m] @ q, n)
-    stadef vstk_v =
-      [n : int] vstk_v (n)
-*)
-
     fun
     big_loop {length   : int | 0 <= length}
              {p_array  : addr}
              {index    : int | 0 <= index; index <= length}
              {stacksz  : int | 0 <= stacksz}
              {nresult  : int | 0 <= nresult}
-             (pf_array : !(@[node_vt][length] @ p_array) >> _ |
+             (pf_array : @[node_vt][length] @ p_array |
               length   : size_t length,
               index    : size_t index,
               p_array  : ptr p_array,
@@ -450,13 +438,14 @@ make_list {size    : int}
               result   : list_vt (list_entry_vt, nresult),
               nresult  : size_t nresult) :
         [nresult : int]
-        @(list_vt (list_entry_vt, nresult),
+        @(@[node_vt][length] @ p_array |
+          list_vt (list_entry_vt, nresult),
           size_t nresult) =
       (* Depth-first traversal by tail recursion. *)
       if index = length then
         begin
           case+ stack of
-          | ~ NIL => @(result, nresult)
+          | ~ NIL => @(pf_array | result, nresult)
           | ~ head :: tail =>
             (* Pop a stack entry and continue where we left off
                in an array. *)
@@ -470,16 +459,15 @@ make_list {size    : int}
 
               prval _ = lemma_g1uint_param index
 
-              val results =
+              val @(pf_parent_array | result, nresult) =
                 big_loop (pf_parent_array |
                           length, index, p_array, tail,
                           result, nresult)
 
-              extern praxi FIXME :
-                {m : int} {q : addr} @[node_vt][m] @ q -<prf> void
-              prval _ = FIXME (pf_parent_array)
+              (* FIXME *)
+              prval _ = $UNSAFE.castview2void{void} pf_parent_array
             in
-              results
+              @(pf_array | result, nresult)
             end
         end
       else
@@ -577,16 +565,16 @@ make_list {size    : int}
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
 
-              val results =
+              val @(pf_subtree_array | result, nresult) =
                 big_loop (subtree.array_view |
                           length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
+              prval _ = subtree.array_view := pf_subtree_array
 
               extern praxi FIXME :
                 () -<prf> @[node_vt][length] @ p_array
-              prval _ = pf_array := FIXME ()
             in
-              results
+              @(FIXME () | result, nresult)
             end
         end
 
@@ -597,9 +585,10 @@ make_list {size    : int}
     prval _ = popcount_is_nonnegative pf_popcount
     val length = i2sz popcount
 
-    val @(result, nresult) =
+    val @(pf_array | result, nresult) =
       big_loop (tree.array_view | length, i2sz 0, tree.p_array,
                                   NIL, NIL, i2sz 0)
+    prval _ = tree.array_view := pf_array
 
     (* Equality of the sizes of the hashmap and the result list
        is checked at runtime, rather than proven. *)
