@@ -404,16 +404,10 @@ make_list {size    : int}
     vtypedef v = value_vt
     vtypedef node_vt = node_vt (k, v)
 
-    extern praxi
-    UNSAFELY_make_array_v :
-      {n : int} {p : addr}
-      (size_t n, ptr p) -<prf>
-        @(@[node_vt][n] @ p,
-          @[node_vt][n] @ p -<lin,prf> void)
-
     vtypedef stkentry_vt (n : int, i : int, p : addr) =
       @{
-        pf_array = @[node_vt][n] @ p |
+        pf_array = @[node_vt][n] @ p,
+        fpf_consume_array = @[node_vt][n] @ p -<lin,prf> void |
         length = size_t n,
         index = size_t i,
         p_array = ptr p
@@ -451,7 +445,8 @@ make_list {size    : int}
                in an array. *)
             let
               val @{
-                    pf_array = pf_parent_array |
+                    pf_array = pf_parent,
+                    fpf_consume_array = fpf_consume_parent |
                     length = length,
                     index = index,
                     p_array = p_array
@@ -459,13 +454,11 @@ make_list {size    : int}
 
               prval _ = lemma_g1uint_param index
 
-              val @(pf_parent_array | result, nresult) =
-                big_loop (pf_parent_array |
-                          length, index, p_array, tail,
-                          result, nresult)
+              val @(pf_parent | result, nresult) =
+                big_loop (pf_parent | length, index, p_array, tail,
+                                      result, nresult)
 
-              (* FIXME *)
-              prval _ = $UNSAFE.castview2void{void} pf_parent_array
+              prval _ = fpf_consume_parent pf_parent
             in
               @(pf_array | result, nresult)
             end
@@ -550,9 +543,30 @@ make_list {size    : int}
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
               prval pf_array = fpf_restore_array pf_entry
 
+              (* FIXME:
+                 These "array manglers" are "safe" as long as you
+                 use the consumer before you use the restorer.
+              *)
+              extern praxi
+              make_array_manglers :
+                {vt : vt@ype}
+                {n  : int}
+                {p  : addr}
+                (!(@[vt][n] @ p) >> _) -<prf>
+                  @{
+                    consumer = @[vt][n] @ p -<lin,prf> void,
+                    restorer = () -<lin,prf> @[vt][n] @ p
+                  }
+
+              prval @{
+                      consumer = fpf_consumer,
+                      restorer = fpf_restorer
+                    } = make_array_manglers pf_array
+
               val stack_entry =
                 @{
-                  pf_array = pf_array |
+                  pf_array = pf_array,
+                  fpf_consume_array = fpf_consumer |
                   length = length,
                   index = succ index,
                   p_array = p_array
@@ -571,11 +585,8 @@ make_list {size    : int}
                           length, i2sz 0, subtree.p_array, stack,
                           result, nresult)
               prval _ = subtree.array_view := pf_subtree_array
-
-              extern praxi FIXME :
-                () -<prf> @[node_vt][length] @ p_array
             in
-              @(FIXME () | result, nresult)
+              @(fpf_restorer () | result, nresult)
             end
         end
 
