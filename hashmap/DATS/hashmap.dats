@@ -62,6 +62,22 @@ prval _ =
     {BITS_SOURCE_MAXVAL == CHAR_BIT * sizeof (population_map_t) - 1}
     ()
 
+(* FIXME:
+   These "array manglers" are "safe" as long as you
+   use the consumer before you use the restorer. But
+   is there a *nice* way to ensure that?
+*)
+extern praxi
+make_array_manglers :
+  {vt : vt@ype}
+  {n  : int}
+  {p  : addr}
+  (!(@[vt][n] @ p) >> _) -<prf>
+    @{
+      consumer = @[vt][n] @ p -<lin,prf> void,
+      restorer = () -<lin,prf> @[vt][n] @ p
+    }
+
 (********************************************************************)
 
 vtypedef
@@ -542,21 +558,6 @@ make_list {size    : int}
                 $effmask_wrt 
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
               prval pf_array = fpf_restore_array pf_entry
-
-              (* FIXME:
-                 These "array manglers" are "safe" as long as you
-                 use the consumer before you use the restorer.
-              *)
-              extern praxi
-              make_array_manglers :
-                {vt : vt@ype}
-                {n  : int}
-                {p  : addr}
-                (!(@[vt][n] @ p) >> _) -<prf>
-                  @{
-                    consumer = @[vt][n] @ p -<lin,prf> void,
-                    restorer = () -<lin,prf> @[vt][n] @ p
-                  }
 
               prval @{
                       consumer = fpf_consumer,
