@@ -64,7 +64,7 @@ prval _ =
 
 (*
   FIXME:
-  This "object magic" is "safe" as long as you use the consumer before
+  This "view magic" is "safe" as long as you use the consumer before
   you use the restorer. But is there a *nice* way to ensure that?
 *)
 extern praxi
