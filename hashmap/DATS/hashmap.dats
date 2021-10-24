@@ -62,13 +62,13 @@ prval _ =
     {BITS_SOURCE_MAXVAL == CHAR_BIT * sizeof (population_map_t) - 1}
     ()
 
-(* FIXME:
-   These "array manglers" are "safe" as long as you
-   use the consumer before you use the restorer. But
-   is there a *nice* way to ensure that?
+(*
+  FIXME:
+  This "array magic" is "safe" as long as you use the consumer before
+  you use the restorer. But is there a *nice* way to ensure that?
 *)
 extern praxi
-make_array_manglers :
+make_array_magic :
   {vt : vt@ype}
   {n  : int}
   {p  : addr}
@@ -562,7 +562,7 @@ make_list {size    : int}
               prval @{
                       consumer = fpf_consumer,
                       restorer = fpf_restorer
-                    } = make_array_manglers pf_array
+                    } = make_array_magic pf_array
 
               val stack_entry =
                 @{
