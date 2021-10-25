@@ -124,7 +124,7 @@ node_array_vt (key_vt            : vt@ype+,
                length            : int,
                p_array           : addr) =
   @{
-    population_map_view = POPCOUNT (population_map, length),
+    population_map_prop = POPCOUNT (population_map, length),
     array_view = @[node_vt (key_vt, value_vt)][length] @ p_array,
     mfree_view = mfree_gc_v p_array |
     population_map = population_map_t population_map,
@@ -221,6 +221,226 @@ make_new_array
 
 (********************************************************************)
 
+fn {hash_vt : vt@ype}
+   {key_vt, value_vt : vt@ype}
+set_entry {size  : int | 1 <= size}
+          (size  : size_t size,
+           tree  : node_array_vt (key_vt, value_vt),
+           hash  : &hash_vt >> _,
+           key   : key_vt,
+           value : value_vt) :
+    [new_size : int | new_size == size || new_size == size + 1]
+    @{
+      size = size_t new_size,
+      tree = node_array_vt (key_vt, value_vt)
+    } =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+    vtypedef size_tree_vt (size : int) =
+      @{
+        size = size_t size,
+        tree = node_array_vt (key_vt, value_vt)
+      }
+
+    fun
+    big_loop {size           : int | 1 <= size}
+             {population_map : int}
+             {length         : int}
+             {p_array        : addr}
+             {hash2_is_set   : bool}
+             (size           : size_t size,
+              tree           : node_array_vt (key_vt, value_vt,
+                                              population_map,
+                                              length, p_array),
+              hash1          : &hash_vt >> _,
+              hash2          : &hash_vt >> _,
+              hash2_is_set   : &(bool hash2_is_set) >> Bool,
+              key            : key_vt,
+              value          : value_vt) :
+        [new_size : int | new_size == size || new_size == size + 1]
+        size_tree_vt (new_size) =
+      let
+        fn
+        stored_key_to_hash
+                (stored_key   : !key_vt >> _,
+                 hash2        : &hash_vt >> _,
+                 hash2_is_set : &(bool hash2_is_set) >> bool true) :
+            void =
+          if not hash2_is_set then
+            let
+              prval _ = $UN.castview2void_at{hash_vt?} (view@ hash2)
+            in
+              hashmap$hash_function<hash_vt><key_vt>
+                (stored_key, hash2);
+              hash2_is_set := true
+            end
+
+        val bits = hashmap$bits_source<hash_vt> (hash1, 0U)
+        val [mask : int] mask = bits_to_population_map (bits)
+        val population_map = (tree.population_map)
+        val array_has_an_entry = isneqz (population_map land mask)
+      in
+        if array_has_an_entry then
+          let
+            val [array_index : int] @(pf_array_index | array_index) =
+              popcount_low_bits_with_proof<population_map_kind>
+                (population_map, i2u bits)
+            prval _ = popcount_low_bits_is_nonnegative pf_array_index
+            prval _ = prop_verify {0 <= array_index} ()
+
+            (* FIXME: Prove this. It is true if any of
+                      bits i, i+1, ..., is set in the population map.
+                      (That is: if (1<<i) <= popcount.)
+                      This is satisfied by ‘array_has_an_entry’.
+                      The trouble is we do not yet have, in this
+                      package, proof-time bitwise operations
+                      on population_map_t. *)
+            prval _ = $UN.prop_assert {array_index < length} ()
+
+            val p_entry = ptr_add<t> (tree.p_array, array_index)
+            prval @(pf_left, pf_entry, pf_right) =
+              array_v_isolate_entry {t} {..} {length} {array_index}
+                                    (tree.array_view)
+            macdef entry = !p_entry
+          in
+            case+ entry of
+            | @ node_vt_key_value key_value =>
+              let
+                val @{key = k, value = v} = key_value
+              in
+                if hashmap$key_vt_eq<key_vt> (key, k) then
+                  (* A key-value pair was found. Replace it. The map
+                     does not grow. *)
+                  let
+                    val _ = hashmap$key_vt_free<key_vt> (k)
+                    val _ = hashmap$value_vt_free<value_vt> (v)
+                    val _ = key_value.key := key
+                    val _ = key_value.value := value
+                    prval _ = fold@ entry
+                    prval _ = tree.array_view :=
+                      array_v_merge_entry (pf_left, pf_entry, pf_right)
+                  in
+                    @{size = size, tree = tree}
+                  end
+                else
+                  (* The key is not in the tree. Either a new node
+                     or separate chaining is required. The map will
+                     grow by one. *)
+                  let
+                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    // This is just the code for replacing an existing entry, used here temporarily,
+                    // to get the compiler to work.
+                    val _ = hashmap$key_vt_free<key_vt> (k)
+                    val _ = hashmap$value_vt_free<value_vt> (v)
+                    val _ = key_value.key := key
+                    val _ = key_value.value := value
+                    prval _ = fold@ entry
+                    prval _ = tree.array_view :=
+                      array_v_merge_entry (pf_left, pf_entry, pf_right)
+                  in
+                    @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                  end
+              end
+            | node_vt_list lst =>
+              (* Search for the key in lst. *)
+              let
+(*
+                fun
+                search_list {n   : int | 0 <= n} .<n>.
+                            (lst : !list_vt (kv_t, n) >> _,
+                             key : !key_vt >> _) :
+                    Option_vt value_vt =
+                  case+ lst of
+                  | NIL =>
+                    (* The key is not in lst. *)
+                    None_vt ()
+                  | @ key_value :: tail =>
+                    if hashmap$key_vt_eq<key_vt>
+                        (key, key_value.key) then
+                      let
+                        val value =
+                          hashmap$value_vt_copy<value_vt>
+                            (key_value.value)
+                        prval _ = fold@ lst
+                      in
+                        (* A key-value pair was found in lst. *)
+                        Some_vt value
+                      end
+                    else
+                      (* Search the tail. *)
+                      let
+                        val result = search_list (tail, key)
+                        prval _ = fold@ lst
+                      in
+                        result
+                      end
+
+                prval _ = lemma_list_vt_param lst
+                val result = search_list (lst, key)
+*)
+
+                prval _ = tree.array_view :=
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
+              in
+                $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
+            | node_vt_array subtree =>
+              (* Search for the key in a subtree. *)
+              let
+(*
+                val result =
+                  find_entry<hash_vt><key_vt, value_vt>
+                    (hash, subtree, key, succ depth)
+*)
+                prval _ = tree.array_view :=
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
+              in
+                $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+              end
+          end
+        else
+          let
+          in
+            $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+          end
+      end
+
+    (* We shall need storage for a hash of an internal key.
+       Pretend it is already initialized. *)
+    var hash2 : hash_vt
+    var hash2_is_set : Bool = false
+    prval _ = $UN.castview2void_at{hash_vt} (view@ hash2)
+    
+    val result =
+      big_loop {size}
+               (size, tree, hash, hash2, hash2_is_set, key, value)
+
+    fn
+    hash_free {hash2_is_set : bool}
+              (hash2        : &hash_vt >> hash_vt?,
+               hash2_is_set : &(bool hash2_is_set) >> Bool?!) :
+        void =
+      if hash2_is_set then
+        hashmap$hash_vt_free<hash_vt> (hash2)
+      else
+        let
+          extern castfn
+          fake_free : (&hash_vt >> hash_vt?) -> void
+        in
+          fake_free (hash2)
+        end
+  in
+    hash_free (hash2, hash2_is_set);
+    result
+  end
+
 implement {hash_vt} {key_vt, value_vt}
 hashmap_set {size} (map, key, value) =
   case+ map of
@@ -245,7 +465,7 @@ hashmap_set {size} (map, key, value) =
 
       val tree =
         @{
-          population_map_view = pf_popcount,
+          population_map_prop = pf_popcount,
           array_view = pf_array,
           mfree_view = pf_mfree |
           population_map = population_map,
@@ -254,12 +474,24 @@ hashmap_set {size} (map, key, value) =
     in
       map_vt_root @{size = i2sz 1, tree = tree}
     end
-  | ~ map_vt_root @{size = size, tree = tree} =>
+  | @ map_vt_root root =>
     let
-val _ = $UN.castvwtp0{void} key
-val _ = $UN.castvwtp0{void} value
+      val @{size = size, tree = tree} = root
+
+      var hash : hash_vt
+
+      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+
+      val @{size = new_size, tree = new_tree} =
+        set_entry {size} (size, tree, hash, key, value)
+      val _ = root.size := new_size
+      val _ = root.tree := new_tree
+
+      val () = hashmap$hash_vt_free<hash_vt> (hash)
+
+      prval _ = fold@ map
     in
-      map_vt_root @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      map
     end
 
 (********************************************************************)
@@ -584,7 +816,7 @@ make_list {size    : int}
 
               val [popcount : int] @(pf_popcount | popcount) =
                 popcount_with_proof (subtree.population_map)
-              prval _ = popcount_isfun (subtree.population_map_view,
+              prval _ = popcount_isfun (subtree.population_map_prop,
                                         pf_popcount)
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
@@ -601,7 +833,7 @@ make_list {size    : int}
 
     val [popcount : int] @(pf_popcount | popcount) =
       popcount_with_proof (tree.population_map)
-    prval _ = popcount_isfun (tree.population_map_view, pf_popcount)
+    prval _ = popcount_isfun (tree.population_map_prop, pf_popcount)
     prval _ = prop_verify {length == popcount} ()
     prval _ = popcount_is_nonnegative pf_popcount
     val length = i2sz popcount
@@ -790,7 +1022,7 @@ free_tree {population_map : int}
 
               val [popcount : int] @(pf_popcount | popcount) =
                 popcount_with_proof (subtree.population_map)
-              prval _ = popcount_isfun (subtree.population_map_view,
+              prval _ = popcount_isfun (subtree.population_map_prop,
                                         pf_popcount)
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
@@ -803,7 +1035,7 @@ free_tree {population_map : int}
 
     val [popcount : int] @(pf_popcount | popcount) =
       popcount_with_proof (tree.population_map)
-    prval _ = popcount_isfun (tree.population_map_view, pf_popcount)
+    prval _ = popcount_isfun (tree.population_map_prop, pf_popcount)
     prval _ = prop_verify {length == popcount} ()
     prval _ = popcount_is_nonnegative pf_popcount
     val length = i2sz popcount
