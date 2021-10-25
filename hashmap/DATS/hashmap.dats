@@ -64,16 +64,16 @@ prval _ =
 
 (*
   FIXME:
-  This "view magic" is "safe" as long as you use the consumer before
-  you use the restorer. But is there a *nice* way to ensure that?
+  This "view tunnel" is "safe" as long as you use the "entry" before
+  you use the "exit". But is there a *nice* way to ensure that?
 *)
 extern praxi
-make_view_magic :
+make_view_tunnel :
   {v : view}
   (!v >> _) -<prf>
     @{
-      consumer = v -<lin,prf> void,
-      restorer = () -<lin,prf> v
+      entry = v -<lin,prf> void,
+      exit = () -<lin,prf> v
     }
 
 (********************************************************************)
@@ -558,14 +558,14 @@ make_list {size    : int}
               prval pf_array = fpf_restore_array pf_entry
 
               prval @{
-                      consumer = fpf_consumer,
-                      restorer = fpf_restorer
-                    } = make_view_magic pf_array
+                      entry = fpf_tunnel_entry,
+                      exit = fpf_tunnel_exit
+                    } = make_view_tunnel pf_array
 
               val stack_entry =
                 @{
                   pf_array = pf_array,
-                  fpf_consume_array = fpf_consumer |
+                  fpf_consume_array = fpf_tunnel_entry |
                   length = length,
                   index = succ index,
                   p_array = p_array
@@ -585,7 +585,7 @@ make_list {size    : int}
                           result, nresult)
               prval _ = subtree.array_view := pf_subtree_array
             in
-              @(fpf_restorer () | result, nresult)
+              @(fpf_tunnel_exit () | result, nresult)
             end
         end
 
