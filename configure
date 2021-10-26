@@ -14624,9 +14624,12 @@ ac_config_files="$ac_config_files hashmap/SATS/array-proofs.sats"
 ac_config_files="$ac_config_files hashmap/DATS/array-proofs.dats"
 
 
-#AC_CONFIG_FILES([hashmap/CATS/memory.cats])
-#AC_CONFIG_FILES([hashmap/SATS/memory.sats])
-#AC_CONFIG_FILES([hashmap/DATS/memory.dats])
+ac_config_files="$ac_config_files hashmap/CATS/memory.cats"
+
+ac_config_files="$ac_config_files hashmap/SATS/memory.sats"
+
+ac_config_files="$ac_config_files hashmap/DATS/memory.dats"
+
 
 ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
@@ -15682,6 +15685,9 @@ do
     "hashmap/DATS/bits_source_uint64_uint64.dats.m4") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/bits_source_uint64_uint64.dats.m4" ;;
     "hashmap/SATS/array-proofs.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/array-proofs.sats" ;;
     "hashmap/DATS/array-proofs.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/array-proofs.dats" ;;
+    "hashmap/CATS/memory.cats") CONFIG_FILES="$CONFIG_FILES hashmap/CATS/memory.cats" ;;
+    "hashmap/SATS/memory.sats") CONFIG_FILES="$CONFIG_FILES hashmap/SATS/memory.sats" ;;
+    "hashmap/DATS/memory.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/memory.dats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

@@ -170,9 +170,9 @@ AC_CONFIG_FILES([hashmap/DATS/bits_source_uint64_uint64.dats.m4])
 AC_CONFIG_FILES([hashmap/SATS/array-proofs.sats])
 AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 
-#AC_CONFIG_FILES([hashmap/CATS/memory.cats])
-#AC_CONFIG_FILES([hashmap/SATS/memory.sats])
-#AC_CONFIG_FILES([hashmap/DATS/memory.dats])
+AC_CONFIG_FILES([hashmap/CATS/memory.cats])
+AC_CONFIG_FILES([hashmap/SATS/memory.sats])
+AC_CONFIG_FILES([hashmap/DATS/memory.dats])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

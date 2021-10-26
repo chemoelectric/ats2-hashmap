@@ -1,0 +1,38 @@
+/*
+
+   Copyright © 2021 Barry Schwartz
+
+   This program is free software: you can redistribute it and/or
+   modify it under the terms of the GNU General Public License, as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License
+   along with this program. If not, see
+   <https://www.gnu.org/licenses/>.
+
+*/
+
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__
+
+/********************************************************************/
+/*
+ * Copying and setting blocks of memory.
+ *
+ * (On some systems, memcpy(3) and memset(3) may be optimized to
+ * inline code. I shall let the platform decide when to do that.)
+ */
+
+#include <string.h>
+#define @ATS_EXTERN_PREFIX@memcpy memcpy
+#define @ATS_EXTERN_PREFIX@memset memset
+
+/********************************************************************/
+
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@MEMORY_CATS__ */

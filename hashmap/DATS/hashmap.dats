@@ -45,17 +45,21 @@ staload "hashmap/SATS/hashmap.sats"
 staload "hashmap/SATS/array-proofs.sats"
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
+staload "hashmap/SATS/memory.sats"
 staload "hashmap/SATS/population_map.sats"
 staload "popcount/SATS/popcount.sats"
 
 staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/population_map.dats"
+staload _ = "hashmap/DATS/memory.dats"
 staload _ = "popcount/DATS/popcount.dats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
 
 #define CHAR_BIT 8              (* The size of a byte, in bits. *)
+
+prval _ = lemma_sizeof {population_map_t} ()
 
 prval _ =
   $UN.prop_assert
@@ -85,6 +89,19 @@ make_view_tunnel :
       entry = v -<lin,prf> void,
       exit = () -<lin,prf> v
     }
+
+fn {}
+orelse1 {x, y : bool}
+        (x : bool x,
+         y : bool y) :<>
+    [z : bool | z == (x || y)]
+    bool z =
+  if x then
+    true
+  else
+    y
+infixl ( || ) |||
+macdef ||| = orelse1
 
 (********************************************************************)
 
@@ -237,11 +254,47 @@ set_entry {size  : int | 1 <= size}
   let
     vtypedef t = node_vt (key_vt, value_vt)
     vtypedef kv_t = key_value_vt (key_vt, value_vt)
-    vtypedef size_tree_vt (size : int) =
+    vtypedef retval_vt (size : int) =
       @{
         size = size_t size,
         tree = node_array_vt (key_vt, value_vt)
       }
+
+    (* We shall need storage for a hash of an internal key.
+       Pretend it is already initialized. *)
+    var hash2 : hash_vt
+    var hash2_is_set : Bool = false
+    prval _ = $UN.castview2void_at{hash_vt} (view@ hash2)
+
+    fn
+    stored_key_to_hash2
+            {hash2_is_set : bool}
+            (stored_key   : !key_vt >> _,
+             hash2        : &hash_vt >> _,
+             hash2_is_set : &(bool hash2_is_set) >> bool true) :
+        void =
+      if not hash2_is_set then
+        let
+          prval _ = $UN.castview2void_at{hash_vt?} (view@ hash2)
+        in
+          hashmap$hash_function<hash_vt><key_vt> (stored_key, hash2);
+          hash2_is_set := true
+        end
+
+    fn
+    hash2_free {hash2_is_set : bool}
+               (hash2        : &hash_vt >> hash_vt?,
+                hash2_is_set : &(bool hash2_is_set) >> Bool?!) :
+        void =
+      if hash2_is_set then
+        hashmap$hash_vt_free<hash_vt> (hash2)
+      else
+        let
+          extern castfn
+          fake_free : (&hash_vt >> hash_vt?) -> void
+        in
+          fake_free (hash2)
+        end
 
     fun
     big_loop {size           : int | 1 <= size}
@@ -249,6 +302,8 @@ set_entry {size  : int | 1 <= size}
              {length         : int}
              {p_array        : addr}
              {hash2_is_set   : bool}
+             {bits           : int | bits_source_valid_bits bits}
+             {depth          : int}
              (size           : size_t size,
               tree           : node_array_vt (key_vt, value_vt,
                                               population_map,
@@ -256,27 +311,13 @@ set_entry {size  : int | 1 <= size}
               hash1          : &hash_vt >> _,
               hash2          : &hash_vt >> _,
               hash2_is_set   : &(bool hash2_is_set) >> Bool,
+              bits           : int bits,
+              depth          : uint depth,
               key            : key_vt,
               value          : value_vt) :
         [new_size : int | new_size == size || new_size == size + 1]
-        size_tree_vt (new_size) =
+        retval_vt (new_size) =
       let
-        fn
-        stored_key_to_hash
-                (stored_key   : !key_vt >> _,
-                 hash2        : &hash_vt >> _,
-                 hash2_is_set : &(bool hash2_is_set) >> bool true) :
-            void =
-          if not hash2_is_set then
-            let
-              prval _ = $UN.castview2void_at{hash_vt?} (view@ hash2)
-            in
-              hashmap$hash_function<hash_vt><key_vt>
-                (stored_key, hash2);
-              hash2_is_set := true
-            end
-
-        val bits = hashmap$bits_source<hash_vt> (hash1, 0U)
         val [mask : int] mask = bits_to_population_map (bits)
         val population_map = (tree.population_map)
         val array_has_an_entry = isneqz (population_map land mask)
@@ -328,18 +369,48 @@ set_entry {size  : int | 1 <= size}
                      or separate chaining is required. The map will
                      grow by one. *)
                   let
-                    // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                    // This is just the code for replacing an existing entry, used here temporarily,
-                    // to get the compiler to work.
-                    val _ = hashmap$key_vt_free<key_vt> (k)
-                    val _ = hashmap$value_vt_free<value_vt> (v)
-                    val _ = key_value.key := key
-                    val _ = key_value.value := value
-                    prval _ = fold@ entry
-                    prval _ = tree.array_view :=
-                      array_v_merge_entry (pf_left, pf_entry, pf_right)
+                    val _ =
+                      stored_key_to_hash2 (k, hash2, hash2_is_set)
+                    val bits1 =
+                      hashmap$bits_source<hash_vt> (hash1, succ depth)
+                    val bits2 =
+                      hashmap$bits_source<hash_vt> (hash2, succ depth)
                   in
-                    @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                    if (bits1 = BITS_SOURCE_EXHAUSTED |||
+                        bits2 = BITS_SOURCE_EXHAUSTED) then
+                      (* Separate chaining is required. *)
+                      let
+                        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                        // This is just the code for replacing an existing entry, used here temporarily,
+                        // to get the compiler to work.
+                        val _ = hashmap$key_vt_free<key_vt> (k)
+                        val _ = hashmap$value_vt_free<value_vt> (v)
+                        val _ = key_value.key := key
+                        val _ = key_value.value := value
+                        prval _ = fold@ entry
+                        prval _ = tree.array_view :=
+                          array_v_merge_entry (pf_left, pf_entry, pf_right)
+                      in
+                        @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                      end
+                    else
+                      (* Create a new node, which will contain only
+                         the old entry; store it in the old location;
+                         and then do a loop. *)
+                      let
+                        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                        // This is just the code for replacing an existing entry, used here temporarily,
+                        // to get the compiler to work.
+                        val _ = hashmap$key_vt_free<key_vt> (k)
+                        val _ = hashmap$value_vt_free<value_vt> (v)
+                        val _ = key_value.key := key
+                        val _ = key_value.value := value
+                        prval _ = fold@ entry
+                        prval _ = tree.array_view :=
+                          array_v_merge_entry (pf_left, pf_entry, pf_right)
+                      in
+                        @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                      end
                   end
               end
             | node_vt_list lst =>
@@ -404,40 +475,98 @@ set_entry {size  : int | 1 <= size}
               end
           end
         else
+          (* There is no entry in the current node for such a value
+             of the hash bits. Expand the node. The size of the map
+             will increase by one. *)
           let
+            val @{
+                  population_map_prop = pf_popcount,
+                  array_view = pf_array,
+                  mfree_view = pf_mfree |
+                  population_map = population_map,
+                  p_array = p_array
+                } = tree
+
+            val [array_index : int] @(pf_array_index | array_index) =
+              popcount_low_bits_with_proof<population_map_kind>
+                (population_map, i2u bits)
+            prval _ = popcount_low_bits_is_nonnegative pf_array_index
+            prval _ = prop_verify {0 <= array_index} ()
+
+            (* FIXME: Prove this. *)
+            prval _ = $UN.prop_assert {array_index < length} ()
+
+            val [new_population_map : int] new_population_map =
+              population_map lor mask
+
+            val [new_popcount : int]
+                @(pf_new_popcount | new_popcount) =
+              popcount_with_proof (new_population_map)
+            prval _ = popcount_param (pf_new_popcount |
+                                      new_population_map)
+
+            (* FIXME: Prove this. *)
+            prval _ = $UN.prop_assert {new_popcount == length + 1} ()
+
+            val [p_new_array : addr]
+                @(pf_new_array, pf_new_mfree | p_new_array) =
+              array_ptr_alloc<t> (i2sz new_popcount)
+
+            val p_new_entry = ptr_add<t> (p_new_array, array_index)
+
+            prval @(pf_left, pf_right) =
+              array_v_subdivide2 {t} {p_array}
+                                 {array_index, length - array_index}
+                                 pf_array
+            prval @(qf_left, qf_entry, qf_right) =
+              array_v_isolate_entry {t?} {p_new_array} {length + 1}
+                                    {array_index}
+                                    pf_new_array
+
+            val _ =
+              array_move<t> (qf_left, pf_left |
+                             p_new_array, p_array, i2sz array_index)
+            val _ =
+              array_move<t> (qf_right, pf_right |
+                             ptr_succ<t> (p_new_entry),
+                             ptr_add<t> (p_array, i2sz array_index),
+                             i2sz (new_popcount - succ array_index))
+
+            val new_entry =
+              node_vt_key_value @{key = key, value = value}
+            val _ = ptr_set<t> (qf_entry | p_new_entry, new_entry)
+
+            prval _ = pf_array :=
+              array_v_join2 {t?} {p_array}
+                            {array_index, length - array_index}
+                            (pf_left, pf_right)
+            prval _ = pf_new_array :=
+              array_v_merge_entry {t} {p_new_array} {length + 1}
+                                  {array_index}
+                                  (qf_left, qf_entry, qf_right)
+
+            val _ = array_ptr_free (pf_array, pf_mfree | p_array)
+            
+            val new_tree =
+              @{
+                population_map_prop = pf_new_popcount,
+                array_view = pf_new_array,
+                mfree_view = pf_new_mfree |
+                population_map = new_population_map,
+                p_array = p_new_array
+              }
           in
-            $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-            @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+            @{size = succ size, tree = new_tree}
           end
       end
-
-    (* We shall need storage for a hash of an internal key.
-       Pretend it is already initialized. *)
-    var hash2 : hash_vt
-    var hash2_is_set : Bool = false
-    prval _ = $UN.castview2void_at{hash_vt} (view@ hash2)
     
+    val bits = hashmap$bits_source<hash_vt> (hash, 0U)
     val result =
       big_loop {size}
-               (size, tree, hash, hash2, hash2_is_set, key, value)
-
-    fn
-    hash_free {hash2_is_set : bool}
-              (hash2        : &hash_vt >> hash_vt?,
-               hash2_is_set : &(bool hash2_is_set) >> Bool?!) :
-        void =
-      if hash2_is_set then
-        hashmap$hash_vt_free<hash_vt> (hash2)
-      else
-        let
-          extern castfn
-          fake_free : (&hash_vt >> hash_vt?) -> void
-        in
-          fake_free (hash2)
-        end
+               (size, tree, hash, hash2, hash2_is_set, bits, 0U,
+                key, value)
   in
-    hash_free (hash2, hash2_is_set);
+    hash2_free (hash2, hash2_is_set);
     result
   end
 

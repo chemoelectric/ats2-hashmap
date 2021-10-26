@@ -31,6 +31,7 @@ staload "hashmap/SATS/bits_source.sats"
 
 staload _ = "hashmap/DATS/hashmap.dats"
 staload _ = "hashmap/DATS/bits_source.dats"
+staload _ = "hashmap/DATS/memory.dats"
 staload _ = "hashmap/DATS/population_map.dats"
 staload _ = "popcount/DATS/popcount.dats"
 

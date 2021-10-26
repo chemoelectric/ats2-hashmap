@@ -170,7 +170,8 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	hashmap/DATS/bits_source_uint64.dats.m4 \
 	hashmap/DATS/bits_source_uint64_uint64.dats.m4 \
 	hashmap/SATS/array-proofs.sats hashmap/DATS/array-proofs.dats \
-	list-ats-dependencies.dats
+	hashmap/CATS/memory.cats hashmap/SATS/memory.sats \
+	hashmap/DATS/memory.dats list-ats-dependencies.dats
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -639,6 +640,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/build-aux/test-driver \
 	$(top_srcdir)/config-status-deps.am \
+	$(top_srcdir)/hashmap/CATS/memory.cats.in \
 	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint16.dats.m4.in \
@@ -646,11 +648,13 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint8.dats.m4.in \
+	$(top_srcdir)/hashmap/DATS/memory.dats.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
-	AUTHORS COPYING INSTALL README build-aux/compile \
-	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
-	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
+	$(top_srcdir)/hashmap/SATS/memory.sats.in AUTHORS COPYING \
+	INSTALL README build-aux/compile build-aux/config.guess \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -819,10 +823,6 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 AUTOMAKE_OPTIONS = foreign subdir-objects -Wno-portability
-
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/CATS/memory.cats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
-#CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
 CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_UINTnn.dats.m4.in \
@@ -833,6 +833,9 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/bits_source_uint64_uint64.dats.m4.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/DATS/array-proofs.dats.in \
+	$(top_srcdir)/hashmap/CATS/memory.cats.in \
+	$(top_srcdir)/hashmap/SATS/memory.sats.in \
+	$(top_srcdir)/hashmap/DATS/memory.dats.in \
 	$(top_srcdir)/list-ats-dependencies.dats.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
@@ -1132,6 +1135,12 @@ hashmap/DATS/bits_source_uint64_uint64.dats.m4: $(top_builddir)/config.status $(
 hashmap/SATS/array-proofs.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/array-proofs.sats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hashmap/DATS/array-proofs.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/array-proofs.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/CATS/memory.cats: $(top_builddir)/config.status $(top_srcdir)/hashmap/CATS/memory.cats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/SATS/memory.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SATS/memory.sats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hashmap/DATS/memory.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/memory.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

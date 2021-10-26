@@ -1,0 +1,94 @@
+(*
+
+Copyright © 2021 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
+%{#
+#include "@ATS_CATS_DIRECTORY@/memory.cats"
+%}
+
+(********************************************************************)
+(*
+  Copying or setting memory.
+*)
+
+(* An interface to memcpy(3).
+
+  IMPORTANT NOTE: memcpy(3) assumes the source and destination do
+                  not overlap. The interface below does not check
+                  for that. You can use memmove(3) for overlapping
+                  data. *)
+fun
+memcpy {n   : int}
+       (dst : &(@[byte?][n]) >> @[byte][n],
+        src : &RD(@[byte][n]),
+        n   : size_t n) :<!refwrt> void = "mac#%"
+
+(* An interface to memset(3). *)
+fun
+memset {n     : int}
+       (dst   : &(@[byte?][n]) >> @[byte][n],
+        value : byte,
+        n     : size_t n) :<!refwrt> void = "mac#%"
+
+(* Move the elements of one array to another array.
+   This is equivalent to the prelude's "array_copy"
+   template; for a nonlinear type, it is a copy. For
+   a linear type, it is a "move" that leaves the old
+   array filled with the equivalent nonlinear data. *)
+fun {vt : vt@ype}
+array_move1 {length : int}
+            (dst    : &(@[vt?][length]) >> @[vt][length],
+             src    : &RD(@[INV(vt)][length]) >> @[vt?!][length],
+             length : size_t length) :<!refwrt> void
+overload array_move with array_move1
+
+(* Move the elements of one array to another array. *)
+fun {vt : vt@ype}
+array_move2 {length : int}
+            {p_dst  : addr}
+            {p_src  : addr}
+            (pf_dst : !(@[vt?][length] @ p_dst) >>
+                          @[vt][length] @ p_dst,
+             pf_src : !(@[INV(vt)][length] @ p_src) >>
+                          @[vt?!][length] @ p_src |
+             p_dst  : ptr p_dst,
+             p_src  : ptr p_src,
+             length : size_t length) :<!refwrt> void
+overload array_move with array_move2
+
+(* Copy "length" elements from one initialized nonlinear
+   array into another. *)
+fun {t : t@ype}
+array_copy_elements
+        {n1, n2 : int}
+        {i1, i2 : int}
+        {length : int | i1 + length <= n1; i2 + length <= n2}
+        (dst    : &(@[t][n1]),
+         i1     : size_t i1,
+         src    : &RD(@[INV(t)][n2]),
+         i2     : size_t i2,
+         length : size_t length) :<!refwrt> void
+
+(********************************************************************)
