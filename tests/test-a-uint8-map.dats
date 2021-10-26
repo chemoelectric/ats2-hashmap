@@ -40,6 +40,14 @@ staload _ = "popcount/DATS/popcount.dats"
 
 macdef cast8 = $UNSAFE.cast{uint8}
 
+implement
+gcompare_val_val<uint8> (x, y) =
+  compare (x, y)
+
+implement
+list_vt_mergesort$cmp<@(uint8, int)> (x, y) =
+  compare (x.0, y.0)
+
 local
 
   typedef hash_t = uint8
@@ -183,9 +191,10 @@ test1 () : void =
     val- ~None_vt () = my_map_get_opt (map, cast8 3)
 
     fun
-    loop {i   : int | 0 <= i; i <= 256} .<256 - i>.
-         (map : !my_map_vt 1 >> _,
-          i   : uint i) : void =
+    loop {size : int}
+         {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt size >> _,
+          i    : uint i) : void =
       if i <> 256U then
         case+ my_map_get_opt (map, cast8 i) of
         | ~ Some_vt n =>
@@ -199,7 +208,7 @@ test1 () : void =
             assertloc (i <> 2U);
             loop (map, succ i)
           end
-    val _ = loop (map, 0U)
+    val _ = loop {1} (map, 0U)
 
     val pairs = my_map_pairs map
     val keys = my_map_keys map
@@ -246,9 +255,92 @@ test2 () : void =
     val _ = free map
   }
 
+fn
+test_node_expansion_1 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast8 0x01, 10)
+    val map = my_map_set (map, cast8 0x05, 50)
+    val map = my_map_set (map, cast8 0x15, 210)
+    val map = my_map_set (map, cast8 0x00, 1)
+    val map = my_map_set (map, cast8 0x0F, 150)
+
+    val- 5 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+    fun
+    loop {size : int}
+         {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt size >> _,
+          i    : uint i) : void =
+      if i <> 256U then
+        let
+          val n_opt = my_map_get_opt (map, cast8 i)
+        in
+          case+ n_opt of
+          | ~ Some_vt (n) =>
+            begin
+              case+ i of
+              | 0x01U => assertloc (n = 10)
+              | 0x05U => assertloc (n = 50)
+              | 0x15U => assertloc (n = 210)
+              | 0x00U => assertloc (n = 1)
+              | 0x0FU => assertloc (n = 150)
+              | _ => assertloc (false)
+            end
+          | ~ None_vt () =>
+            begin
+              assertloc (i <> 0x01U);
+              assertloc (i <> 0x05U);
+              assertloc (i <> 0x15U);
+              assertloc (i <> 0x00U);
+              assertloc (i <> 0x0FU)
+            end;
+          loop (map, succ i)
+        end
+    val _ = loop {5} (map, 0U)
+
+    val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
+    val _ = assertloc (length pairs = 5)
+    val- 0x00U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 0)).0)
+    val- 0x01U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 1)).0)
+    val- 0x05U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 2)).0)
+    val- 0x0FU = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 3)).0)
+    val- 0x15U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 4)).0)
+    val- 1 = ((list_vt_get_at (pairs, 0)).1)
+    val- 10 = ((list_vt_get_at (pairs, 1)).1)
+    val- 50 = ((list_vt_get_at (pairs, 2)).1)
+    val- 150 = ((list_vt_get_at (pairs, 3)).1)
+    val- 210 = ((list_vt_get_at (pairs, 4)).1)
+    val _ = free pairs
+
+    val keys = list_vt_mergesort<uint8> (my_map_keys map)
+    val _ = assertloc (length keys = 5)
+    val- 0x00U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 0))
+    val- 0x01U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 1))
+    val- 0x05U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 2))
+    val- 0x0FU = $UNSAFE.cast{uint} (list_vt_get_at (keys, 3))
+    val- 0x15U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 4))
+    val _ = free keys
+
+    val values = list_vt_mergesort<int> (my_map_values map)
+    val _ = assertloc (length values = 5)
+    val- 1 = list_vt_get_at (values, 0)
+    val- 10 = list_vt_get_at (values, 1)
+    val- 50 = list_vt_get_at (values, 2)
+    val- 150 = list_vt_get_at (values, 3)
+    val- 210 = list_vt_get_at (values, 4)
+    val _ = free values
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
     val _ = test1 ()
     val _ = test2 ()
+    val _ = test_node_expansion_1 ()
   }
