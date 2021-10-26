@@ -526,15 +526,16 @@ set_entry {size  : int | 1 <= size}
             val _ =
               array_move<t> (qf_left, pf_left |
                              p_new_array, p_array, i2sz array_index)
+
+            val new_entry =
+              node_vt_key_value @{key = key, value = value}
+            val _ = ptr_set<t> (qf_entry | p_new_entry, new_entry)
+
             val _ =
               array_move<t> (qf_right, pf_right |
                              ptr_succ<t> (p_new_entry),
                              ptr_add<t> (p_array, i2sz array_index),
                              i2sz (new_popcount - succ array_index))
-
-            val new_entry =
-              node_vt_key_value @{key = key, value = value}
-            val _ = ptr_set<t> (qf_entry | p_new_entry, new_entry)
 
             prval _ = pf_array :=
               array_v_join2 {t?} {p_array}
