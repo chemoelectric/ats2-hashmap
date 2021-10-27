@@ -292,11 +292,6 @@ set_entry {size  : int | 1 <= size}
   let
     vtypedef t = node_vt (key_vt, value_vt)
     vtypedef kv_t = key_value_vt (key_vt, value_vt)
-    vtypedef retval_vt (size : int) =
-      @{
-        size = size_t size,
-        tree = node_array_vt (key_vt, value_vt)
-      }
 
     (* We shall need storage for a hash of an internal key.
        Pretend it is already initialized. *)
@@ -336,16 +331,11 @@ set_entry {size  : int | 1 <= size}
 
     fun
     big_loop {size           : int | 1 <= size}
-             {population_map : int}
-             {length         : int}
-             {p_array        : addr}
              {hash2_is_set   : bool}
              {bits           : int | bits_source_valid_bits bits}
              {depth          : int}
              (size           : size_t size,
-              tree           : node_array_vt (key_vt, value_vt,
-                                              population_map,
-                                              length, p_array),
+              node           : &node_vt (key_vt, value_vt) >> _,
               hash1          : &hash_vt >> _,
               hash2          : &hash_vt >> _,
               hash2_is_set   : &(bool hash2_is_set) >> Bool,
@@ -354,9 +344,23 @@ set_entry {size  : int | 1 <= size}
               key            : key_vt,
               value          : value_vt) :
         [new_size : int | new_size == size || new_size == size + 1]
-        retval_vt (new_size) =
+        size_t new_size =
       (* A tail-recursive implementation. *)
       let
+        val- @ node_vt_array tree = node
+
+        (* Get the statics for "tree", via a bit of trickery. *)
+        prval [population_map : int]
+              [length : int]
+              [p_array : addr]
+              tree_tmp =
+          (tree : [population_map : int]
+                  [length         : int]
+                  [p_array        : addr]
+                  node_array_vt (key_vt, value_vt, population_map,
+                                 length, p_array))
+        prval _ = $effmask_wrt tree := tree_tmp
+
         val [mask : int] mask = bits_to_population_map (bits)
         val population_map = (tree.population_map)
         val array_has_an_entry = isneqz (population_map land mask)
@@ -400,8 +404,9 @@ set_entry {size  : int | 1 <= size}
                     prval _ = fold@ entry
                     prval _ = tree.array_view :=
                       array_v_merge_entry (pf_left, pf_entry, pf_right)
+                    prval _ = fold@ node
                   in
-                    @{size = size, tree = tree}
+                    size
                   end
                 else
                   (* The key is not in the tree, but some of its
@@ -409,8 +414,11 @@ set_entry {size  : int | 1 <= size}
                      separate chaining is required. The map will
                      grow by one. *)
                   let
+                    (* More bits of the stored key's hash
+                       will be needed. *)
                     val _ =
                       stored_key_to_hash2 (k, hash2, hash2_is_set)
+
                     val bits1 =
                       hashmap$bits_source<hash_vt> (hash1, succ depth)
                     val bits2 =
@@ -431,8 +439,9 @@ set_entry {size  : int | 1 <= size}
                         prval _ = fold@ entry
                         prval _ = tree.array_view :=
                           array_v_merge_entry (pf_left, pf_entry, pf_right)
+                        prval _ = fold@ node
                       in
-                        @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                        size
                       end
                     else
                       (* We have come upon a point where the hash bits
@@ -462,13 +471,11 @@ set_entry {size  : int | 1 <= size}
                         prval _ = tree.array_view :=
                           array_v_merge_entry
                             (pf_left, pf_entry, pf_right)
+
+                        prval _ = fold@ node
                       in
-                        (* FIXME: When we loop back, there is more
-                           work being done than is necessary.
-                           Perhaps we can devise another entry
-                           point to the loop (maybe a mutual tail
-                           recursion). *)
-                        big_loop (size, tree, hash1, hash2,
+                        // FIXME: NO NEED TO REDO AT THIS DEPTH!!!!!!!! // FIXME // FIXME // FIXME // FIXME // FIXME
+                        big_loop (size, node, hash1, hash2,
                                   hash2_is_set, bits, depth,
                                   key, value)
                       end
@@ -514,14 +521,25 @@ set_entry {size  : int | 1 <= size}
 
                 prval _ = tree.array_view :=
                   array_v_merge_entry (pf_left, pf_entry, pf_right)
+                prval _ = fold@ node
               in
                 $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                 $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                size // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
             | node_vt_array subtree =>
               (* Search for the key in a subtree. *)
               let
+                (* The next set of bits. *)
+                val bits1 =
+                  hashmap$bits_source<hash_vt> (hash1, succ depth)
+
+                (* In a properly designed hashmap, with hash and
+                   bits source functions working as they should,
+                   the bits cannot be exhausted. Otherwise there
+                   would be no subnode here. *)
+                val _ = assertloc (bits1 <> BITS_SOURCE_EXHAUSTED)
+
 (*
                 val result =
                   find_entry<hash_vt><key_vt, value_vt>
@@ -529,10 +547,12 @@ set_entry {size  : int | 1 <= size}
 *)
                 prval _ = tree.array_view :=
                   array_v_merge_entry (pf_left, pf_entry, pf_right)
+
+                prval _ = fold@ node
               in
                 $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                 $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                size // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
           end
         else
@@ -617,19 +637,26 @@ set_entry {size  : int | 1 <= size}
                 population_map = new_population_map,
                 p_array = p_new_array
               }
+
+            val _ = tree := new_tree
+
+            prval _ = fold@ node
           in
-            @{size = succ size, tree = new_tree}
+            succ size
           end
       end
-    
+
     val bits = hashmap$bits_source<hash_vt> (hash, 0U)
-    val result =
-      big_loop {size}
-               (size, tree, hash, hash2, hash2_is_set, bits, 0U,
+
+    var node = node_vt_array tree
+    val new_size =
+      big_loop (size, node, hash, hash2, hash2_is_set, bits, 0U,
                 key, value)
+
+    val _ = hash2_free (hash2, hash2_is_set)
   in
-    hash2_free (hash2, hash2_is_set);
-    result
+    case- node of
+    | ~ node_vt_array tree => @{size = new_size, tree = tree}
   end
 
 implement {hash_vt} {key_vt, value_vt}
