@@ -175,6 +175,14 @@ hashmap_vt (key_vt, value_vt, size) =
 
 (********************************************************************)
 
+fn {key_vt, value_vt : vt@ype}
+extract_key_value (node : node_vt (key_vt, value_vt)) :
+    key_value_vt (key_vt, value_vt) =
+  case- node of
+  | ~ node_vt_key_value key_value => key_value
+
+(********************************************************************)
+
 primplement
 lemma_hashmap_vt_param (map) =
   case+ map of
@@ -237,6 +245,36 @@ make_new_array
   end
 
 (********************************************************************)
+
+fn {key_vt, value_vt : vt@ype}
+make_new_length1_node_array
+        {bits  : int | bits_source_valid_bits bits}
+        (bits  : int bits,
+         key   : key_vt,
+         value : value_vt) :
+    [population_map : int]
+    [p_array        : addr]
+    node_array_vt (key_vt, value_vt, population_map, 1, p_array) =
+  let
+    val [population_map : int] population_map =
+      bits_to_population_map (bits)
+    prval _ =
+      $UN.prop_assert {popcount_relation (population_map, 1)} ()
+    prval pf_popcount =
+      popcount_relation_to_proof {population_map} {1} ()
+
+    val @(pf_array, pf_mfree | p_array) =
+      make_new_array<key_vt, value_vt>
+        (pf_popcount | population_map, key, value)
+  in
+    @{
+      population_map_prop = pf_popcount,
+      array_view = pf_array,
+      mfree_view = pf_mfree |
+      population_map = population_map,
+      p_array = p_array
+    }
+  end
 
 fn {hash_vt : vt@ype}
    {key_vt, value_vt : vt@ype}
@@ -408,7 +446,11 @@ set_entry {size  : int | 1 <= size}
                         val _ = hashmap$value_vt_free<value_vt> (v)
                         val _ = key_value.key := key
                         val _ = key_value.value := value
+
                         prval _ = fold@ entry
+
+//                        val key_value = extract_key_value entry
+
                         prval _ = tree.array_view :=
                           array_v_merge_entry (pf_left, pf_entry, pf_right)
                       in
@@ -585,25 +627,7 @@ hashmap_set {size} (map, key, value) =
       val bits = hashmap$bits_source<hash_vt> (hash, 0U)
       val () = hashmap$hash_vt_free<hash_vt> (hash)
 
-      val [population_map : int] population_map =
-        bits_to_population_map (bits)
-      prval _ =
-        $UN.prop_assert {popcount_relation (population_map, 1)} ()
-      prval pf_popcount =
-        popcount_relation_to_proof {population_map} {1} ()
-
-      val @(pf_array, pf_mfree | p_array) =
-        make_new_array<key_vt, value_vt>
-          (pf_popcount | population_map, key, value)
-
-      val tree =
-        @{
-          population_map_prop = pf_popcount,
-          array_view = pf_array,
-          mfree_view = pf_mfree |
-          population_map = population_map,
-          p_array = p_array
-        }
+      val tree = make_new_length1_node_array (bits, key, value)
     in
       map_vt_root @{size = i2sz 1, tree = tree}
     end
