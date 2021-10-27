@@ -337,10 +337,79 @@ test_node_expansion_1 () : void =
     val _ = free map
   }
 
+fn
+test_collision_1 () : void =
+  {
+    val map = hashmap ()
+
+    (* The following two hashes will collide in their least
+       significant six bits. *)
+    val map = my_map_set (map, cast8 1, 100)
+    val map = my_map_set (map, cast8 65, 20) (* 65 = 2**6 + 1 *)
+
+    val- 2 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+//    val- ~ Some_vt 100 = my_map_get_opt (map, cast8 1)  // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    val- ~ Some_vt 20 = my_map_get_opt (map, cast8 65)
+
+    val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
+    val _ = assertloc (length pairs = 2)
+    val- 1U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 0)).0)
+    val- 65U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 1)).0)
+    val- 100 = ((list_vt_get_at (pairs, 0)).1)
+    val- 20 = ((list_vt_get_at (pairs, 1)).1)
+    val _ = free pairs
+
+    val keys = list_vt_mergesort<uint8> (my_map_keys map)
+    val _ = assertloc (length keys = 2)
+    val- 1U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 0))
+    val- 65U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 1))
+    val _ = free keys
+
+    val values = list_vt_mergesort<int> (my_map_values map)
+    val _ = assertloc (length values = 2)
+    val- 20 = list_vt_get_at (values, 0)
+    val- 100 = list_vt_get_at (values, 1)
+    val _ = free values
+
+(*
+    fun
+    loop {size : int}
+         {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt size >> _,
+          i    : uint i) : void =
+      if i <> 256U then
+        let
+          val n_opt = my_map_get_opt (map, cast8 i)
+        in
+          case+ n_opt of
+          | ~ Some_vt (n) =>
+            begin
+              case+ i of
+              | 1U => assertloc (n = 10)
+              | 65U => assertloc (n = 20)
+              | _ => assertloc (false)
+            end
+          | ~ None_vt () =>
+            begin
+              assertloc (i <> 1U);
+              assertloc (i <> 65U)
+            end;
+          loop (map, succ i)
+        end
+    val _ = loop {2} (map, 0U)
+*)
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
     val _ = test1 ()
     val _ = test2 ()
     val _ = test_node_expansion_1 ()
+    val _ = test_collision_1 ()
   }
