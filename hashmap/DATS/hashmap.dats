@@ -468,16 +468,19 @@ set_entry {size  : int | 1 <= size}
                         val _ =
                           ptr_set<t> (pf_entry | p_entry, new_node)
 
+                        (* Tail recursion. *)
+                        val new_size =
+                          big_loop (size, entry, hash1, hash2,
+                                    hash2_is_set, bits1, succ depth,
+                                    key, value)
+
                         prval _ = tree.array_view :=
                           array_v_merge_entry
                             (pf_left, pf_entry, pf_right)
 
                         prval _ = fold@ node
                       in
-                        // FIXME: NO NEED TO REDO AT THIS DEPTH!!!!!!!! // FIXME // FIXME // FIXME // FIXME // FIXME
-                        big_loop (size, node, hash1, hash2,
-                                  hash2_is_set, bits, depth,
-                                  key, value)
+                        new_size
                       end
                   end
               end
