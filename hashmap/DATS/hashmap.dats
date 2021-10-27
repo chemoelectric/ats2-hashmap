@@ -365,8 +365,9 @@ set_entry {size  : int | 1 <= size}
                     @{size = size, tree = tree}
                   end
                 else
-                  (* The key is not in the tree. Either a new node
-                     or separate chaining is required. The map will
+                  (* The key is not in the tree, but some of its
+                     hash bits were matched. Either a new node or
+                     separate chaining is required. The map will
                      grow by one. *)
                   let
                     val _ =
@@ -378,7 +379,8 @@ set_entry {size  : int | 1 <= size}
                   in
                     if (bits1 = BITS_SOURCE_EXHAUSTED |||
                         bits2 = BITS_SOURCE_EXHAUSTED) then
-                      (* Separate chaining is required. *)
+                      (* All of the available hash bits are matched.
+                         Separate chaining is required. *)
                       let
                         // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                         // This is just the code for replacing an existing entry, used here temporarily,
@@ -394,9 +396,10 @@ set_entry {size  : int | 1 <= size}
                         @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                       end
                     else
-                      (* Create a new node, which will contain only
-                         the old entry; store it in the old location;
-                         and then do a loop. *)
+                      (* We have come upon a point where the hash bits
+                         diverge. Create a new node, which will
+                         contain only the old entry; store it in the
+                         old location; and then do a loop. *)
                       let
                         // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                         // This is just the code for replacing an existing entry, used here temporarily,
