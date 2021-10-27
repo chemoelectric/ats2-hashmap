@@ -355,6 +355,7 @@ set_entry {size  : int | 1 <= size}
               value          : value_vt) :
         [new_size : int | new_size == size || new_size == size + 1]
         retval_vt (new_size) =
+      (* A tail-recursive implementation. *)
       let
         val [mask : int] mask = bits_to_population_map (bits)
         val population_map = (tree.population_map)
@@ -439,22 +440,37 @@ set_entry {size  : int | 1 <= size}
                          contain only the old entry; store it in the
                          old location; and then do a loop. *)
                       let
-                        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                        // This is just the code for replacing an existing entry, used here temporarily,
-                        // to get the compiler to work.
-                        val _ = hashmap$key_vt_free<key_vt> (k)
-                        val _ = hashmap$value_vt_free<value_vt> (v)
-                        val _ = key_value.key := key
-                        val _ = key_value.value := value
+                        (* Pretend we never extracted k and v. *)
+                        prval _ = $effmask_wrt key_value :=
+                          @{key = k, value = v}
 
                         prval _ = fold@ entry
 
-//                        val key_value = extract_key_value entry
+                        (* Remove the old entry from the
+                           existing array. *)
+                        val key_value = extract_key_value entry
+                        val @{key = k, value = v} = key_value
+
+                        (* Make a new entry, containing a
+                           new array of length one. *)
+                        val subtree =
+                          make_new_length1_node_array (bits2, k, v)
+                        val new_node = node_vt_array subtree
+                        val _ =
+                          ptr_set<t> (pf_entry | p_entry, new_node)
 
                         prval _ = tree.array_view :=
-                          array_v_merge_entry (pf_left, pf_entry, pf_right)
+                          array_v_merge_entry
+                            (pf_left, pf_entry, pf_right)
                       in
-                        @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                        (* FIXME: When we loop back, there is more
+                           work being done than is necessary.
+                           Perhaps we can devise another entry
+                           point to the loop (maybe a mutual tail
+                           recursion). *)
+                        big_loop (size, tree, hash1, hash2,
+                                  hash2_is_set, bits, depth,
+                                  key, value)
                       end
                   end
               end
