@@ -334,7 +334,7 @@ set_entry {size  : int | 1 <= size}
              {hash2_is_set   : bool}
              {bits           : int | bits_source_valid_bits bits}
              {depth          : int}
-             (size           : size_t size,
+             (size           : &size_t size >> size_t new_size,
               node           : &node_vt (key_vt, value_vt) >> _,
               hash1          : &hash_vt >> _,
               hash2          : &hash_vt >> _,
@@ -343,8 +343,8 @@ set_entry {size  : int | 1 <= size}
               depth          : uint depth,
               key            : key_vt,
               value          : value_vt) :
-        [new_size : int | new_size == size || new_size == size + 1]
-        size_t new_size =
+        #[new_size : int | new_size == size || new_size == size + 1]
+        void =
       (* A tail-recursive implementation. *)
       let
         val- @ node_vt_array tree = node
@@ -396,7 +396,7 @@ set_entry {size  : int | 1 <= size}
                 if hashmap$key_vt_eq<key_vt> (key, k) then
                   (* A key-value pair was found. Replace it. The map
                      does not grow. *)
-                  let
+                  {
                     val _ = hashmap$key_vt_free<key_vt> (k)
                     val _ = hashmap$value_vt_free<value_vt> (v)
                     val _ = key_value.key := key
@@ -405,9 +405,7 @@ set_entry {size  : int | 1 <= size}
                     prval _ = tree.array_view :=
                       array_v_merge_entry (pf_left, pf_entry, pf_right)
                     prval _ = fold@ node
-                  in
-                    size
-                  end
+                  }
                 else
                   (* The key is not in the tree, but some of its
                      hash bits were matched. Either a new node or
@@ -428,7 +426,7 @@ set_entry {size  : int | 1 <= size}
                         bits2 = BITS_SOURCE_EXHAUSTED) then
                       (* All of the available hash bits are matched.
                          Separate chaining is required. *)
-                      let
+                      {
                         // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                         // This is just the code for replacing an existing entry, used here temporarily,
                         // to get the compiler to work.
@@ -440,15 +438,13 @@ set_entry {size  : int | 1 <= size}
                         prval _ = tree.array_view :=
                           array_v_merge_entry (pf_left, pf_entry, pf_right)
                         prval _ = fold@ node
-                      in
-                        size
-                      end
+                      }
                     else
                       (* We have come upon a point where the hash bits
                          diverge. Create a new node, which will
                          contain only the old entry; store it in the
                          old location; and then do a loop. *)
-                      let
+                      {
                         (* Pretend we never extracted k and v. *)
                         prval _ = $effmask_wrt key_value :=
                           @{key = k, value = v}
@@ -469,7 +465,7 @@ set_entry {size  : int | 1 <= size}
                           ptr_set<t> (pf_entry | p_entry, new_node)
 
                         (* Tail recursion. *)
-                        val new_size =
+                        val () =
                           big_loop (size, entry, hash1, hash2,
                                     hash2_is_set, bits1, succ depth,
                                     key, value)
@@ -479,9 +475,7 @@ set_entry {size  : int | 1 <= size}
                             (pf_left, pf_entry, pf_right)
 
                         prval _ = fold@ node
-                      in
-                        new_size
-                      end
+                      }
                   end
               end
             | node_vt_list lst =>
@@ -528,7 +522,6 @@ set_entry {size  : int | 1 <= size}
               in
                 $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                 $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                size // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
             | node_vt_array subtree =>
               (* Search for the key in a subtree. *)
@@ -555,14 +548,13 @@ set_entry {size  : int | 1 <= size}
               in
                 $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
                 $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                size // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
               end
           end
         else
           (* There is no entry in the current node for such a value
              of the hash bits. Expand the node. The size of the map
              will increase by one. *)
-          let
+          {
             val @{
                   population_map_prop = pf_popcount,
                   array_view = pf_array,
@@ -642,24 +634,27 @@ set_entry {size  : int | 1 <= size}
               }
 
             val _ = tree := new_tree
+            val _ = size := succ size
 
             prval _ = fold@ node
-          in
-            succ size
-          end
+          }
       end
 
     val bits = hashmap$bits_source<hash_vt> (hash, 0U)
 
-    var node = node_vt_array tree
-    val new_size =
-      big_loop (size, node, hash, hash2, hash2_is_set, bits, 0U,
+    var sz : [sz : int | sz == size || sz == size + 1] size_t sz
+    var node : node_vt (key_vt, value_vt)
+    
+    val _ = sz := size
+    val _ = node := node_vt_array tree
+    val _ =
+      big_loop (sz, node, hash, hash2, hash2_is_set, bits, 0U,
                 key, value)
 
     val _ = hash2_free (hash2, hash2_is_set)
   in
     case- node of
-    | ~ node_vt_array tree => @{size = new_size, tree = tree}
+    | ~ node_vt_array tree => @{size = sz, tree = tree}
   end
 
 implement {hash_vt} {key_vt, value_vt}
