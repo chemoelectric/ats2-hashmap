@@ -1307,7 +1307,7 @@ fn {}
 infer_bits {index   : int}
            (pop_map : population_map_t,
             index   : size_t index) : uint =
-  (* This implementation does not try to be efficient or safe. *)
+  (* This implementation does not try to be efficient. *)
   let
     val one = $UN.cast{population_map_t} 1
     typedef t = [i : int | 0 <= i] int i
@@ -1315,7 +1315,7 @@ infer_bits {index   : int}
     var j : t = 0
     var result : t = 0
   in
-    while (i <= sz2i index && 0 <= j && 0 <= result)
+    while (i <= sz2i index && j < 64 && 0 <= result)
       begin
         while (iseqz (pop_map land (one << j)))
           j := succ j;
