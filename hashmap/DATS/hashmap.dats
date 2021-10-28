@@ -1260,7 +1260,7 @@ fprint_indentation
     var i : [i : int | 0 <= i] uint i
   in
     for (i := 0U; i < depth; i := succ i)
-      fprint! (f, "  ")
+      fprint! (f, "         ")
   end
 
 fn {}
@@ -1280,7 +1280,50 @@ fprint_population_map
         else
           buf[63 - i] := '0'
       end;
-    fprint! (f, $UNSAFE.cast{string (64)} (addr@ buf))
+    fprint! (f, "[", $UNSAFE.cast{string (64)} (addr@ buf), "]")
+  end
+
+fn {}
+fprint_bits
+        (f    : FILEref,
+         bits : uint) : void =
+  let
+    var buf = @[char][7] ('\0')
+    var i : [i : int | 0 <= i; i <= 6] int i
+  in
+    for (i := 0; i <> 6; i := succ i)
+      let
+        val mask = (1U << i)
+      in
+        if isneqz (bits land mask) then
+          buf[5 - i] := '1'
+        else
+          buf[5 - i] := '0'
+      end;
+    fprint! (f, "[", $UNSAFE.cast{string (6)} (addr@ buf), "]")
+  end
+
+fn {}
+infer_bits {index   : int}
+           (pop_map : population_map_t,
+            index   : size_t index) : uint =
+  (* This implementation does not try to be efficient or safe. *)
+  let
+    val one = $UN.cast{population_map_t} 1
+    typedef t = [i : int | 0 <= i] int i
+    var i : t = 0
+    var j : t = 0
+    var result : t = 0
+  in
+    while (i <= sz2i index && 0 <= j && 0 <= result)
+      begin
+        while (iseqz (pop_map land (one << j)))
+          j := succ j;
+        result := j;
+        j := succ j;
+        i := succ i
+      end;
+    i2u result
   end
 
 fn {key_vt, value_vt : vt@ype}
@@ -1374,13 +1417,13 @@ fprint_tree
         let
           val _ =
             if iseqz index then
-              {
-                val _ = fprint_indentation (f, depth)
-                val _ = fprint! (f, "[")
-                val _ = fprint_population_map (f, pop_map)
-                val _ = fprint! (f, "]")
-                val _ = fprintln! (f)
-              }
+              begin
+                fprintln! (f, "depth (", depth, ")");
+
+                fprint_indentation (f, depth);
+                fprint_population_map (f, pop_map);
+                fprintln! (f)
+              end
 
           val p_entry = ptr_add<node_vt> (p_array, index)
           prval @(pf_entry, fpf_restore_array) =
@@ -1402,11 +1445,12 @@ fprint_tree
               prval pf_array = fpf_restore_array pf_entry
 
               val _ = fprint_indentation (f, depth)
-              val _ = fprint! (f, "(")
+              val _ = fprint_bits (f, infer_bits (pop_map, index))
+              val _ = fprint! (f, " (")
               val _ = key_fprint (f, key_value.key)
-              val _ = fprint! (f, ", ")
+              val _ = fprint! (f, " . ")
               val _ = value_fprint (f, key_value.value)
-              val _ = fprintln! (f, ") @ depth(", depth, ")")
+              val _ = fprintln! (f, ")")
             in
               big_loop (pf_array | pop_map, length, succ index,
                                    p_array, stack, depth,
@@ -1424,6 +1468,7 @@ fprint_tree
               fun
               loop {n       : int | 0 <= n} .<n>.
                    (lst     : !list_vt (key_value_vt (k, v), n) >> _,
+                    separator : string,
                     key_fprint : !key_fprint_vt >> _,
                     value_fprint : !value_fprint_vt >> _) : void =
                 case+ lst of
@@ -1431,18 +1476,20 @@ fprint_tree
                 | @ head :: tail =>
                   {
                     val _ = fprint_indentation (f, depth)
-                    val _ = fprint! (f, "  (")
+                    val _ = fprint! (f, separator)
+                    val _ = fprint! (f, "(")
                     val _ = key_fprint (f, head.key)
-                    val _ = fprint! (f, ", ")
+                    val _ = fprint! (f, " . ")
                     val _ = value_fprint (f, head.value)
-                    val _ = fprintln! (f, ") @ depth(", depth, ")")
-                    val _ = loop (tail, key_fprint, value_fprint)
+                    val _ = fprint! (f, ")")
+                    val _ = loop (tail, " ", key_fprint, value_fprint)
                     prval _ = fold@ lst
                   }
               prval _ = lemma_list_vt_param lst
               val _ = fprint_indentation (f, depth)
-              val _ = fprintln! (f, "(")
-              val _ = loop (lst, key_fprint, value_fprint)
+              val _ = fprint_bits (f, infer_bits (pop_map, index))
+              val _ = fprint! (f, " (")
+              val _ = loop (lst, "", key_fprint, value_fprint)
               val _ = fprint_indentation (f, depth)
               val _ = fprintln! (f, ")")
             in
@@ -1485,11 +1532,18 @@ fprint_tree
               prval _ = popcount_is_nonnegative pf_popcount
               val length = i2sz popcount
 
+              val _ =
+                begin
+                  fprint_indentation (f, depth);
+                  fprint_bits (f, infer_bits (pop_map, index));
+                  fprint! (f, " ")
+                end
+
               val @(pf_subtree_array | ) =
                 big_loop (subtree.array_view |
-                          subtree.population_map, length, i2sz 0,
-                          subtree.p_array, stack, succ depth,
-                          key_fprint, value_fprint)
+                          subtree.population_map,
+                          length, i2sz 0, subtree.p_array, stack,
+                          succ depth, key_fprint, value_fprint)
               prval _ = subtree.array_view := pf_subtree_array
             in
               @(fpf_tunnel_exit () | )
@@ -1515,10 +1569,10 @@ implement {key_vt, value_vt}
 hashmap_fprint (f, map, key_fprint, value_fprint) =
   case+ map of
   | map_vt_nil () =>
-    fprintln! (f, "size = 0")
+    fprintln! (f, "size (0)")
   | map_vt_root root =>
     begin
-      fprintln! (f, "size = ", root.size);
+      fprintln! (f, "size (", root.size, ")");
       fprint_tree<key_vt, value_vt> (f, root.tree, key_fprint,
                                      value_fprint)
     end

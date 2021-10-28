@@ -371,7 +371,7 @@ test_collision_1 () : void =
     val map = my_map_set (map, cast8 1, 100)
     val map = my_map_set (map, cast8 65, 20) (* 65 = 2**6 + 1 *)
 
-    //val _ = my_map_fprint (stdout_ref, map)
+    val _ = my_map_fprint (stdout_ref, map)
 
     val- ~ Some_vt 100 = my_map_get_opt (map, cast8 1)
     val- ~ Some_vt 20 = my_map_get_opt (map, cast8 65)
