@@ -1315,7 +1315,7 @@ infer_bits {index   : int}
     var j : t = 0
     var result : t = 0
   in
-    while (i <= sz2i index && j < 64 && 0 <= result)
+    while (i <= sz2i index && j < 64 && result < 64)
       begin
         while (iseqz (pop_map land (one << j)))
           j := succ j;
