@@ -154,7 +154,20 @@ hashmap_values
     list_vt (value_vt, size)
 
 fun {key_vt, value_vt : vt@ype}
-hashmap_free {size : int}
-             (map  : hashmap_vt (key_vt, value_vt, size)) : void
+hashmap_free
+        {size : int}
+        (map  : hashmap_vt (key_vt, value_vt, size)) :
+    void
+
+fun {key_vt, value_vt : vt@ype}
+hashmap_fprint
+        {size         : int}
+        (f            : FILEref,
+         map          : !hashmap_vt (key_vt, value_vt, size) >> _,
+         key_fprint   : !((FILEref, !key_vt >> _)
+                            -<cloptr1> void) >> _,
+         value_fprint : !((FILEref, !value_vt >> _)
+                            -<cloptr1> void) >> _) :
+    void
 
 (********************************************************************)

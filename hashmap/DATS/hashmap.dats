@@ -1250,3 +1250,216 @@ hashmap_free (map) =
     free_tree<key_vt, value_vt> (tree)
 
 (********************************************************************)
+
+fn {key_vt, value_vt : vt@ype}
+fprint_tree
+        {population_map : int}
+        {length         : int}
+        {p_array        : addr}
+        (f              : FILEref,
+         tree           : !(node_array_vt (key_vt, value_vt,
+                                           population_map,
+                                           length, p_array)) >> _,
+         key_fprint     : !((FILEref, !key_vt >> _)
+                                -<cloptr1> void) >> _,
+         value_fprint   : !((FILEref, !value_vt >> _)
+                                -<cloptr1> void) >> _) : void =
+  let
+    vtypedef k = key_vt
+    vtypedef v = value_vt
+    vtypedef node_vt = node_vt (k, v)
+
+    vtypedef stkentry_vt (n : int, i : int, p : addr) =
+      @{
+        pf_array = @[node_vt][n] @ p,
+        fpf_consume_array = @[node_vt][n] @ p -<lin,prf> void |
+        length = size_t n,
+        index = size_t i,
+        p_array = ptr p
+      }
+    vtypedef stkentry_vt =
+      [n : int]
+      [i : int | i <= n]
+      [p : addr]
+      stkentry_vt (n, i, p)
+
+    vtypedef key_fprint_vt =
+      (FILEref, !key_vt >> _) -<cloptr1> void
+    vtypedef value_fprint_vt =
+      (FILEref, !value_vt >> _) -<cloptr1> void
+
+    fun
+    big_loop {length   : int | 0 <= length}
+             {p_array  : addr}
+             {index    : int | 0 <= index; index <= length}
+             {stacksz  : int | 0 <= stacksz}
+             (pf_array : @[node_vt][length] @ p_array |
+              length   : size_t length,
+              index    : size_t index,
+              p_array  : ptr p_array,
+              stack    : list_vt (stkentry_vt, stacksz),
+              key_fprint : !key_fprint_vt >> _,
+              value_fprint : !value_fprint_vt >> _) :
+        @(@[node_vt][length] @ p_array | ) =
+      (* Depth-first traversal by tail recursion. *)
+      if index = length then
+        begin
+          case+ stack of
+          | ~ NIL => @(pf_array | )
+          | ~ head :: tail =>
+            (* Pop a stack entry and continue where we left off
+               in an array. *)
+            let
+              val @{
+                    pf_array = pf_parent,
+                    fpf_consume_array = fpf_consume_parent |
+                    length = length,
+                    index = index,
+                    p_array = p_array
+                  } = head
+
+              prval _ = lemma_g1uint_param index
+
+              val @(pf_parent | ) =
+                big_loop (pf_parent | length, index, p_array, tail,
+                                      key_fprint, value_fprint)
+
+              prval _ = fpf_consume_parent pf_parent
+            in
+              @(pf_array | )
+            end
+        end
+      else
+        let
+          val p_entry = ptr_add<node_vt> (p_array, index)
+          prval @(pf_entry, fpf_restore_array) =
+            array_v_takeout {node_vt} {p_array} {length} {index}
+                            pf_array
+
+          (* Move the view to entry_value. This way we do not have
+             to use fold@ *)
+          val entry_value = ptr_get<node_vt> (pf_entry | p_entry)
+        in
+          case+ entry_value of
+          | node_vt_key_value key_value =>
+            (* Print a key-value pair. *)
+            let
+              (* Restore the array. *)
+              prval _ =
+                $effmask_wrt
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval pf_array = fpf_restore_array pf_entry
+
+              val _ = fprint! (f, "(")
+              val _ = key_fprint (f, key_value.key)
+              val _ = fprint! (f, ", ")
+              val _ = value_fprint (f, key_value.value)
+              val _ = fprintln! (f, ")")
+            in
+              big_loop (pf_array |
+                        length, succ index, p_array, stack,
+                        key_fprint, value_fprint)
+            end
+          | node_vt_list lst =>
+            (* Print multiple key-value pairs. *)
+            let
+              (* Restore the array. *)
+              prval _ =
+                $effmask_wrt
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval pf_array = fpf_restore_array pf_entry
+
+              fun
+              loop {n       : int | 0 <= n} .<n>.
+                   (lst     : !list_vt (key_value_vt (k, v), n) >> _,
+                    key_fprint : !key_fprint_vt >> _,
+                    value_fprint : !value_fprint_vt >> _) : void =
+                case+ lst of
+                | NIL => ()
+                | @ head :: tail =>
+                  {
+                    val _ = fprint! (f, "  (")
+                    val _ = key_fprint (f, head.key)
+                    val _ = fprint! (f, ", ")
+                    val _ = value_fprint (f, head.value)
+                    val _ = fprintln! (f, ")")
+                    val _ = loop (tail, key_fprint, value_fprint)
+                    prval _ = fold@ lst
+                  }
+              prval _ = lemma_list_vt_param lst
+              val _ = loop (lst, key_fprint, value_fprint)
+            in
+              big_loop (pf_array | length, succ index, p_array, stack,
+                                   key_fprint, value_fprint)
+            end
+          | node_vt_array subtree =>
+            (* The node is a subtree. Push a stack entry for
+               the next position in the current array; then loop to
+               handle the subtree. *)
+            let
+              (* Restore the parent tree's array. This way, one avoids
+                 the need for fold@. *)
+              prval _ =
+                $effmask_wrt 
+                  ptr_set<node_vt> (pf_entry | p_entry, entry_value)
+              prval pf_array = fpf_restore_array pf_entry
+
+              prval @{
+                      entry = fpf_tunnel_entry,
+                      exit = fpf_tunnel_exit
+                    } = make_view_tunnel pf_array
+
+              val stack_entry =
+                @{
+                  pf_array = pf_array,
+                  fpf_consume_array = fpf_tunnel_entry |
+                  length = length,
+                  index = succ index,
+                  p_array = p_array
+                }
+              val stack = stack_entry :: stack
+
+              val [popcount : int] @(pf_popcount | popcount) =
+                popcount_with_proof (subtree.population_map)
+              prval _ = popcount_isfun (subtree.population_map_prop,
+                                        pf_popcount)
+              prval _ = popcount_is_nonnegative pf_popcount
+              val length = i2sz popcount
+
+              val @(pf_subtree_array | ) =
+                big_loop (subtree.array_view |
+                          length, i2sz 0, subtree.p_array, stack,
+                          key_fprint, value_fprint)
+              prval _ = subtree.array_view := pf_subtree_array
+            in
+              @(fpf_tunnel_exit () | )
+            end
+        end
+
+    val [popcount : int] @(pf_popcount | popcount) =
+      popcount_with_proof (tree.population_map)
+    prval _ = popcount_isfun (tree.population_map_prop, pf_popcount)
+    prval _ = prop_verify {length == popcount} ()
+    prval _ = popcount_is_nonnegative pf_popcount
+    val length = i2sz popcount
+
+    val @(pf_array | ) =
+      big_loop (tree.array_view | length, i2sz 0, tree.p_array,
+                                  NIL, key_fprint, value_fprint)
+    prval _ = tree.array_view := pf_array
+  in
+  end
+
+implement {key_vt, value_vt}
+hashmap_fprint (f, map, key_fprint, value_fprint) =
+  case+ map of
+  | map_vt_nil () =>
+    fprintln! (f, "size = 0")
+  | map_vt_root root =>
+    begin
+      fprintln! (f, "size = ", root.size);
+      fprint_tree<key_vt, value_vt> (f, root.tree, key_fprint,
+                                     value_fprint)
+    end
+
+(********************************************************************)

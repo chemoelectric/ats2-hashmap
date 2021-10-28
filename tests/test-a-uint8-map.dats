@@ -160,6 +160,30 @@ in
 
   (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
 
+  fn
+  my_map_fprint
+        {size : int}
+        (f    : FILEref,
+         map  : !my_map_vt size >> _) : void =
+    {
+      val key_fprint =
+        lam (f   : FILEref,
+             key : !key_t >> _) : void =<cloptr1>
+          fprint! (f, key)
+      val value_fprint =
+        lam (f     : FILEref,
+             value : !value_t >> _) : void =<cloptr1>
+          fprint! (f, value)
+
+      val _ = hashmap_fprint<key_t, value_t> (f, map, key_fprint,
+                                              value_fprint)
+
+      val _ = cloptr_free ($UNSAFE.castvwtp0{cloptr0} key_fprint)
+      val _ = cloptr_free ($UNSAFE.castvwtp0{cloptr0} value_fprint)
+    }
+
+  (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
+
 end
 
 fn
@@ -346,6 +370,8 @@ test_collision_1 () : void =
        significant six bits. *)
     val map = my_map_set (map, cast8 1, 100)
     val map = my_map_set (map, cast8 65, 20) (* 65 = 2**6 + 1 *)
+
+    val _ = my_map_fprint (stdout_ref, map)
 
     val- 2 = sz2i (size map)
     val- false = iseqz map
