@@ -1251,6 +1251,38 @@ hashmap_free (map) =
 
 (********************************************************************)
 
+fn {}
+fprint_indentation
+        {depth : int}
+        (f     : FILEref,
+         depth : uint depth) : void =
+  let
+    var i : [i : int | 0 <= i] uint i
+  in
+    for (i := 0U; i < depth; i := succ i)
+      fprint! (f, "  ")
+  end
+
+fn {}
+fprint_population_map
+        (f              : FILEref,
+         population_map : population_map_t) : void =
+  let
+    var buf = @[char][65] ('\0')
+    var i : [i : int | 0 <= i; i <= 64] int i
+  in
+    for (i := 0; i <> 64; i := succ i)
+      let
+        val mask = bits_to_population_map i
+      in
+        if isneqz (population_map land mask) then
+          buf[63 - i] := '1'
+        else
+          buf[63 - i] := '0'
+      end;
+    fprint! (f, $UNSAFE.cast{string (64)} (addr@ buf))
+  end
+
 fn {key_vt, value_vt : vt@ype}
 fprint_tree
         {population_map : int}
@@ -1264,6 +1296,8 @@ fprint_tree
                                 -<cloptr1> void) >> _,
          value_fprint   : !((FILEref, !value_vt >> _)
                                 -<cloptr1> void) >> _) : void =
+  (* FIXME: Have this print out useful information such as the
+            bits for getting to the entries. *)
   let
     vtypedef k = key_vt
     vtypedef v = value_vt
@@ -1273,6 +1307,7 @@ fprint_tree
       @{
         pf_array = @[node_vt][n] @ p,
         fpf_consume_array = @[node_vt][n] @ p -<lin,prf> void |
+        population_map = population_map_t,
         length = size_t n,
         index = size_t i,
         p_array = ptr p
@@ -1293,11 +1328,14 @@ fprint_tree
              {p_array  : addr}
              {index    : int | 0 <= index; index <= length}
              {stacksz  : int | 0 <= stacksz}
+             {depth    : int | 0 <= depth}
              (pf_array : @[node_vt][length] @ p_array |
+              pop_map  : population_map_t,
               length   : size_t length,
               index    : size_t index,
               p_array  : ptr p_array,
               stack    : list_vt (stkentry_vt, stacksz),
+              depth    : uint depth,
               key_fprint : !key_fprint_vt >> _,
               value_fprint : !value_fprint_vt >> _) :
         @(@[node_vt][length] @ p_array | ) =
@@ -1313,6 +1351,7 @@ fprint_tree
               val @{
                     pf_array = pf_parent,
                     fpf_consume_array = fpf_consume_parent |
+                    population_map = pop_map,
                     length = length,
                     index = index,
                     p_array = p_array
@@ -1320,9 +1359,11 @@ fprint_tree
 
               prval _ = lemma_g1uint_param index
 
+              val _ = assertloc (1U <= depth)
               val @(pf_parent | ) =
-                big_loop (pf_parent | length, index, p_array, tail,
-                                      key_fprint, value_fprint)
+                big_loop (pf_parent | pop_map, length, index, p_array,
+                                      tail, pred depth, key_fprint,
+                                      value_fprint)
 
               prval _ = fpf_consume_parent pf_parent
             in
@@ -1331,6 +1372,16 @@ fprint_tree
         end
       else
         let
+          val _ =
+            if iseqz index then
+              {
+                val _ = fprint_indentation (f, depth)
+                val _ = fprint! (f, "[")
+                val _ = fprint_population_map (f, pop_map)
+                val _ = fprint! (f, "]")
+                val _ = fprintln! (f)
+              }
+
           val p_entry = ptr_add<node_vt> (p_array, index)
           prval @(pf_entry, fpf_restore_array) =
             array_v_takeout {node_vt} {p_array} {length} {index}
@@ -1350,15 +1401,16 @@ fprint_tree
                   ptr_set<node_vt> (pf_entry | p_entry, entry_value)
               prval pf_array = fpf_restore_array pf_entry
 
+              val _ = fprint_indentation (f, depth)
               val _ = fprint! (f, "(")
               val _ = key_fprint (f, key_value.key)
               val _ = fprint! (f, ", ")
               val _ = value_fprint (f, key_value.value)
-              val _ = fprintln! (f, ")")
+              val _ = fprintln! (f, ") @ depth(", depth, ")")
             in
-              big_loop (pf_array |
-                        length, succ index, p_array, stack,
-                        key_fprint, value_fprint)
+              big_loop (pf_array | pop_map, length, succ index,
+                                   p_array, stack, depth,
+                                   key_fprint, value_fprint)
             end
           | node_vt_list lst =>
             (* Print multiple key-value pairs. *)
@@ -1378,18 +1430,24 @@ fprint_tree
                 | NIL => ()
                 | @ head :: tail =>
                   {
+                    val _ = fprint_indentation (f, depth)
                     val _ = fprint! (f, "  (")
                     val _ = key_fprint (f, head.key)
                     val _ = fprint! (f, ", ")
                     val _ = value_fprint (f, head.value)
-                    val _ = fprintln! (f, ")")
+                    val _ = fprintln! (f, ") @ depth(", depth, ")")
                     val _ = loop (tail, key_fprint, value_fprint)
                     prval _ = fold@ lst
                   }
               prval _ = lemma_list_vt_param lst
+              val _ = fprint_indentation (f, depth)
+              val _ = fprintln! (f, "(")
               val _ = loop (lst, key_fprint, value_fprint)
+              val _ = fprint_indentation (f, depth)
+              val _ = fprintln! (f, ")")
             in
-              big_loop (pf_array | length, succ index, p_array, stack,
+              big_loop (pf_array | pop_map, length, succ index,
+                                   p_array, stack, depth,
                                    key_fprint, value_fprint)
             end
           | node_vt_array subtree =>
@@ -1413,6 +1471,7 @@ fprint_tree
                 @{
                   pf_array = pf_array,
                   fpf_consume_array = fpf_tunnel_entry |
+                  population_map = pop_map,
                   length = length,
                   index = succ index,
                   p_array = p_array
@@ -1428,7 +1487,8 @@ fprint_tree
 
               val @(pf_subtree_array | ) =
                 big_loop (subtree.array_view |
-                          length, i2sz 0, subtree.p_array, stack,
+                          subtree.population_map, length, i2sz 0,
+                          subtree.p_array, stack, succ depth,
                           key_fprint, value_fprint)
               prval _ = subtree.array_view := pf_subtree_array
             in
@@ -1444,8 +1504,9 @@ fprint_tree
     val length = i2sz popcount
 
     val @(pf_array | ) =
-      big_loop (tree.array_view | length, i2sz 0, tree.p_array,
-                                  NIL, key_fprint, value_fprint)
+      big_loop (tree.array_view | tree.population_map, length, i2sz 0,
+                                  tree.p_array, NIL, 0U, key_fprint,
+                                  value_fprint)
     prval _ = tree.array_view := pf_array
   in
   end
