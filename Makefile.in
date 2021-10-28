@@ -175,7 +175,8 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.10.28.11.59.16.structure.reference \
 	tests/2021.10.28.12.10.38.structure.reference \
 	tests/2021.10.28.12.13.23.structure.reference \
-	tests/2021.10.28.12.16.30.structure.reference
+	tests/2021.10.28.12.16.30.structure.reference \
+	tests/2021.10.28.15.41.28.structure.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -660,6 +661,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.10.28.12.10.38.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.28.12.13.23.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.28.12.16.30.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.28.15.41.28.structure.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -848,7 +850,8 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.10.28.11.59.16.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.28.12.10.38.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.28.12.13.23.structure.reference.in \
-	$(top_srcdir)/tests/2021.10.28.12.16.30.structure.reference.in
+	$(top_srcdir)/tests/2021.10.28.12.16.30.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.28.15.41.28.structure.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk hashmap/SATS/array-proofs.sats \
@@ -1163,6 +1166,8 @@ tests/2021.10.28.12.10.38.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.10.28.12.13.23.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.28.12.13.23.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.10.28.12.16.30.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.28.12.16.30.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.28.15.41.28.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.28.15.41.28.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)

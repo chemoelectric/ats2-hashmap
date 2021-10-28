@@ -525,7 +525,7 @@ set_entry {size  : int | 1 <= size}
               end
             | node_vt_array subtree =>
               (* Search for the key in a subtree. *)
-              let
+              {
                 (* The next set of bits. *)
                 val bits1 =
                   hashmap$bits_source<hash_vt> (hash1, succ depth)
@@ -536,19 +536,16 @@ set_entry {size  : int | 1 <= size}
                    would be no subnode here. *)
                 val _ = assertloc (bits1 <> BITS_SOURCE_EXHAUSTED)
 
-(*
-                val result =
-                  find_entry<hash_vt><key_vt, value_vt>
-                    (hash, subtree, key, succ depth)
-*)
+                (* Tail recursion. *)
+                val () = big_loop (size, entry, hash1, hash2,
+                                   hash2_is_set, bits1, succ depth,
+                                   key, value)
+
                 prval _ = tree.array_view :=
                   array_v_merge_entry (pf_left, pf_entry, pf_right)
 
                 prval _ = fold@ node
-              in
-                $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-              end
+              }
           end
         else
           (* There is no entry in the current node for such a value

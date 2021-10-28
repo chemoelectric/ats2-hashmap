@@ -418,6 +418,10 @@ test_collision_1 () : void =
     val map = my_map_set (map, cast8 1, 100)
     val map = my_map_set (map, cast8 65, 20) (* 65 = 2**6 + 1 *)
 
+    val- 2 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
     val- ~ Some_vt 100 = my_map_get_opt (map, cast8 1)
     val- ~ Some_vt 20 = my_map_get_opt (map, cast8 65)
 
@@ -445,10 +449,6 @@ test_collision_1 () : void =
           loop (map, succ i)
         end
     val _ = loop (map, 0U)
-
-    val- 2 = sz2i (size map)
-    val- false = iseqz map
-    val- true = isneqz map
 
     val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
     val _ = assertloc (length pairs = 2)
@@ -479,6 +479,88 @@ test_collision_1 () : void =
     val _ = free map
   }
 
+fn
+test_depth1_1 () : void =
+  {
+    val map = hashmap ()
+
+    (* The following four hashes will collide in their least
+       significant six bits. *)
+    val map = my_map_set (map, cast8 1, 100)
+    val map = my_map_set (map, cast8 65, 20)  (* 65 = 2**6 + 1 *)
+    val map = my_map_set (map, cast8 129, ~5) (* 129 = 2**7 + 1 *)
+    val map = my_map_set (map, cast8 193, 500) (* 193 = 2**7 + 2**6 + 1 *)
+
+    val- 4 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+    fun
+    loop {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt >> _,
+          i    : uint i) : void =
+      if i <> 256U then
+        let
+          val n_opt = my_map_get_opt (map, cast8 i)
+        in
+          case+ n_opt of
+          | ~ Some_vt (n) =>
+            begin
+              case+ i of
+              | 1U => assertloc (n = 100)
+              | 65U => assertloc (n = 20)
+              | 129U => assertloc (n = ~5)
+              | 193U => assertloc (n = 500)
+              | _ => assertloc (false)
+            end
+          | ~ None_vt () =>
+            begin
+              assertloc (i <> 1U);
+              assertloc (i <> 65U);
+              assertloc (i <> 129U);
+              assertloc (i <> 193U)
+            end;
+          loop (map, succ i)
+        end
+    val _ = loop (map, 0U)
+
+    val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
+    val _ = assertloc (length pairs = 4)
+    val- 1U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 0)).0)
+    val- 65U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 1)).0)
+    val- 129U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 2)).0)
+    val- 193U = $UNSAFE.cast{uint} ((list_vt_get_at (pairs, 3)).0)
+    val- 100 = ((list_vt_get_at (pairs, 0)).1)
+    val- 20 = ((list_vt_get_at (pairs, 1)).1)
+    val- 5 = ~((list_vt_get_at (pairs, 2)).1)
+    val- 500 = ((list_vt_get_at (pairs, 3)).1)
+    val _ = free pairs
+
+    val keys = list_vt_mergesort<uint8> (my_map_keys map)
+    val _ = assertloc (length keys = 4)
+    val- 1U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 0))
+    val- 65U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 1))
+    val- 129U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 2))
+    val- 193U = $UNSAFE.cast{uint} (list_vt_get_at (keys, 3))
+    val _ = free keys
+
+    val values = list_vt_mergesort<int> (my_map_values map)
+    val _ = assertloc (length values = 4)
+    val- 5 = ~(list_vt_get_at (values, 0))
+    val- 20 = (list_vt_get_at (values, 1))
+    val- 100 = (list_vt_get_at (values, 2))
+    val- 500 = (list_vt_get_at (values, 3))
+    val _ = free values
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.28.15.41.28.structure",
+           "tests/2021.10.28.15.41.28.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -486,4 +568,5 @@ main0 () =
     val _ = test2 ()
     val _ = test_node_expansion_1 ()
     val _ = test_collision_1 ()
+    val _ = test_depth1_1 ()
   }
