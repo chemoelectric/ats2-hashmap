@@ -280,6 +280,12 @@ test1 () : void =
     val+ ~ NIL = tail
     val _ = assertloc (value = 36)
 
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.28.12.16.30.structure",
+           "tests/2021.10.28.12.16.30.structure.reference"))
+
     val _ = free map
   }
 
@@ -305,6 +311,12 @@ test2 () : void =
     val- 36 = value
     val- ~None_vt () = map[cast8 3]
 
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.28.12.13.23.structure",
+           "tests/2021.10.28.12.13.23.structure.reference"))
+
     val _ = free map
   }
 
@@ -318,8 +330,6 @@ test_node_expansion_1 () : void =
     val map = my_map_set (map, cast8 0x15, 210)
     val map = my_map_set (map, cast8 0x00, 1)
     val map = my_map_set (map, cast8 0x0F, 150)
-
-    //val _ = my_map_fprint (stdout_ref, map)
 
     val- 5 = sz2i (size map)
     val- false = iseqz map
@@ -388,6 +398,12 @@ test_node_expansion_1 () : void =
     val- 150 = list_vt_get_at (values, 3)
     val- 210 = list_vt_get_at (values, 4)
     val _ = free values
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.28.12.10.38.structure",
+           "tests/2021.10.28.12.10.38.structure.reference"))
 
     val _ = free map
   }

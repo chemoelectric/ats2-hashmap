@@ -177,6 +177,9 @@ AC_CONFIG_FILES([hashmap/DATS/memory.dats])
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 
 AC_CONFIG_FILES([tests/2021.10.28.11.59.16.structure.reference])
+AC_CONFIG_FILES([tests/2021.10.28.12.10.38.structure.reference])
+AC_CONFIG_FILES([tests/2021.10.28.12.13.23.structure.reference])
+AC_CONFIG_FILES([tests/2021.10.28.12.16.30.structure.reference])
 
 #AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
 #               [test "x${with_ats2_spookyhash}" != xno])

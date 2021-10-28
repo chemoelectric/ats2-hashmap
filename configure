@@ -14636,6 +14636,12 @@ ac_config_files="$ac_config_files list-ats-dependencies.dats"
 
 ac_config_files="$ac_config_files tests/2021.10.28.11.59.16.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.10.28.12.10.38.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.10.28.12.13.23.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.10.28.12.16.30.structure.reference"
+
 
 #AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
 #               [test "x${with_ats2_spookyhash}" != xno])
@@ -15693,6 +15699,9 @@ do
     "hashmap/DATS/memory.dats") CONFIG_FILES="$CONFIG_FILES hashmap/DATS/memory.dats" ;;
     "list-ats-dependencies.dats") CONFIG_FILES="$CONFIG_FILES list-ats-dependencies.dats" ;;
     "tests/2021.10.28.11.59.16.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.11.59.16.structure.reference" ;;
+    "tests/2021.10.28.12.10.38.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.12.10.38.structure.reference" ;;
+    "tests/2021.10.28.12.13.23.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.12.13.23.structure.reference" ;;
+    "tests/2021.10.28.12.16.30.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.12.16.30.structure.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

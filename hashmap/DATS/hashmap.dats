@@ -1300,24 +1300,9 @@ fprint_tree
       end
 
     fn
-    fprint_bits
-            (f    : FILEref,
-             bits : uint) : void =
-      let
-        var buf = @[char][7] ('\0')
-        var i : [i : int | 0 <= i; i <= 6] int i
-      in
-        for (i := 0; i <> 6; i := succ i)
-          let
-            val mask = (1U << i)
-          in
-            if isneqz (bits land mask) then
-              buf[5 - i] := '1'
-            else
-              buf[5 - i] := '0'
-          end;
-        fprint! (f, "[", $UNSAFE.cast{string (6)} (addr@ buf), "]")
-      end
+    fprint_bits (f    : FILEref,
+                 bits : uint) : void =
+      fprint! (f, "[", bits, "]")
 
     fn
     infer_bits {index   : int}
