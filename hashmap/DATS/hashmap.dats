@@ -705,12 +705,12 @@ find_entry {population_map : int}
                                       population_map,
                                       length, p_array) >> _,
             key     : !key_vt >> _,
-            depth   : size_t depth) : Option_vt (value_vt) =
+            depth   : uint depth) : Option_vt (value_vt) =
   let
     vtypedef t = node_vt (key_vt, value_vt)
     vtypedef kv_t = key_value_vt (key_vt, value_vt)
 
-    val [bits : int] bits = hashmap$bits_source<hash_vt> (hash, 0U)
+    val [bits : int] bits = hashmap$bits_source<hash_vt> (hash, depth)
   in
     if bits = BITS_SOURCE_EXHAUSTED then
       (* There are no more hash bits. *)
@@ -828,7 +828,7 @@ hashmap_get_opt (map, key) =
 
       val result =
         find_entry<hash_vt><key_vt, value_vt>
-          (hash, root.tree, key, i2sz 0)
+          (hash, root.tree, key, 0U)
 
       val () = hashmap$hash_vt_free<hash_vt> (hash)
     in
