@@ -38,3 +38,5 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/SATS/memory.sats.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/hashmap/DATS/memory.dats.in
 
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/list-ats-dependencies.dats.in
+
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.28.11.59.16.structure.reference.in

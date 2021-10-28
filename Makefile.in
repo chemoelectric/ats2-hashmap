@@ -171,7 +171,8 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	hashmap/DATS/bits_source_uint64_uint64.dats.m4 \
 	hashmap/SATS/array-proofs.sats hashmap/DATS/array-proofs.dats \
 	hashmap/CATS/memory.cats hashmap/SATS/memory.sats \
-	hashmap/DATS/memory.dats list-ats-dependencies.dats
+	hashmap/DATS/memory.dats list-ats-dependencies.dats \
+	tests/2021.10.28.11.59.16.structure.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -651,10 +652,11 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/DATS/memory.dats.in \
 	$(top_srcdir)/hashmap/SATS/array-proofs.sats.in \
 	$(top_srcdir)/hashmap/SATS/bits_source-parameters.sats.in \
-	$(top_srcdir)/hashmap/SATS/memory.sats.in AUTHORS COPYING \
-	INSTALL README build-aux/compile build-aux/config.guess \
-	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
-	build-aux/ltmain.sh build-aux/missing
+	$(top_srcdir)/hashmap/SATS/memory.sats.in \
+	$(top_srcdir)/tests/2021.10.28.11.59.16.structure.reference.in \
+	AUTHORS COPYING INSTALL README build-aux/compile \
+	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
+	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -836,7 +838,8 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/hashmap/CATS/memory.cats.in \
 	$(top_srcdir)/hashmap/SATS/memory.sats.in \
 	$(top_srcdir)/hashmap/DATS/memory.dats.in \
-	$(top_srcdir)/list-ats-dependencies.dats.in
+	$(top_srcdir)/list-ats-dependencies.dats.in \
+	$(top_srcdir)/tests/2021.10.28.11.59.16.structure.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk hashmap/SATS/array-proofs.sats \
@@ -1143,6 +1146,8 @@ hashmap/SATS/memory.sats: $(top_builddir)/config.status $(top_srcdir)/hashmap/SA
 hashmap/DATS/memory.dats: $(top_builddir)/config.status $(top_srcdir)/hashmap/DATS/memory.dats.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 list-ats-dependencies.dats: $(top_builddir)/config.status $(srcdir)/list-ats-dependencies.dats.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.28.11.59.16.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.28.11.59.16.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -2409,6 +2414,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
+clean-local: tests-clean
 
 @GNU@ include $(top_srcdir)/m4-rules.mk
 
@@ -2464,6 +2470,10 @@ hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
 	    'bits_source_$(*)bytes (hash, depth) =' \
 		'  bits_source_nbytes (i2sz $(*), hash, depth)' \
 		> $(@)
+
+.PHONY: tests-clean
+tests-clean:
+	-rm -f tests/*.structure
 
 #--------------------------------------------------------------------------
 

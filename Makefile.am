@@ -70,6 +70,7 @@ AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
+clean-local: tests-clean
 
 #---------------------------------------------------------------------
 #
@@ -403,6 +404,10 @@ tests_test_a_uint8_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-a-uint8-map.dats
 CLEANFILES += tests/test-a-uint8-map
 CLEANFILES += tests/test-a-uint8-map_dats.c
+
+.PHONY: tests-clean
+tests-clean:
+	-rm -f tests/*.structure
 
 #--------------------------------------------------------------------------
 #

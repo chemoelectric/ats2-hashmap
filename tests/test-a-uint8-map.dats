@@ -187,6 +187,35 @@ in
 end
 
 fn
+compare_structure (map                : !my_map_vt >> _,
+                   filename           : String0,
+                   reference_filename : String0) : bool =
+  let
+    val f = fileref_open_exn (filename, file_mode_w)
+    val _ = my_map_fprint (f, map)
+    val _ = fileref_close (f)
+
+    val space = string1_copy (" ")
+    val fname = string1_copy (filename)
+    val reffname = string1_copy (reference_filename)
+    val cmp = string1_copy ("cmp -s ")
+    val command1 = strnptr_append (space, fname)
+    val command2 = strnptr_append (reffname, command1)
+    val _ = free (command1)
+    val command = strnptr_append (cmp, command2)
+    val _ = free (command2)
+    val status =
+      $extfcall (int, "system", $UNSAFE.castvwtp1{string} command)
+    val _ = free (command)
+    val _ = free (space)
+    val _ = free (fname)
+    val _ = free (reffname)
+    val _ = free (cmp)
+  in
+    status = 0
+  end
+
+fn
 test1 () : void =
   {
     val map = hashmap ()
@@ -290,6 +319,8 @@ test_node_expansion_1 () : void =
     val map = my_map_set (map, cast8 0x00, 1)
     val map = my_map_set (map, cast8 0x0F, 150)
 
+    //val _ = my_map_fprint (stdout_ref, map)
+
     val- 5 = sz2i (size map)
     val- false = iseqz map
     val- true = isneqz map
@@ -371,8 +402,6 @@ test_collision_1 () : void =
     val map = my_map_set (map, cast8 1, 100)
     val map = my_map_set (map, cast8 65, 20) (* 65 = 2**6 + 1 *)
 
-    val _ = my_map_fprint (stdout_ref, map)
-
     val- ~ Some_vt 100 = my_map_get_opt (map, cast8 1)
     val- ~ Some_vt 20 = my_map_get_opt (map, cast8 65)
 
@@ -424,6 +453,12 @@ test_collision_1 () : void =
     val- 20 = list_vt_get_at (values, 0)
     val- 100 = list_vt_get_at (values, 1)
     val _ = free values
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.28.11.59.16.structure",
+           "tests/2021.10.28.11.59.16.structure.reference"))
 
     val _ = free map
   }
