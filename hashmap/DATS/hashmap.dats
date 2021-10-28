@@ -1251,81 +1251,6 @@ hashmap_free (map) =
 
 (********************************************************************)
 
-fn {}
-fprint_indentation
-        {depth : int}
-        (f     : FILEref,
-         depth : uint depth) : void =
-  let
-    var i : [i : int | 0 <= i] uint i
-  in
-    for (i := 0U; i < depth; i := succ i)
-      fprint! (f, "         ")
-  end
-
-fn {}
-fprint_population_map
-        (f              : FILEref,
-         population_map : population_map_t) : void =
-  let
-    var buf = @[char][65] ('\0')
-    var i : [i : int | 0 <= i; i <= 64] int i
-  in
-    for (i := 0; i <> 64; i := succ i)
-      let
-        val mask = bits_to_population_map i
-      in
-        if isneqz (population_map land mask) then
-          buf[63 - i] := '1'
-        else
-          buf[63 - i] := '0'
-      end;
-    fprint! (f, "[", $UNSAFE.cast{string (64)} (addr@ buf), "]")
-  end
-
-fn {}
-fprint_bits
-        (f    : FILEref,
-         bits : uint) : void =
-  let
-    var buf = @[char][7] ('\0')
-    var i : [i : int | 0 <= i; i <= 6] int i
-  in
-    for (i := 0; i <> 6; i := succ i)
-      let
-        val mask = (1U << i)
-      in
-        if isneqz (bits land mask) then
-          buf[5 - i] := '1'
-        else
-          buf[5 - i] := '0'
-      end;
-    fprint! (f, "[", $UNSAFE.cast{string (6)} (addr@ buf), "]")
-  end
-
-fn {}
-infer_bits {index   : int}
-           (pop_map : population_map_t,
-            index   : size_t index) : uint =
-  (* This implementation does not try to be efficient. *)
-  let
-    val one = $UN.cast{population_map_t} 1
-    typedef t = [i : int | 0 <= i] int i
-    var i : t = 0
-    var j : t = 0
-    var result : t = 0
-  in
-    while (i <= sz2i index && j < 64 && result < 64)
-      begin
-        while (iseqz (pop_map land (one << j)))
-          j := succ j;
-        result := j;
-        j := succ j;
-        i := succ i
-      end;
-    i2u result
-  end
-
 fn {key_vt, value_vt : vt@ype}
 fprint_tree
         {population_map : int}
@@ -1342,6 +1267,81 @@ fprint_tree
   (* FIXME: Have this print out useful information such as the
             bits for getting to the entries. *)
   let
+    fn
+    fprint_indentation
+            {depth : int}
+            (f     : FILEref,
+             depth : uint depth) : void =
+      let
+        var i : [i : int | 0 <= i] uint i
+      in
+        for (i := 0U; i < depth; i := succ i)
+          fprint! (f, "         ")
+      end
+
+    fn
+    fprint_population_map
+            (f              : FILEref,
+             population_map : population_map_t) : void =
+      let
+        var buf = @[char][65] ('\0')
+        var i : [i : int | 0 <= i; i <= 64] int i
+      in
+        for (i := 0; i <> 64; i := succ i)
+          let
+            val mask = bits_to_population_map i
+          in
+            if isneqz (population_map land mask) then
+              buf[63 - i] := '1'
+            else
+              buf[63 - i] := '0'
+          end;
+        fprint! (f, "[", $UNSAFE.cast{string (64)} (addr@ buf), "]")
+      end
+
+    fn
+    fprint_bits
+            (f    : FILEref,
+             bits : uint) : void =
+      let
+        var buf = @[char][7] ('\0')
+        var i : [i : int | 0 <= i; i <= 6] int i
+      in
+        for (i := 0; i <> 6; i := succ i)
+          let
+            val mask = (1U << i)
+          in
+            if isneqz (bits land mask) then
+              buf[5 - i] := '1'
+            else
+              buf[5 - i] := '0'
+          end;
+        fprint! (f, "[", $UNSAFE.cast{string (6)} (addr@ buf), "]")
+      end
+
+    fn
+    infer_bits {index   : int}
+               (pop_map : population_map_t,
+                index   : size_t index) : uint =
+      (* This implementation does not try to be efficient. *)
+      let
+        val one = $UN.cast{population_map_t} 1
+        typedef t = [i : int | 0 <= i] int i
+        var i : t = 0
+        var j : t = 0
+        var result : t = 0
+      in
+        while (i <= sz2i index && j < 64 && result < 64)
+          begin
+            while (iseqz (pop_map land (one << j)))
+              j := succ j;
+            result := j;
+            j := succ j;
+            i := succ i
+          end;
+        i2u result
+      end
+
     vtypedef k = key_vt
     vtypedef v = value_vt
     vtypedef node_vt = node_vt (k, v)
