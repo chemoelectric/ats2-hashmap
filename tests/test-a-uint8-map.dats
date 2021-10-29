@@ -576,6 +576,25 @@ test_fill_1 () : void =
 
     val map = fill (hashmap (), 0)
 
+    val- 256 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+    fun
+    loop {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt >> _,
+          i    : uint i) : void =
+      if i <> 256U then
+        let
+          val n_opt = my_map_get_opt (map, cast8 i)
+        in
+          case+ n_opt of
+          | ~ Some_vt (n) => assertloc (u2i i = pred n)
+          | ~ None_vt () => assertloc (false);
+          loop (map, succ i)
+        end
+    val _ = loop (map, 0U)
+
     val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
     val _ = assertloc (length pairs = 256)
     val _ =
@@ -621,6 +640,100 @@ test_fill_1 () : void =
     val _ = free map
   }
 
+fn
+test_replace_1 () : void =
+  {
+    fun
+    fill {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : my_map_vt,
+          i    : int i) :
+        my_map_vt =
+      if i = 256 then
+        map
+      else
+        fill (my_map_set (map, cast8 i, succ i), succ i)
+
+    fun
+    replace {i    : int | 0 <= i; i <= 256} .<256 - i>.
+            (map  : my_map_vt,
+             i    : int i) :
+        my_map_vt =
+      if i = 256 then
+        map
+      else
+        let
+          val- ~ Some_vt value = my_map_get_opt (map, cast8 i)
+        in
+          replace (my_map_set (map, cast8 i, neg value), succ i)
+        end
+
+    val map = fill (hashmap (), 0)
+    val map = replace (map, 0)
+
+    val- 256 = sz2i (size map)
+    val- false = iseqz map
+    val- true = isneqz map
+
+    fun
+    loop {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : !my_map_vt >> _,
+          i    : uint i) : void =
+      if i <> 256U then
+        let
+          val n_opt = my_map_get_opt (map, cast8 i)
+        in
+          case+ n_opt of
+          | ~ Some_vt (n) => assertloc (u2i i = pred (neg n))
+          | ~ None_vt () => assertloc (false);
+          loop (map, succ i)
+        end
+    val _ = loop (map, 0U)
+
+    val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
+    val _ = assertloc (length pairs = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          begin
+            assertloc ($UNSAFE.cast{int} ((list_vt_get_at (pairs, i)).0) = i);
+            assertloc (((list_vt_get_at (pairs, i)).1) = neg (succ i))
+          end
+      end
+    val _ = free pairs
+
+    val keys = list_vt_mergesort<uint8> (my_map_keys map)
+    val _ = assertloc (length keys = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          assertloc ($UNSAFE.cast{int} (list_vt_get_at (keys, i)) = i)
+      end
+    val _ = free keys
+
+    val values = list_vt_mergesort<int> (my_map_values map)
+    val _ = assertloc (length values = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          assertloc (list_vt_get_at (values, i) = neg (256 - i))
+      end
+    val _ = free values
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.29.06.31.29.structure",
+           "tests/2021.10.29.06.31.29.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -630,4 +743,5 @@ main0 () =
     val _ = test_collision_1 ()
     val _ = test_depth1_1 ()
     val _ = test_fill_1 ()
+    val _ = test_replace_1 ()
   }
