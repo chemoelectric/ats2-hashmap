@@ -476,51 +476,61 @@ set_entry {size  : int | 1 <= size}
                       }
                   end
               end
-            | node_vt_list lst =>
-              (* Search for the key in lst. *)
-              let
-(*
+            | @ node_vt_list lst =>
+              (* Add an entry to, or replace an entry in lst. *)
+              {
                 fun
-                search_list {n   : int | 0 <= n} .<n>.
-                            (lst : !list_vt (kv_t, n) >> _,
-                             key : !key_vt >> _) :
-                    Option_vt value_vt =
+                remove_entry
+                        {n       : int | 0 <= n} .<n>.
+                        (lst     : &list_vt (kv_t, n) >>
+                                          list_vt (kv_t, m),
+                         removed : &bool? >> bool (m == n - 1),
+                         key     : !key_vt >> _) :
+                    #[m : int | 0 <= m; m == n || m == n - 1]
+                    void =
                   case+ lst of
-                  | NIL =>
-                    (* The key is not in lst. *)
-                    None_vt ()
-                  | @ key_value :: tail =>
-                    if hashmap$key_vt_eq<key_vt>
-                        (key, key_value.key) then
+                  | @ NIL =>
+                    {
+                      val _ = removed := false
+                      prval _ = fold@ lst
+                    }
+                  | @ head :: tail =>
+                    if hashmap$key_vt_eq<key_vt> (key, head.key) then
                       let
-                        val value =
-                          hashmap$value_vt_copy<value_vt>
-                            (key_value.value)
-                        prval _ = fold@ lst
+                        val tail = tail
+                        val _ = hashmap$key_vt_free (head.key)
+                        val _ = hashmap$value_vt_free (head.value)
+                        val _ = free@ {kv_t} {0} (lst)
                       in
-                        (* A key-value pair was found in lst. *)
-                        Some_vt value
+                        lst := tail;
+                        removed := true
                       end
                     else
-                      (* Search the tail. *)
-                      let
-                        val result = search_list (tail, key)
+                      {
+                        val _ = remove_entry (tail, removed, key)
                         prval _ = fold@ lst
-                      in
-                        result
-                      end
+                      }
 
                 prval _ = lemma_list_vt_param lst
-                val result = search_list (lst, key)
-*)
+
+                (* Remove the old entry, if there is one. *)
+                var lst_var : List_vt (kv_t) = lst
+                var removed : bool
+                val _ = remove_entry (lst_var, removed, key)
+
+                (* The new key-value pair comes first in the list. *)
+                val _ = lst := @{key = key, value = value} :: lst_var
+
+                prval _ = fold@ entry
+
+                (* If there was no old entry, then the size of the map
+                   has increased by one. *)
+                val _ = if not removed then size := succ size
 
                 prval _ = tree.array_view :=
                   array_v_merge_entry (pf_left, pf_entry, pf_right)
                 prval _ = fold@ node
-              in
-                $UN.castvwtp0{void} key; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                $UN.castvwtp0{void} value; // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-              end
+              }
             | node_vt_array subtree =>
               (* Search for the key in a subtree. *)
               {
