@@ -141,7 +141,9 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_8bytes$(EXEEXT) \
 	tests/test-bits_source_16bytes$(EXEEXT) \
 	tests/test-population_map$(EXEEXT) \
-	tests/test-a-uint8-map$(EXEEXT)
+	tests/test-a-uint8-map$(EXEEXT) \
+	tests/test-separate-chaining-1$(EXEEXT) \
+	tests/test-separate-chaining-2$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -178,7 +180,11 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.10.28.12.16.30.structure.reference \
 	tests/2021.10.28.15.41.28.structure.reference \
 	tests/2021.10.29.06.20.08.structure.reference \
-	tests/2021.10.29.06.31.29.structure.reference
+	tests/2021.10.29.06.31.29.structure.reference \
+	tests/2021.10.29.13.44.21.structure.reference \
+	tests/2021.10.29.13.58.50.structure.reference \
+	tests/2021.10.29.14.01.48.structure.reference \
+	tests/2021.10.29.14.02.11.structure.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -317,6 +323,14 @@ am_tests_test_population_map_OBJECTS =  \
 tests_test_population_map_OBJECTS =  \
 	$(am_tests_test_population_map_OBJECTS)
 tests_test_population_map_DEPENDENCIES = $(lib_LTLIBRARIES)
+am_tests_test_separate_chaining_1_OBJECTS = tests/test_separate_chaining_1-test-separate-chaining-1_dats.$(OBJEXT)
+tests_test_separate_chaining_1_OBJECTS =  \
+	$(am_tests_test_separate_chaining_1_OBJECTS)
+tests_test_separate_chaining_1_DEPENDENCIES = $(lib_LTLIBRARIES)
+am_tests_test_separate_chaining_2_OBJECTS = tests/test_separate_chaining_2-test-separate-chaining-2_dats.$(OBJEXT)
+tests_test_separate_chaining_2_OBJECTS =  \
+	$(am_tests_test_separate_chaining_2_OBJECTS)
+tests_test_separate_chaining_2_DEPENDENCIES = $(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -389,7 +403,9 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint8_dats.Po \
 	tests/$(DEPDIR)/test-population_map_dats.Po \
-	tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
+	tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po \
+	tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po \
+	tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -420,7 +436,9 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(tests_test_bits_source_uint8_SOURCES) \
-	$(tests_test_population_map_SOURCES)
+	$(tests_test_population_map_SOURCES) \
+	$(tests_test_separate_chaining_1_SOURCES) \
+	$(tests_test_separate_chaining_2_SOURCES)
 DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
 	$(tests_test_a_uint8_map_SOURCES) \
@@ -432,7 +450,9 @@ DIST_SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_bits_source_uint64_SOURCES) \
 	$(tests_test_bits_source_uint64_uint64_SOURCES) \
 	$(tests_test_bits_source_uint8_SOURCES) \
-	$(tests_test_population_map_SOURCES)
+	$(tests_test_population_map_SOURCES) \
+	$(tests_test_separate_chaining_1_SOURCES) \
+	$(tests_test_separate_chaining_2_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -666,6 +686,10 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.10.28.15.41.28.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.29.06.20.08.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.29.06.31.29.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.13.44.21.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.13.58.50.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.14.01.48.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.14.02.11.structure.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -857,7 +881,11 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.10.28.12.16.30.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.28.15.41.28.structure.reference.in \
 	$(top_srcdir)/tests/2021.10.29.06.20.08.structure.reference.in \
-	$(top_srcdir)/tests/2021.10.29.06.31.29.structure.reference.in
+	$(top_srcdir)/tests/2021.10.29.06.31.29.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.13.44.21.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.13.58.50.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.14.01.48.structure.reference.in \
+	$(top_srcdir)/tests/2021.10.29.14.02.11.structure.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk hashmap/SATS/array-proofs.sats \
@@ -872,7 +900,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-bits_source_8bytes.dats \
 	tests/test-bits_source_16bytes.dats \
 	tests/test-population_map.dats tests/test-a-uint8-map.dats \
-	list-ats-dependencies.dats
+	tests/test-separate-chaining-1.dats \
+	tests/test-separate-chaining-2.dats list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/array-proofs_dats.c \
@@ -910,7 +939,11 @@ CLEANFILES = hashmap/SATS/array-proofs_sats.c \
 	tests/test-bits_source_16bytes_dats.c \
 	tests/test-population_map tests/test-population_map_dats.c \
 	tests/test-a-uint8-map tests/test-a-uint8-map_dats.c \
-	list-ats-dependencies list-ats-dependencies_depsprog.c
+	tests/test-separate-chaining-1 \
+	tests/test-separate-chaining-1_dats.c \
+	tests/test-separate-chaining-2 \
+	tests/test-separate-chaining-2_dats.c list-ats-dependencies \
+	list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
 	hashmap/DATS/bits_source_2bytes_implementation.dats \
@@ -1093,6 +1126,14 @@ tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
 tests_test_a_uint8_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
+tests_test_separate_chaining_1_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_1_LDADD = $(lib_LTLIBRARIES) \
+	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
+tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES) \
+	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1178,6 +1219,14 @@ tests/2021.10.28.15.41.28.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.10.29.06.20.08.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.06.20.08.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.10.29.06.31.29.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.06.31.29.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.29.13.44.21.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.13.44.21.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.29.13.58.50.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.13.58.50.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.29.14.01.48.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.14.01.48.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.10.29.14.02.11.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.10.29.14.02.11.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -1485,6 +1534,18 @@ tests/test-population_map_dats.$(OBJEXT): tests/$(am__dirstamp) \
 tests/test-population_map$(EXEEXT): $(tests_test_population_map_OBJECTS) $(tests_test_population_map_DEPENDENCIES) $(EXTRA_tests_test_population_map_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-population_map$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_population_map_OBJECTS) $(tests_test_population_map_LDADD) $(LIBS)
+tests/test_separate_chaining_1-test-separate-chaining-1_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-separate-chaining-1$(EXEEXT): $(tests_test_separate_chaining_1_OBJECTS) $(tests_test_separate_chaining_1_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_1_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-separate-chaining-1$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_1_OBJECTS) $(tests_test_separate_chaining_1_LDADD) $(LIBS)
+tests/test_separate_chaining_2-test-separate-chaining-2_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-separate-chaining-2$(EXEEXT): $(tests_test_separate_chaining_2_OBJECTS) $(tests_test_separate_chaining_2_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_2_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-separate-chaining-2$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_2_OBJECTS) $(tests_test_separate_chaining_2_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -1555,6 +1616,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint8_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-population_map_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -1613,6 +1676,34 @@ tests/test_a_uint8_map-test-a-uint8-map_dats.obj: tests/test-a-uint8-map_dats.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-a-uint8-map_dats.c' object='tests/test_a_uint8_map-test-a-uint8-map_dats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_a_uint8_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_a_uint8_map-test-a-uint8-map_dats.obj `if test -f 'tests/test-a-uint8-map_dats.c'; then $(CYGPATH_W) 'tests/test-a-uint8-map_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-a-uint8-map_dats.c'; fi`
+
+tests/test_separate_chaining_1-test-separate-chaining-1_dats.o: tests/test-separate-chaining-1_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_1_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_1-test-separate-chaining-1_dats.o -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Tpo -c -o tests/test_separate_chaining_1-test-separate-chaining-1_dats.o `test -f 'tests/test-separate-chaining-1_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-1_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-1_dats.c' object='tests/test_separate_chaining_1-test-separate-chaining-1_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_1_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_1-test-separate-chaining-1_dats.o `test -f 'tests/test-separate-chaining-1_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-1_dats.c
+
+tests/test_separate_chaining_1-test-separate-chaining-1_dats.obj: tests/test-separate-chaining-1_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_1_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_1-test-separate-chaining-1_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Tpo -c -o tests/test_separate_chaining_1-test-separate-chaining-1_dats.obj `if test -f 'tests/test-separate-chaining-1_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-1_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-1_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-1_dats.c' object='tests/test_separate_chaining_1-test-separate-chaining-1_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_1_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_1-test-separate-chaining-1_dats.obj `if test -f 'tests/test-separate-chaining-1_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-1_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-1_dats.c'; fi`
+
+tests/test_separate_chaining_2-test-separate-chaining-2_dats.o: tests/test-separate-chaining-2_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_2_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_2-test-separate-chaining-2_dats.o -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Tpo -c -o tests/test_separate_chaining_2-test-separate-chaining-2_dats.o `test -f 'tests/test-separate-chaining-2_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-2_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-2_dats.c' object='tests/test_separate_chaining_2-test-separate-chaining-2_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_2_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_2-test-separate-chaining-2_dats.o `test -f 'tests/test-separate-chaining-2_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-2_dats.c
+
+tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj: tests/test-separate-chaining-2_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_2_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Tpo -c -o tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj `if test -f 'tests/test-separate-chaining-2_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-2_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-2_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-2_dats.c' object='tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_2_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj `if test -f 'tests/test-separate-chaining-2_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-2_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-2_dats.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1965,6 +2056,20 @@ tests/test-a-uint8-map.log: tests/test-a-uint8-map$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-separate-chaining-1.log: tests/test-separate-chaining-1$(EXEEXT)
+	@p='tests/test-separate-chaining-1$(EXEEXT)'; \
+	b='tests/test-separate-chaining-1'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-separate-chaining-2.log: tests/test-separate-chaining-2$(EXEEXT)
+	@p='tests/test-separate-chaining-2$(EXEEXT)'; \
+	b='tests/test-separate-chaining-2'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -2277,6 +2382,8 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po
 	-rm -f tests/$(DEPDIR)/test-population_map_dats.Po
 	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -2384,6 +2491,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po
 	-rm -f tests/$(DEPDIR)/test-population_map_dats.Po
 	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

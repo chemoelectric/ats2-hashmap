@@ -405,6 +405,24 @@ EXTRA_DIST += tests/test-a-uint8-map.dats
 CLEANFILES += tests/test-a-uint8-map
 CLEANFILES += tests/test-a-uint8-map_dats.c
 
+check_PROGRAMS += tests/test-separate-chaining-1
+tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
+tests_test_separate_chaining_1_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_1_LDADD = $(lib_LTLIBRARIES)
+tests_test_separate_chaining_1_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+EXTRA_DIST += tests/test-separate-chaining-1.dats
+CLEANFILES += tests/test-separate-chaining-1
+CLEANFILES += tests/test-separate-chaining-1_dats.c
+
+check_PROGRAMS += tests/test-separate-chaining-2
+tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
+tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES)
+tests_test_separate_chaining_2_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+EXTRA_DIST += tests/test-separate-chaining-2.dats
+CLEANFILES += tests/test-separate-chaining-2
+CLEANFILES += tests/test-separate-chaining-2_dats.c
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
