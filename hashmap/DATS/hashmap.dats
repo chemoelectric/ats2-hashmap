@@ -391,9 +391,8 @@ set_entry {size  : int | 1 <= size}
             case+ entry of
             | @ node_vt_key_value key_value =>
               let
-//                val @{key = k, value = v} = key_value
-                macdef k = key_value.key
-                macdef v = key_value.value
+                macdef k = (key_value.key)
+                macdef v = (key_value.value)
               in
                 if hashmap$key_vt_eq<key_vt> (key, k) then
                   (* A key-value pair was found. Replace it. The map
@@ -428,32 +427,20 @@ set_entry {size  : int | 1 <= size}
                         bits2 = BITS_SOURCE_EXHAUSTED) then
                       (* All of the available hash bits are matched.
                          Separate chaining is required. *)
-(*
                       {
-                        val lst = (@{key = key, value = value}
-                                    :: @{key = k, value = v} :: NIL)
                         prval _ = fold@ entry
-                        val- ~ node_vt_key_value _ = entry
+
+                        val- ~ node_vt_key_value kv = entry
+                        val lst =
+                          @{key = key, value = value} :: kv :: NIL
                         val new_node = node_vt_list lst
                         val _ =
                           ptr_set<t> (pf_entry | p_entry, new_node)
-                      }
-*)
-(**)
-                      {
-                        // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                        // This is just the code for replacing an existing entry, used here temporarily,
-                        // to get the compiler to work.
-                        val _ = hashmap$key_vt_free<key_vt> (k)
-                        val _ = hashmap$value_vt_free<value_vt> (v)
-                        val _ = key_value.key := key
-                        val _ = key_value.value := value
-                        prval _ = fold@ entry
+
                         prval _ = tree.array_view :=
                           array_v_merge_entry (pf_left, pf_entry, pf_right)
                         prval _ = fold@ node
                       }
-(**)
                     else
                       (* We have come upon a point where the hash bits
                          diverge. Create a new node, which will
