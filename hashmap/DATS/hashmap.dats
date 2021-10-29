@@ -1467,7 +1467,6 @@ fprint_tree
                 | NIL => ()
                 | @ head :: tail =>
                   {
-                    val _ = fprint_indentation (f, depth)
                     val _ = fprint! (f, separator)
                     val _ = fprint! (f, "(")
                     val _ = key_fprint (f, head.key)
@@ -1482,7 +1481,6 @@ fprint_tree
               val _ = fprint_bits (f, infer_bits (pop_map, index))
               val _ = fprint! (f, " (")
               val _ = loop (lst, "", key_fprint, value_fprint)
-              val _ = fprint_indentation (f, depth)
               val _ = fprintln! (f, ")")
             in
               big_loop (pf_array | pop_map, length, succ index,
