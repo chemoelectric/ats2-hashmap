@@ -14644,6 +14644,8 @@ ac_config_files="$ac_config_files tests/2021.10.28.12.16.30.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.10.28.15.41.28.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.10.29.06.20.08.structure.reference"
+
 
 #AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
 #               [test "x${with_ats2_spookyhash}" != xno])
@@ -15705,6 +15707,7 @@ do
     "tests/2021.10.28.12.13.23.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.12.13.23.structure.reference" ;;
     "tests/2021.10.28.12.16.30.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.12.16.30.structure.reference" ;;
     "tests/2021.10.28.15.41.28.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.28.15.41.28.structure.reference" ;;
+    "tests/2021.10.29.06.20.08.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.29.06.20.08.structure.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

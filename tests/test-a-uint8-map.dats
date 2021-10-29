@@ -561,6 +561,66 @@ test_depth1_1 () : void =
     val _ = free map
   }
 
+fn
+test_fill_1 () : void =
+  {
+    fun
+    fill {i    : int | 0 <= i; i <= 256} .<256 - i>.
+         (map  : my_map_vt,
+          i    : int i) :
+        my_map_vt =
+      if i = 256 then
+        map
+      else
+        fill (my_map_set (map, cast8 i, succ i), succ i)
+
+    val map = fill (hashmap (), 0)
+
+    val pairs = list_vt_mergesort<@(uint8, int)> (my_map_pairs map)
+    val _ = assertloc (length pairs = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          begin
+            assertloc ($UNSAFE.cast{int} ((list_vt_get_at (pairs, i)).0) = i);
+            assertloc (((list_vt_get_at (pairs, i)).1) = succ i)
+          end
+      end
+    val _ = free pairs
+
+    val keys = list_vt_mergesort<uint8> (my_map_keys map)
+    val _ = assertloc (length keys = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          assertloc ($UNSAFE.cast{int} (list_vt_get_at (keys, i)) = i)
+      end
+    val _ = free keys
+
+    val values = list_vt_mergesort<int> (my_map_values map)
+    val _ = assertloc (length values = 256)
+    val _ =
+      let
+        var i : [i : int | 0 <= i; i <= 256] int i
+      in
+        for (i := 0; i < 256; i := succ i)
+          assertloc (list_vt_get_at (values, i) = succ i)
+      end
+    val _ = free values
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.29.06.20.08.structure",
+           "tests/2021.10.29.06.20.08.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -569,4 +629,5 @@ main0 () =
     val _ = test_node_expansion_1 ()
     val _ = test_collision_1 ()
     val _ = test_depth1_1 ()
+    val _ = test_fill_1 ()
   }
