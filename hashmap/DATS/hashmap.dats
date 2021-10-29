@@ -440,6 +440,8 @@ set_entry {size  : int | 1 <= size}
                         prval _ = tree.array_view :=
                           array_v_merge_entry (pf_left, pf_entry, pf_right)
                         prval _ = fold@ node
+
+                        val _ = size := succ size
                       }
                     else
                       (* We have come upon a point where the hash bits
