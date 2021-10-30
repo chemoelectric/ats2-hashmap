@@ -310,6 +310,7 @@ CLEANFILES += hashmap/SATS/hashmap_sats.c
 CLEANFILES += hashmap/DATS/hashmap_dats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
+nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
 #if WITH_ATS2_SPOOKYHASH
 #libats2_hashmap_la_SOURCES += hashmap/SATS/strptr-map_sats.c

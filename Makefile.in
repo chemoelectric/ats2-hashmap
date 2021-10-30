@@ -719,6 +719,9 @@ AR = @AR@
 ATS2_POPCOUNT_CFLAGS = @ATS2_POPCOUNT_CFLAGS@
 ATS2_POPCOUNT_LIBS = @ATS2_POPCOUNT_LIBS@
 ATS2_POPCOUNT_PATSOPTFLAGS = @ATS2_POPCOUNT_PATSOPTFLAGS@
+ATS2_SPOOKYHASH_CFLAGS = @ATS2_SPOOKYHASH_CFLAGS@
+ATS2_SPOOKYHASH_LIBS = @ATS2_SPOOKYHASH_LIBS@
+ATS2_SPOOKYHASH_PATSOPTFLAGS = @ATS2_SPOOKYHASH_PATSOPTFLAGS@
 ATS_CATS_DIRECTORY = @ATS_CATS_DIRECTORY@
 ATS_DATS_DIRECTORY = @ATS_DATS_DIRECTORY@
 ATS_EXTERN_PREFIX = @ATS_EXTERN_PREFIX@
@@ -1014,7 +1017,7 @@ lib_LTLIBRARIES = libats2-hashmap.la
 nobase_dist_pkginclude_HEADERS = hashmap/SATS/bits_source.sats \
 	hashmap/DATS/bits_source.dats hashmap/SATS/population_map.sats \
 	hashmap/DATS/population_map.dats hashmap/SATS/hashmap.sats \
-	hashmap/DATS/hashmap.dats
+	hashmap/DATS/hashmap.dats hashmap/HATS/hashmap.hats
 nobase_nodist_pkginclude_HEADERS =  \
 	hashmap/SATS/bits_source-parameters.sats
 nodist_pkgconfig_DATA = 

@@ -74,11 +74,11 @@ AC_SUBST([BITS_SOURCE_MASK],[63])
 # Equals 2**BITS_SOURCE_NUM_BITS
 AC_SUBST([BITS_SOURCE_EXPT2],[64])
 
-#AC_ARG_WITH([ats2-spookyhash],
-#  [AS_HELP_STRING([--without-ats2-spookyhash],
-#    [disable support for SpookyHash])],
-#    [],
-#    [with_ats2_spookyhash=yes])
+AC_ARG_WITH([ats2-spookyhash],
+  [AS_HELP_STRING([--without-ats2-spookyhash],
+    [disable support for SpookyHash])],
+    [],
+    [with_ats2_spookyhash=yes])
 
 #--------------------------------------------------------------------------
 #
@@ -108,12 +108,12 @@ PKG_INSTALLDIR
 #
 # Checks for libraries.
 
-#AS_IF([test "x${with_ats2_spookyhash}" != xno],
-#  [PKG_CHECK_MODULES([ATS2_SPOOKYHASH],[ats2-spookyhash],
-#    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
-#     PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
-#    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
-#])
+AS_IF([test "x${with_ats2_spookyhash}" != xno],
+  [PKG_CHECK_MODULES([ATS2_SPOOKYHASH],[ats2-spookyhash],
+    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
+     PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
+    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
+])
 
 PKG_CHECK_MODULES([ATS2_POPCOUNT],[ats2-popcount],
   [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-popcount"
@@ -188,8 +188,8 @@ AC_CONFIG_FILES([tests/2021.10.29.13.58.50.structure.reference])
 AC_CONFIG_FILES([tests/2021.10.29.14.01.48.structure.reference])
 AC_CONFIG_FILES([tests/2021.10.29.14.02.11.structure.reference])
 
-#AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
-#               [test "x${with_ats2_spookyhash}" != xno])
+AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
+               [test "x${with_ats2_spookyhash}" != xno])
 
 AC_OUTPUT
 

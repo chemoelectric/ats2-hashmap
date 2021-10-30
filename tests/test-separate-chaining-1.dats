@@ -26,14 +26,7 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload "hashmap/SATS/hashmap.sats"
-staload "hashmap/SATS/bits_source.sats"
-
-staload _ = "hashmap/DATS/hashmap.dats"
-staload _ = "hashmap/DATS/bits_source.dats"
-staload _ = "hashmap/DATS/memory.dats"
-staload _ = "hashmap/DATS/population_map.dats"
-staload _ = "popcount/DATS/popcount.dats"
+#include "hashmap/HATS/hashmap.hats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
