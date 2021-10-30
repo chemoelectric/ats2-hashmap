@@ -28,37 +28,12 @@ along with this program. If not, see
 
 staload UN = "prelude/SATS/unsafe.sats"
 
-staload "hashmap/SATS/stringmap_spooky.sats"
+staload "hashmap/SATS/stringmap-spookyhash.sats"
 
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
 staload "hashmap/SATS/hashmap.sats"
 staload "spookyhash/SATS/spookyhash.sats"
-
-staload _ = "hashmap/DATS/bits_source.dats"
-
-(*
-staload "hashmap/SATS/array-proofs.sats"
-staload "hashmap/SATS/memory.sats"
-staload "hashmap/SATS/population_map.sats"
-staload "popcount/SATS/popcount.sats"
-
-staload _ = "hashmap/DATS/population_map.dats"
-staload _ = "hashmap/DATS/memory.dats"
-staload _ = "popcount/DATS/popcount.dats"
-
-#define NIL list_vt_nil ()
-#define :: list_vt_cons
-
-#define CHAR_BIT 8              (* The size of a byte, in bits. *)
-
-prval _ = lemma_sizeof {population_map_t} ()
-
-prval _ =
-  $UN.prop_assert
-    {BITS_SOURCE_MAXVAL == CHAR_BIT * sizeof (population_map_t) - 1}
-    ()
-*)
 
 local
 

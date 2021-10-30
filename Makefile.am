@@ -150,32 +150,27 @@ lib_LTLIBRARIES += libats2-hashmap.la
 
 libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
-libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
+libats2_hashmap_la_LIBADD =
+
+libats2_hashmap_la_LIBADD += $(ATS2_POPCOUNT_LIBS)
 if WITH_ATS2_SPOOKYHASH
-libats2_hashmap_la_LIBADD = $(ATS2_SPOOKYHASH_LIBS)
+libats2_hashmap_la_LIBADD += $(ATS2_SPOOKYHASH_LIBS)
 endif WITH_ATS2_SPOOKYHASH
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
 CLEANFILES += hashmap/SATS/array-proofs_sats.c
 CLEANFILES += hashmap/DATS/array-proofs_dats.c
-EXTRA_DIST += hashmap/SATS/array-proofs.sats
-EXTRA_DIST += hashmap/DATS/array-proofs.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/array-proofs.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/array-proofs.dats
 
-#libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
-#CLEANFILES += hashmap/SATS/memory_sats.c
-#CLEANFILES += hashmap/DATS/memory_dats.c
-#EXTRA_DIST += hashmap/SATS/memory.sats
-#EXTRA_DIST += hashmap/DATS/memory.dats
-#EXTRA_DIST += hashmap/CATS/memory.cats
-#
-#libats2_hashmap_la_SOURCES += hashmap/SATS/print-bitmap_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/print-bitmap_dats.c
-#CLEANFILES += hashmap/SATS/print-bitmap_sats.c
-#CLEANFILES += hashmap/DATS/print-bitmap_dats.c
-#EXTRA_DIST += hashmap/SATS/print-bitmap.sats
-#EXTRA_DIST += hashmap/DATS/print-bitmap.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
+CLEANFILES += hashmap/SATS/memory_sats.c
+CLEANFILES += hashmap/DATS/memory_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/memory.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/memory.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/CATS/memory.cats
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source-parameters_sats.c
 libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source_sats.c
@@ -322,15 +317,15 @@ nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
 if WITH_ATS2_SPOOKYHASH
-libats2_hashmap_la_SOURCES += hashmap/SATS/stringmap_spooky_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/stringmap_spooky_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/SATS/stringmap_spooky.sats
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/stringmap_spooky.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/stringmap-spookyhash_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/stringmap-spookyhash_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/stringmap-spookyhash.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/stringmap-spookyhash.dats
 endif WITH_ATS2_SPOOKYHASH
-CLEANFILES += hashmap/SATS/stringmap_spooky_sats.c
-CLEANFILES += hashmap/DATS/stringmap_spooky_dats.c
-EXTRA_DIST += hashmap/SATS/stringmap_spooky.sats
-EXTRA_DIST += hashmap/DATS/stringmap_spooky.dats
+CLEANFILES += hashmap/SATS/stringmap-spookyhash_sats.c
+CLEANFILES += hashmap/DATS/stringmap-spookyhash_dats.c
+EXTRA_DIST += hashmap/SATS/stringmap-spookyhash.sats
+EXTRA_DIST += hashmap/DATS/stringmap-spookyhash.dats
 
 #--------------------------------------------------------------------------
 #
@@ -430,6 +425,15 @@ tests_test_separate_chaining_2_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latsli
 EXTRA_DIST += tests/test-separate-chaining-2.dats
 CLEANFILES += tests/test-separate-chaining-2
 CLEANFILES += tests/test-separate-chaining-2_dats.c
+
+check_PROGRAMS += tests/test-string2string-spookyhash-map
+tests_test_string2string_spookyhash_map_SOURCES = tests/test-string2string-spookyhash-map_dats.c
+tests_test_string2string_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_string2string_spookyhash_map_LDADD = $(lib_LTLIBRARIES)
+tests_test_string2string_spookyhash_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+EXTRA_DIST += tests/test-string2string-spookyhash-map.dats
+CLEANFILES += tests/test-string2string-spookyhash-map
+CLEANFILES += tests/test-string2string-spookyhash-map_dats.c
 
 .PHONY: tests-clean
 tests-clean:
