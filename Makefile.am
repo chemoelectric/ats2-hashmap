@@ -67,6 +67,9 @@ AM_CPPFLAGS += -I$(PATSHOME)
 AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
 
 AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
+if WITH_ATS2_SPOOKYHASH
+AM_CFLAGS += $(ATS2_SPOOKYHASH_CFLAGS)
+endif WITH_ATS2_SPOOKYHASH
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
@@ -103,6 +106,9 @@ AM_PATSOPTFLAGS =
 AM_PATSOPTFLAGS += -IATS $(builddir)
 AM_PATSOPTFLAGS += -IATS $(srcdir)
 AM_PATSOPTFLAGS += $(ATS2_POPCOUNT_PATSOPTFLAGS)
+if WITH_ATS2_SPOOKYHASH
+AM_PATSOPTFLAGS += $(ATS2_SPOOKYHASH_PATSOPTFLAGS)
+endif WITH_ATS2_SPOOKYHASH
 
 TOTAL_PATSOPTFLAGS =
 TOTAL_PATSOPTFLAGS += $(AM_PATSOPTFLAGS)
@@ -145,6 +151,9 @@ lib_LTLIBRARIES += libats2-hashmap.la
 libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS)
+if WITH_ATS2_SPOOKYHASH
+libats2_hashmap_la_LIBADD = $(ATS2_SPOOKYHASH_LIBS)
+endif WITH_ATS2_SPOOKYHASH
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
@@ -312,18 +321,16 @@ nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
-#if WITH_ATS2_SPOOKYHASH
-#libats2_hashmap_la_SOURCES += hashmap/SATS/strptr-map_sats.c
-#libats2_hashmap_la_SOURCES += hashmap/DATS/strptr-map_dats.c
-#endif WITH_ATS2_SPOOKYHASH
-#CLEANFILES += hashmap/SATS/strptr-map_sats.c
-#CLEANFILES += hashmap/DATS/strptr-map_dats.c
-#EXTRA_DIST += hashmap/SATS/strptr-map.sats
-#EXTRA_DIST += hashmap/DATS/strptr-map.dats
-#if WITH_ATS2_SPOOKYHASH
-#nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strptr-map.sats
-#nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strptr-map.dats
-#endif WITH_ATS2_SPOOKYHASH
+if WITH_ATS2_SPOOKYHASH
+libats2_hashmap_la_SOURCES += hashmap/SATS/stringmap_spooky_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/stringmap_spooky_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/stringmap_spooky.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/stringmap_spooky.dats
+endif WITH_ATS2_SPOOKYHASH
+CLEANFILES += hashmap/SATS/stringmap_spooky_sats.c
+CLEANFILES += hashmap/DATS/stringmap_spooky_dats.c
+EXTRA_DIST += hashmap/SATS/stringmap_spooky.sats
+EXTRA_DIST += hashmap/DATS/stringmap_spooky.dats
 
 #--------------------------------------------------------------------------
 #

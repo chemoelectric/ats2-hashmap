@@ -30,22 +30,15 @@ absvtype hashmap_vt (key_vt   : vt@ype+,
                      size     : int)
 vtypedef hashmap_vt (key_vt   : vt@ype+,
                      value_vt : vt@ype+) =
-  [size : int] hashmap_vt (key_vt, value_vt, size)
-vtypedef hashmap_vt (size : int) =
-  [key_vt, value_vt : vt@ype]
-  hashmap_vt (key_vt, value_vt, size)
-vtypedef hashmap_vt (key_vt : vt@ype, value_vt : vt@ype) =
-  [size : int]
-  hashmap_vt (key_vt, value_vt, size)
-vtypedef hashmap_vt =
-  [key_vt, value_vt : vt@ype]
   [size : int]
   hashmap_vt (key_vt, value_vt, size)
 
-prfn
+prfun
 lemma_hashmap_vt_param :
+  {key_vt, value_vt : vt@ype}
   {size : int}
-  (!hashmap_vt (size) >> _) -<prf> [0 <= size] void
+  (!hashmap_vt (key_vt, value_vt, size) >> _) -<prf>
+    [0 <= size] void
 
 (********************************************************************)
 
