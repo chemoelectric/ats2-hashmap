@@ -100,7 +100,8 @@ in
   implement {value_vt}
   stringmap_set_string (map, key, value) =
     let
-      val _ = lemma_string_param key
+      val key = g1ofg0 key
+      prval _ = lemma_string_param key
       val s = string1_copy key
     in
       stringmap_set_strnptr<value_vt> (map, s, value)
@@ -110,7 +111,7 @@ in
   stringmap_set_strptr (map, key, value) =
     let
       val s = strptr2strnptr key
-      val _ = lemma_strnptr_param s
+      prval _ = lemma_strnptr_param s
     in
       stringmap_set_strnptr<value_vt> (map, s, value)
     end
@@ -137,7 +138,7 @@ in
   stringmap_del_strptr (map, key) =
     let
       val s = $UN.castvwtp1{Strnptr1} key
-      val _ = lemma_strnptr_param s
+      prval _ = lemma_strnptr_param s
       val result = stringmap_del_strnptr<value_vt> (map, s)
       val _ = $UN.castvwtp0{void} s
     in
@@ -166,7 +167,7 @@ in
   stringmap_get_opt_strptr (map, key) =
     let
       val s = $UN.castvwtp1{Strnptr1} key
-      val _ = lemma_strnptr_param s
+      prval _ = lemma_strnptr_param s
       val result = stringmap_get_opt_strnptr<value_vt> (map, s)
       val _ = $UN.castvwtp0{void} s
     in

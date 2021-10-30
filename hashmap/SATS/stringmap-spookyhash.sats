@@ -29,6 +29,8 @@ along with this program. If not, see
 
 staload "hashmap/SATS/hashmap.sats"
 
+(********************************************************************)
+
 vtypedef stringmap_vt (value_vt : vt@ype+,
                        size     : int) =
   hashmap_vt (Strnptr1, value_vt, size)
@@ -42,6 +44,8 @@ lemma_stringmap_vt_param :
   {size     : int}
   (!stringmap_vt (value_vt, size) >> _) -<prf>
     [0 <= size] void
+
+(********************************************************************)
 
 fun {}
 stringmap {value_vt : vt@ype} () :
@@ -75,7 +79,7 @@ fun {value_vt : vt@ype}
 stringmap_set_string
         {size  : int}
         (map   : stringmap_vt (value_vt, size),
-         key   : String,
+         key   : string,
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
     stringmap_vt (value_vt, new_size)
@@ -95,9 +99,9 @@ stringmap_set_strnptr
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
     stringmap_vt (value_vt, new_size)
-overload stringmap_set with stringmap_set_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
-overload stringmap_set with stringmap_set_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
-overload stringmap_set with stringmap_set_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_set with stringmap_set_string of 0
+overload stringmap_set with stringmap_set_strptr of 10
+overload stringmap_set with stringmap_set_strnptr of 20
 
 fun {value_vt : vt@ype}
 stringmap_del_string
@@ -120,9 +124,9 @@ stringmap_del_strnptr
          key  : !RD(Strnptr1) >> _) :
     [new_size : int | new_size == size || new_size == size - 1]
     stringmap_vt (value_vt, new_size)
-overload stringmap_del with stringmap_del_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
-overload stringmap_del with stringmap_del_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
-overload stringmap_del with stringmap_del_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_del with stringmap_del_string of 0
+overload stringmap_del with stringmap_del_strptr of 10
+overload stringmap_del with stringmap_del_strnptr of 20
 
 fun {value_vt : vt@ype}
 stringmap_get_opt_string
@@ -142,9 +146,9 @@ stringmap_get_opt_strnptr
         (map  : !RD(stringmap_vt (value_vt, size)) >> _,
          key  : !RD(Strnptr1) >> _) :
     Option_vt (value_vt)
-overload stringmap_get_opt with stringmap_get_opt_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
-overload stringmap_get_opt with stringmap_get_opt_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
-overload stringmap_get_opt with stringmap_get_opt_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
+overload stringmap_get_opt with stringmap_get_opt_string of 0
+overload stringmap_get_opt with stringmap_get_opt_strptr of 10
+overload stringmap_get_opt with stringmap_get_opt_strnptr of 20
 
 fun {value_vt : vt@ype}
 stringmap_pairs
@@ -169,3 +173,5 @@ stringmap_free
         {size : int}
         (map  : stringmap_vt (value_vt, size)) :
     void
+
+(********************************************************************)

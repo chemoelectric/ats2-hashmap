@@ -49,11 +49,6 @@ staload "hashmap/SATS/memory.sats"
 staload "hashmap/SATS/population_map.sats"
 staload "popcount/SATS/popcount.sats"
 
-staload _ = "hashmap/DATS/bits_source.dats"
-staload _ = "hashmap/DATS/population_map.dats"
-staload _ = "hashmap/DATS/memory.dats"
-staload _ = "popcount/DATS/popcount.dats"
-
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
 
