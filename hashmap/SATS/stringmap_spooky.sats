@@ -18,6 +18,12 @@ along with this program. If not, see
 
 *)
 
+(********************************************************************)
+(*                                                                  *)
+(* String maps by means of hashmap and ats2-spookyhash              *)
+(*                                                                  *)
+(********************************************************************)
+
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
@@ -40,3 +46,126 @@ lemma_stringmap_vt_param :
 fun {}
 stringmap {value_vt : vt@ype} () :
   stringmap_vt (value_vt, 0)
+
+fun {}
+stringmap_size
+        {size     : int}
+        {value_vt : vt@ype}
+        (map      : !stringmap_vt (value_vt, size) >> _) :
+    size_t size
+overload size with stringmap_size of 10
+
+fun {}
+stringmap_is_empty
+        {size     : int}
+        {value_vt : vt@ype}
+        (map      : !stringmap_vt (value_vt, size) >> _) :
+    bool (size == 0)
+overload iseqz with stringmap_is_empty of 10
+
+fun {}
+stringmap_isnot_empty
+        {size     : int}
+        {value_vt : vt@ype}
+        (map      : !stringmap_vt (value_vt, size) >> _) :
+    bool (size != 0)
+overload isneqz with stringmap_isnot_empty of 10
+
+fun {value_vt : vt@ype}
+stringmap_set_string
+        {size  : int}
+        (map   : stringmap_vt (value_vt, size),
+         key   : String,
+         value : value_vt) :
+    [new_size : int | new_size == size || new_size == size + 1]
+    stringmap_vt (value_vt, new_size)
+fun {value_vt : vt@ype}
+stringmap_set_strptr
+        {size  : int}
+        (map   : stringmap_vt (value_vt, size),
+         key   : Strptr1,
+         value : value_vt) :
+    [new_size : int | new_size == size || new_size == size + 1]
+    stringmap_vt (value_vt, new_size)
+fun {value_vt : vt@ype}
+stringmap_set_strnptr
+        {size  : int}
+        (map   : stringmap_vt (value_vt, size),
+         key   : Strnptr1,
+         value : value_vt) :
+    [new_size : int | new_size == size || new_size == size + 1]
+    stringmap_vt (value_vt, new_size)
+overload stringmap_set with stringmap_set_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_set with stringmap_set_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_set with stringmap_set_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+
+fun {value_vt : vt@ype}
+stringmap_del_string
+        {size : int}
+        (map  : stringmap_vt (value_vt, size),
+         key  : String) :
+    [new_size : int | new_size == size || new_size == size - 1]
+    stringmap_vt (value_vt, new_size)
+fun {value_vt : vt@ype}
+stringmap_del_strptr
+        {size : int}
+        (map  : stringmap_vt (value_vt, size),
+         key  : !RD(Strptr1) >> _) :
+    [new_size : int | new_size == size || new_size == size - 1]
+    stringmap_vt (value_vt, new_size)
+fun {value_vt : vt@ype}
+stringmap_del_strnptr
+        {size : int}
+        (map  : stringmap_vt (value_vt, size),
+         key  : !RD(Strnptr1) >> _) :
+    [new_size : int | new_size == size || new_size == size - 1]
+    stringmap_vt (value_vt, new_size)
+overload stringmap_del with stringmap_del_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_del with stringmap_del_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+overload stringmap_del with stringmap_del_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME // FIXME
+
+fun {value_vt : vt@ype}
+stringmap_get_opt_string
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+         key  : String) :
+    Option_vt (value_vt)
+fun {value_vt : vt@ype}
+stringmap_get_opt_strptr
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+         key  : !RD(Strptr1) >> _) :
+    Option_vt (value_vt)
+fun {value_vt : vt@ype}
+stringmap_get_opt_strnptr
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+         key  : !RD(Strnptr1) >> _) :
+    Option_vt (value_vt)
+overload stringmap_get_opt with stringmap_get_opt_string of 0 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
+overload stringmap_get_opt with stringmap_get_opt_strptr of 10 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
+overload stringmap_get_opt with stringmap_get_opt_strnptr of 20 // FIXME: DO THESE OVERLOADS WORK??? :FIXME // FIXME // FIXME
+
+fun {value_vt : vt@ype}
+stringmap_pairs
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+    list_vt (@(Strnptr1, value_vt), size)
+
+fun {value_vt : vt@ype}
+stringmap_keys
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+    list_vt (Strnptr1, size)
+
+fun {value_vt : vt@ype}
+stringmap_values
+        {size : int}
+        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+    list_vt (value_vt, size)
+
+fun {value_vt : vt@ype}
+stringmap_free
+        {size : int}
+        (map  : stringmap_vt (value_vt, size)) :
+    void

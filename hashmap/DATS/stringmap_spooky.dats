@@ -108,6 +108,114 @@ in
 
   implement {}
   stringmap () =
-    hashmap ()
+    hashmap<> ()
+
+  implement {}
+  stringmap_size (map) =
+    hashmap_size<> (map)
+
+  implement {}
+  stringmap_is_empty (map) =
+    hashmap_is_empty<> (map)
+
+  implement {}
+  stringmap_isnot_empty (map) =
+    hashmap_isnot_empty<> (map)
+
+  implement {value_vt}
+  stringmap_set_string (map, key, value) =
+    let
+      val _ = lemma_string_param key
+      val s = string1_copy key
+    in
+      stringmap_set_strnptr<value_vt> (map, s, value)
+    end
+
+  implement {value_vt}
+  stringmap_set_strptr (map, key, value) =
+    let
+      val s = strptr2strnptr key
+      val _ = lemma_strnptr_param s
+    in
+      stringmap_set_strnptr<value_vt> (map, s, value)
+    end
+
+  implement {value_vt}
+  stringmap_set_strnptr (map, key, value) =
+    hashmap_set<hash_t><key_vt, value_vt> (map, key, value)
+
+  implement {value_vt}
+  stringmap_del_string (map, key) =
+    (* WARNING: The following implementation really does assume that
+       the "key" argument to stringmap_del_strnptr is read-only.
+       (You could implement this template without that assumption,
+       by using string1_copy. *)
+    let
+      val s = $UN.castvwtp0{Strnptr1} key
+      val result = stringmap_del_strnptr<value_vt> (map, s)
+      prval _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  stringmap_del_strptr (map, key) =
+    let
+      val s = $UN.castvwtp1{Strnptr1} key
+      val _ = lemma_strnptr_param s
+      val result = stringmap_del_strnptr<value_vt> (map, s)
+      val _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  stringmap_del_strnptr (map, key) =
+    hashmap_del<hash_t><key_vt, value_vt> (map, key)
+
+  implement {value_vt}
+  stringmap_get_opt_string (map, key) =
+    (* WARNING: The following implementation really does assume that
+       the "key" argument to stringmap_del_strnptr is read-only.
+       (You could implement this template without that assumption,
+       by using string1_copy. *)
+    let
+      val s = $UN.castvwtp0{Strnptr1} key
+      val result = stringmap_get_opt_strnptr<value_vt> (map, s)
+      prval _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  stringmap_get_opt_strptr (map, key) =
+    let
+      val s = $UN.castvwtp1{Strnptr1} key
+      val _ = lemma_strnptr_param s
+      val result = stringmap_get_opt_strnptr<value_vt> (map, s)
+      val _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  stringmap_get_opt_strnptr (map, key) =
+    hashmap_get_opt<hash_t><key_vt, value_vt> (map, key)
+
+  implement {value_vt}
+  stringmap_pairs (map) =
+    hashmap_pairs<key_vt, value_vt> (map)
+
+  implement {value_vt}
+  stringmap_keys (map) =
+    hashmap_keys<key_vt, value_vt> (map)
+
+  implement {value_vt}
+  stringmap_values (map) =
+    hashmap_values<key_vt, value_vt> (map)
+
+  implement {value_vt}
+  stringmap_free (map) =
+    hashmap_free<key_vt, value_vt> (map)
 
 end

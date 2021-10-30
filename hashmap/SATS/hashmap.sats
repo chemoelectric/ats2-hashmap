@@ -81,7 +81,7 @@ fun {}
 hashmap_size
         {size : int}
         {key_vt, value_vt : vt@ype}
-        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     size_t size
 overload size with hashmap_size of 0
 
@@ -89,7 +89,7 @@ fun {}
 hashmap_is_empty
         {size : int}
         {key_vt, value_vt : vt@ype}
-        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     bool (size == 0)
 overload iseqz with hashmap_is_empty of 0
 
@@ -97,7 +97,7 @@ fun {}
 hashmap_isnot_empty
         {size : int}
         {key_vt, value_vt : vt@ype}
-        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     bool (size != 0)
 overload isneqz with hashmap_isnot_empty of 0
 
@@ -116,7 +116,7 @@ fun {hash_vt : vt@ype}
 hashmap_del
         {size : int}
         (map  : hashmap_vt (key_vt, value_vt, size),
-         key  : !key_vt >> _) :
+         key  : !RD(key_vt) >> _) :
     [new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
 
@@ -124,26 +124,26 @@ fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
 hashmap_get_opt
         {size : int}
-        (map  : !hashmap_vt (key_vt, value_vt, size) >> _,
-         key  : !key_vt >> _) :
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _,
+         key  : !RD(key_vt) >> _) :
     Option_vt (value_vt)
 
 fun {key_vt, value_vt : vt@ype}
 hashmap_pairs
         {size : int}
-        (map  : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (@(key_vt, value_vt), size)
 
 fun {key_vt, value_vt : vt@ype}
 hashmap_keys
         {size     : int}
-        (map      : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map      : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (key_vt, size)
 
 fun {key_vt, value_vt : vt@ype}
 hashmap_values
         {size   : int}
-        (map    : !hashmap_vt (key_vt, value_vt, size) >> _) :
+        (map    : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (value_vt, size)
 
 fun {key_vt, value_vt : vt@ype}
@@ -156,7 +156,7 @@ fun {key_vt, value_vt : vt@ype}
 hashmap_fprint
         {size         : int}
         (f            : FILEref,
-         map          : !hashmap_vt (key_vt, value_vt, size) >> _,
+         map          : !RD(hashmap_vt (key_vt, value_vt, size)) >> _,
          key_fprint   : !((FILEref, !key_vt >> _)
                             -<cloptr1> void) >> _,
          value_fprint : !((FILEref, !value_vt >> _)
