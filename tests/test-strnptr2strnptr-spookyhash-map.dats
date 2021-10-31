@@ -171,6 +171,11 @@ list_vt_freelin$clear<@(Strnptr1, Strnptr1)> (x) =
   end
 
 fn
+make_strnptr_fprint () :
+    (FILEref, !Strnptr1 >> _) -<cloptr1> void =
+  lam (f, s) => fprint! (f, $UN.strnptr2string s)
+
+fn
 fprint_strnptr_list_vt
         {n   : int}
         (f   : FILEref,
@@ -298,6 +303,52 @@ strnptr_pair_list_vt_test
   end
 
 fn
+s2s_map_fprint
+        {size : int}
+        (f    : FILEref,
+         map  : !strnptrmap_vt (Strnptr1, size) >> _) : void =
+  {
+    val key_fprint = make_strnptr_fprint ()
+    val value_fprint = make_strnptr_fprint ()
+    val _ =
+      hashmap_fprint<Strnptr1, Strnptr1>
+        (f, map, key_fprint, value_fprint)
+    val _ = cloptr_free ($UN.castvwtp0{cloptr0} key_fprint)
+    val _ = cloptr_free ($UN.castvwtp0{cloptr0} value_fprint)
+  }
+
+fn
+compare_structure
+        {size               : int}
+        (map                : !strnptrmap_vt (Strnptr1, size) >> _,
+         filename           : String0,
+         reference_filename : String0) : bool =
+  let
+    val f = fileref_open_exn (filename, file_mode_w)
+    val _ = s2s_map_fprint (f, map)
+    val _ = fileref_close (f)
+
+    val space = string1_copy (" ")
+    val fname = string1_copy (filename)
+    val reffname = string1_copy (reference_filename)
+    val cmp = string1_copy ("cmp -s ")
+    val command1 = strnptr_append (space, fname)
+    val command2 = strnptr_append (reffname, command1)
+    val _ = free (command1)
+    val command = strnptr_append (cmp, command2)
+    val _ = free (command2)
+    val status =
+      $extfcall (int, "system", $UNSAFE.castvwtp1{string} command)
+    val _ = free (command)
+    val _ = free (space)
+    val _ = free (fname)
+    val _ = free (reffname)
+    val _ = free (cmp)
+  in
+    status = 0
+  end
+
+fn
 test1 () : void =
   {
     val foo2 = string0_copy "foo2"
@@ -335,6 +386,11 @@ test1 () : void =
     val _ = assertloc ($UN.strnptr2string x = $UN.strnptr2string bar3)
     val _ = free x
 
+    val- ~ None_vt () = s2s_map_get_opt (map, "foo4")
+    val- ~ None_vt () = s2s_map_get_opt (map, "foo5")
+    val- ~ None_vt () = s2s_map_get_opt (map, "foo6")
+    val- ~ None_vt () = s2s_map_get_opt (map, "foo7")
+
     val pairs =
       list_vt_mergesort<@(Strnptr1, Strnptr1)> (s2s_map_pairs (map))
     val pairs_ref = @("foo1", "bar1") :: @("foo2", "bar2")
@@ -349,23 +405,30 @@ test1 () : void =
     val keys_ref = "foo1" :: "foo2" :: "foo3" :: NIL
     val _ = assertloc (strnptr_list_vt_test (keys, keys_ref))
     val _ = free keys_ref
-//    val _ = fprint_strnptr_list_vt (stdout_ref, keys)
-//    val _ = fprintln! (stdout_ref)
+    //val _ = fprint_strnptr_list_vt (stdout_ref, keys)
+    //val _ = fprintln! (stdout_ref)
     val _ = list_vt_freelin keys
 
     val values = list_vt_mergesort<Strnptr1> (s2s_map_values (map))
     val values_ref = "bar1" :: "bar2" :: "bar3" :: NIL
     val _ = assertloc (strnptr_list_vt_test (values, values_ref))
     val _ = free values_ref
-//    val _ = fprint_strnptr_list_vt (stdout_ref, values)
-//    val _ = fprintln! (stdout_ref)
+    //val _ = fprint_strnptr_list_vt (stdout_ref, values)
+    //val _ = fprintln! (stdout_ref)
     val _ = list_vt_freelin values
 
-    val _ = free map
     val _ = free foo2
     val _ = free bar2
     val _ = free foo3
     val _ = free bar3
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.31.10.54.20.structure",
+           "tests/2021.10.31.10.54.20.structure.reference"))
+
+    val _ = free map
   }
 
 implement

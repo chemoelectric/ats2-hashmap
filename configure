@@ -14776,6 +14776,8 @@ ac_config_files="$ac_config_files tests/2021.10.29.14.01.48.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.10.29.14.02.11.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.10.31.10.54.20.structure.reference"
+
 
  if test "x${with_ats2_spookyhash}" != xno; then
   WITH_ATS2_SPOOKYHASH_TRUE=
@@ -15853,6 +15855,7 @@ do
     "tests/2021.10.29.13.58.50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.29.13.58.50.structure.reference" ;;
     "tests/2021.10.29.14.01.48.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.29.14.01.48.structure.reference" ;;
     "tests/2021.10.29.14.02.11.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.29.14.02.11.structure.reference" ;;
+    "tests/2021.10.31.10.54.20.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.10.31.10.54.20.structure.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -50,3 +50,4 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.29.13.44.21.structure.
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.29.13.58.50.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.29.14.01.48.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.29.14.02.11.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.10.31.10.54.20.structure.reference.in
