@@ -21,7 +21,9 @@ along with this program. If not, see
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
-#define ATS_DYNLOADFLAG 0
+%{#
+#include <stdio.h>
+%}
 
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
@@ -174,6 +176,63 @@ fn
 make_strnptr_fprint () :
     (FILEref, !Strnptr1 >> _) -<cloptr1> void =
   lam (f, s) => fprint! (f, $UN.strnptr2string s)
+
+fn
+rand_uint64 (seed : uint64) :<> uint64 =
+  (* A linear congruential generator used by Donald Knuth.
+     See https://en.wikipedia.org/w/index.php?title=Linear_congruential_generator&oldid=1043012257 *)
+  (seed * ($UN.cast{uint64} 6364136223846793005ULL)) +
+    ($UN.cast{uint64} 1442695040888963407ULL)
+
+var rand_seed : uint64 = $UN.cast{uint64} 1442695040888963407ULL
+val p_rand_seed : [p : addr] ptr p = addr@ rand_seed
+
+fn
+get_rand_seed () : uint64 =
+  let
+    val [p : addr] @(pf | p) =
+      $UN.castvwtp0{[p : addr] @(uint64 @ p | ptr p)} (p_rand_seed)
+    val seed = !p
+    prval _ = $UN.castvwtp0{void} @(pf | p)
+  in
+    seed
+  end
+
+fn
+set_rand_seed (seed : uint64) : void =
+  {
+    val [p : addr] @(pf | p) =
+      $UN.castvwtp0{[p : addr] @(uint64 @ p | ptr p)} (p_rand_seed)
+    val _ = !p := seed
+    prval _ = $UN.castvwtp0{void} @(pf | p)
+  }
+
+fn
+reset_rand_seed () : void =
+  set_rand_seed ($UN.cast{uint64} 1442695040888963407ULL)
+
+fn
+randint_size {n : int | n != 0}
+             (n : size_t n) : sizeLt (n) =
+  let
+    prval _ = lemma_g1uint_param n
+    val seed = get_rand_seed ()
+  in
+    set_rand_seed (rand_uint64 (seed));
+    ($UN.cast{Size_t} seed) mod n
+  end
+
+fn
+size2strnptr (n : size_t) : Strnptr1 =
+  let
+    var arr : @[char][1000]
+    val _ = $extfcall (int, "snprintf", addr@ arr, i2sz 1000,
+                       "%zu", n)
+    val s = $UN.cast{String} (addr@ arr)
+    prval _ = lemma_string_param s
+  in
+    string1_copy s
+  end
 
 fn
 fprint_strnptr_list_vt
@@ -357,9 +416,18 @@ test1 () : void =
     val bar3 = string1_copy "bar3"
 
     val map = strnptrmap ()
+
+    val _ = assertloc (size map = i2sz 0)
+    val _ = assertloc (iseqz map)
+    val _ = assertloc (not (isneqz map))
+
     val map = s2s_map_set (map, "foo1", "bar1")
     val map = s2s_map_set (map, foo2, bar2)
     val map = s2s_map_set (map, foo3, bar3)
+
+    val _ = assertloc (size map = i2sz 3)
+    val _ = assertloc (not (iseqz map))
+    val _ = assertloc (isneqz map)
 
     val foo2 = string0_copy "foo2"
     val bar2 = string0_copy "bar2"
@@ -417,22 +485,128 @@ test1 () : void =
     //val _ = fprintln! (stdout_ref)
     val _ = list_vt_freelin values
 
-    val _ = free foo2
-    val _ = free bar2
-    val _ = free foo3
-    val _ = free bar3
-
     val _ =
       assertloc
         (compare_structure
           (map, "tests/2021.10.31.10.54.20.structure",
            "tests/2021.10.31.10.54.20.structure.reference"))
 
+    val map = s2s_map_set (map, "foo3", "bar1")
+    val map = s2s_map_set (map, "foo1", "bar2")
+    val map = s2s_map_set (map, "foo2", "bar3")
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.31.11.39.37.structure",
+           "tests/2021.10.31.11.39.37.structure.reference"))
+
+    val _ = free foo2
+    val _ = free bar2
+    val _ = free foo3
+    val _ = free bar3
+
     val _ = free map
+  }
+
+fn
+test2 () : void =
+  {
+    val _ = reset_rand_seed ()
+
+    #define BIGNESS 10000
+
+    var numbers_in_order : @[size_t][BIGNESS]
+    val _ =
+      let
+        implement
+        array_initize$init<size_t> (i, x) =
+          x := succ i
+      in
+        array_initize<size_t> (numbers_in_order, i2sz BIGNESS)
+      end
+
+    var numbers_permuted : @[size_t][BIGNESS]
+    val _ =
+      let
+        implement
+        array_initize$init<size_t> (i, x) =
+          x := succ i
+        implement
+        array_permute$randint<> (n) =
+          randint_size (n)
+      in
+        array_initize<size_t> (numbers_permuted, i2sz BIGNESS);
+        array_permute<size_t> (numbers_permuted, i2sz BIGNESS)
+      end
+
+    fun
+    fill_map {i         : int | i <= BIGNESS} .<BIGNESS - i>.
+             (map       : strnptrmap_vt (Strnptr1),
+              key_arr   : &(@[size_t][BIGNESS]) >> _,
+              value_arr : &(@[size_t][BIGNESS]) >> _,
+              i         : size_t i) :
+        strnptrmap_vt (Strnptr1) =
+      if i = i2sz BIGNESS then
+        map
+      else
+        let
+          prval _ = lemma_g1uint_param i
+        in
+          fill_map (s2s_map_set (map, size2strnptr (key_arr[i]),
+                                 size2strnptr (value_arr[i])),
+                    key_arr, value_arr, succ i)
+        end
+
+    val map = strnptrmap ()
+    val map = fill_map (map, numbers_permuted,
+                        numbers_in_order, i2sz 0)
+    val _ = assertloc (size map = i2sz BIGNESS)
+    val _ = assertloc (not (iseqz map))
+    val _ = assertloc (isneqz map)
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.10.31.13.08.40.structure",
+           "tests/2021.10.31.13.08.40.structure.reference"))
+    val _ = free map
+
+    val map1 = strnptrmap ()
+    val map1 = fill_map (map1, numbers_permuted,
+                         numbers_permuted, i2sz 0)
+    val _ = assertloc (size map1 = i2sz BIGNESS)
+    val _ = assertloc (not (iseqz map1))
+    val _ = assertloc (isneqz map1)
+    val _ =
+      assertloc
+        (compare_structure
+          (map1, "tests/2021.10.31.13.19.39.structure",
+           "tests/2021.10.31.13.19.39.structure.reference"))
+    val map2 = strnptrmap ()
+    val map2 = fill_map (map2, numbers_in_order,
+                         numbers_in_order, i2sz 0)
+    val _ = assertloc (size map2 = i2sz BIGNESS)
+    val _ = assertloc (not (iseqz map2))
+    val _ = assertloc (isneqz map2)
+    val _ =
+      assertloc
+        (compare_structure
+          (map2, "tests/2021.10.31.13.23.10.structure",
+           "tests/2021.10.31.13.23.10.structure.reference"))
+    val _ =
+      (* Check that map1 and map2 have the same structure. *)
+      assertloc
+        ($extfcall
+          (int, "system",
+           "cmp -s tests/2021.10.31.13.19.39.structure tests/2021.10.31.13.23.10.structure")
+              = 0)
+    val _ = free map1
+    val _ = free map2
   }
 
 implement
 main0 () =
   {
     val _ = test1 ()
+    val _ = test2 ()
   }
