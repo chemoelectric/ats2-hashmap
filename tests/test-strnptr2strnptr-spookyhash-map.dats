@@ -23,6 +23,7 @@ along with this program. If not, see
 
 %{#
 #include <stdio.h>
+#include <stdlib.h>
 %}
 
 #include "share/atspre_define.hats"
@@ -46,10 +47,19 @@ list_vt_mergesort$cmp<@(Strnptr1, Strnptr1)> (x, y) =
                      $UN.strnptr2string (y.0))
   in
     if i = 0 then
-      compare ($UN.strnptr2string (x.1),
-               $UN.strnptr2string (y.1))
+      compare($UN.strnptr2string (x.1),
+              $UN.strnptr2string (y.1))
     else
       i
+  end
+
+fn
+compare_num (x : string, y : string) :<> int =
+  let
+    val nx = $extfcall (ullint, "atoll", x)
+    val ny = $extfcall (ullint, "atoll", y)
+  in
+    compare (nx, ny)
   end
 
 local
@@ -407,6 +417,56 @@ compare_structure
     status = 0
   end
 
+fun
+check_pairs {n   : int}
+            (lst : !list_vt (@(Strnptr1, Strnptr1), n) >> _,
+             map : !strnptrmap_vt (Strnptr1) >> _) :
+    bool =
+  case+ lst of
+  | NIL => true
+  | head :: tail =>
+    let
+      val- ~ Some_vt entry = s2s_map_get_opt (map, head.0)
+      val eq =
+        ($UN.strnptr2string entry) = ($UN.strnptr2string (head.1)) 
+      val _ = free entry
+    in
+      if eq then
+        check_pairs (tail, map)
+      else
+        false
+    end
+
+fun
+check_lst {bigness : int}
+          {n       : int | 0 <= n; n <= bigness} .<n>.
+          (bigness : size_t bigness,
+           lst     : &list_vt (Strnptr1, n) >> _,
+           arr     : &(@[size_t][bigness]) >> _,
+           n       : size_t n) : bool =
+  case+ lst of
+  | NIL => true
+  | @ x :: tail =>
+    let
+      val y = size2strnptr (arr[bigness - n])
+      val eq = (($UN.strnptr2string x) = ($UN.strnptr2string y))
+      val _ = free y
+    in
+      if not eq then
+        let
+          prval _ = fold@ lst
+        in
+          false
+        end
+      else
+        let
+          val result = check_lst (bigness, tail, arr, pred n)
+          prval _ = fold@ lst
+        in
+          result
+        end
+    end
+
 fn
 test1 () : void =
   {
@@ -569,6 +629,48 @@ test2 () : void =
         (compare_structure
           (map, "tests/2021.10.31.13.08.40.structure",
            "tests/2021.10.31.13.08.40.structure.reference"))
+    //
+    var keys =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_keys (map))
+      end
+    var values =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_values (map))
+      end
+    val _ = assertloc (length keys = BIGNESS)
+    val _ = assertloc (length values = BIGNESS)
+    val _ = assertloc (check_lst (i2sz BIGNESS, keys,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = assertloc (check_lst (i2sz BIGNESS, values,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = list_vt_freelin keys
+    val _ = list_vt_freelin values
+    //
+    val pairs = s2s_map_pairs (map)
+    val _ = assertloc (length pairs = BIGNESS)
+    val _ = check_pairs (pairs, map)
+    val _ = list_vt_freelin pairs
+    //
+    val- ~ None_vt () = s2s_map_get_opt (map, "nope")
+    val- ~ None_vt () = s2s_map_get_opt (map, "inte")
+    val- ~ None_vt () = s2s_map_get_opt (map, "nej")
+    val- ~ None_vt () = s2s_map_get_opt (map, "ikke")
+    val- ~ None_vt () = s2s_map_get_opt (map, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map, "minime")
+    //
     val _ = free map
 
     val map1 = strnptrmap ()
@@ -600,6 +702,89 @@ test2 () : void =
           (int, "system",
            "cmp -s tests/2021.10.31.13.19.39.structure tests/2021.10.31.13.23.10.structure")
               = 0)
+    //
+    val pairs = s2s_map_pairs (map1)
+    val _ = assertloc (length pairs = BIGNESS)
+    val _ = check_pairs (pairs, map1)
+    val _ = list_vt_freelin pairs
+    //
+    val- ~ None_vt () = s2s_map_get_opt (map1, "nope")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "inte")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "nej")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "ikke")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "minime")
+    //
+    val pairs = s2s_map_pairs (map2)
+    val _ = assertloc (length pairs = BIGNESS)
+    val _ = check_pairs (pairs, map2)
+    val _ = list_vt_freelin pairs
+    //
+    val- ~ None_vt () = s2s_map_get_opt (map2, "nope")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "inte")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "nej")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "ikke")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "minime")
+    //
+    var keys =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_keys (map1))
+      end
+    var values =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_values (map1))
+      end
+    val _ = assertloc (length keys = BIGNESS)
+    val _ = assertloc (length values = BIGNESS)
+    val _ = assertloc (check_lst (i2sz BIGNESS, keys,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = assertloc (check_lst (i2sz BIGNESS, values,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = list_vt_freelin keys
+    val _ = list_vt_freelin values
+    //
+    var keys =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_keys (map2))
+      end
+    var values =
+      let
+        implement
+        list_vt_mergesort$cmp<Strnptr1> (x, y) =
+          compare_num ($UN.strnptr2string x,
+                       $UN.strnptr2string y)
+      in
+        list_vt_mergesort<Strnptr1> (s2s_map_values (map2))
+      end
+    val _ = assertloc (length keys = BIGNESS)
+    val _ = assertloc (length values = BIGNESS)
+    val _ = assertloc (check_lst (i2sz BIGNESS, keys,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = assertloc (check_lst (i2sz BIGNESS, values,
+                                  numbers_in_order,
+                                  i2sz BIGNESS))
+    val _ = list_vt_freelin keys
+    val _ = list_vt_freelin values
+    //
     val _ = free map1
     val _ = free map2
   }
