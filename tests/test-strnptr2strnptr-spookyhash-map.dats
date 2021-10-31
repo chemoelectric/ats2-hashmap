@@ -26,11 +26,9 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-staload UN = "prelude/SATS/unsafe.sats"
+#include "hashmap/HATS/strnptrmap-spookyhash.hats"
 
-#include "hashmap/HATS/hashmap.hats"
-staload "hashmap/SATS/strnptrmap-spookyhash.sats"
-staload _ = "hashmap/DATS/strnptrmap-spookyhash.dats"
+staload UN = "prelude/SATS/unsafe.sats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons

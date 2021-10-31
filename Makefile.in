@@ -138,7 +138,8 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_4 = hashmap/SATS/strnptrmap-spookyhash_sats.c \
 @WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash_dats.c
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_5 = hashmap/SATS/strnptrmap-spookyhash.sats \
-@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash.dats
+@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash.dats \
+@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/HATS/strnptrmap-spookyhash.hats
 check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint16$(EXEEXT) \
 	tests/test-bits_source_uint32$(EXEEXT) \
@@ -970,6 +971,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/bits_source_nbytes.dats \
 	hashmap/SATS/strnptrmap-spookyhash.sats \
 	hashmap/DATS/strnptrmap-spookyhash.dats \
+	hashmap/HATS/strnptrmap-spookyhash.hats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
 	tests/test-bits_source_uint32.dats \
