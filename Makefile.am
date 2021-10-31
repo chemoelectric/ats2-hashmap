@@ -317,15 +317,15 @@ nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
 if WITH_ATS2_SPOOKYHASH
-libats2_hashmap_la_SOURCES += hashmap/SATS/stringmap-spookyhash_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/stringmap-spookyhash_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/SATS/stringmap-spookyhash.sats
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/stringmap-spookyhash.dats
+libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap-spookyhash_sats.c
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap-spookyhash.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-spookyhash.dats
 endif WITH_ATS2_SPOOKYHASH
-CLEANFILES += hashmap/SATS/stringmap-spookyhash_sats.c
-CLEANFILES += hashmap/DATS/stringmap-spookyhash_dats.c
-EXTRA_DIST += hashmap/SATS/stringmap-spookyhash.sats
-EXTRA_DIST += hashmap/DATS/stringmap-spookyhash.dats
+CLEANFILES += hashmap/SATS/strnptrmap-spookyhash_sats.c
+CLEANFILES += hashmap/DATS/strnptrmap-spookyhash_dats.c
+EXTRA_DIST += hashmap/SATS/strnptrmap-spookyhash.sats
+EXTRA_DIST += hashmap/DATS/strnptrmap-spookyhash.dats
 
 #--------------------------------------------------------------------------
 #
@@ -426,14 +426,14 @@ EXTRA_DIST += tests/test-separate-chaining-2.dats
 CLEANFILES += tests/test-separate-chaining-2
 CLEANFILES += tests/test-separate-chaining-2_dats.c
 
-check_PROGRAMS += tests/test-string2string-spookyhash-map
-tests_test_string2string_spookyhash_map_SOURCES = tests/test-string2string-spookyhash-map_dats.c
-tests_test_string2string_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
-tests_test_string2string_spookyhash_map_LDADD = $(lib_LTLIBRARIES)
-tests_test_string2string_spookyhash_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-EXTRA_DIST += tests/test-string2string-spookyhash-map.dats
-CLEANFILES += tests/test-string2string-spookyhash-map
-CLEANFILES += tests/test-string2string-spookyhash-map_dats.c
+check_PROGRAMS += tests/test-strnptr2strnptr-spookyhash-map
+tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
+tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_spookyhash_map_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_spookyhash_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+EXTRA_DIST += tests/test-strnptr2strnptr-spookyhash-map.dats
+CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map
+CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map_dats.c
 
 .PHONY: tests-clean
 tests-clean:

@@ -31,147 +31,147 @@ staload "hashmap/SATS/hashmap.sats"
 
 (********************************************************************)
 
-vtypedef stringmap_vt (value_vt : vt@ype+,
-                       size     : int) =
+vtypedef strnptrmap_vt (value_vt : vt@ype+,
+                        size     : int) =
   hashmap_vt (Strnptr1, value_vt, size)
-vtypedef stringmap_vt (value_vt : vt@ype+) =
+vtypedef strnptrmap_vt (value_vt : vt@ype+) =
   [size : int]
-  stringmap_vt (value_vt, size)
+  strnptrmap_vt (value_vt, size)
 
 prfun
-lemma_stringmap_vt_param :
+lemma_strnptrmap_vt_param :
   {value_vt : vt@ype}
   {size     : int}
-  (!stringmap_vt (value_vt, size) >> _) -<prf>
+  (!strnptrmap_vt (value_vt, size) >> _) -<prf>
     [0 <= size] void
 
 (********************************************************************)
 
 fun {}
-stringmap {value_vt : vt@ype} () :
-  stringmap_vt (value_vt, 0)
+strnptrmap {value_vt : vt@ype} () :
+  strnptrmap_vt (value_vt, 0)
 
 fun {}
-stringmap_size
+strnptrmap_size
         {size     : int}
         {value_vt : vt@ype}
-        (map      : !stringmap_vt (value_vt, size) >> _) :
+        (map      : !strnptrmap_vt (value_vt, size) >> _) :
     size_t size
-overload size with stringmap_size of 10
+overload size with strnptrmap_size of 10
 
 fun {}
-stringmap_is_empty
+strnptrmap_is_empty
         {size     : int}
         {value_vt : vt@ype}
-        (map      : !stringmap_vt (value_vt, size) >> _) :
+        (map      : !strnptrmap_vt (value_vt, size) >> _) :
     bool (size == 0)
-overload iseqz with stringmap_is_empty of 10
+overload iseqz with strnptrmap_is_empty of 10
 
 fun {}
-stringmap_isnot_empty
+strnptrmap_isnot_empty
         {size     : int}
         {value_vt : vt@ype}
-        (map      : !stringmap_vt (value_vt, size) >> _) :
+        (map      : !strnptrmap_vt (value_vt, size) >> _) :
     bool (size != 0)
-overload isneqz with stringmap_isnot_empty of 10
+overload isneqz with strnptrmap_isnot_empty of 10
 
 fun {value_vt : vt@ype}
-stringmap_set_string
+strnptrmap_set_string
         {size  : int}
-        (map   : stringmap_vt (value_vt, size),
+        (map   : strnptrmap_vt (value_vt, size),
          key   : string,
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
-    stringmap_vt (value_vt, new_size)
+    strnptrmap_vt (value_vt, new_size)
 fun {value_vt : vt@ype}
-stringmap_set_strptr
+strnptrmap_set_strptr
         {size  : int}
-        (map   : stringmap_vt (value_vt, size),
+        (map   : strnptrmap_vt (value_vt, size),
          key   : Strptr1,
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
-    stringmap_vt (value_vt, new_size)
+    strnptrmap_vt (value_vt, new_size)
 fun {value_vt : vt@ype}
-stringmap_set_strnptr
+strnptrmap_set_strnptr
         {size  : int}
-        (map   : stringmap_vt (value_vt, size),
+        (map   : strnptrmap_vt (value_vt, size),
          key   : Strnptr1,
          value : value_vt) :
     [new_size : int | new_size == size || new_size == size + 1]
-    stringmap_vt (value_vt, new_size)
-overload stringmap_set with stringmap_set_string of 0
-overload stringmap_set with stringmap_set_strptr of 10
-overload stringmap_set with stringmap_set_strnptr of 20
+    strnptrmap_vt (value_vt, new_size)
+overload strnptrmap_set with strnptrmap_set_string of 0
+overload strnptrmap_set with strnptrmap_set_strptr of 10
+overload strnptrmap_set with strnptrmap_set_strnptr of 20
 
 fun {value_vt : vt@ype}
-stringmap_del_string
+strnptrmap_del_string
         {size : int}
-        (map  : stringmap_vt (value_vt, size),
+        (map  : strnptrmap_vt (value_vt, size),
          key  : string) :
     [new_size : int | new_size == size || new_size == size - 1]
-    stringmap_vt (value_vt, new_size)
+    strnptrmap_vt (value_vt, new_size)
 fun {value_vt : vt@ype}
-stringmap_del_strptr
+strnptrmap_del_strptr
         {size : int}
-        (map  : stringmap_vt (value_vt, size),
+        (map  : strnptrmap_vt (value_vt, size),
          key  : !RD(Strptr1) >> _) :
     [new_size : int | new_size == size || new_size == size - 1]
-    stringmap_vt (value_vt, new_size)
+    strnptrmap_vt (value_vt, new_size)
 fun {value_vt : vt@ype}
-stringmap_del_strnptr
+strnptrmap_del_strnptr
         {size : int}
-        (map  : stringmap_vt (value_vt, size),
+        (map  : strnptrmap_vt (value_vt, size),
          key  : !RD(Strnptr1) >> _) :
     [new_size : int | new_size == size || new_size == size - 1]
-    stringmap_vt (value_vt, new_size)
-overload stringmap_del with stringmap_del_string of 0
-overload stringmap_del with stringmap_del_strptr of 10
-overload stringmap_del with stringmap_del_strnptr of 20
+    strnptrmap_vt (value_vt, new_size)
+overload strnptrmap_del with strnptrmap_del_string of 0
+overload strnptrmap_del with strnptrmap_del_strptr of 10
+overload strnptrmap_del with strnptrmap_del_strnptr of 20
 
 fun {value_vt : vt@ype}
-stringmap_get_opt_string
+strnptrmap_get_opt_string
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
          key  : string) :
     Option_vt (value_vt)
 fun {value_vt : vt@ype}
-stringmap_get_opt_strptr
+strnptrmap_get_opt_strptr
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
          key  : !RD(Strptr1) >> _) :
     Option_vt (value_vt)
 fun {value_vt : vt@ype}
-stringmap_get_opt_strnptr
+strnptrmap_get_opt_strnptr
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _,
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
          key  : !RD(Strnptr1) >> _) :
     Option_vt (value_vt)
-overload stringmap_get_opt with stringmap_get_opt_string of 0
-overload stringmap_get_opt with stringmap_get_opt_strptr of 10
-overload stringmap_get_opt with stringmap_get_opt_strnptr of 20
+overload strnptrmap_get_opt with strnptrmap_get_opt_string of 0
+overload strnptrmap_get_opt with strnptrmap_get_opt_strptr of 10
+overload strnptrmap_get_opt with strnptrmap_get_opt_strnptr of 20
 
 fun {value_vt : vt@ype}
-stringmap_pairs
+strnptrmap_pairs
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _) :
     list_vt (@(Strnptr1, value_vt), size)
 
 fun {value_vt : vt@ype}
-stringmap_keys
+strnptrmap_keys
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _) :
     list_vt (Strnptr1, size)
 
 fun {value_vt : vt@ype}
-stringmap_values
+strnptrmap_values
         {size : int}
-        (map  : !RD(stringmap_vt (value_vt, size)) >> _) :
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _) :
     list_vt (value_vt, size)
 
 fun {value_vt : vt@ype}
-stringmap_free
+strnptrmap_free
         {size : int}
-        (map  : stringmap_vt (value_vt, size)) :
+        (map  : strnptrmap_vt (value_vt, size)) :
     void
 
 (********************************************************************)

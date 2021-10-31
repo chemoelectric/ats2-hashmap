@@ -29,8 +29,8 @@ along with this program. If not, see
 staload UN = "prelude/SATS/unsafe.sats"
 
 #include "hashmap/HATS/hashmap.hats"
-staload "hashmap/SATS/stringmap-spookyhash.sats"
-staload _ = "hashmap/DATS/stringmap-spookyhash.dats"
+staload "hashmap/SATS/strnptrmap-spookyhash.sats"
+staload _ = "hashmap/DATS/strnptrmap-spookyhash.dats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
@@ -67,40 +67,40 @@ in
   fn
   s2s_map_set_string_string
           {size  : int}
-          (map   : stringmap_vt (Strnptr1, size),
+          (map   : strnptrmap_vt (Strnptr1, size),
            key   : string,
            value : string) :
       [new_size : int | new_size == size || new_size == size + 1]
-      stringmap_vt (Strnptr1, new_size) =
+      strnptrmap_vt (Strnptr1, new_size) =
     let
       val value = g1ofg0 value
       prval _ = lemma_string_param value
     in
-      stringmap_set<Strnptr1> (map, key, string1_copy value)
+      strnptrmap_set<Strnptr1> (map, key, string1_copy value)
     end
   fn
   s2s_map_set_strptr_strptr
           {size  : int}
-          (map   : stringmap_vt (Strnptr1, size),
+          (map   : strnptrmap_vt (Strnptr1, size),
            key   : Strptr1,
            value : Strptr1) :
       [new_size : int | new_size == size || new_size == size + 1]
-      stringmap_vt (Strnptr1, new_size) =
+      strnptrmap_vt (Strnptr1, new_size) =
     let
       val value = strptr2strnptr value
       prval _ = lemma_strnptr_param value
     in
-      stringmap_set<Strnptr1> (map, key, value)
+      strnptrmap_set<Strnptr1> (map, key, value)
     end
   fn
   s2s_map_set_strnptr_strnptr
           {size  : int}
-          (map   : stringmap_vt (Strnptr1, size),
+          (map   : strnptrmap_vt (Strnptr1, size),
            key   : Strnptr1,
            value : Strnptr1) :
       [new_size : int | new_size == size || new_size == size + 1]
-      stringmap_vt (Strnptr1, new_size) =
-    stringmap_set<Strnptr1> (map, key, value)
+      strnptrmap_vt (Strnptr1, new_size) =
+    strnptrmap_set<Strnptr1> (map, key, value)
   overload s2s_map_set with s2s_map_set_string_string of 50
   overload s2s_map_set with s2s_map_set_strptr_strptr of 60
   overload s2s_map_set with s2s_map_set_strnptr_strnptr of 70
@@ -108,24 +108,24 @@ in
   fn
   s2s_map_get_opt_string
         {size : int}
-        (map  : !RD(stringmap_vt (Strnptr1, size)) >> _,
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
          key  : string) :
       Option_vt (Strnptr1) =
-    stringmap_get_opt<Strnptr1> {size} (map, key)
+    strnptrmap_get_opt<Strnptr1> {size} (map, key)
   fn
   s2s_map_get_opt_strptr
         {size : int}
-        (map  : !RD(stringmap_vt (Strnptr1, size)) >> _,
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
          key  : !RD(Strptr1) >> _) :
       Option_vt (Strnptr1) =
-    stringmap_get_opt<Strnptr1> {size} (map, key)
+    strnptrmap_get_opt<Strnptr1> {size} (map, key)
   fn
   s2s_map_get_opt_strnptr
         {size : int}
-        (map  : !RD(stringmap_vt (Strnptr1, size)) >> _,
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
          key  : !RD(Strnptr1) >> _) :
       Option_vt (Strnptr1) =
-    stringmap_get_opt<Strnptr1> {size} (map, key)
+    strnptrmap_get_opt<Strnptr1> {size} (map, key)
   overload s2s_map_get_opt with s2s_map_get_opt_string of 50
   overload s2s_map_get_opt with s2s_map_get_opt_strptr of 60
   overload s2s_map_get_opt with s2s_map_get_opt_strnptr of 70
@@ -133,30 +133,30 @@ in
   fn
   s2s_map_pairs
           {size : int}
-          (map  : !stringmap_vt (Strnptr1, size) >> _) :
+          (map  : !strnptrmap_vt (Strnptr1, size) >> _) :
       list_vt (@(Strnptr1, Strnptr1), size) =
-    stringmap_pairs<Strnptr1> {size} map
+    strnptrmap_pairs<Strnptr1> {size} map
 
   fn
   s2s_map_keys
           {size : int}
-          (map  : !stringmap_vt (Strnptr1, size) >> _) :
+          (map  : !strnptrmap_vt (Strnptr1, size) >> _) :
       list_vt (Strnptr1, size) =
-    stringmap_keys<Strnptr1> {size} map
+    strnptrmap_keys<Strnptr1> {size} map
 
   fn
   s2s_map_values
           {size : int}
-          (map  : !stringmap_vt (Strnptr1, size) >> _) :
+          (map  : !strnptrmap_vt (Strnptr1, size) >> _) :
       list_vt (Strnptr1, size) =
-    stringmap_values<Strnptr1> {size} map
+    strnptrmap_values<Strnptr1> {size} map
 
   fn
   s2s_map_free
           {size : int}
-          (map  : stringmap_vt (Strnptr1, size)) :
+          (map  : strnptrmap_vt (Strnptr1, size)) :
       void =
-    stringmap_free<Strnptr1> map
+    strnptrmap_free<Strnptr1> map
   overload free with s2s_map_free of 20
 
 end
@@ -307,7 +307,7 @@ test1 () : void =
     val foo3 = string1_copy "foo3"
     val bar3 = string1_copy "bar3"
 
-    val map = stringmap ()
+    val map = strnptrmap ()
     val map = s2s_map_set (map, "foo1", "bar1")
     val map = s2s_map_set (map, foo2, bar2)
     val map = s2s_map_set (map, foo3, bar3)
