@@ -40,7 +40,9 @@ local
   typedef hash_t = @(uint64, uint64)
   vtypedef key_vt = Strnptr1
 
-  (* seed1 and seeds may be any numbers that please the programmer. *)
+  (* seed1 and seeds may be any numbers that please the programmer,
+     although changing them may change what are the correct results
+     of regression tests. *)
   macdef seed1 = $UN.cast{uint64} 0xBA5EBA11BACEBA11ULL
   macdef seed2 = $UN.cast{uint64} 0x0123456789012345ULL
 

@@ -107,7 +107,7 @@ fun {value_vt : vt@ype}
 stringmap_del_string
         {size : int}
         (map  : stringmap_vt (value_vt, size),
-         key  : String) :
+         key  : string) :
     [new_size : int | new_size == size || new_size == size - 1]
     stringmap_vt (value_vt, new_size)
 fun {value_vt : vt@ype}
@@ -132,7 +132,7 @@ fun {value_vt : vt@ype}
 stringmap_get_opt_string
         {size : int}
         (map  : !RD(stringmap_vt (value_vt, size)) >> _,
-         key  : String) :
+         key  : string) :
     Option_vt (value_vt)
 fun {value_vt : vt@ype}
 stringmap_get_opt_strptr
