@@ -668,7 +668,7 @@ test2 () : void =
     val- ~ None_vt () = s2s_map_get_opt (map, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map, "nej")
     val- ~ None_vt () = s2s_map_get_opt (map, "ikke")
-    val- ~ None_vt () = s2s_map_get_opt (map, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map, "jamais")
     val- ~ None_vt () = s2s_map_get_opt (map, "minime")
     //
     val _ = free map
@@ -712,7 +712,7 @@ test2 () : void =
     val- ~ None_vt () = s2s_map_get_opt (map1, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map1, "nej")
     val- ~ None_vt () = s2s_map_get_opt (map1, "ikke")
-    val- ~ None_vt () = s2s_map_get_opt (map1, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map1, "jamais")
     val- ~ None_vt () = s2s_map_get_opt (map1, "minime")
     //
     val pairs = s2s_map_pairs (map2)
@@ -724,7 +724,7 @@ test2 () : void =
     val- ~ None_vt () = s2s_map_get_opt (map2, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map2, "nej")
     val- ~ None_vt () = s2s_map_get_opt (map2, "ikke")
-    val- ~ None_vt () = s2s_map_get_opt (map2, "rien")
+    val- ~ None_vt () = s2s_map_get_opt (map2, "jamais")
     val- ~ None_vt () = s2s_map_get_opt (map2, "minime")
     //
     var keys =
