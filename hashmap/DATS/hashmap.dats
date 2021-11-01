@@ -676,22 +676,44 @@ hashmap_set {size} (map, key, value) =
     end
   | @ map_vt_root root =>
     let
-      val @{size = size, tree = tree} = root
-
       var hash : hash_vt
-
       val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
 
-      val @{size = new_size, tree = new_tree} =
-        set_entry {size} (size, tree, hash, key, value)
-      val _ = root.size := new_size
-      val _ = root.tree := new_tree
+      val @{size = size, tree = tree} = root
+      val _ = root := set_entry {size} (size, tree, hash, key, value)
 
       val () = hashmap$hash_vt_free<hash_vt> (hash)
 
       prval _ = fold@ map
     in
       map
+    end
+
+(********************************************************************)
+
+(*
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vt@ype}
+hashmap_del
+        {size : int}
+        (map  : hashmap_vt (key_vt, value_vt, size),
+         key  : !RD(key_vt) >> _) :
+    [new_size : int | new_size == size || new_size == size - 1]
+    hashmap_vt (key_vt, value_vt, new_size)
+*)
+
+implement {hash_vt} {key_vt, value_vt}
+hashmap_del (map, key) =
+  case+ map of
+  | map_vt_nil () => map
+  | @ map_vt_root root =>
+    let
+//      var hash : hash_vt
+//      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+
+      prval _ = fold@ map
+    in
+      map // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
     end
 
 (********************************************************************)
@@ -825,7 +847,6 @@ hashmap_get_opt (map, key) =
   | map_vt_root root =>
     let
       var hash : hash_vt
-
       val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
 
       val result =
