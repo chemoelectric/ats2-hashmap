@@ -151,8 +151,8 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-population_map$(EXEEXT) \
 	tests/test-a-uint8-map$(EXEEXT) \
 	tests/test-separate-chaining-1$(EXEEXT) \
-	tests/test-separate-chaining-2$(EXEEXT) \
-	tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)
+	tests/test-separate-chaining-2$(EXEEXT) $(am__EXEEXT_1)
+@WITH_ATS2_SPOOKYHASH_TRUE@am__append_6 = tests/test-strnptr2strnptr-spookyhash-map
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -203,6 +203,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
 	"$(DESTDIR)$(pkgincludedir)"
+@WITH_ATS2_SPOOKYHASH_TRUE@am__EXEEXT_1 = tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -400,11 +401,13 @@ am_tests_test_separate_chaining_2_OBJECTS = tests/test_separate_chaining_2-test-
 tests_test_separate_chaining_2_OBJECTS =  \
 	$(am_tests_test_separate_chaining_2_OBJECTS)
 tests_test_separate_chaining_2_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
+am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-spookyhash-map_dats.c
+@WITH_ATS2_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_spookyhash_map_OBJECTS =  \
 	$(am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS)
-tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
-	$(lib_LTLIBRARIES)
+@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
+@WITH_ATS2_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -533,7 +536,7 @@ DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
 	$(tests_test_population_map_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
-	$(tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
+	$(am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -1213,10 +1216,12 @@ tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
 tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
-tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
-tests_test_strnptr2strnptr_spookyhash_map_LDADD = $(lib_LTLIBRARIES) \
-	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
+@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_LDADD =  \
+@WITH_ATS2_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_ATS2_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_ATS2_SPOOKYHASH_TRUE@	-latslib
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
