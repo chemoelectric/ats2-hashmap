@@ -680,7 +680,9 @@ hashmap_set {size} (map, key, value) =
       val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
 
       val @{size = size, tree = tree} = root
-      val _ = root := set_entry {size} (size, tree, hash, key, value)
+      val _ = root :=
+        set_entry<hash_vt><key_vt, value_vt>
+          {size} (size, tree, hash, key, value)
 
       val () = hashmap$hash_vt_free<hash_vt> (hash)
 
@@ -691,29 +693,58 @@ hashmap_set {size} (map, key, value) =
 
 (********************************************************************)
 
-(*
-fun {hash_vt : vt@ype}
-    {key_vt, value_vt : vt@ype}
-hashmap_del
-        {size : int}
-        (map  : hashmap_vt (key_vt, value_vt, size),
-         key  : !RD(key_vt) >> _) :
+fn {hash_vt : vt@ype}
+   {key_vt, value_vt : vt@ype}
+del_entry {size  : int | 1 <= size}
+          (size  : size_t size,
+           tree  : node_array_vt (key_vt, value_vt),
+           hash  : &hash_vt >> _,
+           key   : !RD(key_vt) >> _) :
+    // FIXME: TREAT SIZE = 1 as a SPECIAL CASE :FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    //        Then no option_vt is necessary.
     [new_size : int | new_size == size || new_size == size - 1]
-    hashmap_vt (key_vt, value_vt, new_size)
-*)
+    @{
+      size = size_t new_size,
+      tree_opt = option_vt (node_array_vt (key_vt, value_vt),
+                            new_size != 0)
+    } =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+  in
+    @{size = size, tree_opt = Some_vt tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+  end
 
 implement {hash_vt} {key_vt, value_vt}
-hashmap_del (map, key) =
+hashmap_del {size} (map, key) =
   case+ map of
   | map_vt_nil () => map
-  | @ map_vt_root root =>
+  | ~ map_vt_root root =>
+    // FIXME: TREAT SIZE = 1 as a SPECIAL CASE :FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    //        Then no option_vt is necessary.
     let
-//      var hash : hash_vt
-//      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+      var hash : hash_vt
+      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
 
-      prval _ = fold@ map
+      val @{size = size, tree = tree} = root
+      val @{size = new_size, tree_opt = tree_opt} =
+        del_entry<hash_vt><key_vt, value_vt>
+          {size} (size, tree, hash, key)
+
+      val () = hashmap$hash_vt_free<hash_vt> (hash)
     in
-      map // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+      if new_size = i2sz 0 then
+        let
+          val+ ~ None_vt () = tree_opt
+        in
+          map_vt_nil ()
+        end
+      else
+        let
+          val+ ~ Some_vt new_tree = tree_opt
+        in
+          map_vt_root @{size = new_size, tree = new_tree}
+        end
     end
 
 (********************************************************************)
@@ -725,10 +756,10 @@ find_entry {population_map : int}
            {p_array : addr}
            {depth   : int}
            (hash    : &hash_vt >> _,
-            tree    : !node_array_vt (key_vt, value_vt,
-                                      population_map,
-                                      length, p_array) >> _,
-            key     : !key_vt >> _,
+            tree    : !RD(node_array_vt (key_vt, value_vt,
+                                         population_map,
+                                         length, p_array)) >> _,
+            key     : !RD(key_vt) >> _,
             depth   : uint depth) : Option_vt (value_vt) =
   let
     vtypedef t = node_vt (key_vt, value_vt)
@@ -856,6 +887,143 @@ hashmap_get_opt (map, key) =
       val () = hashmap$hash_vt_free<hash_vt> (hash)
     in
       result
+    end
+
+(********************************************************************)
+
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vt@ype}
+find_key {population_map : int}
+         {length  : int}
+         {p_array : addr}
+         {depth   : int}
+         (hash    : &hash_vt >> _,
+          tree    : !RD(node_array_vt (key_vt, value_vt,
+                                       population_map,
+                                       length, p_array)) >> _,
+          key     : !RD(key_vt) >> _,
+          depth   : uint depth) : bool =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+
+    val [bits : int] bits = hashmap$bits_source<hash_vt> (hash, depth)
+  in
+    if bits = BITS_SOURCE_EXHAUSTED then
+      (* There are no more hash bits. *)
+      false
+    else
+      let
+        prval _ = prop_verify {bits_source_valid_bits bits} ()
+        val mask = bits_to_population_map bits
+        val population_map = (tree.population_map)
+        val array_has_an_entry = isneqz (population_map land mask)
+      in
+        if array_has_an_entry then
+          let
+            val [array_index : int] @(pf_array_index | array_index) =
+              popcount_low_bits_with_proof<population_map_kind>
+                (population_map, i2u bits)
+            prval _ = popcount_low_bits_is_nonnegative pf_array_index
+
+            (* FIXME: Prove this. *)
+            prval _ = $UN.prop_assert {array_index < length} ()
+
+            val p_entry = ptr_add<t> (tree.p_array, array_index)
+            prval @(pf_left, pf_entry, pf_right) =
+              array_v_isolate_entry {t} {..} {length} {array_index}
+                                    (tree.array_view)
+          in
+            case+ !p_entry of
+            | node_vt_key_value key_value =>
+              if hashmap$key_vt_eq<key_vt> (key, key_value.key) then
+                (* A key-value pair was found. *)
+                let
+                  prval _ = tree.array_view :=
+                    array_v_merge_entry (pf_left, pf_entry, pf_right)
+                in
+                  true
+                end
+              else
+                (* The key is not in the tree. *)
+                let
+                  prval _ = tree.array_view :=
+                    array_v_merge_entry (pf_left, pf_entry, pf_right)
+                in
+                  false
+                end
+            | node_vt_list lst =>
+              (* Search for the key in lst. *)
+              let
+                fun
+                search_list {n   : int | 0 <= n} .<n>.
+                            (lst : !list_vt (kv_t, n) >> _,
+                             key : !key_vt >> _) :
+                    bool =
+                  case+ lst of
+                  | NIL =>
+                    (* The key is not in lst. *)
+                    false
+                  | @ key_value :: tail =>
+                    if hashmap$key_vt_eq<key_vt>
+                        (key, key_value.key) then
+                      let
+                        prval _ = fold@ lst
+                      in
+                        (* A key-value pair was found in lst. *)
+                        true
+                      end
+                    else
+                      (* Search the tail. *)
+                      let
+                        val result = search_list (tail, key)
+                        prval _ = fold@ lst
+                      in
+                        result
+                      end
+
+                prval _ = lemma_list_vt_param lst
+                val result = search_list (lst, key)
+
+                prval _ = tree.array_view :=
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
+              in
+                result
+              end
+            | node_vt_array subtree =>
+              (* Search for the key in a subtree. *)
+              let
+                val result =
+                  find_key<hash_vt><key_vt, value_vt>
+                    (hash, subtree, key, succ depth)
+                prval _ = tree.array_view :=
+                  array_v_merge_entry (pf_left, pf_entry, pf_right)
+              in
+                result
+              end
+          end
+        else
+          (* There is no array entry for the current hash bits. *)
+          false
+      end
+  end
+
+implement {hash_vt} {key_vt, value_vt}
+hashmap_has_key (map, key) =
+  case+ map of
+  | map_vt_nil () => false
+  | map_vt_root root =>
+    let
+      var hash : hash_vt
+      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+
+      val has_key =
+        find_key<hash_vt><key_vt, value_vt>
+          (hash, root.tree, key, 0U)
+
+      val () = hashmap$hash_vt_free<hash_vt> (hash)
+    in
+      has_key
     end
 
 (********************************************************************)

@@ -141,6 +141,31 @@ in
   overload s2s_map_get_opt with s2s_map_get_opt_strnptr of 70
 
   fn
+  s2s_map_has_key_string
+        {size : int}
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
+         key  : string) :
+      bool =
+    strnptrmap_has_key<Strnptr1> {size} (map, key)
+  fn
+  s2s_map_has_key_strptr
+        {size : int}
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
+         key  : !RD(Strptr1) >> _) :
+      bool =
+    strnptrmap_has_key<Strnptr1> {size} (map, key)
+  fn
+  s2s_map_has_key_strnptr
+        {size : int}
+        (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
+         key  : !RD(Strnptr1) >> _) :
+      bool =
+    strnptrmap_has_key<Strnptr1> {size} (map, key)
+  overload s2s_map_has_key with s2s_map_has_key_string of 50
+  overload s2s_map_has_key with s2s_map_has_key_strptr of 60
+  overload s2s_map_has_key with s2s_map_has_key_strnptr of 70
+
+  fn
   s2s_map_pairs
           {size : int}
           (map  : !strnptrmap_vt (Strnptr1, size) >> _) :
@@ -426,6 +451,7 @@ check_pairs {n   : int}
   | NIL => true
   | head :: tail =>
     let
+      val- true = s2s_map_has_key (map, head.0)
       val- ~ Some_vt entry = s2s_map_get_opt (map, head.0)
       val eq =
         ($UN.strnptr2string entry) = ($UN.strnptr2string (head.1)) 
@@ -494,26 +520,35 @@ test1 () : void =
     val foo3 = string1_copy "foo3"
     val bar3 = string1_copy "bar3"
 
+    val- true = s2s_map_has_key (map, "foo1")
     val- ~ Some_vt x = s2s_map_get_opt (map, "foo1")
     val _ = assertloc ($UN.strnptr2string x = "bar1")
     val _ = free x
 
+    val- true = s2s_map_has_key (map, foo2)
     val- ~ Some_vt x = s2s_map_get_opt (map, foo2)
     val _ = assertloc ($UN.strnptr2string x = $UN.strptr2string bar2)
     val _ = free x
 
+    val- true = s2s_map_has_key (map, "foo2")
     val- ~ Some_vt x = s2s_map_get_opt (map, "foo2")
     val _ = assertloc ($UN.strnptr2string x = $UN.strptr2string bar2)
     val _ = free x
 
+    val- true = s2s_map_has_key (map, foo3)
     val- ~ Some_vt x = s2s_map_get_opt (map, foo3)
     val _ = assertloc ($UN.strnptr2string x = $UN.strnptr2string bar3)
     val _ = free x
 
+    val- true = s2s_map_has_key (map, "foo3")
     val- ~ Some_vt x = s2s_map_get_opt (map, "foo3")
     val _ = assertloc ($UN.strnptr2string x = $UN.strnptr2string bar3)
     val _ = free x
 
+    val- false = s2s_map_has_key (map, "foo4")
+    val- false = s2s_map_has_key (map, "foo5")
+    val- false = s2s_map_has_key (map, "foo6")
+    val- false = s2s_map_has_key (map, "foo7")
     val- ~ None_vt () = s2s_map_get_opt (map, "foo4")
     val- ~ None_vt () = s2s_map_get_opt (map, "foo5")
     val- ~ None_vt () = s2s_map_get_opt (map, "foo6")
@@ -664,6 +699,12 @@ test2 () : void =
     val _ = check_pairs (pairs, map)
     val _ = list_vt_freelin pairs
     //
+    val- false = s2s_map_has_key (map, "nope")
+    val- false = s2s_map_has_key (map, "inte")
+    val- false = s2s_map_has_key (map, "nej")
+    val- false = s2s_map_has_key (map, "ikke")
+    val- false = s2s_map_has_key (map, "jamais")
+    val- false = s2s_map_has_key (map, "minime")
     val- ~ None_vt () = s2s_map_get_opt (map, "nope")
     val- ~ None_vt () = s2s_map_get_opt (map, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map, "nej")
@@ -708,6 +749,12 @@ test2 () : void =
     val _ = check_pairs (pairs, map1)
     val _ = list_vt_freelin pairs
     //
+    val- false = s2s_map_has_key (map1, "nope")
+    val- false = s2s_map_has_key (map1, "inte")
+    val- false = s2s_map_has_key (map1, "nej")
+    val- false = s2s_map_has_key (map1, "ikke")
+    val- false = s2s_map_has_key (map1, "jamais")
+    val- false = s2s_map_has_key (map1, "minime")
     val- ~ None_vt () = s2s_map_get_opt (map1, "nope")
     val- ~ None_vt () = s2s_map_get_opt (map1, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map1, "nej")
@@ -720,6 +767,12 @@ test2 () : void =
     val _ = check_pairs (pairs, map2)
     val _ = list_vt_freelin pairs
     //
+    val- false = s2s_map_has_key (map2, "nope")
+    val- false = s2s_map_has_key (map2, "inte")
+    val- false = s2s_map_has_key (map2, "nej")
+    val- false = s2s_map_has_key (map2, "ikke")
+    val- false = s2s_map_has_key (map2, "jamais")
+    val- false = s2s_map_has_key (map2, "minime")
     val- ~ None_vt () = s2s_map_get_opt (map2, "nope")
     val- ~ None_vt () = s2s_map_get_opt (map2, "inte")
     val- ~ None_vt () = s2s_map_get_opt (map2, "nej")

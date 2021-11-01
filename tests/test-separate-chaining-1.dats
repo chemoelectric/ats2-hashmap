@@ -104,6 +104,14 @@ in
     hashmap_get_opt<hash_t><key_t, value_t> {size} (map, key)
 
   fn
+  my_map_has_key
+          {size : int}
+          (map  : !my_map_vt size >> _,
+           key  : !key_t >> _) :
+      bool =
+    hashmap_has_key<hash_t><key_t, value_t> {size} (map, key)
+
+  fn
   my_map_pairs
           {size : int}
           (map  : !my_map_vt size >> _) :
@@ -236,6 +244,7 @@ test_fill_1 () : void =
         let
           val n_opt = my_map_get_opt (map, cast8 i)
         in
+          assertloc (my_map_has_key (map, cast8 i));
           case+ n_opt of
           | ~ Some_vt (n) => assertloc (u2i i = pred n)
           | ~ None_vt () => assertloc (false);
@@ -310,6 +319,7 @@ test_replace_1 () : void =
         map
       else
         let
+          val _ = assertloc (my_map_has_key (map, cast8 i))
           val- ~ Some_vt value = my_map_get_opt (map, cast8 i)
         in
           replace (my_map_set (map, cast8 i, neg value), succ i)
@@ -330,6 +340,7 @@ test_replace_1 () : void =
         let
           val n_opt = my_map_get_opt (map, cast8 i)
         in
+          assertloc (my_map_has_key (map, cast8 i));
           case+ n_opt of
           | ~ Some_vt (n) => assertloc (u2i i = pred (neg n))
           | ~ None_vt () => assertloc (false);

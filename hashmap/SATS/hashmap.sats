@@ -128,6 +128,14 @@ hashmap_get_opt
          key  : !RD(key_vt) >> _) :
     Option_vt (value_vt)
 
+fun {hash_vt : vt@ype}
+    {key_vt, value_vt : vt@ype}
+hashmap_has_key
+        {size : int}
+        (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _,
+         key  : !RD(key_vt) >> _) :
+    bool
+
 fun {key_vt, value_vt : vt@ype}
 hashmap_pairs
         {size : int}

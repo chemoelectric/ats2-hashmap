@@ -181,6 +181,35 @@ in
     hashmap_get_opt<hash_t><key_vt, value_vt> (map, key)
 
   implement {value_vt}
+  strnptrmap_has_key_string (map, key) =
+    (* WARNING: The following implementation really does assume that
+       the "key" argument to strnptrmap_del_strnptr is read-only.
+       (You could implement this template without that assumption,
+       by using string1_copy. *)
+    let
+      val s = $UN.castvwtp0{Strnptr1} key
+      val result = strnptrmap_has_key_strnptr<value_vt> (map, s)
+      prval _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  strnptrmap_has_key_strptr (map, key) =
+    let
+      val s = $UN.castvwtp1{Strnptr1} key
+      prval _ = lemma_strnptr_param s
+      val result = strnptrmap_has_key_strnptr<value_vt> (map, s)
+      val _ = $UN.castvwtp0{void} s
+    in
+      result
+    end
+
+  implement {value_vt}
+  strnptrmap_has_key_strnptr (map, key) =
+    hashmap_has_key<hash_t><key_vt, value_vt> (map, key)
+
+  implement {value_vt}
   strnptrmap_pairs (map) =
     hashmap_pairs<key_vt, value_vt> (map)
 

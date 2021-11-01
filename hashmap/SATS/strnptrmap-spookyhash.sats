@@ -151,6 +151,28 @@ overload strnptrmap_get_opt with strnptrmap_get_opt_strptr of 10
 overload strnptrmap_get_opt with strnptrmap_get_opt_strnptr of 20
 
 fun {value_vt : vt@ype}
+strnptrmap_has_key_string
+        {size : int}
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
+         key  : string) :
+    bool
+fun {value_vt : vt@ype}
+strnptrmap_has_key_strptr
+        {size : int}
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
+         key  : !RD(Strptr1) >> _) :
+    bool
+fun {value_vt : vt@ype}
+strnptrmap_has_key_strnptr
+        {size : int}
+        (map  : !RD(strnptrmap_vt (value_vt, size)) >> _,
+         key  : !RD(Strnptr1) >> _) :
+    bool
+overload strnptrmap_has_key with strnptrmap_has_key_string of 0
+overload strnptrmap_has_key with strnptrmap_has_key_strptr of 10
+overload strnptrmap_has_key with strnptrmap_has_key_strnptr of 20
+
+fun {value_vt : vt@ype}
 strnptrmap_pairs
         {size : int}
         (map  : !RD(strnptrmap_vt (value_vt, size)) >> _) :

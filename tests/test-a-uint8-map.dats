@@ -103,6 +103,14 @@ in
     hashmap_get_opt<hash_t><key_t, value_t> {size} (map, key)
 
   fn
+  my_map_has_key
+          {size : int}
+          (map  : !my_map_vt size >> _,
+           key  : !key_t >> _) :
+      bool =
+    hashmap_has_key<hash_t><key_t, value_t> {size} (map, key)
+
+  fn
   my_map_pairs
           {size : int}
           (map  : !my_map_vt size >> _) :
@@ -231,9 +239,11 @@ test1 () : void =
     val- false = iseqz map
     val- true = isneqz map
 
+    val- true = my_map_has_key (map, cast8 2)
     val- ~Some_vt 36 = my_map_get_opt (map, cast8 2)
     val- ~Some_vt value = my_map_get_opt (map, cast8 2)
     val- 36 = value
+    val- false = my_map_has_key (map, cast8 3)
     val- ~None_vt () = my_map_get_opt (map, cast8 3)
 
     fun
@@ -245,12 +255,14 @@ test1 () : void =
         case+ my_map_get_opt (map, cast8 i) of
         | ~ Some_vt n =>
           begin
+            assertloc (my_map_has_key (map, cast8 i));
             assertloc (i = 2U);
             assertloc (n = 36);
             loop (map, succ i)
           end
         | ~ None_vt () =>
           begin
+            assertloc (not (my_map_has_key (map, cast8 i)));
             assertloc (i <> 2U);
             loop (map, succ i)
           end
@@ -340,6 +352,7 @@ test_node_expansion_1 () : void =
           case+ n_opt of
           | ~ Some_vt (n) =>
             begin
+              assertloc (my_map_has_key (map, cast8 i));
               case+ i of
               | 0x01U => assertloc (n = 10)
               | 0x05U => assertloc (n = 50)
@@ -350,6 +363,7 @@ test_node_expansion_1 () : void =
             end
           | ~ None_vt () =>
             begin
+              assertloc (not (my_map_has_key (map, cast8 i)));
               assertloc (i <> 0x01U);
               assertloc (i <> 0x05U);
               assertloc (i <> 0x15U);
@@ -415,6 +429,8 @@ test_collision_1 () : void =
     val- false = iseqz map
     val- true = isneqz map
 
+    val- true = my_map_has_key (map, cast8 1)
+    val- true = my_map_has_key (map, cast8 65)
     val- ~ Some_vt 100 = my_map_get_opt (map, cast8 1)
     val- ~ Some_vt 20 = my_map_get_opt (map, cast8 65)
 
@@ -429,6 +445,7 @@ test_collision_1 () : void =
           case+ n_opt of
           | ~ Some_vt (n) =>
             begin
+              assertloc (my_map_has_key (map, cast8 i));
               case+ i of
               | 1U => assertloc (n = 100)
               | 65U => assertloc (n = 20)
@@ -436,6 +453,7 @@ test_collision_1 () : void =
             end
           | ~ None_vt () =>
             begin
+              assertloc (not (my_map_has_key (map, cast8 i)));
               assertloc (i <> 1U);
               assertloc (i <> 65U)
             end;
@@ -499,6 +517,7 @@ test_depth1_1 () : void =
           case+ n_opt of
           | ~ Some_vt (n) =>
             begin
+              assertloc (my_map_has_key (map, cast8 i));
               case+ i of
               | 1U => assertloc (n = 100)
               | 65U => assertloc (n = 20)
@@ -508,6 +527,7 @@ test_depth1_1 () : void =
             end
           | ~ None_vt () =>
             begin
+              assertloc (not (my_map_has_key (map, cast8 i)));
               assertloc (i <> 1U);
               assertloc (i <> 65U);
               assertloc (i <> 129U);
@@ -581,6 +601,7 @@ test_fill_1 () : void =
         let
           val n_opt = my_map_get_opt (map, cast8 i)
         in
+          assertloc (my_map_has_key (map, cast8 i));
           case+ n_opt of
           | ~ Some_vt (n) => assertloc (u2i i = pred n)
           | ~ None_vt () => assertloc (false);
@@ -655,6 +676,7 @@ test_replace_1 () : void =
         map
       else
         let
+          val _ = assertloc (my_map_has_key (map, cast8 i))
           val- ~ Some_vt value = my_map_get_opt (map, cast8 i)
         in
           replace (my_map_set (map, cast8 i, neg value), succ i)
@@ -675,6 +697,7 @@ test_replace_1 () : void =
         let
           val n_opt = my_map_get_opt (map, cast8 i)
         in
+          assertloc (my_map_has_key (map, cast8 i));
           case+ n_opt of
           | ~ Some_vt (n) => assertloc (u2i i = pred (neg n))
           | ~ None_vt () => assertloc (false);
