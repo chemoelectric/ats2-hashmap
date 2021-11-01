@@ -695,57 +695,59 @@ hashmap_set {size} (map, key, value) =
 
 fn {hash_vt : vt@ype}
    {key_vt, value_vt : vt@ype}
-del_entry {size  : int | 1 <= size}
+del_entry {size  : int | 2 <= size}
           (size  : size_t size,
            tree  : node_array_vt (key_vt, value_vt),
            hash  : &hash_vt >> _,
            key   : !RD(key_vt) >> _) :
-    // FIXME: TREAT SIZE = 1 as a SPECIAL CASE :FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-    //        Then no option_vt is necessary.
     [new_size : int | new_size == size || new_size == size - 1]
     @{
       size = size_t new_size,
-      tree_opt = option_vt (node_array_vt (key_vt, value_vt),
-                            new_size != 0)
+      tree = node_array_vt (key_vt, value_vt)
     } =
   let
     vtypedef t = node_vt (key_vt, value_vt)
     vtypedef kv_t = key_value_vt (key_vt, value_vt)
   in
-    @{size = size, tree_opt = Some_vt tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+    @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
   end
 
 implement {hash_vt} {key_vt, value_vt}
 hashmap_del {size} (map, key) =
-  case+ map of
-  | map_vt_nil () => map
-  | ~ map_vt_root root =>
-    // FIXME: TREAT SIZE = 1 as a SPECIAL CASE :FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-    //        Then no option_vt is necessary.
-    let
-      var hash : hash_vt
-      val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+  let
+    val size = hashmap_size<> (map)
+  in
+    if size = i2sz 0 then
+      map
+    else if size = i2sz 1 then
+      begin
+        if hashmap_has_key<hash_vt><key_vt, value_vt> (map, key) then
+          begin
+            hashmap_free<key_vt, value_vt> map;
+            map_vt_nil ()
+          end
+        else
+          map
+      end
+    else
+      let
+        val @ map_vt_root root = map
 
-      val @{size = size, tree = tree} = root
-      val @{size = new_size, tree_opt = tree_opt} =
-        del_entry<hash_vt><key_vt, value_vt>
-          {size} (size, tree, hash, key)
+        var hash : hash_vt
+        val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
 
-      val () = hashmap$hash_vt_free<hash_vt> (hash)
-    in
-      if new_size = i2sz 0 then
-        let
-          val+ ~ None_vt () = tree_opt
-        in
-          map_vt_nil ()
-        end
-      else
-        let
-          val+ ~ Some_vt new_tree = tree_opt
-        in
-          map_vt_root @{size = new_size, tree = new_tree}
-        end
-    end
+        val @{size = size, tree = tree} = root
+        val _ = root :=
+          del_entry<hash_vt><key_vt, value_vt>
+            {size} (size, tree, hash, key)
+
+        val () = hashmap$hash_vt_free<hash_vt> (hash)
+
+        prval _ = fold@ map
+      in
+        map
+      end
+  end
 
 (********************************************************************)
 
