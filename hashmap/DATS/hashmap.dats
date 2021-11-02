@@ -799,6 +799,76 @@ hashmap_del {size} (map, key) =
       end
 
     fn
+    eliminate_length2_array
+            {population_map : int}
+            {p_array        : addr}
+            {index          : int | index <= 1}
+            {mask           : int}
+            (tree           : node_array_vt (key_vt, value_vt,
+                                             population_map,
+                                             2, p_array),
+             index          : size_t index) : t =
+      (* Return the entry that is *not* the index’th.
+         Also free the array. *)
+      let
+        prval _ = lemma_g1uint_param index
+        prval _ = prop_verify {index == 0 || index == 1} ()
+
+        val @{
+              population_map_prop = pf_population_map,
+              array_view = pf_array,
+              mfree_view = pf_mfree |
+              population_map = population_map,
+              p_array = p_array
+            } = tree
+
+        prval @(pf_left, pf_right) =
+          array_v_subdivide2 {t} {p_array} {1, 1} pf_array
+        prval @(pf_entry0, pf_nil0) = array_v_uncons pf_left
+        prval @(pf_entry1, pf_nil1) = array_v_uncons pf_right
+        prval pf_nil0 = array_v_unnil_nil pf_nil0
+        prval pf_nil1 = array_v_unnil_nil pf_nil1
+      in
+        if index = i2sz 0 then
+          let
+            val- ~ node_vt_key_value @{key = k, value = v} =
+              ptr_get<t> (pf_entry0 | p_array)
+            val _ = hashmap$key_vt_free<key_vt> k
+            val _ = hashmap$value_vt_free<value_vt> v
+
+            val retval =
+              ptr_get<t> (pf_entry1 | ptr_succ<t> (p_array))
+
+            prval pf_left = array_v_cons (pf_entry0, pf_nil0)
+            prval pf_right = array_v_cons (pf_entry1, pf_nil1)
+            prval pf_array =
+              array_v_join2 {t?} {p_array} {1, 1} (pf_left, pf_right)
+
+            val _ = array_ptr_free (pf_array, pf_mfree | p_array)
+          in
+            retval
+          end
+        else
+          let
+            val- ~ node_vt_key_value @{key = k, value = v} =
+              ptr_get<t> (pf_entry1 | ptr_succ<t> p_array)
+            val _ = hashmap$key_vt_free<key_vt> k
+            val _ = hashmap$value_vt_free<value_vt> v
+
+            val retval = ptr_get<t> (pf_entry0 | p_array)
+
+            prval pf_left = array_v_cons (pf_entry0, pf_nil0)
+            prval pf_right = array_v_cons (pf_entry1, pf_nil1)
+            prval pf_array =
+              array_v_join2 {t?} {p_array} {1, 1} (pf_left, pf_right)
+
+            val _ = array_ptr_free (pf_array, pf_mfree | p_array)
+          in
+            retval
+          end
+      end
+
+    fn
     del_entry {size  : int | 2 <= size}
               {bits  : int | bits_source_valid_bits bits}
               {depth : int}
@@ -892,13 +962,37 @@ hashmap_del {size} (map, key) =
                     {
                       (* By design, there should be no length-one
                          arrays, except at depth zero. *)
-                      val _ = assertloc (i2sz 2 <= length)
-
-                      // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                      val _ = assertloc (length = i2sz 2)
 
                       prval _ = tree.array_view :=
                         fpf_restore_array pf_entry
                       prval _ = fold@ node
+
+                      val index = i2sz array_index
+                      val- ~ node_vt_array tree = node
+
+                      (* Get the statics for "tree", via a bit of
+                         trickery. *)
+                      prval [population_map : int]
+                            [length : int]
+                            [p_array : addr]
+                            tree_tmp =
+                        (tree : [population_map : int]
+                                [length         : int]
+                                [p_array        : addr]
+                                node_array_vt (key_vt, value_vt,
+                                               population_map,
+                                               length, p_array))
+                      prval _ = $effmask_wrt tree := tree_tmp
+
+                      (* FIXME: Prove this. *)
+                      prval _ = $UN.prop_assert {length == 2} ()
+
+                      val new_node =
+                        eliminate_length2_array (tree, index)
+
+                      val _ = node := new_node
+                      val _ = size := pred size
                     }
                 end
             | node_vt_list lst =>
