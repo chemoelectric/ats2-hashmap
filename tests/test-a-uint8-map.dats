@@ -918,6 +918,59 @@ test_delete_from_size2_2 () : void =
     val _ = free map
   }
 
+fn
+test_delete_from_root_1 () : void =
+  {
+    val map = hashmap ()
+    val map = my_map_set (map, cast8 1, 1)
+    val map = my_map_set (map, cast8 2, 2)
+    val map = my_map_set (map, cast8 3, 3)
+    val map = my_map_set (map, cast8 4, 4)
+    val map = my_map_set (map, cast8 5, 5)
+
+    val map = my_map_del (map, cast8 3)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.02.08.39.34.structure",
+           "tests/2021.11.02.08.39.34.structure.reference"))
+
+    val map = my_map_del (map, cast8 1)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.02.09.07.40.structure",
+           "tests/2021.11.02.09.07.40.structure.reference"))
+
+    val map = my_map_del (map, cast8 4)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.02.09.11.02.structure",
+           "tests/2021.11.02.09.11.02.structure.reference"))
+
+    val map = my_map_del (map, cast8 2)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.02.09.17.00.structure",
+           "tests/2021.11.02.09.17.00.structure.reference"))
+
+    val map = my_map_del (map, cast8 5)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.02.09.19.00.structure",
+           "tests/2021.11.02.09.19.00.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -932,4 +985,5 @@ main0 () =
     val _ = test_delete_from_size1_1 ()
     val _ = test_delete_from_size2_1 ()
     val _ = test_delete_from_size2_2 ()
+    val _ = test_delete_from_root_1 ()
   }
