@@ -95,39 +95,48 @@ in
     hashmap_set<hash_t><key_t, value_t> {size} (map, key, value)
 
   fn
+  my_map_del
+          {size  : int}
+          (map   : my_map_vt size,
+           key   : !RD(key_t) >> _) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      my_map_vt new_size =
+    hashmap_del<hash_t><key_t, value_t> {size} (map, key)
+
+  fn
   my_map_get_opt
           {size : int}
-          (map  : !my_map_vt size >> _,
-           key  : !key_t >> _) :
+          (map  : !RD(my_map_vt size) >> _,
+           key  : !RD(key_t) >> _) :
       Option_vt (value_t) =
     hashmap_get_opt<hash_t><key_t, value_t> {size} (map, key)
 
   fn
   my_map_has_key
           {size : int}
-          (map  : !my_map_vt size >> _,
-           key  : !key_t >> _) :
+          (map  : !RD(my_map_vt size) >> _,
+           key  : !RD(key_t) >> _) :
       bool =
     hashmap_has_key<hash_t><key_t, value_t> {size} (map, key)
 
   fn
   my_map_pairs
           {size : int}
-          (map  : !my_map_vt size >> _) :
+          (map  : !RD(my_map_vt size) >> _) :
       list_vt (@(key_t, value_t), size) =
     hashmap_pairs<key_t, value_t> {size} map
 
   fn
   my_map_keys
           {size : int}
-          (map  : !my_map_vt size >> _) :
+          (map  : !RD(my_map_vt size) >> _) :
       list_vt (key_t, size) =
     hashmap_keys<key_t, value_t> {size} map
 
   fn
   my_map_values
           {size : int}
-          (map  : !my_map_vt size >> _) :
+          (map  : !RD(my_map_vt size) >> _) :
       list_vt (value_t, size) =
     hashmap_values<key_t, value_t> {size} map
 
@@ -750,6 +759,165 @@ test_replace_1 () : void =
     val _ = free map
   }
 
+fn
+test_delete_from_nil_1 () : void =
+  {
+    val map = hashmap ()
+    val _ = assertloc (iseqz map)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (iseqz map)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (iseqz map)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (iseqz map)
+    val _ = free map
+  }
+
+fn
+test_delete_from_size1_1 () : void =
+  {
+    val map = hashmap ()
+    val map = my_map_set (map, cast8 123, 321)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 123)
+    val _ = assertloc (iseqz map)
+    val _ = free map
+  }
+
+fn
+test_delete_from_size2_1 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast8 123, 321)
+    val map = my_map_set (map, cast8 234, 432)
+
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+
+    val map = my_map_del (map, cast8 123)
+
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+
+    val map = my_map_del (map, cast8 123)
+    val map = my_map_del (map, cast8 123)
+    val map = my_map_del (map, cast8 123)
+    val map = my_map_del (map, cast8 123)
+    val map = my_map_del (map, cast8 123)
+
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+
+    val map = my_map_del (map, cast8 234)
+    val _ = assertloc (iseqz map)
+
+    val _ = free map
+  }
+
+fn
+test_delete_from_size2_2 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast8 123, 321)
+    val map = my_map_set (map, cast8 234, 432)
+
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 2)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val- ~ Some_vt 432 = my_map_get_opt (map, cast8 234)
+
+    val map = my_map_del (map, cast8 234)
+
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+
+    val map = my_map_del (map, cast8 234)
+    val map = my_map_del (map, cast8 234)
+    val map = my_map_del (map, cast8 234)
+    val map = my_map_del (map, cast8 234)
+    val map = my_map_del (map, cast8 234)
+
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 0)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 1)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+    val map = my_map_del (map, cast8 2)
+    val _ = assertloc (size map = i2sz 1)
+    val- ~ Some_vt 321 = my_map_get_opt (map, cast8 123)
+
+    val map = my_map_del (map, cast8 123)
+    val _ = assertloc (iseqz map)
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -760,4 +928,8 @@ main0 () =
     val _ = test_depth1_1 ()
     val _ = test_fill_1 ()
     val _ = test_replace_1 ()
+    val _ = test_delete_from_nil_1 ()
+    val _ = test_delete_from_size1_1 ()
+    val _ = test_delete_from_size2_1 ()
+    val _ = test_delete_from_size2_2 ()
   }
