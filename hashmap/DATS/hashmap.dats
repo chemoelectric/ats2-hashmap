@@ -176,6 +176,52 @@ extract_key_value (node : node_vt (key_vt, value_vt)) :
   case- node of
   | ~ node_vt_key_value key_value => key_value
 
+
+fn {key_vt, value_vt : vt@ype}
+remove_list_entry
+        {n       : int | 0 <= n} .<n>.
+        (lst     : &list_vt (key_value_vt (key_vt, value_vt), n) >>
+                      list_vt (key_value_vt (key_vt, value_vt), m),
+         removed : &bool? >> bool (m == n - 1),
+         key     : !RD(key_vt) >> _) :
+    #[m : int | 0 <= m; m == n || m == n - 1]
+    void =
+  let
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+
+    fun
+    loop {n       : int | 0 <= n} .<n>.
+         (lst     : &list_vt (kv_t, n) >> list_vt (kv_t, m),
+          removed : &bool? >> bool (m == n - 1),
+          key     : !RD(key_vt) >> _) :
+        #[m : int | 0 <= m; m == n || m == n - 1]
+        void =
+      case+ lst of
+      | @ NIL =>
+        {
+          val _ = removed := false
+          prval _ = fold@ lst
+        }
+      | @ head :: tail =>
+        if hashmap$key_vt_eq<key_vt> (key, head.key) then
+          let
+            val tail = tail
+            val _ = hashmap$key_vt_free (head.key)
+            val _ = hashmap$value_vt_free (head.value)
+            val _ = free@ {kv_t} {0} (lst)
+          in
+            lst := tail;
+            removed := true
+          end
+        else
+          {
+            val _ = loop (tail, removed, key)
+            prval _ = fold@ lst
+          }
+  in
+    loop {n} (lst, removed, key)
+  end
+
 (********************************************************************)
 
 primplement
@@ -476,44 +522,14 @@ set_entry {size  : int | 1 <= size}
             | @ node_vt_list lst =>
               (* Add an entry to, or replace an entry in lst. *)
               {
-                fun
-                remove_entry
-                        {n       : int | 0 <= n} .<n>.
-                        (lst     : &list_vt (kv_t, n) >>
-                                          list_vt (kv_t, m),
-                         removed : &bool? >> bool (m == n - 1),
-                         key     : !key_vt >> _) :
-                    #[m : int | 0 <= m; m == n || m == n - 1]
-                    void =
-                  case+ lst of
-                  | @ NIL =>
-                    {
-                      val _ = removed := false
-                      prval _ = fold@ lst
-                    }
-                  | @ head :: tail =>
-                    if hashmap$key_vt_eq<key_vt> (key, head.key) then
-                      let
-                        val tail = tail
-                        val _ = hashmap$key_vt_free (head.key)
-                        val _ = hashmap$value_vt_free (head.value)
-                        val _ = free@ {kv_t} {0} (lst)
-                      in
-                        lst := tail;
-                        removed := true
-                      end
-                    else
-                      {
-                        val _ = remove_entry (tail, removed, key)
-                        prval _ = fold@ lst
-                      }
-
                 prval _ = lemma_list_vt_param lst
 
                 (* Remove the old entry, if there is one. *)
                 var lst_var : List_vt (kv_t) = lst
                 var removed : bool
-                val _ = remove_entry (lst_var, removed, key)
+                val _ =
+                  remove_list_entry<key_vt, value_vt>
+                    (lst_var, removed, key)
 
                 (* The new key-value pair comes first in the list. *)
                 val _ = lst := @{key = key, value = value} :: lst_var
