@@ -696,22 +696,210 @@ hashmap_set {size} (map, key, value) =
 implement {hash_vt} {key_vt, value_vt}
 hashmap_del {size} (map, key) =
   let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+
+    fn
+    shrink_array
+            {population_map : int}
+            {length         : int}
+            {p_array        : addr}
+            {index          : int | index < length}
+            {mask           : int}
+            (tree           : node_array_vt (key_vt, value_vt,
+                                             population_map,
+                                             length, p_array),
+             index          : size_t index,
+             mask           : population_map_t mask) :
+        [new_population_map : int]
+        [new_length         : int | new_length == length - 1]
+        [p_new_array        : addr]
+        node_array_vt (key_vt, value_vt, new_population_map,
+                       new_length, p_new_array) =
+      let
+        prval _ = lemma_g1uint_param index
+
+        val p_entry = ptr_add<t> (tree.p_array, index)
+
+        val [new_population_map : int] new_population_map =
+          ((tree.population_map) land (lnot mask))
+
+        val [new_popcount : int] @(pf_new_popcount | new_popcount) =
+          popcount_with_proof (new_population_map)
+        prval _ = popcount_param (pf_new_popcount |
+                                  new_population_map)
+
+        (* FIXME: Prove this. *)
+        prval _ = $UN.prop_assert {new_popcount == length - 1} ()
+
+        (* Allocate a new array, one entry smaller than the old
+           array. *)
+        val [p_new_array : addr] @(pf_new_array, pf_new_mfree |
+                                   p_new_array) =
+          array_ptr_alloc<t> (i2sz new_popcount)
+
+        prval @(pf_left, pf_entry, pf_right) =
+          array_v_isolate_entry {t} {p_array} {length} {index}
+                                (tree.array_view)
+        prval @(qf_left, qf_right) =
+          array_v_subdivide2 {t?} {p_new_array}
+                             {index, length - 1 - index}
+                             pf_new_array
+
+        (* Copy the entries that come before the deleted entry. *)
+        val _ = array_move<t> (qf_left, pf_left |
+                               p_new_array, tree.p_array, index)
+
+        (* Free the deleted entry. *)
+        val- ~ node_vt_key_value @{key = k, value = v} = !p_entry
+        val _ = hashmap$key_vt_free<key_vt> k
+        val _ = hashmap$value_vt_free<value_vt> v
+
+        (* Copy the entries that come after the deleted entry. *)
+        val _ = array_move<t> (qf_right, pf_right |
+                               ptr_add<t> (p_new_array, index),
+                               ptr_succ<t> (p_entry),
+                               (i2sz new_popcount) - index)
+
+        prval _ = tree.array_view :=
+          array_v_merge_entry {t?} {p_array} {length} {index}
+                              (pf_left, pf_entry, pf_right)
+        prval _ = pf_new_array :=
+          array_v_join2 {t} {p_new_array}
+                        {index, length - 1 - index}
+                        (qf_left, qf_right)
+
+        (* Free the old array. *)
+        val _ = array_ptr_free (tree.array_view, tree.mfree_view |
+                                tree.p_array)
+      in
+        @{
+          population_map_prop = pf_new_popcount,
+          array_view = pf_new_array,
+          mfree_view = pf_new_mfree |
+          population_map = new_population_map,
+          p_array = p_new_array
+        }
+      end
+
     fn
     del_entry {size  : int | 2 <= size}
-              (size  : size_t size,
-               tree  : node_array_vt (key_vt, value_vt),
+              {bits  : int | bits_source_valid_bits bits}
+              {depth : int}
+              (size  : &size_t size >> size_t new_size,
+               node  : &node_vt (key_vt, value_vt) >> _,
                hash  : &hash_vt >> _,
+               bits  : int bits,
+               depth : uint depth,
                key   : !RD(key_vt) >> _) :
-        [new_size : int | new_size == size || new_size == size - 1]
-        @{
-          size = size_t new_size,
-          tree = node_array_vt (key_vt, value_vt)
-        } =
+        #[new_size : int | new_size == size || new_size == size - 1]
+        void =
+      (* A tail-recursive implementation. *)
       let
-        vtypedef t = node_vt (key_vt, value_vt)
-        vtypedef kv_t = key_value_vt (key_vt, value_vt)
+        val- @ node_vt_array tree = node
+
+        (* Get the statics for "tree", via a bit of trickery. *)
+        prval [population_map : int]
+              [length : int]
+              [p_array : addr]
+              tree_tmp =
+          (tree : [population_map : int]
+                  [length         : int]
+                  [p_array        : addr]
+                  node_array_vt (key_vt, value_vt, population_map,
+                                 length, p_array))
+        prval _ = $effmask_wrt tree := tree_tmp
+
+        val [mask : int] mask = bits_to_population_map (bits)
+        val population_map = (tree.population_map)
+        val array_has_an_entry = isneqz (population_map land mask)
       in
-        @{size = size, tree = tree} // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+        if not array_has_an_entry then
+          (* There is no entry to delete. *)
+          {
+            prval _ = fold@ node
+          }
+        else
+          let
+            val [array_index : int] @(pf_array_index | array_index) =
+              popcount_low_bits_with_proof<population_map_kind>
+                (population_map, i2u bits)
+            prval _ = popcount_low_bits_is_nonnegative pf_array_index
+            prval _ = prop_verify {0 <= array_index} ()
+
+            (* FIXME: Prove this. *)
+            prval _ = $UN.prop_assert {array_index < length} ()
+
+            val p_entry = ptr_add<t> (tree.p_array, array_index)
+            prval @(pf_entry, fpf_restore_array) =
+              array_v_takeout {t} {p_array} {length} {array_index}
+                              (tree.array_view)
+            macdef entry = !p_entry
+          in
+            case+ entry of
+            | node_vt_key_value key_value =>
+              if (not (hashmap$key_vt_eq<key_vt>
+                         (key, key_value.key))) then
+                (* There is no entry to remove. *)
+                {
+                  prval _ = tree.array_view :=
+                    fpf_restore_array pf_entry
+                  prval _ = fold@ node
+                }
+              else
+                let
+                  val [popcount : int] @(pf_popcount | popcount) =
+                    popcount_with_proof population_map
+                  prval _ =
+                    popcount_isfun (tree.population_map_prop,
+                                    pf_popcount)
+                  prval _ = prop_verify {length == popcount} ()
+                  prval _ = popcount_is_nonnegative pf_popcount
+                  val length = i2sz popcount
+                in
+                  if depth = 0U || i2sz 3 <= length then
+                    (* Shrink the array. *)
+                    {
+                      prval _ = tree.array_view :=
+                        fpf_restore_array pf_entry
+  
+                      val new_tree =
+                        shrink_array (tree, i2sz array_index, mask)
+
+                      val _ = tree := new_tree
+                      val _ = size := pred size
+
+                      prval _ = fold@ node
+                    }
+                  else
+                    (* Eliminate the array. *)
+                    {
+                      (* By design, there should be no length-one
+                         arrays, except at depth zero. *)
+                      val _ = assertloc (i2sz 2 <= length)
+
+                      // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+
+                      prval _ = tree.array_view :=
+                        fpf_restore_array pf_entry
+                      prval _ = fold@ node
+                    }
+                end
+            | node_vt_list lst =>
+              {
+               // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                prval _ = tree.array_view :=
+                  fpf_restore_array pf_entry
+                prval _ = fold@ node
+              }
+            | node_vt_array subtree =>
+              {
+               // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
+                prval _ = tree.array_view :=
+                  fpf_restore_array pf_entry
+                prval _ = fold@ node
+              }
+          end
       end
 
     val size = hashmap_size<> (map)
@@ -730,20 +918,27 @@ hashmap_del {size} (map, key) =
       end
     else
       let
-        val @ map_vt_root root = map
-
         var hash : hash_vt
-        val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
-
+        var sz : [sz : int | sz == size || sz == size - 1] size_t sz
+        var node : t
+    
+        val @ map_vt_root root = map
         val @{size = size, tree = tree} = root
-        val _ = root :=
-          del_entry {size} (size, tree, hash, key)
-
-        val () = hashmap$hash_vt_free<hash_vt> (hash)
-
-        prval _ = fold@ map
+        val _ = sz := size
+        val _ = node := node_vt_array tree
+        val _ = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+        val bits = hashmap$bits_source<hash_vt> (hash, 0U)
+        val _ = del_entry {size} (sz, node, hash, bits, 0U, key)
+        val _ = hashmap$hash_vt_free<hash_vt> (hash)
       in
-        map
+        case- node of
+        | ~ node_vt_array tree =>
+          let
+            val _ = root := @{size = sz, tree = tree}
+            prval _ = fold@ map
+          in
+            map
+          end
       end
   end
 
