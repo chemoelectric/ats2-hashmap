@@ -950,6 +950,37 @@ hashmap_get_opt (map, key) =
   | map_vt_nil () => None_vt ()
   | map_vt_root root =>
     let
+      vtypedef t = node_vt (key_vt, value_vt)
+      vtypedef kv_t = key_value_vt (key_vt, value_vt)
+
+      fun
+      search_list {n   : int | 0 <= n} .<n>.
+                  (lst : !list_vt (kv_t, n) >> _,
+                   key : !key_vt >> _) :
+          Option_vt value_vt =
+        case+ lst of
+        | NIL =>
+          (* The key is not in lst. *)
+          None_vt ()
+        | @ key_value :: tail =>
+          if hashmap$key_vt_eq<key_vt> (key, key_value.key) then
+            let
+              val value =
+                hashmap$value_vt_copy<value_vt> (key_value.value)
+              prval _ = fold@ lst
+            in
+              (* A key-value pair was found in lst. *)
+              Some_vt value
+            end
+          else
+            (* Search the tail. *)
+            let
+              val result = search_list (tail, key)
+              prval _ = fold@ lst
+            in
+              result
+            end
+
       fun
       find_entry {population_map : int}
                  {length  : int}
@@ -962,9 +993,6 @@ hashmap_get_opt (map, key) =
                   key     : !RD(key_vt) >> _,
                   depth   : uint depth) : Option_vt (value_vt) =
         let
-          vtypedef t = node_vt (key_vt, value_vt)
-          vtypedef kv_t = key_value_vt (key_vt, value_vt)
-
           val [bits : int] bits =
             hashmap$bits_source<hash_vt> (hash, depth)
         in
@@ -1024,36 +1052,6 @@ hashmap_get_opt (map, key) =
                   | node_vt_list lst =>
                     (* Search for the key in lst. *)
                     let
-                      fun
-                      search_list {n   : int | 0 <= n} .<n>.
-                                  (lst : !list_vt (kv_t, n) >> _,
-                                   key : !key_vt >> _) :
-                          Option_vt value_vt =
-                        case+ lst of
-                        | NIL =>
-                          (* The key is not in lst. *)
-                          None_vt ()
-                        | @ key_value :: tail =>
-                          if hashmap$key_vt_eq<key_vt>
-                              (key, key_value.key) then
-                            let
-                              val value =
-                                hashmap$value_vt_copy<value_vt>
-                                  (key_value.value)
-                              prval _ = fold@ lst
-                            in
-                              (* A key-value pair was found in lst. *)
-                              Some_vt value
-                            end
-                          else
-                            (* Search the tail. *)
-                            let
-                              val result = search_list (tail, key)
-                              prval _ = fold@ lst
-                            in
-                              result
-                            end
-
                       prval _ = lemma_list_vt_param lst
                       val result = search_list (lst, key)
 
@@ -1098,6 +1096,35 @@ hashmap_has_key (map, key) =
   | map_vt_nil () => false
   | map_vt_root root =>
     let
+      vtypedef t = node_vt (key_vt, value_vt)
+      vtypedef kv_t = key_value_vt (key_vt, value_vt)
+
+      fun
+      search_list {n   : int | 0 <= n} .<n>.
+                  (lst : !list_vt (kv_t, n) >> _,
+                   key : !key_vt >> _) :
+          bool =
+        case+ lst of
+        | NIL =>
+          (* The key is not in lst. *)
+          false
+        | @ key_value :: tail =>
+          if (hashmap$key_vt_eq<key_vt> (key, key_value.key)) then
+            let
+              prval _ = fold@ lst
+            in
+              (* A key-value pair was found in lst. *)
+              true
+            end
+          else
+            (* Search the tail. *)
+            let
+              val result = search_list (tail, key)
+              prval _ = fold@ lst
+            in
+              result
+            end
+
       fun
       find_key {population_map : int}
                {length  : int}
@@ -1110,9 +1137,6 @@ hashmap_has_key (map, key) =
                 key     : !RD(key_vt) >> _,
                 depth   : uint depth) : bool =
         let
-          vtypedef t = node_vt (key_vt, value_vt)
-          vtypedef kv_t = key_value_vt (key_vt, value_vt)
-
           val [bits : int] bits =
             hashmap$bits_source<hash_vt> (hash, depth)
         in
@@ -1169,33 +1193,6 @@ hashmap_has_key (map, key) =
                   | node_vt_list lst =>
                     (* Search for the key in lst. *)
                     let
-                      fun
-                      search_list {n   : int | 0 <= n} .<n>.
-                                  (lst : !list_vt (kv_t, n) >> _,
-                                   key : !key_vt >> _) :
-                          bool =
-                        case+ lst of
-                        | NIL =>
-                          (* The key is not in lst. *)
-                          false
-                        | @ key_value :: tail =>
-                          if (hashmap$key_vt_eq<key_vt>
-                                (key, key_value.key)) then
-                            let
-                              prval _ = fold@ lst
-                            in
-                              (* A key-value pair was found in lst. *)
-                              true
-                            end
-                          else
-                            (* Search the tail. *)
-                            let
-                              val result = search_list (tail, key)
-                              prval _ = fold@ lst
-                            in
-                              result
-                            end
-
                       prval _ = lemma_list_vt_param lst
                       val result = search_list (lst, key)
 
