@@ -170,12 +170,23 @@ hashmap_vt (key_vt, value_vt, size) =
 
 (********************************************************************)
 
+extern praxi {key_vt, value_vt : vt@ype}
+get_node_array_vt_statics
+        {population_map : int}
+        {length         : int}
+        {p_array        : addr}
+        (tree : !(node_array_vt (key_vt, value_vt, population_map,
+                                 length, p_array)) >> _) :<prf>
+    [pop_map : int | pop_map == population_map]
+    [len     : int | len == length]
+    [p       : addr | p == p_array]
+    void
+
 fn {key_vt, value_vt : vt@ype}
 extract_key_value (node : node_vt (key_vt, value_vt)) :
     key_value_vt (key_vt, value_vt) =
   case- node of
   | ~ node_vt_key_value key_value => key_value
-
 
 fn {key_vt, value_vt : vt@ype}
 remove_list_entry
@@ -390,17 +401,11 @@ set_entry {size  : int | 1 <= size}
       let
         val- @ node_vt_array tree = node
 
-        (* Get the statics for "tree", via a bit of trickery. *)
         prval [population_map : int]
               [length : int]
               [p_array : addr]
-              tree_tmp =
-          (tree : [population_map : int]
-                  [length         : int]
-                  [p_array        : addr]
-                  node_array_vt (key_vt, value_vt, population_map,
-                                 length, p_array))
-        prval _ = $effmask_wrt tree := tree_tmp
+              () =
+          get_node_array_vt_statics<key_vt, value_vt> tree
 
         val [mask : int] mask = bits_to_population_map (bits)
         val population_map = (tree.population_map)
@@ -884,17 +889,31 @@ hashmap_del {size} (map, key) =
       let
         val- @ node_vt_array tree = node
 
-        (* Get the statics for "tree", via a bit of trickery. *)
-        prval [population_map : int]
-              [length : int]
-              [p_array : addr]
-              tree_tmp =
-          (tree : [population_map : int]
-                  [length         : int]
-                  [p_array        : addr]
-                  node_array_vt (key_vt, value_vt, population_map,
-                                 length, p_array))
-        prval _ = $effmask_wrt tree := tree_tmp
+        #if 0 #then
+
+          (* FIXME: Why does this not work here? *)
+
+          prval [population_map : int]
+                [length : int]
+                [p_array : addr]
+                () =
+            get_node_array_vt_statics<key_vt, value_vt> tree
+
+        #else
+
+          (* Get the statics for "tree" via a bit of trickery. *)
+          prval [population_map : int]
+                [length : int]
+                [p_array : addr]
+                tree_tmp =
+            (tree : [population_map : int]
+                    [length         : int]
+                    [p_array        : addr]
+                    node_array_vt (key_vt, value_vt, population_map,
+                                   length, p_array))
+          prval _ = $effmask_wrt tree := tree_tmp
+
+        #endif  
 
         val [mask : int] mask = bits_to_population_map (bits)
         val population_map = (tree.population_map)
@@ -971,19 +990,12 @@ hashmap_del {size} (map, key) =
                       val index = i2sz array_index
                       val- ~ node_vt_array tree = node
 
-                      (* Get the statics for "tree", via a bit of
-                         trickery. *)
                       prval [population_map : int]
                             [length : int]
                             [p_array : addr]
-                            tree_tmp =
-                        (tree : [population_map : int]
-                                [length         : int]
-                                [p_array        : addr]
-                                node_array_vt (key_vt, value_vt,
-                                               population_map,
-                                               length, p_array))
-                      prval _ = $effmask_wrt tree := tree_tmp
+                            () =
+                        get_node_array_vt_statics<key_vt, value_vt>
+                          tree
 
                       (* FIXME: Prove this. *)
                       prval _ = $UN.prop_assert {length == 2} ()
