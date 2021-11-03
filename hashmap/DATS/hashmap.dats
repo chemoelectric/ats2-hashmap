@@ -130,11 +130,11 @@ node_vt (key_vt   : vt@ype+,
 | node_vt_array (key_vt, value_vt) of
     node_array_vt (key_vt, value_vt)
 where
-node_array_vt (key_vt            : vt@ype+,
-               value_vt          : vt@ype+,
-               population_map    : int,
-               length            : int,
-               p_array           : addr) =
+node_array_vt (key_vt         : vt@ype+,
+               value_vt       : vt@ype+,
+               population_map : int,
+               length         : int,
+               p_array        : addr) =
   @{
     population_map_prop = POPCOUNT (population_map, length),
     array_view = @[node_vt (key_vt, value_vt)][length] @ p_array,
@@ -143,17 +143,17 @@ node_array_vt (key_vt            : vt@ype+,
     p_array = ptr p_array
   }
 and
-node_array_vt (key_vt            : vt@ype+,
-               value_vt          : vt@ype+) =
+node_array_vt (key_vt   : vt@ype+,
+               value_vt : vt@ype+) =
   [population_map : int]
   [length         : int]
   [p              : addr]
   node_array_vt (key_vt, value_vt, population_map, length, p)
 
 datavtype
-map_vt (key_vt            : vt@ype+,
-        value_vt          : vt@ype+,
-        size              : int) =
+map_vt (key_vt   : vt@ype+,
+        value_vt : vt@ype+,
+        size     : int) =
 | map_vt_nil (key_vt, value_vt, 0) of ()
 | {1 <= size}
   map_vt_root (key_vt, value_vt, size) of
@@ -167,6 +167,83 @@ hashmap_vt (key_vt, value_vt, size) =
   map_vt (key_vt, value_vt, size)
 
 #define NODESZ (sizeof (node_vt))
+
+(********************************************************************)
+(* The following data structure is used in hashmap_del. *)
+
+vtypedef
+node_path_array_vt (key_vt         : vt@ype+,
+                    value_vt       : vt@ype+,
+                    population_map : int,
+                    length         : int,
+                    p_array        : addr,
+                    index          : int) =
+  [index < length]
+  @{
+    population_map_prop = POPCOUNT (population_map, length),
+    left_view = @[node_vt (key_vt, value_vt)][index] @ p_array,
+    entry_view =
+      node_vt (key_vt, value_vt)?!
+          @ (p_array + index * sizeof (node_vt (key_vt, value_vt))),
+    right_view =
+      @[node_vt (key_vt, value_vt)][length - 1 - index]
+          @ (p_array + index * sizeof (node_vt (key_vt, value_vt))
+                + sizeof (node_vt (key_vt, value_vt))),
+    mfree_view = mfree_gc_v p_array |
+    population_map = population_map_t population_map,
+    p_array = ptr p_array,
+    index = size_t index
+  }
+vtypedef
+node_path_array_vt (key_vt         : vt@ype+,
+                    value_vt       : vt@ype+) =
+  [population_map : int]
+  [length         : int]
+  [p_array        : addr]
+  [index          : int]
+  node_path_array_vt (key_vt, value_vt, population_map, length,
+                      p_array, index)
+
+datavtype
+node_path_vt (key_vt   : vt@ype+,
+              value_vt : vt@ype+,
+              length   : int) =
+| node_path_vt_nil (key_vt, value_vt, 0) of ()
+| {n : int | 0 <= n}
+  node_path_vt_path_array (key_vt, value_vt, n + 1) of
+    @(node_path_vt (key_vt, value_vt, n),
+      node_path_array_vt (key_vt, value_vt))
+| {n : int | 0 <= n}
+  node_path_vt_array (key_vt, value_vt, n + 1) of
+    @(node_path_vt (key_vt, value_vt, n),
+      node_array_vt (key_vt, value_vt))
+| {n : int | 0 <= n}
+  node_path_vt_key_value (key_vt, value_vt, n + 1) of
+    @(node_path_vt (key_vt, value_vt, n),
+      key_value_vt (key_vt, value_vt))
+| {n : int | 0 <= n}
+  node_path_vt_list (key_vt, value_vt, n + 1) of
+    @(node_path_vt (key_vt, value_vt, n),
+      List_vt (key_value_vt (key_vt, value_vt)))
+vtypedef
+node_path_vt (key_vt   : vt@ype+,
+              value_vt : vt@ype+) =
+  [length : int]
+  node_path_vt (key_vt, value_vt, length)
+
+prfn
+lemma_node_path_vt_param
+        {key_vt, value_vt : vt@ype}
+        {length : int}
+        (path   : !RD(node_path_vt (key_vt, value_vt,
+                                    length)) >> _) :<>
+    [0 <= length] void =
+  case+ path of
+  | node_path_vt_nil _ => ()
+  | node_path_vt_path_array _ => ()
+  | node_path_vt_array _ => ()
+  | node_path_vt_key_value _ => ()
+  | node_path_vt_list _ => ()
 
 (********************************************************************)
 
@@ -713,6 +790,282 @@ hashmap_set {size} (map, key, value) =
     end
 
 (********************************************************************)
+
+fn {hash_vt : vt@ype}
+   {key_vt, value_vt : vt@ype}
+tree_to_node_path
+        (tree : node_array_vt (key_vt, value_vt),
+         key  : !RD(key_vt) >> _) :
+    [length : int]
+    node_path_vt (key_vt, value_vt, length) =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef kv_t = key_value_vt (key_vt, value_vt)
+    vtypedef np_t = node_path_vt (key_vt, value_vt)
+
+    fun
+    build_path {population_map : int}
+               {length  : int}
+               {p_array : addr}
+               {depth   : int}
+               (hash    : &hash_vt >> _,
+                tree    : node_array_vt (key_vt, value_vt,
+                                         population_map,
+                                         length, p_array),
+                depth   : uint depth,
+                path    : np_t) : np_t =
+      let
+        prval _ = lemma_node_path_vt_param path
+
+        val [bits : int] bits =
+          hashmap$bits_source<hash_vt> (hash, depth)
+      in
+        if bits = BITS_SOURCE_EXHAUSTED then
+          (* There are no more hash bits. *)
+          let
+            (* Push the array. *)
+            val path = node_path_vt_array @(path, tree)
+          in
+            path
+          end
+        else
+          let
+            val @{
+                  population_map_prop = pf_population_map,
+                  array_view = pf_array,
+                  mfree_view = pf_mfree |
+                  population_map = population_map,
+                  p_array = p_array
+                } = tree
+            prval _ = prop_verify {bits_source_valid_bits bits} ()
+            val mask = bits_to_population_map bits
+            val array_has_an_entry =
+              isneqz (population_map land mask)
+          in
+            if array_has_an_entry then
+              let
+                val [array_index : int]
+                    @(pf_array_index | array_index) =
+                  popcount_low_bits_with_proof<population_map_kind>
+                    (population_map, i2u bits)
+                prval _ =
+                  popcount_low_bits_is_nonnegative pf_array_index
+
+                (* FIXME: Prove this. *)
+                prval _ = $UN.prop_assert {array_index < length} ()
+
+                val p_entry = ptr_add<t> (p_array, array_index)
+                prval @(pf_left, pf_entry, pf_right) =
+                  array_v_isolate_entry
+                    {t} {..} {length} {array_index}
+                    pf_array
+              in
+                case+ !p_entry of
+                | ~ node_vt_key_value key_value =>
+                  (* A key-value pair was found. It may or may
+                     not match the argument key; at this point,
+                     we do not care which. It is merely the
+                     bits path that concerns us. *)
+                  let
+                    (* Push the array. *)
+                    val path_array =
+                      @{
+                        population_map_prop = pf_population_map,
+                        left_view = pf_left,
+                        entry_view = pf_entry,
+                        right_view = pf_right,
+                        mfree_view = pf_mfree |
+                        population_map = population_map,
+                        p_array = p_array,
+                        index = i2sz array_index
+                      }
+                    val path =
+                      node_path_vt_path_array @(path, path_array)
+
+                    (* Push the key-value pair. *)
+                    val path =
+                      node_path_vt_key_value @(path, key_value)
+                  in
+                    path
+                  end
+                | ~ node_vt_list lst =>
+                  (* A key-value list was found. It may or may
+                     not match contain a match to the argument
+                     key; at this point, we do not care which.
+                     It is merely the bits path that concerns
+                     us. *)
+                  let
+                    (* Push the array. *)
+                    val path_array =
+                      @{
+                        population_map_prop = pf_population_map,
+                        left_view = pf_left,
+                        entry_view = pf_entry,
+                        right_view = pf_right,
+                        mfree_view = pf_mfree |
+                        population_map = population_map,
+                        p_array = p_array,
+                        index = i2sz array_index
+                      }
+                    val path =
+                      node_path_vt_path_array @(path, path_array)
+
+                    (* Push the key-value list. *)
+                    val path = node_path_vt_list @(path, lst)
+                  in
+                    path
+                  end
+                | ~ node_vt_array subtree =>
+                  (* Build the path in a subtree. *)
+                  let
+                    (* Push the array. *)
+                    val path_array =
+                      @{
+                        population_map_prop = pf_population_map,
+                        left_view = pf_left,
+                        entry_view = pf_entry,
+                        right_view = pf_right,
+                        mfree_view = pf_mfree |
+                        population_map = population_map,
+                        p_array = p_array,
+                        index = i2sz array_index
+                      }
+                    val path =
+                      node_path_vt_path_array @(path, path_array)
+
+                    (* Loop into the subtree. *)
+                    val path =
+                      build_path (hash, subtree, succ depth, path)
+                  in
+                    path
+                  end
+              end
+            else
+              (* There is no entry matching the hash bits. *)
+              let
+                (* Push the array. *)
+                val tree =
+                  @{
+                    population_map_prop = pf_population_map,
+                    array_view = pf_array,
+                    mfree_view = pf_mfree |
+                    population_map = population_map,
+                    p_array = p_array
+                  }
+                val path = node_path_vt_array @(path, tree)
+              in
+                path
+              end
+          end
+      end
+
+    var hash : hash_vt
+    val () = hashmap$hash_function<hash_vt><key_vt> (key, hash)
+    val path = build_path (hash, tree, 0U, node_path_vt_nil ())
+    val () = hashmap$hash_vt_free<hash_vt> (hash)
+  in
+    path
+  end
+
+fn {hash_vt : vt@ype}
+   {key_vt, value_vt : vt@ype}
+node_path_to_tree
+        {length : int}
+        (path   : node_path_vt (key_vt, value_vt, length)) :
+    node_array_vt (key_vt, value_vt) =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+    vtypedef na_t = node_array_vt (key_vt, value_vt)
+    vtypedef np_t = node_path_vt (key_vt, value_vt)
+    vtypedef npa_t = node_path_array_vt (key_vt, value_vt)
+
+    fnx
+    build_tree (path : np_t) : na_t =
+      case- path of
+      | ~ node_path_vt_array @(node_path_vt_nil (), tree) =>
+        tree
+      | ~ node_path_vt_array
+            @(node_path_vt_path_array @(path, array),
+              tree) =>
+        fill_slot (path, array, node_vt_array tree)
+      | ~ node_path_vt_list
+            @(node_path_vt_path_array @(path, array),
+              lst) =>
+        fill_slot (path, array, node_vt_list lst)
+      | ~ node_path_vt_key_value
+            @(node_path_vt_path_array @(path, array),
+              key_value) =>
+        fill_slot (path, array, node_vt_key_value key_value)
+    and
+    fill_slot (path  : np_t,
+               array : npa_t,
+               node  : t) : na_t =
+      let
+        val @{
+              population_map_prop = pf_population_map,
+              left_view = pf_left,
+              entry_view = pf_entry,
+              right_view = pf_right,
+              mfree_view = pf_mfree |
+              population_map = population_map,
+              p_array = p_array,
+              index = index
+            } = array
+        prval _ = lemma_g1uint_param index
+        val p_entry = ptr_add<t> (p_array, index)
+        val _ = ptr_set<t> (pf_entry | p_entry, node)
+        prval pf_array =
+          array_v_merge_entry (pf_left, pf_entry, pf_right)
+        val tree =
+          @{
+            population_map_prop = pf_population_map,
+            array_view = pf_array,
+            mfree_view = pf_mfree |
+            population_map = population_map,
+            p_array = p_array
+          }
+      in
+        continue_building_tree (path, tree)
+      end
+    and
+    continue_building_tree (path : np_t,
+                            tree : na_t) : na_t =
+      case- path of
+      | ~ node_path_vt_nil () => tree
+      | ~ node_path_vt_path_array @(path, array) =>
+        let
+          val @{
+                population_map_prop = pf_population_map,
+                left_view = pf_left,
+                entry_view = pf_entry,
+                right_view = pf_right,
+                mfree_view = pf_mfree |
+                population_map = population_map,
+                p_array = p_array,
+                index = index
+              } = array
+          prval _ = lemma_g1uint_param index
+          val p_entry = ptr_add<t> (p_array, index)
+          val node = node_vt_array tree
+          val _ = ptr_set<t> (pf_entry | p_entry, node)
+          prval pf_array =
+            array_v_merge_entry (pf_left, pf_entry, pf_right)
+          val tree =
+            @{
+              population_map_prop = pf_population_map,
+              array_view = pf_array,
+              mfree_view = pf_mfree |
+              population_map = population_map,
+              p_array = p_array
+            }
+        in
+          continue_building_tree (path, tree)
+        end
+  in
+    build_tree (path)
+  end
+
+
 
 implement {hash_vt} {key_vt, value_vt}
 hashmap_del {size} (map, key) =
