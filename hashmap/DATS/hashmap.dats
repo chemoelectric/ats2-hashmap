@@ -1094,7 +1094,8 @@ node_path_to_tree
             (* There is one entry in the map. It needs to be
                put in a length-1 array. *)
             let
-              (* FIXME: Avoid having to rehash the key here. *)
+              (* FIXME: Perhaps avoid having to rehash the key here.
+                        Or perhaps this is not a significant issue. *)
               val @{key = k, value = v} = key_value
               var hash : hash_vt
               val _ = hashmap$hash_function<hash_vt><key_vt> (k, hash)
