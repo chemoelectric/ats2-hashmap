@@ -83,8 +83,8 @@ array_v_merge_entry
         {n        : int}
         {i        : int | 0 <= i; i < n}
         (pf_left  : @[t][i] @ p,
-        pf_entry : t @ (p + (i * sizeof (t))),
-        pf_right : @[t][n - 1 - i]
+         pf_entry : t @ (p + (i * sizeof (t))),
+         pf_right : @[t][n - 1 - i]
                       @ (p + (i * sizeof (t)) + sizeof (t))) :<prf>
     @[t][n] @ p             
 
