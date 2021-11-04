@@ -971,6 +971,84 @@ test_delete_from_root_1 () : void =
     val _ = free map
   }
 
+fn
+test_delete_depth1_1 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast8 0x3F, 1)
+    val map = my_map_set (map, cast8 0x7F, 2)
+    val map = my_map_set (map, cast8 0xBF, 3)
+    val map = my_map_set (map, cast8 0xFF, 4)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.03.51.structure",
+           "tests/2021.11.04.12.03.51.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x7F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.09.50.structure",
+           "tests/2021.11.04.12.09.50.structure.reference"))
+
+    val map = my_map_del (map, cast8 0)
+    val map = my_map_del (map, cast8 2)
+    val map = my_map_del (map, cast8 3)
+    val map = my_map_del (map, cast8 4)
+    val map = my_map_del (map, cast8 5)
+    val map = my_map_del (map, cast8 6)
+    val map = my_map_del (map, cast8 7)
+    val map = my_map_del (map, cast8 0x7F)
+    val map = my_map_del (map, cast8 0x7F)
+    val map = my_map_del (map, cast8 0x7F)
+    val map = my_map_del (map, cast8 0x7F)
+    val map = my_map_del (map, cast8 0x7F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.12.30.structure",
+           "tests/2021.11.04.12.12.30.structure.reference"))
+
+    val _ =
+      assertloc
+        ($extfcall
+          (int, "system",
+           "cmp -s tests/2021.11.04.12.09.50.structure tests/2021.11.04.12.12.30.structure")
+              = 0)
+
+    val map = my_map_del (map, cast8 0xFF)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.17.00.structure",
+           "tests/2021.11.04.12.17.00.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x3F)
+
+    (* The map should be shortened to depth 0. *)
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.21.07.structure",
+           "tests/2021.11.04.12.21.07.structure.reference"))
+
+    val map = my_map_del (map, cast8 0xBF)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.24.49.structure",
+           "tests/2021.11.04.12.24.49.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
@@ -986,4 +1064,5 @@ main0 () =
     val _ = test_delete_from_size2_1 ()
     val _ = test_delete_from_size2_2 ()
     val _ = test_delete_from_root_1 ()
+    val _ = test_delete_depth1_1 ()
   }
