@@ -96,6 +96,15 @@ in
     hashmap_set<hash_t><key_t, value_t> {size} (map, key, value)
 
   fn
+  my_map_del
+        {size : int}
+        (map  : my_map_vt size,
+         key  : !RD(key_t) >> _) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      my_map_vt new_size =
+    hashmap_del<hash_t><key_t, value_t> {size} (map, key)
+
+  fn
   my_map_get_opt
           {size : int}
           (map  : !my_map_vt size >> _,
@@ -393,9 +402,71 @@ test_replace_1 () : void =
     val _ = free map
   }
 
+fn
+test_delete_1 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast8 0x0F, 0)
+    val map = my_map_set (map, cast8 0x1F, 1)
+    val map = my_map_set (map, cast8 0x2F, 2)
+    val map = my_map_set (map, cast8 0x3F, 3)
+    val map = my_map_set (map, cast8 0x4F, 4)
+    val map = my_map_set (map, cast8 0x5F, 5)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.49.55.structure",
+           "tests/2021.11.04.12.49.55.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x3F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.52.24.structure",
+           "tests/2021.11.04.12.52.24.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x5F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.56.31.structure",
+           "tests/2021.11.04.12.56.31.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x0F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.12.58.34.structure",
+           "tests/2021.11.04.12.58.34.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x2F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.13.01.28.structure",
+           "tests/2021.11.04.13.01.28.structure.reference"))
+
+    val map = my_map_del (map, cast8 0x4F)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.04.13.03.31.structure",
+           "tests/2021.11.04.13.03.31.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
     val _ = test_fill_1 ()
     val _ = test_replace_1 ()
+    val _ = test_delete_1 ()
   }

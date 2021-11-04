@@ -14808,6 +14808,18 @@ ac_config_files="$ac_config_files tests/2021.11.04.12.21.07.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.11.04.12.24.49.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.11.04.12.49.55.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.04.12.52.24.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.04.12.56.31.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.04.12.58.34.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.04.13.01.28.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.04.13.03.31.structure.reference"
+
 
  if test "x${with_ats2_spookyhash}" != xno; then
   WITH_ATS2_SPOOKYHASH_TRUE=
@@ -15901,6 +15913,12 @@ do
     "tests/2021.11.04.12.17.00.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.17.00.structure.reference" ;;
     "tests/2021.11.04.12.21.07.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.21.07.structure.reference" ;;
     "tests/2021.11.04.12.24.49.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.24.49.structure.reference" ;;
+    "tests/2021.11.04.12.49.55.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.49.55.structure.reference" ;;
+    "tests/2021.11.04.12.52.24.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.52.24.structure.reference" ;;
+    "tests/2021.11.04.12.56.31.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.56.31.structure.reference" ;;
+    "tests/2021.11.04.12.58.34.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.12.58.34.structure.reference" ;;
+    "tests/2021.11.04.13.01.28.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.13.01.28.structure.reference" ;;
+    "tests/2021.11.04.13.03.31.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.13.03.31.structure.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

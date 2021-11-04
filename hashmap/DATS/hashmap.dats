@@ -262,21 +262,6 @@ get_node_array_vt_statics
     [p       : addr | p == p_array]
     void
 
-fn {vt : vt@ype}
-list_vt_is_length1
-        {length : int}
-        (lst    : !RD(list_vt (vt, length)) >> _) :<>
-    [b : bool | b == (length == 1)]
-    bool b =
-  case+ lst of
-  | NIL => false
-  | _ :: tail =>
-    begin
-      case+ tail of
-      | NIL => true
-      | _ :: _ => false
-    end
-
 fn {key_vt, value_vt : vt@ype}
 extract_key_value (node : node_vt (key_vt, value_vt)) :
     key_value_vt (key_vt, value_vt) =
@@ -1289,16 +1274,6 @@ node_path_del
         in
           shorten_path (node_path_vt_key_value (path, key_value))
         end
-      | ~ node_path_vt_list (path, lst)
-            when list_vt_is_length1 lst =>
-        (* A key-value list of length 1. Convert it to
-           a key-value pair. *)
-        let
-          val+ ~ (key_value :: tail) = lst
-          val+ ~ NIL = tail
-        in
-          shorten_path (node_path_vt_key_value (path, key_value))
-        end
       | other => shorten_path (other)
 
     fn
@@ -1332,10 +1307,28 @@ node_path_del
           val lst = lst_var
         in
           if removed then
-            @{
-              path = trim_path (node_path_vt_list (path1, lst)),
-              entry_removed = true
-            }
+            begin
+              case+ lst of
+              | _ :: NIL =>
+                (* The new list has length 1. Convert it to an
+                   "unlisted" key-value pair. *)
+                let
+                  val- ~ key_value :: tail = lst
+                  val- ~ NIL = tail
+                in
+                  @{
+                    path =
+                      trim_path
+                        (node_path_vt_key_value (path1, key_value)),
+                    entry_removed = true
+                  }
+                end
+              | _ =>
+                @{
+                  path = trim_path (node_path_vt_list (path1, lst)),
+                  entry_removed = true
+                }
+            end
           else
             @{
               path = node_path_vt_list (path1, lst),
