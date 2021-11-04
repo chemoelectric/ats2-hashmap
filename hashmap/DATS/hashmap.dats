@@ -214,20 +214,20 @@ node_path_vt (key_vt   : vt@ype+,
 | node_path_vt_nil (key_vt, value_vt, 0) of ()
 | {n : int | 0 <= n}
   node_path_vt_path_array (key_vt, value_vt, n + 1) of
-    @(node_path_vt (key_vt, value_vt, n),
-      node_path_array_vt (key_vt, value_vt))
+    (node_path_vt (key_vt, value_vt, n),
+     node_path_array_vt (key_vt, value_vt))
 | {n : int | 0 <= n}
   node_path_vt_array (key_vt, value_vt, n + 1) of
-    @(node_path_vt (key_vt, value_vt, n),
-      node_array_vt (key_vt, value_vt))
+    (node_path_vt (key_vt, value_vt, n),
+     node_array_vt (key_vt, value_vt))
 | {n : int | 0 <= n}
   node_path_vt_key_value (key_vt, value_vt, n + 1) of
-    @(node_path_vt (key_vt, value_vt, n),
-      key_value_vt (key_vt, value_vt))
+    (node_path_vt (key_vt, value_vt, n),
+     key_value_vt (key_vt, value_vt))
 | {n : int | 0 <= n}
   node_path_vt_list (key_vt, value_vt, n + 1) of
-    @(node_path_vt (key_vt, value_vt, n),
-      List_vt (key_value_vt (key_vt, value_vt)))
+    (node_path_vt (key_vt, value_vt, n),
+     List_vt (key_value_vt (key_vt, value_vt)))
 vtypedef
 node_path_vt (key_vt   : vt@ype+,
               value_vt : vt@ype+) =
@@ -842,7 +842,7 @@ tree_to_node_path
           (* There are no more hash bits. *)
           let
             (* Push the array. *)
-            val path = node_path_vt_array @(path, tree)
+            val path = node_path_vt_array (path, tree)
           in
             path
           end
@@ -899,11 +899,11 @@ tree_to_node_path
                         index = i2sz array_index
                       }
                     val path =
-                      node_path_vt_path_array @(path, path_array)
+                      node_path_vt_path_array (path, path_array)
 
                     (* Push the key-value pair. *)
                     val path =
-                      node_path_vt_key_value @(path, key_value)
+                      node_path_vt_key_value (path, key_value)
                   in
                     path
                   end
@@ -928,10 +928,10 @@ tree_to_node_path
                         index = i2sz array_index
                       }
                     val path =
-                      node_path_vt_path_array @(path, path_array)
+                      node_path_vt_path_array (path, path_array)
 
                     (* Push the key-value list. *)
-                    val path = node_path_vt_list @(path, lst)
+                    val path = node_path_vt_list (path, lst)
                   in
                     path
                   end
@@ -952,7 +952,7 @@ tree_to_node_path
                         index = i2sz array_index
                       }
                     val path =
-                      node_path_vt_path_array @(path, path_array)
+                      node_path_vt_path_array (path, path_array)
 
                     (* Loop into the subtree. *)
                     val path =
@@ -973,7 +973,7 @@ tree_to_node_path
                     population_map = population_map,
                     p_array = p_array
                   }
-                val path = node_path_vt_array @(path, tree)
+                val path = node_path_vt_array (path, tree)
               in
                 path
               end
@@ -988,7 +988,8 @@ tree_to_node_path
     path
   end
 
-fn {key_vt, value_vt : vt@ype}
+fn {hash_vt : vt@ype}
+   {key_vt, value_vt : vt@ype}
 node_path_to_tree
         {length : int}
         (path   : node_path_vt (key_vt, value_vt, length)) :
@@ -1004,7 +1005,7 @@ node_path_to_tree
                             tree : na_t) : na_t =
       case- path of
       | ~ node_path_vt_nil () => tree
-      | ~ node_path_vt_path_array @(path, array) =>
+      | ~ node_path_vt_path_array (path, array) =>
         let
           val @{
                 population_map_prop = pf_population_map,
@@ -1071,20 +1072,38 @@ node_path_to_tree
     fn
     build_tree (path : np_t) : na_t =
       case- path of
-      | ~ node_path_vt_array @(node_path_vt_nil (), tree) =>
-        tree
-      | ~ node_path_vt_array
-            @(node_path_vt_path_array @(path, array),
-              tree) =>
-        fill_slot (path, array, node_vt_array tree)
-      | ~ node_path_vt_list
-            @(node_path_vt_path_array @(path, array),
-              lst) =>
-        fill_slot (path, array, node_vt_list lst)
-      | ~ node_path_vt_key_value
-            @(node_path_vt_path_array @(path, array),
-              key_value) =>
-        fill_slot (path, array, node_vt_key_value key_value)
+      | ~ node_path_vt_array (path1, tree) =>
+        begin
+          case- path1 of
+          | ~ node_path_vt_nil () => tree
+          | ~ node_path_vt_path_array (path2, array) =>
+            fill_slot (path2, array, node_vt_array tree)
+        end
+      | ~ node_path_vt_list (path1, lst) =>
+        begin
+          case- path1 of
+          | ~ node_path_vt_path_array (path2, array) =>
+            fill_slot (path2, array, node_vt_list lst)
+        end
+      | ~ node_path_vt_key_value (path1, key_value) =>
+        begin
+          case- path1 of
+          | ~ node_path_vt_path_array (path2, array) =>
+            fill_slot (path2, array, node_vt_key_value key_value)
+          | ~ node_path_vt_nil () =>
+            (* There is one entry in the map. It needs to be
+               put in a length-1 array. *)
+            let
+              (* FIXME: Avoid having to rehash the key here. *)
+              val @{key = k, value = v} = key_value
+              var hash : hash_vt
+              val _ = hashmap$hash_function<hash_vt><key_vt> (k, hash)
+              val bits = hashmap$bits_source<hash_vt> (hash, 0U)
+              val _ = hashmap$hash_vt_free<hash_vt> (hash)
+            in
+              make_new_length1_node_array (bits, k, v)
+            end
+        end
   in
     build_tree (path)
   end
@@ -1191,15 +1210,19 @@ node_path_del
     fun
     shorten_path (path : np_t) : np_t =
       case+ path of
-      | ~ node_path_vt_key_value
-            @(node_path_vt_path_array
-                @(node_path_vt_path_array @(path, array2),
-                  array1),
-              key_value)
-            when popcount (array1.population_map) = 1 =>
+      | node_path_vt_key_value
+          (node_path_vt_path_array
+            (node_path_vt_path_array (_, _),
+             array1),
+           _)
+          when popcount (array1.population_map) = 1 =>
         (* There is a length-1 array where one will not
            be needed. Shorten the path. *)
         let
+          val- ~ node_path_vt_key_value (path1, key_value) = path
+          val- ~ node_path_vt_path_array (path2, array1) = path1
+          val- ~ node_path_vt_path_array (path3, array2) = path2
+
           val [population_map : int]
               [length         : int]
               [p_array        : addr]
@@ -1231,15 +1254,15 @@ node_path_del
         in
           shorten_path
             (node_path_vt_key_value
-              @(node_path_vt_path_array @(path, array2),
-                key_value))
+              (node_path_vt_path_array (path3, array2),
+               key_value))
         end
       | other => other
 
     fun
     trim_path (path : np_t) : np_t =
       case+ path of
-      | ~ node_path_vt_array @(path, tree)
+      | ~ node_path_vt_array (path, tree)
             when popcount (tree.population_map) = 1 =>
         (* A node_array_vt of length 1. Convert it to
            a key-value pair. *)
@@ -1265,9 +1288,9 @@ node_path_del
           prval pf_array = array_v_cons (pf_entry, pf_nil)
           val _ = array_ptr_free (pf_array, pf_mfree | p_array)
         in
-          shorten_path (node_path_vt_key_value @(path, key_value))
+          shorten_path (node_path_vt_key_value (path, key_value))
         end
-      | ~ node_path_vt_list @(path, lst)
+      | ~ node_path_vt_list (path, lst)
             when list_vt_is_length1 lst =>
         (* A key-value list of length 1. Convert it to
            a key-value pair. *)
@@ -1275,7 +1298,7 @@ node_path_del
           val+ ~ (key_value :: tail) = lst
           val+ ~ NIL = tail
         in
-          shorten_path (node_path_vt_key_value @(path, key_value))
+          shorten_path (node_path_vt_key_value (path, key_value))
         end
       | other => shorten_path (other)
 
@@ -1287,21 +1310,21 @@ node_path_del
           entry_removed = bool
         } =
       case+ path of
-      | ~ node_path_vt_key_value
-            @(node_path_vt_path_array @(path, array), key_value)
+      | ~ node_path_vt_key_value (path1, key_value)
             when hashmap$key_vt_eq<key_vt> (key, key_value.key) =>
         let
+          val- ~ node_path_vt_path_array (path2, array) = path1
           val @{key = k, value = v} = key_value
           val _ = hashmap$key_vt_free<key_vt> k
           val _ = hashmap$value_vt_free<value_vt> v
           val tree = shrink_array (array)
         in
           @{
-            path = trim_path (node_path_vt_array @(path, tree)),
+            path = trim_path (node_path_vt_array (path2, tree)),
             entry_removed = true
           }
         end
-      | ~ node_path_vt_list @(path, lst) =>
+      | ~ node_path_vt_list (path1, lst) =>
         let
           prval _ = lemma_list_vt_param lst
           var lst_var : List_vt (kv_t) = lst
@@ -1311,12 +1334,12 @@ node_path_del
         in
           if removed then
             @{
-              path = trim_path (node_path_vt_list @(path, lst)),
-              entry_removed = removed
+              path = trim_path (node_path_vt_list (path1, lst)),
+              entry_removed = true
             }
           else
             @{
-              path = node_path_vt_list @(path, lst),
+              path = node_path_vt_list (path1, lst),
               entry_removed = false
             }
         end
@@ -1356,7 +1379,7 @@ hashmap_del {size} (map, key) =
           val @{path = path, entry_removed = entry_removed} =
             node_path_del<key_vt, value_vt> (path, key)
           val _ = root.tree :=
-            node_path_to_tree<key_vt, value_vt> (path)
+            node_path_to_tree<hash_vt><key_vt, value_vt> (path)
         in
           if entry_removed then
             let
@@ -1373,358 +1396,6 @@ hashmap_del {size} (map, key) =
             end
         end
   end
-
-(*
-implement {hash_vt} {key_vt, value_vt}
-hashmap_del {size} (map, key) =
-  let
-    vtypedef t = node_vt (key_vt, value_vt)
-    vtypedef kv_t = key_value_vt (key_vt, value_vt)
-
-    fn
-    shrink_array
-            {population_map : int}
-            {length         : int}
-            {p_array        : addr}
-            {index          : int | index < length}
-            {mask           : int}
-            (tree           : node_array_vt (key_vt, value_vt,
-                                             population_map,
-                                             length, p_array),
-             index          : size_t index,
-             mask           : population_map_t mask) :
-        [new_population_map : int]
-        [new_length         : int | new_length == length - 1]
-        [p_new_array        : addr]
-        node_array_vt (key_vt, value_vt, new_population_map,
-                       new_length, p_new_array) =
-      let
-        prval _ = lemma_g1uint_param index
-
-        val p_entry = ptr_add<t> (tree.p_array, index)
-
-        val [new_population_map : int] new_population_map =
-          ((tree.population_map) land (lnot mask))
-
-        val [new_popcount : int] @(pf_new_popcount | new_popcount) =
-          popcount_with_proof (new_population_map)
-        prval _ = popcount_param (pf_new_popcount |
-                                  new_population_map)
-
-        (* FIXME: Prove this. *)
-        prval _ = $UN.prop_assert {new_popcount == length - 1} ()
-
-        (* Allocate a new array, one entry smaller than the old
-           array. *)
-        val [p_new_array : addr] @(pf_new_array, pf_new_mfree |
-                                   p_new_array) =
-          array_ptr_alloc<t> (i2sz new_popcount)
-
-        prval @(pf_left, pf_entry, pf_right) =
-          array_v_isolate_entry {t} {p_array} {length} {index}
-                                (tree.array_view)
-        prval @(qf_left, qf_right) =
-          array_v_subdivide2 {t?} {p_new_array}
-                             {index, length - 1 - index}
-                             pf_new_array
-
-        (* Copy the entries that come before the deleted entry. *)
-        val _ = array_move<t> (qf_left, pf_left |
-                               p_new_array, tree.p_array, index)
-
-        (* Free the deleted entry. *)
-        val- ~ node_vt_key_value @{key = k, value = v} = !p_entry
-        val _ = hashmap$key_vt_free<key_vt> k
-        val _ = hashmap$value_vt_free<value_vt> v
-
-        (* Copy the entries that come after the deleted entry. *)
-        val _ = array_move<t> (qf_right, pf_right |
-                               ptr_add<t> (p_new_array, index),
-                               ptr_succ<t> (p_entry),
-                               (i2sz new_popcount) - index)
-
-        prval _ = tree.array_view :=
-          array_v_merge_entry {t?} {p_array} {length} {index}
-                              (pf_left, pf_entry, pf_right)
-        prval _ = pf_new_array :=
-          array_v_join2 {t} {p_new_array}
-                        {index, length - 1 - index}
-                        (qf_left, qf_right)
-
-        (* Free the old array. *)
-        val _ = array_ptr_free (tree.array_view, tree.mfree_view |
-                                tree.p_array)
-      in
-        @{
-          population_map_prop = pf_new_popcount,
-          array_view = pf_new_array,
-          mfree_view = pf_new_mfree |
-          population_map = new_population_map,
-          p_array = p_new_array
-        }
-      end
-
-    fn
-    eliminate_length2_array
-            {population_map : int}
-            {p_array        : addr}
-            {index          : int | index <= 1}
-            {mask           : int}
-            (tree           : node_array_vt (key_vt, value_vt,
-                                             population_map,
-                                             2, p_array),
-             index          : size_t index) : t =
-      (* Return the entry that is *not* the index’th.
-         Also free the array. *)
-      let
-        prval _ = lemma_g1uint_param index
-        prval _ = prop_verify {index == 0 || index == 1} ()
-
-        val @{
-              population_map_prop = pf_population_map,
-              array_view = pf_array,
-              mfree_view = pf_mfree |
-              population_map = population_map,
-              p_array = p_array
-            } = tree
-
-        prval @(pf_left, pf_right) =
-          array_v_subdivide2 {t} {p_array} {1, 1} pf_array
-        prval @(pf_entry0, pf_nil0) = array_v_uncons pf_left
-        prval @(pf_entry1, pf_nil1) = array_v_uncons pf_right
-        prval pf_nil0 = array_v_unnil_nil pf_nil0
-        prval pf_nil1 = array_v_unnil_nil pf_nil1
-      in
-        if index = i2sz 0 then
-          let
-            val- ~ node_vt_key_value @{key = k, value = v} =
-              ptr_get<t> (pf_entry0 | p_array)
-            val _ = hashmap$key_vt_free<key_vt> k
-            val _ = hashmap$value_vt_free<value_vt> v
-
-            val retval =
-              ptr_get<t> (pf_entry1 | ptr_succ<t> (p_array))
-
-            prval pf_left = array_v_cons (pf_entry0, pf_nil0)
-            prval pf_right = array_v_cons (pf_entry1, pf_nil1)
-            prval pf_array =
-              array_v_join2 {t?} {p_array} {1, 1} (pf_left, pf_right)
-
-            val _ = array_ptr_free (pf_array, pf_mfree | p_array)
-          in
-            retval
-          end
-        else
-          let
-            val- ~ node_vt_key_value @{key = k, value = v} =
-              ptr_get<t> (pf_entry1 | ptr_succ<t> p_array)
-            val _ = hashmap$key_vt_free<key_vt> k
-            val _ = hashmap$value_vt_free<value_vt> v
-
-            val retval = ptr_get<t> (pf_entry0 | p_array)
-
-            prval pf_left = array_v_cons (pf_entry0, pf_nil0)
-            prval pf_right = array_v_cons (pf_entry1, pf_nil1)
-            prval pf_array =
-              array_v_join2 {t?} {p_array} {1, 1} (pf_left, pf_right)
-
-            val _ = array_ptr_free (pf_array, pf_mfree | p_array)
-          in
-            retval
-          end
-      end
-
-    fn
-    del_entry {size  : int | 2 <= size}
-              {bits  : int | bits_source_valid_bits bits}
-              {depth : int}
-              (size  : &size_t size >> size_t new_size,
-               node  : &node_vt (key_vt, value_vt) >> _,
-               hash  : &hash_vt >> _,
-               bits  : int bits,
-               depth : uint depth,
-               key   : !RD(key_vt) >> _) :
-        #[new_size : int | new_size == size || new_size == size - 1]
-        void =
-      (* A tail-recursive implementation. *)
-      let
-        val- @ node_vt_array tree = node
-
-        #if 0 #then
-
-          (* FIXME: Why does this not work here? *)
-
-          prval [population_map : int]
-                [length : int]
-                [p_array : addr]
-                () =
-            get_node_array_vt_statics<key_vt, value_vt> tree
-
-        #else
-
-          (* Get the statics for "tree" via a bit of trickery. *)
-          prval [population_map : int]
-                [length : int]
-                [p_array : addr]
-                tree_tmp =
-            (tree : [population_map : int]
-                    [length         : int]
-                    [p_array        : addr]
-                    node_array_vt (key_vt, value_vt, population_map,
-                                   length, p_array))
-          prval _ = $effmask_wrt tree := tree_tmp
-
-        #endif  
-
-        val [mask : int] mask = bits_to_population_map (bits)
-        val population_map = (tree.population_map)
-        val array_has_an_entry = isneqz (population_map land mask)
-      in
-        if not array_has_an_entry then
-          (* There is no entry to delete. *)
-          {
-            prval _ = fold@ node
-          }
-        else
-          let
-            val [array_index : int] @(pf_array_index | array_index) =
-              popcount_low_bits_with_proof<population_map_kind>
-                (population_map, i2u bits)
-            prval _ = popcount_low_bits_is_nonnegative pf_array_index
-            prval _ = prop_verify {0 <= array_index} ()
-
-            (* FIXME: Prove this. *)
-            prval _ = $UN.prop_assert {array_index < length} ()
-
-            val p_entry = ptr_add<t> (tree.p_array, array_index)
-            prval @(pf_entry, fpf_restore_array) =
-              array_v_takeout {t} {p_array} {length} {array_index}
-                              (tree.array_view)
-            macdef entry = !p_entry
-          in
-            case+ entry of
-            | node_vt_key_value key_value =>
-              if (not (hashmap$key_vt_eq<key_vt>
-                         (key, key_value.key))) then
-                (* There is no entry to remove. *)
-                {
-                  prval _ = tree.array_view :=
-                    fpf_restore_array pf_entry
-                  prval _ = fold@ node
-                }
-              else
-                let
-                  val [popcount : int] @(pf_popcount | popcount) =
-                    popcount_with_proof population_map
-                  prval _ =
-                    popcount_isfun (tree.population_map_prop,
-                                    pf_popcount)
-                  prval _ = prop_verify {length == popcount} ()
-                  prval _ = popcount_is_nonnegative pf_popcount
-                  val length = i2sz popcount
-                in
-                  if depth = 0U || i2sz 3 <= length then
-                    (* Shrink the array. *)
-                    {
-                      prval _ = tree.array_view :=
-                        fpf_restore_array pf_entry
-  
-                      val new_tree =
-                        shrink_array (tree, i2sz array_index, mask)
-
-                      val _ = tree := new_tree
-                      val _ = size := pred size
-
-                      prval _ = fold@ node
-                    }
-                  else
-                    (* Eliminate the array. *)
-                    {
-                      (* By design, there should be no length-one
-                         arrays, except at depth zero. *)
-                      val _ = assertloc (length = i2sz 2)
-
-                      prval _ = tree.array_view :=
-                        fpf_restore_array pf_entry
-                      prval _ = fold@ node
-
-                      val index = i2sz array_index
-                      val- ~ node_vt_array tree = node
-
-                      prval [population_map : int]
-                            [length : int]
-                            [p_array : addr]
-                            () =
-                        get_node_array_vt_statics<key_vt, value_vt>
-                          tree
-
-                      (* FIXME: Prove this. *)
-                      prval _ = $UN.prop_assert {length == 2} ()
-
-                      val new_node =
-                        eliminate_length2_array (tree, index)
-
-                      val _ = node := new_node
-                      val _ = size := pred size
-                    }
-                end
-            | node_vt_list lst =>
-              {
-               // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                prval _ = tree.array_view :=
-                  fpf_restore_array pf_entry
-                prval _ = fold@ node
-              }
-            | node_vt_array subtree =>
-              {
-               // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME // FIXME
-                prval _ = tree.array_view :=
-                  fpf_restore_array pf_entry
-                prval _ = fold@ node
-              }
-          end
-      end
-
-    val size = hashmap_size<> (map)
-  in
-    if size = i2sz 0 then
-      map
-    else if size = i2sz 1 then
-      begin
-        if hashmap_has_key<hash_vt><key_vt, value_vt> (map, key) then
-          begin
-            hashmap_free<key_vt, value_vt> map;
-            map_vt_nil ()
-          end
-        else
-          map
-      end
-    else
-      let
-        var hash : hash_vt
-        var sz : [sz : int | sz == size || sz == size - 1] size_t sz
-        var node : t
-    
-        val @ map_vt_root root = map
-        val @{size = size, tree = tree} = root
-        val _ = sz := size
-        val _ = node := node_vt_array tree
-        val _ = hashmap$hash_function<hash_vt><key_vt> (key, hash)
-        val bits = hashmap$bits_source<hash_vt> (hash, 0U)
-        val _ = del_entry {size} (sz, node, hash, bits, 0U, key)
-        val _ = hashmap$hash_vt_free<hash_vt> (hash)
-      in
-        case- node of
-        | ~ node_vt_array tree =>
-          let
-            val _ = root := @{size = sz, tree = tree}
-            prval _ = fold@ map
-          in
-            map
-          end
-      end
-  end
-*)
 
 (********************************************************************)
 
