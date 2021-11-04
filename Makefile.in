@@ -151,7 +151,8 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-population_map$(EXEEXT) \
 	tests/test-a-uint8-map$(EXEEXT) \
 	tests/test-separate-chaining-1$(EXEEXT) \
-	tests/test-separate-chaining-2$(EXEEXT) $(am__EXEEXT_1)
+	tests/test-separate-chaining-2$(EXEEXT) \
+	tests/test-separate-chaining-3$(EXEEXT) $(am__EXEEXT_1)
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_6 = tests/test-strnptr2strnptr-spookyhash-map
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -215,7 +216,13 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.11.04.12.56.31.structure.reference \
 	tests/2021.11.04.12.58.34.structure.reference \
 	tests/2021.11.04.13.01.28.structure.reference \
-	tests/2021.11.04.13.03.31.structure.reference
+	tests/2021.11.04.13.03.31.structure.reference \
+	tests/2021.11.04.15.37.36.structure.reference \
+	tests/2021.11.04.15.42.11.structure.reference \
+	tests/2021.11.04.15.45.14.structure.reference \
+	tests/2021.11.04.15.47.40.structure.reference \
+	tests/2021.11.04.15.49.22.structure.reference \
+	tests/2021.11.04.15.51.36.structure.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -418,6 +425,10 @@ am_tests_test_separate_chaining_2_OBJECTS = tests/test_separate_chaining_2-test-
 tests_test_separate_chaining_2_OBJECTS =  \
 	$(am_tests_test_separate_chaining_2_OBJECTS)
 tests_test_separate_chaining_2_DEPENDENCIES = $(lib_LTLIBRARIES)
+am_tests_test_separate_chaining_3_OBJECTS = tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT)
+tests_test_separate_chaining_3_OBJECTS =  \
+	$(am_tests_test_separate_chaining_3_OBJECTS)
+tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
 am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST =  \
 	tests/test-strnptr2strnptr-spookyhash-map_dats.c
 @WITH_ATS2_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
@@ -504,6 +515,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po \
+	tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po \
 	tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -538,6 +550,7 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_population_map_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
+	$(tests_test_separate_chaining_3_SOURCES) \
 	$(tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
 DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
 	$(list_ats_dependencies_SOURCES) \
@@ -553,6 +566,7 @@ DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
 	$(tests_test_population_map_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
+	$(tests_test_separate_chaining_3_SOURCES) \
 	$(am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -813,6 +827,12 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.04.12.58.34.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.04.13.01.28.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.04.13.03.31.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.37.36.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.42.11.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.45.14.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.47.40.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.49.22.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.51.36.structure.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -1033,7 +1053,13 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.04.12.56.31.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.04.12.58.34.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.04.13.01.28.structure.reference.in \
-	$(top_srcdir)/tests/2021.11.04.13.03.31.structure.reference.in
+	$(top_srcdir)/tests/2021.11.04.13.03.31.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.37.36.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.42.11.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.45.14.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.47.40.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.49.22.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.04.15.51.36.structure.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
@@ -1052,6 +1078,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-population_map.dats tests/test-a-uint8-map.dats \
 	tests/test-separate-chaining-1.dats \
 	tests/test-separate-chaining-2.dats \
+	tests/test-separate-chaining-3.dats \
 	tests/test-strnptr2strnptr-spookyhash-map.dats \
 	list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
@@ -1099,6 +1126,8 @@ CLEANFILES = hashmap/SATS/array-proofs_sats.c \
 	tests/test-separate-chaining-1_dats.c \
 	tests/test-separate-chaining-2 \
 	tests/test-separate-chaining-2_dats.c \
+	tests/test-separate-chaining-3 \
+	tests/test-separate-chaining-3_dats.c \
 	tests/test-strnptr2strnptr-spookyhash-map \
 	tests/test-strnptr2strnptr-spookyhash-map_dats.c \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
@@ -1267,6 +1296,10 @@ tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
 tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
+tests_test_separate_chaining_3_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES) \
+	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 @WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
 @WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_LDADD =  \
@@ -1410,6 +1443,18 @@ tests/2021.11.04.12.58.34.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.11.04.13.01.28.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.13.01.28.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.11.04.13.03.31.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.13.03.31.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.37.36.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.37.36.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.42.11.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.42.11.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.45.14.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.45.14.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.47.40.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.47.40.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.49.22.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.49.22.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.04.15.51.36.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.04.15.51.36.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -1739,6 +1784,12 @@ tests/test_separate_chaining_2-test-separate-chaining-2_dats.$(OBJEXT):  \
 tests/test-separate-chaining-2$(EXEEXT): $(tests_test_separate_chaining_2_OBJECTS) $(tests_test_separate_chaining_2_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_2_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-separate-chaining-2$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_2_OBJECTS) $(tests_test_separate_chaining_2_LDADD) $(LIBS)
+tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-separate-chaining-3$(EXEEXT): $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_3_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-separate-chaining-3$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_LDADD) $(LIBS)
 tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT):  \
 	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -1821,6 +1872,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -1908,6 +1960,20 @@ tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj: tests/test-sep
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-2_dats.c' object='tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_2_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_2-test-separate-chaining-2_dats.obj `if test -f 'tests/test-separate-chaining-2_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-2_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-2_dats.c'; fi`
+
+tests/test_separate_chaining_3-test-separate-chaining-3_dats.o: tests/test-separate-chaining-3_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_3-test-separate-chaining-3_dats.o -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Tpo -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.o `test -f 'tests/test-separate-chaining-3_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-3_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-3_dats.c' object='tests/test_separate_chaining_3-test-separate-chaining-3_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.o `test -f 'tests/test-separate-chaining-3_dats.c' || echo '$(srcdir)/'`tests/test-separate-chaining-3_dats.c
+
+tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj: tests/test-separate-chaining-3_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Tpo -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj `if test -f 'tests/test-separate-chaining-3_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-3_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-3_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Tpo tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-3_dats.c' object='tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj `if test -f 'tests/test-separate-chaining-3_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-3_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-3_dats.c'; fi`
 
 tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o: tests/test-strnptr2strnptr-spookyhash-map_dats.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Tpo -c -o tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o `test -f 'tests/test-strnptr2strnptr-spookyhash-map_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-spookyhash-map_dats.c
@@ -2288,6 +2354,13 @@ tests/test-separate-chaining-2.log: tests/test-separate-chaining-2$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-separate-chaining-3.log: tests/test-separate-chaining-3$(EXEEXT)
+	@p='tests/test-separate-chaining-3$(EXEEXT)'; \
+	b='tests/test-separate-chaining-3'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 tests/test-strnptr2strnptr-spookyhash-map.log: tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)
 	@p='tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)'; \
 	b='tests/test-strnptr2strnptr-spookyhash-map'; \
@@ -2613,6 +2686,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -2727,6 +2801,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test_a_uint8_map-test-a-uint8-map_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
+	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

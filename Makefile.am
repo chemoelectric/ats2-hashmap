@@ -428,6 +428,15 @@ EXTRA_DIST += tests/test-separate-chaining-2.dats
 CLEANFILES += tests/test-separate-chaining-2
 CLEANFILES += tests/test-separate-chaining-2_dats.c
 
+check_PROGRAMS += tests/test-separate-chaining-3
+tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
+tests_test_separate_chaining_3_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
+tests_test_separate_chaining_3_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+EXTRA_DIST += tests/test-separate-chaining-3.dats
+CLEANFILES += tests/test-separate-chaining-3
+CLEANFILES += tests/test-separate-chaining-3_dats.c
+
 if WITH_ATS2_SPOOKYHASH
 check_PROGRAMS += tests/test-strnptr2strnptr-spookyhash-map
 tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
