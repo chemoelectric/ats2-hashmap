@@ -281,13 +281,10 @@ node_path_vt_is_nil
         {length : int}
         (path   : !RD(node_path_vt (key_vt, value_vt,
                                     length)) >> _) :<>
-    bool (length == 0) =
+    bool =
   case+ path of
   | node_path_vt_nil _ => true
-  | node_path_vt_path_array _ => false
-  | node_path_vt_array _ => false
-  | node_path_vt_key_value _ => false
-  | node_path_vt_list _ => false
+  | _ => false
 
 (********************************************************************)
 
