@@ -1400,22 +1400,22 @@ node_path_del
             (* Convert the one remaining entry to a bare
                key-value pair. *)
             let
-              val [population_map : int]
-                  [length         : int]
-                  [p_array        : addr]
-                  [mask           : int]
-                  [index          : int]
-                  @{
-                    population_map_prop = pf_population_map,
-                    left_view = pf_left,
-                    entry_view = pf_entry,
-                    right_view = pf_right,
-                    mfree_view = pf_mfree |
-                    population_map = population_map,
-                    p_array = p_array,
-                    mask = mask,
-                    index = index
-                  } = (array : npa_t)
+              prval [population_map : int]
+                    [length         : int]
+                    [p_array        : addr]
+                    [mask           : int]
+                    [index          : int]
+                    @{
+                      population_map_prop = pf_population_map,
+                      left_view = pf_left,
+                      entry_view = pf_entry,
+                      right_view = pf_right,
+                      mfree_view = pf_mfree |
+                      population_map = population_map,
+                      p_array = p_array,
+                      mask = mask,
+                      index = index
+                    } = (array : npa_t)
               prval _ = array :=
                 @{
                     population_map_prop = pf_population_map,
