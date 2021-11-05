@@ -250,7 +250,7 @@ lemma_node_path_vt_param
         {key_vt, value_vt : vt@ype}
         {length : int}
         (path   : !RD(node_path_vt (key_vt, value_vt,
-                                    length)) >> _) :<>
+                                    length)) >> _) :<prf>
     [0 <= length] void =
   case+ path of
   | node_path_vt_nil _ => ()
@@ -258,6 +258,20 @@ lemma_node_path_vt_param
   | node_path_vt_array _ => ()
   | node_path_vt_key_value _ => ()
   | node_path_vt_list _ => ()
+
+fn {}
+node_path_vt_is_nil
+        {key_vt, value_vt : vt@ype}
+        {length : int}
+        (path   : !RD(node_path_vt (key_vt, value_vt,
+                                    length)) >> _) :<>
+    bool (length == 0) =
+  case+ path of
+  | node_path_vt_nil _ => true
+  | node_path_vt_path_array _ => false
+  | node_path_vt_array _ => false
+  | node_path_vt_key_value _ => false
+  | node_path_vt_list _ => false
 
 (********************************************************************)
 
@@ -876,10 +890,10 @@ tree_to_node_path
               in
                 case+ !p_entry of
                 | ~ node_vt_key_value key_value =>
-                  (* A key-value pair was found. It may or may
-                     not match the argument key; at this point,
-                     we do not care which. It is merely the
-                     bits path that concerns us. *)
+                  (* A key-value pair was found, at depth greater
+                     than zero. It may or may not match the argument
+                     key; at this point, we do not care which.
+                     It is merely the bits path that concerns us. *)
                   let
                     (* Push the array. *)
                     val path_array =
@@ -1086,18 +1100,6 @@ node_path_to_tree
           case- path1 of
           | ~ node_path_vt_path_array (path2, array) =>
             fill_slot (path2, array, node_vt_key_value key_value)
-          | ~ node_path_vt_nil () =>
-            (* There is one entry in the map. It needs to be
-               put in a length-1 array. *)
-            let
-              val @{key = k, value = v} = key_value
-              var hash : hash_vt
-              val _ = hashmap$hash_function<hash_vt><key_vt> (k, hash)
-              val bits = hashmap$bits_source<hash_vt> (hash, 0U)
-              val _ = hashmap$hash_vt_free<hash_vt> (hash)
-            in
-              make_new_length1_node_array (bits, k, v)
-            end
         end
   in
     build_tree (path)
@@ -1373,7 +1375,12 @@ node_path_del
           val _ = hashmap$value_vt_free<value_vt> v
           val old_popcount = popcount (array.population_map)
         in
-          if old_popcount = 2 then
+          (* Is the node array of length 2 and is it not at
+             depth 0? If so, then, after one of the entries is
+             deleted, it will need to be converted to a bare
+             key-value pair. *)
+          if (old_popcount = 2
+                 && not (node_path_vt_is_nil<> path2)) then
             (* Convert the one remaining entry to a bare
                key-value pair. *)
             let
@@ -1419,7 +1426,8 @@ node_path_del
               }
             end
           else
-            (* Shrink the array by one entry. *)
+            (* Either the node array has a length greater than 2,
+               or it is at depth 0. Shrink the array by one entry. *)
             let
               val tree = shrink_array (array, old_popcount)
             in
