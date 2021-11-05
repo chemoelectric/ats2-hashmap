@@ -285,9 +285,161 @@ test_delete_2 () : void =
     val _ = free map
   }
 
+fn
+test_delete_3 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast64 0x100FFFULL, 0)
+    val map = my_map_set (map, cast64 0x20FFFFULL, 1)
+    val map = my_map_set (map, cast64 0x200FFFULL, 2)
+    val map = my_map_set (map, cast64 0x10FFFFULL, 3)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 4)
+    val- ~ Some_vt 0 = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ Some_vt 1 = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.08.58.41.structure",
+           "tests/2021.11.05.08.58.41.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x100FFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 3)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ Some_vt 1 = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.01.02.structure",
+           "tests/2021.11.05.09.01.02.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x10FFFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 2)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ Some_vt 1 = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.06.12.structure",
+           "tests/2021.11.05.09.06.12.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x20FFFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 1)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.12.56.structure",
+           "tests/2021.11.05.09.12.56.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x200FFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 0)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ = free map
+  }
+
+fn
+test_delete_4 () : void =
+  {
+    val map = hashmap ()
+
+    val map = my_map_set (map, cast64 0x100FFFULL, 0)
+    val map = my_map_set (map, cast64 0x20FFFFULL, 1)
+    val map = my_map_set (map, cast64 0x200FFFULL, 2)
+    val map = my_map_set (map, cast64 0x10FFFFULL, 3)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 4)
+    val- ~ Some_vt 0 = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ Some_vt 1 = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.19.39.structure",
+           "tests/2021.11.05.09.19.39.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x100FFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 3)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ Some_vt 1 = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.19.40.structure",
+           "tests/2021.11.05.09.19.40.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x20FFFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 2)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ Some_vt 2 = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.19.41.structure",
+           "tests/2021.11.05.09.19.41.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x200FFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 1)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ Some_vt 3 = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.05.09.19.42.structure",
+           "tests/2021.11.05.09.19.42.structure.reference"))
+
+    val map = my_map_del (map, cast64 0x10FFFFULL)
+
+    val _ = assertloc (hashmap_size (map) = i2sz 0)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x100FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x20FFFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x200FFFULL)
+    val- ~ None_vt () = my_map_get_opt (map, cast64 0x10FFFFULL)
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
     val _ = test_delete_1 ()
     val _ = test_delete_2 ()
+    val _ = test_delete_3 ()
+    val _ = test_delete_4 ()
   }

@@ -14832,6 +14832,22 @@ ac_config_files="$ac_config_files tests/2021.11.04.15.49.22.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.11.04.15.51.36.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.11.05.08.58.41.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.01.02.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.06.12.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.12.56.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.19.39.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.19.40.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.19.41.structure.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.05.09.19.42.structure.reference"
+
 
  if test "x${with_ats2_spookyhash}" != xno; then
   WITH_ATS2_SPOOKYHASH_TRUE=
@@ -15937,6 +15953,14 @@ do
     "tests/2021.11.04.15.47.40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.15.47.40.structure.reference" ;;
     "tests/2021.11.04.15.49.22.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.15.49.22.structure.reference" ;;
     "tests/2021.11.04.15.51.36.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.04.15.51.36.structure.reference" ;;
+    "tests/2021.11.05.08.58.41.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.08.58.41.structure.reference" ;;
+    "tests/2021.11.05.09.01.02.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.01.02.structure.reference" ;;
+    "tests/2021.11.05.09.06.12.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.06.12.structure.reference" ;;
+    "tests/2021.11.05.09.12.56.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.12.56.structure.reference" ;;
+    "tests/2021.11.05.09.19.39.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.19.39.structure.reference" ;;
+    "tests/2021.11.05.09.19.40.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.19.40.structure.reference" ;;
+    "tests/2021.11.05.09.19.41.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.19.41.structure.reference" ;;
+    "tests/2021.11.05.09.19.42.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.05.09.19.42.structure.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -78,3 +78,12 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.04.15.45.14.structure.
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.04.15.47.40.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.04.15.49.22.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.04.15.51.36.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.08.58.41.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.01.02.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.06.12.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.12.56.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.19.39.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.19.40.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.19.41.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.05.09.19.42.structure.reference.in
+
