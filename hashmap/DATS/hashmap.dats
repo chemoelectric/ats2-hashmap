@@ -218,24 +218,40 @@ node_path_array_vt (key_vt         : vt@ype+,
   node_path_array_vt (key_vt, value_vt, population_map, length,
                       p_array, mask, index)
 
+(* node_path_vt is a kind of linked list. It holds the
+   same structural information as a node_vt, but in reverse
+   order; it also includes information about the path through
+   the structure that is implied by a hash value. *)
 datavtype
 node_path_vt (key_vt   : vt@ype+,
               value_vt : vt@ype+,
               length   : int) =
-| node_path_vt_nil (key_vt, value_vt, 0) of ()
-| {n : int | 0 <= n}
+| (* node_path_vt_nil (): the nil path list. *)
+  node_path_vt_nil (key_vt, value_vt, 0) of ()
+| (* node_path_vt_path_array (tail, node-path-array):
+     a non-head list entry representing the two sides of
+     an array surrounding the entry that is part of the
+     hash-bits path. *)
+  {n : int | 0 <= n}
   node_path_vt_path_array (key_vt, value_vt, n + 1) of
     (node_path_vt (key_vt, value_vt, n),
      node_path_array_vt (key_vt, value_vt))
-| {n : int | 0 <= n}
+| (* node_path_vt_array (tail, node-array):
+     a head entry representing a node array. *)
+  {n : int | 0 <= n}
   node_path_vt_array (key_vt, value_vt, n + 1) of
     (node_path_vt (key_vt, value_vt, n),
      node_array_vt (key_vt, value_vt))
-| {n : int | 0 <= n}
+| (* node_path_vt_key_value (tail, key-value):
+     a head entry representing a key-value pair. *)
+  {n : int | 0 <= n}
   node_path_vt_key_value (key_vt, value_vt, n + 1) of
     (node_path_vt (key_vt, value_vt, n),
      key_value_vt (key_vt, value_vt))
-| {n : int | 0 <= n}
+| (* node_path_vt_list (tail, list):
+     a head entry representing a list of key-value pairs
+     for separate chaining. *)
+  {n : int | 0 <= n}
   node_path_vt_list (key_vt, value_vt, n + 1) of
     (node_path_vt (key_vt, value_vt, n),
      List_vt (key_value_vt (key_vt, value_vt)))
