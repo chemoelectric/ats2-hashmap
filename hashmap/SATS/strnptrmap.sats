@@ -20,7 +20,7 @@ along with this program. If not, see
 
 (********************************************************************)
 (*                                                                  *)
-(* String maps by means of hashmap and ats2-spookyhash              *)
+(* String maps by means of hashmap                                  *)
 (*                                                                  *)
 (********************************************************************)
 

@@ -316,16 +316,17 @@ nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
+libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap_sats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
+CLEANFILES += hashmap/SATS/strnptrmap_sats.c
+EXTRA_DIST += hashmap/SATS/strnptrmap.sats
+
 if WITH_ATS2_SPOOKYHASH
-libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap-spookyhash_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap-spookyhash.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-spookyhash.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-spookyhash.hats
 endif WITH_ATS2_SPOOKYHASH
-CLEANFILES += hashmap/SATS/strnptrmap-spookyhash_sats.c
 CLEANFILES += hashmap/DATS/strnptrmap-spookyhash_dats.c
-EXTRA_DIST += hashmap/SATS/strnptrmap-spookyhash.sats
 EXTRA_DIST += hashmap/DATS/strnptrmap-spookyhash.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-spookyhash.hats
 

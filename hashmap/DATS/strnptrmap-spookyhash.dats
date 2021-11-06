@@ -18,6 +18,12 @@ along with this program. If not, see
 
 *)
 
+(********************************************************************)
+(*                                                                  *)
+(* String maps by means of hashmap and ats2-spookyhash              *)
+(*                                                                  *)
+(********************************************************************)
+
 #define ATS_PACKNAME "ats2-hashmap"
 #define ATS_EXTERN_PREFIX "ats2_hashmap_"
 
@@ -28,7 +34,7 @@ along with this program. If not, see
 
 staload UN = "prelude/SATS/unsafe.sats"
 
-staload "hashmap/SATS/strnptrmap-spookyhash.sats"
+staload "hashmap/SATS/strnptrmap.sats"
 
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"

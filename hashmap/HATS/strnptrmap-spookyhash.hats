@@ -20,5 +20,5 @@ along with this program. If not, see
 
 #include "hashmap/HATS/hashmap.hats"
 
-staload "hashmap/SATS/strnptrmap-spookyhash.sats"
+staload "hashmap/SATS/strnptrmap.sats"
 staload _ = "hashmap/DATS/strnptrmap-spookyhash.dats"

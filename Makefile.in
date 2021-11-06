@@ -135,10 +135,8 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_1 = $(ATS2_SPOOKYHASH_CFLAGS)
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_2 = $(ATS2_SPOOKYHASH_PATSOPTFLAGS)
 @WITH_ATS2_SPOOKYHASH_TRUE@am__append_3 = $(ATS2_SPOOKYHASH_LIBS)
-@WITH_ATS2_SPOOKYHASH_TRUE@am__append_4 = hashmap/SATS/strnptrmap-spookyhash_sats.c \
-@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash_dats.c
-@WITH_ATS2_SPOOKYHASH_TRUE@am__append_5 = hashmap/SATS/strnptrmap-spookyhash.sats \
-@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash.dats \
+@WITH_ATS2_SPOOKYHASH_TRUE@am__append_4 = hashmap/DATS/strnptrmap-spookyhash_dats.c
+@WITH_ATS2_SPOOKYHASH_TRUE@am__append_5 = hashmap/DATS/strnptrmap-spookyhash.dats \
 @WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/HATS/strnptrmap-spookyhash.hats
 check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint16$(EXEEXT) \
@@ -314,12 +312,10 @@ am__libats2_hashmap_la_SOURCES_DIST =  \
 	hashmap/DATS/bits_source_32bytes_implementation_dats.c \
 	hashmap/SATS/population_map_sats.c \
 	hashmap/DATS/population_map_dats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c \
-	hashmap/SATS/strnptrmap-spookyhash_sats.c \
+	hashmap/DATS/hashmap_dats.c hashmap/SATS/strnptrmap_sats.c \
 	hashmap/DATS/strnptrmap-spookyhash_dats.c
 am__dirstamp = $(am__leading_dot)dirstamp
-@WITH_ATS2_SPOOKYHASH_TRUE@am__objects_1 = hashmap/SATS/strnptrmap-spookyhash_sats.lo \
-@WITH_ATS2_SPOOKYHASH_TRUE@	hashmap/DATS/strnptrmap-spookyhash_dats.lo
+@WITH_ATS2_SPOOKYHASH_TRUE@am__objects_1 = hashmap/DATS/strnptrmap-spookyhash_dats.lo
 am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/DATS/array-proofs_dats.lo hashmap/SATS/memory_sats.lo \
 	hashmap/DATS/memory_dats.lo \
@@ -367,7 +363,7 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/SATS/population_map_sats.lo \
 	hashmap/DATS/population_map_dats.lo \
 	hashmap/SATS/hashmap_sats.lo hashmap/DATS/hashmap_dats.lo \
-	$(am__objects_1)
+	hashmap/SATS/strnptrmap_sats.lo $(am__objects_1)
 libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -510,7 +506,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/memory_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/population_map_sats.Plo \
-	hashmap/SATS/$(DEPDIR)/strnptrmap-spookyhash_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo \
 	tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_1byte_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po \
@@ -1088,7 +1084,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
 	hashmap/DATS/bits_source_nbytes.dats \
-	hashmap/SATS/strnptrmap-spookyhash.sats \
+	hashmap/SATS/strnptrmap.sats \
 	hashmap/DATS/strnptrmap-spookyhash.dats \
 	hashmap/HATS/strnptrmap-spookyhash.hats \
 	tests/test-bits_source_uint8.dats \
@@ -1125,8 +1121,7 @@ CLEANFILES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/bits_source_nbytes_dats.c \
 	hashmap/SATS/population_map_sats.c \
 	hashmap/DATS/population_map_dats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c \
-	hashmap/SATS/strnptrmap-spookyhash_sats.c \
+	hashmap/DATS/hashmap_dats.c hashmap/SATS/strnptrmap_sats.c \
 	hashmap/DATS/strnptrmap-spookyhash_dats.c \
 	tests/test-bits_source_uint8 \
 	tests/test-bits_source_uint8_dats.c \
@@ -1216,7 +1211,8 @@ nobase_dist_pkginclude_HEADERS = hashmap/SATS/bits_source.sats \
 nobase_nodist_pkginclude_HEADERS = hashmap/SATS/array-proofs.sats \
 	hashmap/DATS/array-proofs.dats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/memory.cats \
-	hashmap/SATS/bits_source-parameters.sats $(am__append_5)
+	hashmap/SATS/bits_source-parameters.sats \
+	hashmap/SATS/strnptrmap.sats $(am__append_5)
 nodist_pkgconfig_DATA = 
 
 #---------------------------------------------------------------------
@@ -1287,7 +1283,8 @@ libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/bits_source_32bytes_implementation_dats.c \
 	hashmap/SATS/population_map_sats.c \
 	hashmap/DATS/population_map_dats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c $(am__append_4)
+	hashmap/DATS/hashmap_dats.c hashmap/SATS/strnptrmap_sats.c \
+	$(am__append_4)
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS) $(am__append_3)
 tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
@@ -1733,8 +1730,7 @@ hashmap/SATS/hashmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/hashmap_dats.lo: hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
-hashmap/SATS/strnptrmap-spookyhash_sats.lo:  \
-	hashmap/SATS/$(am__dirstamp) \
+hashmap/SATS/strnptrmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/strnptrmap-spookyhash_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
@@ -1899,7 +1895,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/memory_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/population_map_sats.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrmap-spookyhash_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_1byte_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po@am__quote@ # am--include-marker
@@ -2713,7 +2709,7 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap-spookyhash_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
@@ -2828,7 +2824,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
-	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap-spookyhash_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
