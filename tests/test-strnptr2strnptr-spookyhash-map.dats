@@ -917,12 +917,10 @@ test3 () : void =
           prval _ = lemma_g1uint_param i
           val i_key = key_arr[i]
           val s_key = size2strnptr i_key
-          val map =
-            diminish_map (s2s_map_del (map, s_key), key_arr,
-                          succ i, pred n)
+          val map = s2s_map_del (map, s_key)
           val _ = strnptr_free s_key
         in
-          map
+          diminish_map (map, key_arr, succ i, pred n)
         end
 
     val map = strnptrmap ()
@@ -1061,12 +1059,10 @@ test4 () : void =
           prval _ = lemma_g1uint_param i
           val i_key = key_arr[i]
           val s_key = size2strnptr i_key
-          val map =
-            diminish_map (s2s_map_del (map, s_key), key_arr,
-                          succ i, pred n)
+          val map = s2s_map_del (map, s_key)
           val _ = strnptr_free s_key
         in
-          map
+          diminish_map (map, key_arr, succ i, pred n)
         end
 
     val map = strnptrmap ()
