@@ -873,8 +873,6 @@ test2 () : void =
 fn
 test3 () : void =
   {
-    val _ = reset_rand_seed ()
-
     #define BIGNESS 1000
 
     var numbers_in_order : @[size_t][BIGNESS]
@@ -905,16 +903,6 @@ test3 () : void =
                     key_arr, value_arr, succ i)
         end
 
-    val map = strnptrmap ()
-    val map = fill_map (map, numbers_in_order,
-                        numbers_in_order, i2sz 0)
-
-    val _ =
-      assertloc
-        (compare_structure
-          (map, "tests/2021.11.06.15.34.58.structure",
-           "tests/2021.11.06.15.34.58.structure.reference"))
-
     fun
     diminish_map {i, n    : int | 0 <= n; i + n <= BIGNESS} .<n>.
                  (map     : strnptrmap_vt (Strnptr1),
@@ -936,6 +924,16 @@ test3 () : void =
         in
           map
         end
+
+    val map = strnptrmap ()
+    val map = fill_map (map, numbers_in_order,
+                        numbers_in_order, i2sz 0)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.34.58.structure",
+           "tests/2021.11.06.15.34.58.structure.reference"))
 
     val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 1)
 
@@ -996,10 +994,108 @@ test3 () : void =
     val _ = free map
   }
 
+fn
+test4 () : void =
+  {
+    val _ = reset_rand_seed ()
+
+    #define BIGNESS 100000
+
+    val @(pf1a, pf1b | p_numbers_in_order) =
+      array_ptr_alloc<size_t> (i2sz BIGNESS)
+    macdef numbers_in_order = !p_numbers_in_order
+    val _ =
+      let
+        implement
+        array_initize$init<size_t> (i, x) =
+          x := succ i
+      in
+        array_initize<size_t> (numbers_in_order, i2sz BIGNESS)
+      end
+
+    val @(pf2a, pf2b | p_numbers_permuted) =
+      array_ptr_alloc<size_t> (i2sz BIGNESS)
+    macdef numbers_permuted = !p_numbers_permuted
+    val _ =
+      let
+        implement
+        array_initize$init<size_t> (i, x) =
+          x := succ i
+        implement
+        array_permute$randint<> (n) =
+          randint_size (n)
+      in
+        array_initize<size_t> (numbers_permuted, i2sz BIGNESS);
+        array_permute<size_t> (numbers_permuted, i2sz BIGNESS)
+      end
+
+    fun
+    fill_map {i         : int | i <= BIGNESS} .<BIGNESS - i>.
+             (map       : strnptrmap_vt (Strnptr1),
+              key_arr   : &(@[size_t][BIGNESS]) >> _,
+              value_arr : &(@[size_t][BIGNESS]) >> _,
+              i         : size_t i) :
+        strnptrmap_vt (Strnptr1) =
+      if i = i2sz BIGNESS then
+        map
+      else
+        let
+          prval _ = lemma_g1uint_param i
+        in
+          fill_map (s2s_map_set (map, size2strnptr (key_arr[i]),
+                                 size2strnptr (value_arr[i])),
+                    key_arr, value_arr, succ i)
+        end
+
+    fun
+    diminish_map {i, n    : int | 0 <= n; i + n <= BIGNESS} .<n>.
+                 (map     : strnptrmap_vt (Strnptr1),
+                  key_arr : &(@[size_t][BIGNESS]) >> _,
+                  i       : size_t i,
+                  n       : size_t n) :
+        strnptrmap_vt (Strnptr1) =
+      if n = i2sz 0 then
+        map
+      else
+        let
+          prval _ = lemma_g1uint_param i
+          val i_key = key_arr[i]
+          val s_key = size2strnptr i_key
+          val map =
+            diminish_map (s2s_map_del (map, s_key), key_arr,
+                          succ i, pred n)
+          val _ = strnptr_free s_key
+        in
+          map
+        end
+
+    val map = strnptrmap ()
+    val map = fill_map (map, numbers_in_order,
+                        numbers_in_order, i2sz 0)
+
+    val _ = assertloc (size map = i2sz BIGNESS)
+
+    val map = diminish_map (map, numbers_permuted,
+                            i2sz 0, i2sz (BIGNESS / 2))
+
+    val _ = assertloc (size map = i2sz (BIGNESS - (BIGNESS / 2)))
+
+    val map = diminish_map (map, numbers_permuted,
+                            i2sz 0, i2sz BIGNESS)
+
+    val _ = assertloc (iseqz map)
+
+    val _ = free map
+
+    val _ = array_ptr_free (pf1a, pf1b | p_numbers_in_order)
+    val _ = array_ptr_free (pf2a, pf2b | p_numbers_permuted)
+  }
+
 implement
 main0 () =
   {
     val _ = test1 ()
     val _ = test2 ()
     val _ = test3 ()
+    val _ = test4 ()
   }
