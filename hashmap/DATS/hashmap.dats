@@ -85,6 +85,7 @@ make_view_tunnel :
       exit = () -<lin,prf> v
     }
 
+(* A dependent-typed variant of orelse. *)
 fn {}
 orelse1 {x, y : bool}
         (x : bool x,
@@ -98,6 +99,7 @@ orelse1 {x, y : bool}
 infixl ( || ) |||
 macdef ||| = orelse1
 
+(* Multiplication is a one-valued function. *)
 prfn
 lemma_mul_isfun {m1, n1 : int}
                 {m2, n2 : int | m1 == m2; n1 == n2}
@@ -110,6 +112,7 @@ lemma_mul_isfun {m1, n1 : int}
   }
 
 (********************************************************************)
+(* The internal structure of an array-mapped tree. *)
 
 vtypedef
 key_value_vt (key_vt   : vt@ype+,
@@ -165,7 +168,8 @@ datavtype
 map_vt (key_vt   : vt@ype+,
         value_vt : vt@ype+,
         size     : int) =
-| map_vt_nil (key_vt, value_vt, 0) of ()
+| (* An empty hashmap is a C null pointer. *)
+  map_vt_nil (key_vt, value_vt, 0) of ()
 | {1 <= size}
   map_vt_root (key_vt, value_vt, size) of
     @{
@@ -173,6 +177,8 @@ map_vt (key_vt   : vt@ype+,
       tree = node_array_vt (key_vt, value_vt)
     }
 
+(* To the outside world, a hashmap is an abstract type, but in this
+   source file it is a map_vt. *)
 assume
 hashmap_vt (key_vt, value_vt, size) =
   map_vt (key_vt, value_vt, size)
@@ -182,6 +188,9 @@ hashmap_vt (key_vt, value_vt, size) =
 (********************************************************************)
 (* The following data structure is used in hashmap_del. *)
 
+(* node_path_array_vt: these are used to make a linked list of
+   (the reverse of) a path through the array-mapped tree. See
+   node_path_vt, below. *)
 vtypedef
 node_path_array_vt (key_vt         : vt@ype+,
                     value_vt       : vt@ype+,
@@ -287,6 +296,7 @@ node_path_vt_is_nil
   | _ => false
 
 (********************************************************************)
+(* Miscellaneous helpers. *)
 
 extern praxi {key_vt, value_vt : vt@ype}
 get_node_array_vt_statics
@@ -351,6 +361,34 @@ remove_list_entry
     loop {n} (lst, removed, key)
   end
 
+fn {key_vt, value_vt : vt@ype}
+make_new_array
+        {population_map : int}
+        (pf_popcount    : POPCOUNT (population_map, 1) |
+         population_map : population_map_t population_map,
+         key            : key_vt,
+         value          : value_vt) :
+    [p : addr | null < p]
+    (@[node_vt (key_vt, value_vt)][1] @ p, mfree_gc_v p | ptr p) =
+  let
+    vtypedef t = node_vt (key_vt, value_vt)
+
+    (* The only leaf node that will be in the array. *)
+    val new_leaf = node_vt_key_value @{key = key, value = value}
+
+    (* Allocate the array. *)
+    val [p_array : addr] @(pf_array, pf_mfree | p_array) =
+      array_ptr_alloc<t> (i2sz 1)
+
+    (* Put the leaf in it. *)
+    prval @(pf_entry, pf_nil_array) = array_v_uncons pf_array
+    val _ = ptr_set<t> {p_array} (pf_entry | p_array, new_leaf)
+    prval pf_nil_array = array_v_unnil_nil {t?, t} pf_nil_array
+    prval pf_array = array_v_cons (pf_entry, pf_nil_array)
+  in
+    @(pf_array, pf_mfree | p_array)
+  end
+
 (********************************************************************)
 
 primplement
@@ -383,36 +421,6 @@ hashmap_isnot_empty (map) =
   case+ map of
   | map_vt_nil () => false
   | map_vt_root _ => true
-
-(********************************************************************)
-
-fn {key_vt, value_vt : vt@ype}
-make_new_array
-        {population_map : int}
-        (pf_popcount    : POPCOUNT (population_map, 1) |
-         population_map : population_map_t population_map,
-         key            : key_vt,
-         value          : value_vt) :
-    [p : addr | null < p]
-    (@[node_vt (key_vt, value_vt)][1] @ p, mfree_gc_v p | ptr p) =
-  let
-    vtypedef t = node_vt (key_vt, value_vt)
-
-    (* The only leaf node that will be in the array. *)
-    val new_leaf = node_vt_key_value @{key = key, value = value}
-
-    (* Allocate the array. *)
-    val [p_array : addr] @(pf_array, pf_mfree | p_array) =
-      array_ptr_alloc<t> (i2sz 1)
-
-    (* Put the leaf in it. *)
-    prval @(pf_entry, pf_nil_array) = array_v_uncons pf_array
-    val _ = ptr_set<t> {p_array} (pf_entry | p_array, new_leaf)
-    prval pf_nil_array = array_v_unnil_nil {t?, t} pf_nil_array
-    prval pf_array = array_v_cons (pf_entry, pf_nil_array)
-  in
-    @(pf_array, pf_mfree | p_array)
-  end
 
 (********************************************************************)
 
