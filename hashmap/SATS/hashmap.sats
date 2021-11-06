@@ -72,11 +72,14 @@ hashmap$key_vt_eq (key_arg    : !key_vt >> _,
 
 (********************************************************************)
 
+(* Start a new hashmap. (In the C code, this will be
+   a NULL pointer. *)
 fun {}
 hashmap {key_vt, value_vt : vt@ype}
         () :
     hashmap_vt (key_vt, value_vt, 0)
 
+(* Return the number of elements in a hashmap. *)
 fun {}
 hashmap_size
         {size : int}
@@ -85,6 +88,7 @@ hashmap_size
     size_t size
 overload size with hashmap_size of 0
 
+(* Is a hashmap's size equal to zero? *)
 fun {}
 hashmap_is_empty
         {size : int}
@@ -93,6 +97,7 @@ hashmap_is_empty
     bool (size == 0)
 overload iseqz with hashmap_is_empty of 0
 
+(* Is a hashmap's size not equal to zero? *)
 fun {}
 hashmap_isnot_empty
         {size : int}
@@ -101,6 +106,10 @@ hashmap_isnot_empty
     bool (size != 0)
 overload isneqz with hashmap_isnot_empty of 0
 
+(* Set the value corresponding to a given a key. This action
+   either installs a new key-value pair (increasing the hashmap's
+   size by one) or replaces a key-value pair (leaving the hashmap's
+   size unchanged). *)
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
 hashmap_set
@@ -111,6 +120,10 @@ hashmap_set
     [new_size : int | new_size == size || new_size == size + 1]
     hashmap_vt (key_vt, value_vt, new_size)
 
+(* If the given key is present in the hashmap, remove the
+   corresponding key-value pair (reducing the hashmap's size
+   by one). If the key is not present, return a hashmap equivalent
+   to the original (not necessarily the same memory blocks). *)
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
 hashmap_del
@@ -120,6 +133,9 @@ hashmap_del
     [new_size : int | new_size == size || new_size == size - 1]
     hashmap_vt (key_vt, value_vt, new_size)
 
+(* Return Some_vt(value) (where "value" is a COPY of the stored
+   value), if the given key is in the hashmap. Otherwise return
+   None_vt(). *)
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
 hashmap_get_opt
@@ -128,6 +144,7 @@ hashmap_get_opt
          key  : !RD(key_vt) >> _) :
     Option_vt (value_vt)
 
+(* Is the given key present in the hashmap? *)
 fun {hash_vt : vt@ype}
     {key_vt, value_vt : vt@ype}
 hashmap_has_key
@@ -136,30 +153,43 @@ hashmap_has_key
          key  : !RD(key_vt) >> _) :
     bool
 
+(* Return a list of COPIES of the key-value pairs stored in the
+   hashmap. The order in which the pairs are returned is
+   unspecified. *)
 fun {key_vt, value_vt : vt@ype}
 hashmap_pairs
         {size : int}
         (map  : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (@(key_vt, value_vt), size)
 
+(* Return a list of COPIES of the keys stored in the
+   hashmap. The order in which the keys are returned is
+   unspecified. *)
 fun {key_vt, value_vt : vt@ype}
 hashmap_keys
         {size     : int}
         (map      : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (key_vt, size)
 
+(* Return a list of COPIES of the values stored in the
+   hashmap. The order in which the values are returned is
+   unspecified. *)
 fun {key_vt, value_vt : vt@ype}
 hashmap_values
         {size   : int}
         (map    : !RD(hashmap_vt (key_vt, value_vt, size)) >> _) :
     list_vt (value_vt, size)
 
+(* Free a hashmap. Every hashmap must be freed. *)
 fun {key_vt, value_vt : vt@ype}
 hashmap_free
         {size : int}
         (map  : hashmap_vt (key_vt, value_vt, size)) :
     void
 
+(* Print the structure of a given hashmap. The key_fprint and
+   and value_fprint closures are called to print keys and values,
+   respectively. *)
 fun {key_vt, value_vt : vt@ype}
 hashmap_fprint
         {size         : int}
