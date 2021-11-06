@@ -969,6 +969,30 @@ test3 () : void =
           (map, "tests/2021.11.06.15.55.48.structure",
            "tests/2021.11.06.15.55.48.structure.reference"))
 
+    val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 998)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.49.structure",
+           "tests/2021.11.06.15.55.49.structure.reference"))
+
+    val map = diminish_map (map, numbers_in_order, i2sz 999, i2sz 1)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.50.structure",
+           "tests/2021.11.06.15.55.50.structure.reference"))
+
+    val map = diminish_map (map, numbers_in_order, i2sz 998, i2sz 1)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.51.structure",
+           "tests/2021.11.06.15.55.51.structure.reference"))
+
     val _ = free map
   }
 

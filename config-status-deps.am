@@ -91,3 +91,6 @@ CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.34.59.structure.
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.46.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.47.structure.reference.in
 CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.48.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.49.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in
+CONFIG_STATUS_DEPENDENCIES += $(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in
