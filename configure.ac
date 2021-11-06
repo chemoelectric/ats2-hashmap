@@ -223,6 +223,11 @@ AC_CONFIG_FILES([tests/2021.11.05.09.19.39.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.05.09.19.40.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.05.09.19.41.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.05.09.19.42.structure.reference])
+AC_CONFIG_FILES([tests/2021.11.06.15.34.58.structure.reference])
+AC_CONFIG_FILES([tests/2021.11.06.15.34.59.structure.reference])
+AC_CONFIG_FILES([tests/2021.11.06.15.55.46.structure.reference])
+AC_CONFIG_FILES([tests/2021.11.06.15.55.47.structure.reference])
+AC_CONFIG_FILES([tests/2021.11.06.15.55.48.structure.reference])
 
 AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
                [test "x${with_ats2_spookyhash}" != xno])

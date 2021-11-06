@@ -228,7 +228,12 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.11.05.09.19.39.structure.reference \
 	tests/2021.11.05.09.19.40.structure.reference \
 	tests/2021.11.05.09.19.41.structure.reference \
-	tests/2021.11.05.09.19.42.structure.reference
+	tests/2021.11.05.09.19.42.structure.reference \
+	tests/2021.11.06.15.34.58.structure.reference \
+	tests/2021.11.06.15.34.59.structure.reference \
+	tests/2021.11.06.15.55.46.structure.reference \
+	tests/2021.11.06.15.55.47.structure.reference \
+	tests/2021.11.06.15.55.48.structure.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -845,6 +850,11 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.40.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.41.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.42.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.34.58.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.34.59.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.46.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.47.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.48.structure.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -1079,7 +1089,12 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.39.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.40.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.05.09.19.41.structure.reference.in \
-	$(top_srcdir)/tests/2021.11.05.09.19.42.structure.reference.in
+	$(top_srcdir)/tests/2021.11.05.09.19.42.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.34.58.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.34.59.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.46.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.47.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.06.15.55.48.structure.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
@@ -1492,6 +1507,16 @@ tests/2021.11.05.09.19.40.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.11.05.09.19.41.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.05.09.19.41.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.11.05.09.19.42.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.05.09.19.42.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.06.15.34.58.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.34.58.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.06.15.34.59.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.34.59.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.06.15.55.46.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.46.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.06.15.55.47.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.47.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.06.15.55.48.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.48.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)

@@ -116,6 +116,34 @@ in
   overload s2s_map_set with s2s_map_set_strnptr_strnptr of 70
 
   fn
+  s2s_map_del_string
+          {size  : int}
+          (map   : strnptrmap_vt (Strnptr1, size),
+           key   : string) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      strnptrmap_vt (Strnptr1, new_size) =
+    strnptrmap_del<Strnptr1> (map, key)
+  fn
+  s2s_map_del_strptr
+          {size  : int}
+          (map   : strnptrmap_vt (Strnptr1, size),
+           key   : !RD(Strptr1) >> _) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      strnptrmap_vt (Strnptr1, new_size) =
+    strnptrmap_del<Strnptr1> (map, key)
+  fn
+  s2s_map_del_strnptr
+          {size  : int}
+          (map   : strnptrmap_vt (Strnptr1, size),
+           key   : !RD(Strnptr1) >> _) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      strnptrmap_vt (Strnptr1, new_size) =
+    strnptrmap_del<Strnptr1> (map, key)
+  overload s2s_map_del with s2s_map_del_string of 50
+  overload s2s_map_del with s2s_map_del_strptr of 60
+  overload s2s_map_del with s2s_map_del_strnptr of 70
+
+  fn
   s2s_map_get_opt_string
         {size : int}
         (map  : !RD(strnptrmap_vt (Strnptr1, size)) >> _,
@@ -842,9 +870,112 @@ test2 () : void =
     val _ = free map2
   }
 
+fn
+test3 () : void =
+  {
+    val _ = reset_rand_seed ()
+
+    #define BIGNESS 1000
+
+    var numbers_in_order : @[size_t][BIGNESS]
+    val _ =
+      let
+        implement
+        array_initize$init<size_t> (i, x) =
+          x := succ i
+      in
+        array_initize<size_t> (numbers_in_order, i2sz BIGNESS)
+      end
+
+    fun
+    fill_map {i         : int | i <= BIGNESS} .<BIGNESS - i>.
+             (map       : strnptrmap_vt (Strnptr1),
+              key_arr   : &(@[size_t][BIGNESS]) >> _,
+              value_arr : &(@[size_t][BIGNESS]) >> _,
+              i         : size_t i) :
+        strnptrmap_vt (Strnptr1) =
+      if i = i2sz BIGNESS then
+        map
+      else
+        let
+          prval _ = lemma_g1uint_param i
+        in
+          fill_map (s2s_map_set (map, size2strnptr (key_arr[i]),
+                                 size2strnptr (value_arr[i])),
+                    key_arr, value_arr, succ i)
+        end
+
+    val map = strnptrmap ()
+    val map = fill_map (map, numbers_in_order,
+                        numbers_in_order, i2sz 0)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.34.58.structure",
+           "tests/2021.11.06.15.34.58.structure.reference"))
+
+    fun
+    diminish_map {i, n    : int | 0 <= n; i + n <= BIGNESS} .<n>.
+                 (map     : strnptrmap_vt (Strnptr1),
+                  key_arr : &(@[size_t][BIGNESS]) >> _,
+                  i       : size_t i,
+                  n       : size_t n) :
+        strnptrmap_vt (Strnptr1) =
+      if n = i2sz 0 then
+        map
+      else
+        let
+          prval _ = lemma_g1uint_param i
+          val i_key = key_arr[i]
+          val s_key = size2strnptr i_key
+          val map =
+            diminish_map (s2s_map_del (map, s_key), key_arr,
+                          succ i, pred n)
+          val _ = strnptr_free s_key
+        in
+          map
+        end
+
+    val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 1)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.34.59.structure",
+           "tests/2021.11.06.15.34.59.structure.reference"))
+
+    val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 10)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.46.structure",
+           "tests/2021.11.06.15.55.46.structure.reference"))
+
+    val map = diminish_map (map, numbers_in_order, i2sz 900, i2sz 90)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.47.structure",
+           "tests/2021.11.06.15.55.47.structure.reference"))
+
+    val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 990)
+
+    val _ =
+      assertloc
+        (compare_structure
+          (map, "tests/2021.11.06.15.55.48.structure",
+           "tests/2021.11.06.15.55.48.structure.reference"))
+
+    val _ = free map
+  }
+
 implement
 main0 () =
   {
     val _ = test1 ()
     val _ = test2 ()
+    val _ = test3 ()
   }

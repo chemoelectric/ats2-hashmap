@@ -310,6 +310,15 @@ get_node_array_vt_statics
     [p       : addr | p == p_array]
     void
 
+fn {}
+node_is_key_value
+        {key_vt, value_vt : vt@ype}
+        (node : !RD(node_vt (key_vt, value_vt)) >> _) :
+    bool =
+  case+ node of
+  | node_vt_key_value _ => true
+  | _ => false
+
 fn {key_vt, value_vt : vt@ype}
 extract_key_value (node : node_vt (key_vt, value_vt)) :
     key_value_vt (key_vt, value_vt) =
@@ -1142,6 +1151,54 @@ node_path_del
     vtypedef npa_t = node_path_array_vt (key_vt, value_vt)
 
     fn
+    other_entry_is_key_value
+            {population_map : int}
+            {p_array        : addr}
+            {mask           : int}
+            {index          : int}
+            (array          : !(node_path_array_vt
+                                  (key_vt, value_vt, population_map,
+                                   2, p_array, mask, index)) >> _) :
+        bool =
+      let
+        prval _ = lemma_g1uint_param (array.index)
+      in
+        if array.index = i2sz 1 then
+          let
+            val p_remaining_entry = array.p_array
+            prval @(pf_left1, pf_left2) =
+              array_v_uncons {t} {p_array} {1} (array.left_view)
+            val is_key_value =
+              node_is_key_value<> (!p_remaining_entry)
+            prval _ = array.left_view :=
+              array_v_cons {t} {p_array} {0} (pf_left1, pf_left2)
+          in
+            is_key_value
+          end
+        else
+          let
+            prval _ =
+              lemma_mul_isfun
+                {index, sizeof (t)}
+                {0, sizeof (t)}
+                ()
+            prval _ = prop_verify {index * sizeof (t) == 0} ()
+
+            val p_remaining_entry = ptr_succ<t> (array.p_array)
+            prval @(pf_right1, pf_right2) =
+              array_v_uncons
+                {t} {p_array + sizeof (t?!)} {1}
+                (array.right_view)
+            val is_key_value =
+              node_is_key_value<> (!p_remaining_entry)
+            prval _ = array.right_view :=
+              array_v_cons (pf_right1, pf_right2)
+          in
+            is_key_value
+          end
+      end
+
+    fn
     eliminate_array
             {population_map : int}
             {p_array        : addr}
@@ -1395,60 +1452,40 @@ node_path_del
           val _ = hashmap$key_vt_free<key_vt> k
           val _ = hashmap$value_vt_free<value_vt> v
           val old_popcount = popcount (array.population_map)
-        in
-          (* Is the node array of length 2 and is it not at
-             depth 0? If so, then, after one of the entries is
-             deleted, it will need to be converted to a bare
-             key-value pair. *)
-          if (old_popcount = 2
-                 && not (node_path_vt_is_nil<> path2)) then
-            (* Convert the one remaining entry to a bare
-               key-value pair. *)
-            let
-              prval [population_map : int]
-                    [length         : int]
-                    [p_array        : addr]
-                    [mask           : int]
-                    [index          : int]
-                    @{
-                      population_map_prop = pf_population_map,
-                      left_view = pf_left,
-                      entry_view = pf_entry,
-                      right_view = pf_right,
-                      mfree_view = pf_mfree |
-                      population_map = population_map,
-                      p_array = p_array,
-                      mask = mask,
-                      index = index
-                    } = (array : npa_t)
-              prval _ = array :=
+
+          prval [population_map : int]
+                [length         : int]
+                [p_array        : addr]
+                [mask           : int]
+                [index          : int]
                 @{
-                    population_map_prop = pf_population_map,
-                    left_view = pf_left,
-                    entry_view = pf_entry,
-                    right_view = pf_right,
-                    mfree_view = pf_mfree |
-                    population_map = population_map,
-                    p_array = p_array,
-                    mask = mask,
-                    index = index
-                }
-
-              (* FIXME: Prove this. *)
-              prval _ = $UN.prop_assert {length == 2} ()
-
-              val key_value = eliminate_array (array)
-            in
-              @{
-                path =
-                  shorten_path
-                    (node_path_vt_key_value (path2, key_value)),
-                entry_removed = true
-              }
-            end
-          else
-            (* Either the node array has a length greater than 2,
-               or it is at depth 0. Shrink the array by one entry. *)
+                  population_map_prop = pf_population_map,
+                  left_view = pf_left,
+                  entry_view = pf_entry,
+                  right_view = pf_right,
+                  mfree_view = pf_mfree |
+                  population_map = population_map,
+                  p_array = p_array,
+                  mask = mask,
+                  index = index
+                } = (array : npa_t)
+          prval _ = array :=
+            @{
+                population_map_prop = pf_population_map,
+                left_view = pf_left,
+                entry_view = pf_entry,
+                right_view = pf_right,
+                mfree_view = pf_mfree |
+                population_map = population_map,
+                p_array = p_array,
+                mask = mask,
+                index = index
+            }
+        in
+          if (old_popcount <> 2 |||
+              g1ofg0 (node_path_vt_is_nil<> path2)) then
+            (* The node array has a length greater than 2 or is
+               at depth 0. Shrink the array by one entry. *)
             let
               val tree = shrink_array (array, old_popcount)
             in
@@ -1456,6 +1493,36 @@ node_path_del
                 path = node_path_vt_array (path2, tree),
                 entry_removed = true
               }
+            end
+          else
+            let
+              (* FIXME: Prove this. *)
+              prval _ = $UN.prop_assert {length == 2} ()
+            in
+              if other_entry_is_key_value array then
+                (* Instead of shrinking the array to length 1,
+                   convert the remaining entry to a bare key-value
+                   pair. *)
+                let
+                  val key_value = eliminate_array (array)
+                in
+                  @{
+                    path =
+                      shorten_path
+                        (node_path_vt_key_value (path2, key_value)),
+                    entry_removed = true
+                  }
+                end
+              else
+                (* Shrink the array by one entry. *)
+                let
+                  val tree = shrink_array (array, old_popcount)
+                in
+                  @{
+                    path = node_path_vt_array (path2, tree),
+                    entry_removed = true
+                  }
+                end
             end
         end
       | ~ node_path_vt_list (path1, lst) =>
