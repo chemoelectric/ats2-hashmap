@@ -293,6 +293,17 @@ AM_CONDITIONAL([WITH_DEFAULT_HASH_SIPHASH_64],
 AM_CONDITIONAL([WITH_DEFAULT_HASH_SIPHASH_128],
                [test "x${DEFAULT_HASH}" = xsiphash_128])
 
+with_strnptrmap=no
+AS_IF([test "x${with_spookyhash}" != xno || \
+       test "x${with_murmurhash3_32}" != xno || \
+       test "x${with_halfsiphash_32}" != xno || \
+       test "x${with_halfsiphash_64}" != xno || \
+       test "x${with_siphash_64}" != xno || \
+       test "x${with_siphash_128}" != xno],
+      [with_strnptrmap=yes])
+AM_CONDITIONAL([WITH_STRNPTRMAP],
+               [test "x${with_strnptrmap}" != xno])
+
 AM_CONDITIONAL([WITH_SPOOKYHASH],
                [test "x${with_spookyhash}" != xno])
 AM_CONDITIONAL([WITH_MURMURHASH3_32],

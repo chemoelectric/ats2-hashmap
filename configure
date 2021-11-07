@@ -678,6 +678,8 @@ WITH_MURMURHASH3_32_FALSE
 WITH_MURMURHASH3_32_TRUE
 WITH_SPOOKYHASH_FALSE
 WITH_SPOOKYHASH_TRUE
+WITH_STRNPTRMAP_FALSE
+WITH_STRNPTRMAP_TRUE
 WITH_DEFAULT_HASH_SIPHASH_128_FALSE
 WITH_DEFAULT_HASH_SIPHASH_128_TRUE
 WITH_DEFAULT_HASH_SIPHASH_64_FALSE
@@ -15229,6 +15231,25 @@ else
 fi
 
 
+with_strnptrmap=no
+if test "x${with_spookyhash}" != xno || \
+       test "x${with_murmurhash3_32}" != xno || \
+       test "x${with_halfsiphash_32}" != xno || \
+       test "x${with_halfsiphash_64}" != xno || \
+       test "x${with_siphash_64}" != xno || \
+       test "x${with_siphash_128}" != xno
+then :
+  with_strnptrmap=yes
+fi
+ if test "x${with_strnptrmap}" != xno; then
+  WITH_STRNPTRMAP_TRUE=
+  WITH_STRNPTRMAP_FALSE='#'
+else
+  WITH_STRNPTRMAP_TRUE='#'
+  WITH_STRNPTRMAP_FALSE=
+fi
+
+
  if test "x${with_spookyhash}" != xno; then
   WITH_SPOOKYHASH_TRUE=
   WITH_SPOOKYHASH_FALSE='#'
@@ -15506,6 +15527,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WITH_DEFAULT_HASH_SIPHASH_128_TRUE}" && test -z "${WITH_DEFAULT_HASH_SIPHASH_128_FALSE}"; then
   as_fn_error $? "conditional \"WITH_DEFAULT_HASH_SIPHASH_128\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_STRNPTRMAP_TRUE}" && test -z "${WITH_STRNPTRMAP_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_STRNPTRMAP\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WITH_SPOOKYHASH_TRUE}" && test -z "${WITH_SPOOKYHASH_FALSE}"; then

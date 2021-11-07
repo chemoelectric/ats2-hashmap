@@ -323,10 +323,12 @@ nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
 EXTRA_DIST += hashmap/SATS/strnptrmap.sats
 
 EXTRA_DIST += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+if WITH_STRNPTRMAP
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+endif WITH_STRNPTRMAP
 
 if WITH_SPOOKYHASH
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-spookyhash.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-spookyhash.hats
 endif WITH_SPOOKYHASH
@@ -335,7 +337,6 @@ EXTRA_DIST += hashmap/HATS/strnptrmap-spookyhash.hats
 
 if WITH_MURMURHASH3_32
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-murmurhash3_32.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-murmurhash3_32.hats
 endif WITH_MURMURHASH3_32
@@ -344,7 +345,6 @@ EXTRA_DIST += hashmap/HATS/strnptrmap-murmurhash3_32.hats
 
 if WITH_HALFSIPHASH_32
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_32.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_32.hats
 endif WITH_HALFSIPHASH_32
@@ -353,7 +353,6 @@ EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_32.hats
 
 if WITH_HALFSIPHASH_64
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_64.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_64.hats
 endif WITH_HALFSIPHASH_64
@@ -362,7 +361,6 @@ EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_64.hats
 
 if WITH_SIPHASH_64
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_64_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_64.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_64.hats
 endif WITH_SIPHASH_64
@@ -371,7 +369,6 @@ EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_64.hats
 
 if WITH_SIPHASH_128
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_128_dats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_128.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_128.hats
 endif WITH_SIPHASH_128
