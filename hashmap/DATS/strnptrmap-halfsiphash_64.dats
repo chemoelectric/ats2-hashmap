@@ -20,7 +20,8 @@ along with this program. If not, see
 
 (********************************************************************)
 (*                                                                  *)
-(* String maps by means of hashmap and ats2-spookyhash              *)
+(* String maps by means of hashmap and ats2-siphash                 *)
+(* (64-bit HalfSipHash)                                             *)
 (*                                                                  *)
 (********************************************************************)
 
@@ -39,18 +40,31 @@ staload "hashmap/SATS/strnptrmap.sats"
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
 staload "hashmap/SATS/hashmap.sats"
-staload "spookyhash/SATS/spookyhash.sats"
+staload "siphash/SATS/halfsiphash.sats"
+staload "siphash/SATS/key.sats"
+
+%{#
+#undef ats2_hashmap_strnptrmap_halfsiphash_64_lshift
+#define ats2_hashmap_strnptrmap_halfsiphash_64_lshift(u, i) ((u) << (i))
+
+#undef ats2_hashmap_strnptrmap_halfsiphash_64_lor
+#define ats2_hashmap_strnptrmap_halfsiphash_64_lor(u, v) ((u) | (v))
+%}
+
+extern fn
+lshift_uint64_int (u    : uint64,
+                   i    : int) :<> uint64 =
+  "mac#ats2_hashmap_strnptrmap_halfsiphash_64_lshift"
+
+extern fn
+lor_uint64 (u    : uint64,
+            v    : uint64) :<> uint64 =
+  "mac#ats2_hashmap_strnptrmap_halfsiphash_64_lor"
 
 local
 
-  typedef hash_t = @(uint64, uint64)
+  typedef hash_t = uint64
   vtypedef key_vt = Strnptr1
-
-  (* seed1 and seeds may be any numbers that please the programmer,
-     although changing them may change what are the correct results
-     of regression tests. *)
-  macdef seed1 = $UN.cast{uint64} 0xDEADBEEFBACEBA11ULL
-  macdef seed2 = $UN.cast{uint64} 0xBACEBA11DEADBEEFULL
 
   implement
   hashmap$hash_function<hash_t><key_vt> (key, hash) =
@@ -59,7 +73,13 @@ local
       val n = strlen s
       val p = string2ptr s
       val (pf_bytes, consume_pf | p) = $UN.ptr_vtake {@[byte][n]} p
-      val _ = hash := spookyhash_hash128 (!p, n, seed1, seed2)
+      val (pf_key, fpf_consume_pf_key | key) = halfsiphash_key ()
+      val @(hash1, hash2) = halfsiphash_64 (!p, n, !key)
+      prval () = fpf_consume_pf_key pf_key
+      val hash1 : uint64 = $UN.cast{uint64} hash1
+      val hash2 : uint64 = $UN.cast{uint64} hash2
+      val () = hash :=
+        lor_uint64 (lshift_uint64_int (hash2, 32), hash1)
       prval () = consume_pf pf_bytes
     }
 
@@ -69,7 +89,7 @@ local
 
   implement
   hashmap$bits_source<hash_t> (hash, depth) =
-    bits_source_uint64_uint64 (hash, depth)
+    bits_source_uint64 (hash, depth)
 
   implement
   hashmap$key_vt_free<key_vt> (key) =

@@ -660,8 +660,36 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+WITH_ATS2_SIPHASH_FALSE
+WITH_ATS2_SIPHASH_TRUE
+WITH_ATS2_MURMURHASH3_FALSE
+WITH_ATS2_MURMURHASH3_TRUE
 WITH_ATS2_SPOOKYHASH_FALSE
 WITH_ATS2_SPOOKYHASH_TRUE
+WITH_SIPHASH_128_FALSE
+WITH_SIPHASH_128_TRUE
+WITH_SIPHASH_64_FALSE
+WITH_SIPHASH_64_TRUE
+WITH_HALFSIPHASH_64_FALSE
+WITH_HALFSIPHASH_64_TRUE
+WITH_HALFSIPHASH_32_FALSE
+WITH_HALFSIPHASH_32_TRUE
+WITH_MURMURHASH3_32_FALSE
+WITH_MURMURHASH3_32_TRUE
+WITH_SPOOKYHASH_FALSE
+WITH_SPOOKYHASH_TRUE
+WITH_DEFAULT_HASH_SIPHASH_128_FALSE
+WITH_DEFAULT_HASH_SIPHASH_128_TRUE
+WITH_DEFAULT_HASH_SIPHASH_64_FALSE
+WITH_DEFAULT_HASH_SIPHASH_64_TRUE
+WITH_DEFAULT_HASH_HALFSIPHASH_64_FALSE
+WITH_DEFAULT_HASH_HALFSIPHASH_64_TRUE
+WITH_DEFAULT_HASH_HALFSIPHASH_32_FALSE
+WITH_DEFAULT_HASH_HALFSIPHASH_32_TRUE
+WITH_DEFAULT_HASH_MURMURHASH3_32_FALSE
+WITH_DEFAULT_HASH_MURMURHASH3_32_TRUE
+WITH_DEFAULT_HASH_SPOOKYHASH_FALSE
+WITH_DEFAULT_HASH_SPOOKYHASH_TRUE
 ifnGNUmake
 ifGNUmake
 GNU_MAKE
@@ -671,9 +699,16 @@ REQUIRES_PRIVATE_PKGS
 ATS2_POPCOUNT_PATSOPTFLAGS
 ATS2_POPCOUNT_LIBS
 ATS2_POPCOUNT_CFLAGS
+ATS2_SIPHASH_PATSOPTFLAGS
+ATS2_SIPHASH_LIBS
+ATS2_SIPHASH_CFLAGS
+ATS2_MURMURHASH3_PATSOPTFLAGS
+ATS2_MURMURHASH3_LIBS
+ATS2_MURMURHASH3_CFLAGS
 ATS2_SPOOKYHASH_PATSOPTFLAGS
 ATS2_SPOOKYHASH_LIBS
 ATS2_SPOOKYHASH_CFLAGS
+DEFAULT_HASH
 pkgconfigdir
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
@@ -828,7 +863,7 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-with_ats2_spookyhash
+with_hash
 with_pkgconfigdir
 '
       ac_precious_vars='build_alias
@@ -848,6 +883,12 @@ PKG_CONFIG_LIBDIR
 ATS2_SPOOKYHASH_CFLAGS
 ATS2_SPOOKYHASH_LIBS
 ATS2_SPOOKYHASH_PATSOPTFLAGS
+ATS2_MURMURHASH3_CFLAGS
+ATS2_MURMURHASH3_LIBS
+ATS2_MURMURHASH3_PATSOPTFLAGS
+ATS2_SIPHASH_CFLAGS
+ATS2_SIPHASH_LIBS
+ATS2_SIPHASH_PATSOPTFLAGS
 ATS2_POPCOUNT_CFLAGS
 ATS2_POPCOUNT_LIBS
 ATS2_POPCOUNT_PATSOPTFLAGS
@@ -1505,8 +1546,10 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
-  --without-ats2-spookyhash
-                          disable support for SpookyHash
+  --with-hash=HASH_LIST
+                          HASH_LIST=no,spookyhash,murmurhash3_32,halfsiphash_32,halfsiphash_64,siphash_64,siphash_128
+                          (comma-separated; preferred hash listed first)
+                          [--with-hash=spookyhash]
   --with-pkgconfigdir     pkg-config installation directory
                           ['${libdir}/pkgconfig']
 
@@ -1535,6 +1578,19 @@ Some influential environment variables:
               linker flags for ATS2_SPOOKYHASH, overriding pkg-config
   ATS2_SPOOKYHASH_PATSOPTFLAGS
               value of PATSOPTFLAGS for ats2-spookyhash, overriding pkg-config
+  ATS2_MURMURHASH3_CFLAGS
+              C compiler flags for ATS2_MURMURHASH3, overriding pkg-config
+  ATS2_MURMURHASH3_LIBS
+              linker flags for ATS2_MURMURHASH3, overriding pkg-config
+  ATS2_MURMURHASH3_PATSOPTFLAGS
+              value of PATSOPTFLAGS for ats2-murmurhash3, overriding
+              pkg-config
+  ATS2_SIPHASH_CFLAGS
+              C compiler flags for ATS2_SIPHASH, overriding pkg-config
+  ATS2_SIPHASH_LIBS
+              linker flags for ATS2_SIPHASH, overriding pkg-config
+  ATS2_SIPHASH_PATSOPTFLAGS
+              value of PATSOPTFLAGS for ats2-siphash, overriding pkg-config
   ATS2_POPCOUNT_CFLAGS
               C compiler flags for ATS2_POPCOUNT, overriding pkg-config
   ATS2_POPCOUNT_LIBS
@@ -12768,13 +12824,14 @@ BITS_SOURCE_MASK=63
 BITS_SOURCE_EXPT2=64
 
 
+# Which hash functions/packages to support.
 
-# Check whether --with-ats2-spookyhash was given.
-if test ${with_ats2_spookyhash+y}
+# Check whether --with-hash was given.
+if test ${with_hash+y}
 then :
-  withval=$with_ats2_spookyhash;
+  withval=$with_hash;
 else $as_nop
-  with_ats2_spookyhash=yes
+  with_hash=spookyhash
 fi
 
 
@@ -14255,6 +14312,52 @@ pkgconfigdir=$with_pkgconfigdir
 #
 # Checks for libraries.
 
+default_hash=
+with_spookyhash=no
+with_murmurhash3_32=no
+with_halfsiphash_32=no
+with_halfsiphash_64=no
+with_siphash_64=no
+with_siphash_128=no
+with_ats2_spookyhash=no
+with_ats2_murmurhash3=no
+with_ats2_siphash=no
+for hash in `printf "%s" "${with_hash}" | ${SED} -e 's/,/ /g'`; do
+  test x"${default_hash}" = x && default_hash="${hash}"
+  case x"${hash}" in #(
+  xno) :
+     ;; #(
+  xspookyhash) :
+    with_spookyhash=yes
+                   with_ats2_spookyhash=yes ;; #(
+  xmurmurhash3_32) :
+    with_murmurhash3_32=yes
+                       with_ats2_murmurhash3=yes ;; #(
+  xhalfsiphash_32) :
+    with_halfsiphash_32=yes
+                       with_ats2_siphash=yes ;; #(
+  xhalfsiphash_64) :
+    with_halfsiphash_64=yes
+                       with_ats2_siphash=yes ;; #(
+  xsiphash_64) :
+    with_siphash_64=yes
+                   with_ats2_siphash=yes ;; #(
+  xsiphash_128) :
+    with_siphash_128=yes
+                    with_ats2_siphash=yes ;; #(
+  x*) :
+    as_fn_error $? "--with-hash entry not supported: \"${hash}\"" "$LINENO" 5 ;; #(
+  *) :
+     ;;
+esac
+done
+DEFAULT_HASH=
+if test x"${default_hash}" != xno
+then :
+  DEFAULT_HASH="${default_hash}"
+fi
+
+
 if test "x${with_ats2_spookyhash}" != xno
 then :
 
@@ -14318,14 +14421,14 @@ fi
 
 	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+as_fn_error $? "ats2-spookyhash not found. Consider installing it, configuring --without-hash, etc.
 See \`config.log' for more details" "$LINENO" 5; }
 elif test $pkg_failed = untried; then
      	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
 	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash
+as_fn_error $? "ats2-spookyhash not found. Consider installing it, configuring --without-hash, etc.
 See \`config.log' for more details" "$LINENO" 5; }
 else
 	ATS2_SPOOKYHASH_CFLAGS=$pkg_cv_ATS2_SPOOKYHASH_CFLAGS
@@ -14354,6 +14457,218 @@ fi
 ATS2_SPOOKYHASH_PATSOPTFLAGS=$pkg_cv_ATS2_SPOOKYHASH_PATSOPTFLAGS
 
 if test "x$ATS2_SPOOKYHASH_PATSOPTFLAGS" = x""
+then :
+
+fi
+fi
+
+fi
+
+if test "x${with_ats2_murmurhash3}" != xno
+then :
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ATS2_MURMURHASH3" >&5
+printf %s "checking for ATS2_MURMURHASH3... " >&6; }
+
+if test -n "$ATS2_MURMURHASH3_CFLAGS"; then
+    pkg_cv_ATS2_MURMURHASH3_CFLAGS="$ATS2_MURMURHASH3_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-murmurhash3\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-murmurhash3") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_MURMURHASH3_CFLAGS=`$PKG_CONFIG --cflags "ats2-murmurhash3" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$ATS2_MURMURHASH3_LIBS"; then
+    pkg_cv_ATS2_MURMURHASH3_LIBS="$ATS2_MURMURHASH3_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-murmurhash3\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-murmurhash3") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_MURMURHASH3_LIBS=`$PKG_CONFIG --libs "ats2-murmurhash3" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        ATS2_MURMURHASH3_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "ats2-murmurhash3" 2>&1`
+        else
+	        ATS2_MURMURHASH3_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "ats2-murmurhash3" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$ATS2_MURMURHASH3_PKG_ERRORS" >&5
+
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-murmurhash3 not found. Consider installing it or configuring without it
+See \`config.log' for more details" "$LINENO" 5; }
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-murmurhash3 not found. Consider installing it or configuring without it
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	ATS2_MURMURHASH3_CFLAGS=$pkg_cv_ATS2_MURMURHASH3_CFLAGS
+	ATS2_MURMURHASH3_LIBS=$pkg_cv_ATS2_MURMURHASH3_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-murmurhash3"
+
+if test -n "$ATS2_MURMURHASH3_PATSOPTFLAGS"; then
+    pkg_cv_ATS2_MURMURHASH3_PATSOPTFLAGS="$ATS2_MURMURHASH3_PATSOPTFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-murmurhash3\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-murmurhash3") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_MURMURHASH3_PATSOPTFLAGS=`$PKG_CONFIG --variable="PATSOPTFLAGS" "ats2-murmurhash3" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+ATS2_MURMURHASH3_PATSOPTFLAGS=$pkg_cv_ATS2_MURMURHASH3_PATSOPTFLAGS
+
+if test "x$ATS2_MURMURHASH3_PATSOPTFLAGS" = x""
+then :
+
+fi
+fi
+
+fi
+
+if test "x${with_ats2_siphash}" != xno
+then :
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ATS2_SIPHASH" >&5
+printf %s "checking for ATS2_SIPHASH... " >&6; }
+
+if test -n "$ATS2_SIPHASH_CFLAGS"; then
+    pkg_cv_ATS2_SIPHASH_CFLAGS="$ATS2_SIPHASH_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-siphash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-siphash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SIPHASH_CFLAGS=`$PKG_CONFIG --cflags "ats2-siphash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$ATS2_SIPHASH_LIBS"; then
+    pkg_cv_ATS2_SIPHASH_LIBS="$ATS2_SIPHASH_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-siphash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-siphash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SIPHASH_LIBS=`$PKG_CONFIG --libs "ats2-siphash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        ATS2_SIPHASH_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "ats2-siphash" 2>&1`
+        else
+	        ATS2_SIPHASH_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "ats2-siphash" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$ATS2_SIPHASH_PKG_ERRORS" >&5
+
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-siphash not found. Consider installing it or configuring without it
+See \`config.log' for more details" "$LINENO" 5; }
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "ats2-siphash not found. Consider installing it or configuring without it
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	ATS2_SIPHASH_CFLAGS=$pkg_cv_ATS2_SIPHASH_CFLAGS
+	ATS2_SIPHASH_LIBS=$pkg_cv_ATS2_SIPHASH_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+	REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-siphash"
+
+if test -n "$ATS2_SIPHASH_PATSOPTFLAGS"; then
+    pkg_cv_ATS2_SIPHASH_PATSOPTFLAGS="$ATS2_SIPHASH_PATSOPTFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ats2-siphash\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ats2-siphash") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_ATS2_SIPHASH_PATSOPTFLAGS=`$PKG_CONFIG --variable="PATSOPTFLAGS" "ats2-siphash" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+ATS2_SIPHASH_PATSOPTFLAGS=$pkg_cv_ATS2_SIPHASH_PATSOPTFLAGS
+
+if test "x$ATS2_SIPHASH_PATSOPTFLAGS" = x""
 then :
 
 fi
@@ -14865,12 +15180,126 @@ ac_config_files="$ac_config_files tests/2021.11.06.15.55.50.structure.reference"
 ac_config_files="$ac_config_files tests/2021.11.06.15.55.51.structure.reference"
 
 
+ if test "x${DEFAULT_HASH}" = xspookyhash; then
+  WITH_DEFAULT_HASH_SPOOKYHASH_TRUE=
+  WITH_DEFAULT_HASH_SPOOKYHASH_FALSE='#'
+else
+  WITH_DEFAULT_HASH_SPOOKYHASH_TRUE='#'
+  WITH_DEFAULT_HASH_SPOOKYHASH_FALSE=
+fi
+
+ if test "x${DEFAULT_HASH}" = xmurmurhash3_32; then
+  WITH_DEFAULT_HASH_MURMURHASH3_32_TRUE=
+  WITH_DEFAULT_HASH_MURMURHASH3_32_FALSE='#'
+else
+  WITH_DEFAULT_HASH_MURMURHASH3_32_TRUE='#'
+  WITH_DEFAULT_HASH_MURMURHASH3_32_FALSE=
+fi
+
+ if test "x${DEFAULT_HASH}" = xhalfsiphash_32; then
+  WITH_DEFAULT_HASH_HALFSIPHASH_32_TRUE=
+  WITH_DEFAULT_HASH_HALFSIPHASH_32_FALSE='#'
+else
+  WITH_DEFAULT_HASH_HALFSIPHASH_32_TRUE='#'
+  WITH_DEFAULT_HASH_HALFSIPHASH_32_FALSE=
+fi
+
+ if test "x${DEFAULT_HASH}" = xhalfsiphash_64; then
+  WITH_DEFAULT_HASH_HALFSIPHASH_64_TRUE=
+  WITH_DEFAULT_HASH_HALFSIPHASH_64_FALSE='#'
+else
+  WITH_DEFAULT_HASH_HALFSIPHASH_64_TRUE='#'
+  WITH_DEFAULT_HASH_HALFSIPHASH_64_FALSE=
+fi
+
+ if test "x${DEFAULT_HASH}" = xsiphash_64; then
+  WITH_DEFAULT_HASH_SIPHASH_64_TRUE=
+  WITH_DEFAULT_HASH_SIPHASH_64_FALSE='#'
+else
+  WITH_DEFAULT_HASH_SIPHASH_64_TRUE='#'
+  WITH_DEFAULT_HASH_SIPHASH_64_FALSE=
+fi
+
+ if test "x${DEFAULT_HASH}" = xsiphash_128; then
+  WITH_DEFAULT_HASH_SIPHASH_128_TRUE=
+  WITH_DEFAULT_HASH_SIPHASH_128_FALSE='#'
+else
+  WITH_DEFAULT_HASH_SIPHASH_128_TRUE='#'
+  WITH_DEFAULT_HASH_SIPHASH_128_FALSE=
+fi
+
+
+ if test "x${with_spookyhash}" != xno; then
+  WITH_SPOOKYHASH_TRUE=
+  WITH_SPOOKYHASH_FALSE='#'
+else
+  WITH_SPOOKYHASH_TRUE='#'
+  WITH_SPOOKYHASH_FALSE=
+fi
+
+ if test "x${with_murmurhash3_32}" != xno; then
+  WITH_MURMURHASH3_32_TRUE=
+  WITH_MURMURHASH3_32_FALSE='#'
+else
+  WITH_MURMURHASH3_32_TRUE='#'
+  WITH_MURMURHASH3_32_FALSE=
+fi
+
+ if test "x${with_halfsiphash_32}" != xno; then
+  WITH_HALFSIPHASH_32_TRUE=
+  WITH_HALFSIPHASH_32_FALSE='#'
+else
+  WITH_HALFSIPHASH_32_TRUE='#'
+  WITH_HALFSIPHASH_32_FALSE=
+fi
+
+ if test "x${with_halfsiphash_64}" != xno; then
+  WITH_HALFSIPHASH_64_TRUE=
+  WITH_HALFSIPHASH_64_FALSE='#'
+else
+  WITH_HALFSIPHASH_64_TRUE='#'
+  WITH_HALFSIPHASH_64_FALSE=
+fi
+
+ if test "x${with_siphash_64}" != xno; then
+  WITH_SIPHASH_64_TRUE=
+  WITH_SIPHASH_64_FALSE='#'
+else
+  WITH_SIPHASH_64_TRUE='#'
+  WITH_SIPHASH_64_FALSE=
+fi
+
+ if test "x${with_siphash_128}" != xno; then
+  WITH_SIPHASH_128_TRUE=
+  WITH_SIPHASH_128_FALSE='#'
+else
+  WITH_SIPHASH_128_TRUE='#'
+  WITH_SIPHASH_128_FALSE=
+fi
+
+
  if test "x${with_ats2_spookyhash}" != xno; then
   WITH_ATS2_SPOOKYHASH_TRUE=
   WITH_ATS2_SPOOKYHASH_FALSE='#'
 else
   WITH_ATS2_SPOOKYHASH_TRUE='#'
   WITH_ATS2_SPOOKYHASH_FALSE=
+fi
+
+ if test "x${with_ats2_murmurhash3}" != xno; then
+  WITH_ATS2_MURMURHASH3_TRUE=
+  WITH_ATS2_MURMURHASH3_FALSE='#'
+else
+  WITH_ATS2_MURMURHASH3_TRUE='#'
+  WITH_ATS2_MURMURHASH3_FALSE=
+fi
+
+ if test "x${with_ats2_siphash}" != xno; then
+  WITH_ATS2_SIPHASH_TRUE=
+  WITH_ATS2_SIPHASH_FALSE='#'
+else
+  WITH_ATS2_SIPHASH_TRUE='#'
+  WITH_ATS2_SIPHASH_FALSE=
 fi
 
 
@@ -15055,8 +15484,64 @@ if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE
   as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${WITH_DEFAULT_HASH_SPOOKYHASH_TRUE}" && test -z "${WITH_DEFAULT_HASH_SPOOKYHASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_SPOOKYHASH\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_MURMURHASH3_32_TRUE}" && test -z "${WITH_DEFAULT_HASH_MURMURHASH3_32_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_MURMURHASH3_32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_HALFSIPHASH_32_TRUE}" && test -z "${WITH_DEFAULT_HASH_HALFSIPHASH_32_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_HALFSIPHASH_32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_HALFSIPHASH_64_TRUE}" && test -z "${WITH_DEFAULT_HASH_HALFSIPHASH_64_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_HALFSIPHASH_64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_SIPHASH_64_TRUE}" && test -z "${WITH_DEFAULT_HASH_SIPHASH_64_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_SIPHASH_64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_SIPHASH_128_TRUE}" && test -z "${WITH_DEFAULT_HASH_SIPHASH_128_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH_SIPHASH_128\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_SPOOKYHASH_TRUE}" && test -z "${WITH_SPOOKYHASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_SPOOKYHASH\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_MURMURHASH3_32_TRUE}" && test -z "${WITH_MURMURHASH3_32_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_MURMURHASH3_32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_HALFSIPHASH_32_TRUE}" && test -z "${WITH_HALFSIPHASH_32_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_HALFSIPHASH_32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_HALFSIPHASH_64_TRUE}" && test -z "${WITH_HALFSIPHASH_64_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_HALFSIPHASH_64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_SIPHASH_64_TRUE}" && test -z "${WITH_SIPHASH_64_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_SIPHASH_64\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_SIPHASH_128_TRUE}" && test -z "${WITH_SIPHASH_128_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_SIPHASH_128\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${WITH_ATS2_SPOOKYHASH_TRUE}" && test -z "${WITH_ATS2_SPOOKYHASH_FALSE}"; then
   as_fn_error $? "conditional \"WITH_ATS2_SPOOKYHASH\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_ATS2_MURMURHASH3_TRUE}" && test -z "${WITH_ATS2_MURMURHASH3_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_ATS2_MURMURHASH3\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_ATS2_SIPHASH_TRUE}" && test -z "${WITH_ATS2_SIPHASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_ATS2_SIPHASH\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

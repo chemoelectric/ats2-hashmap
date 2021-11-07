@@ -74,11 +74,12 @@ AC_SUBST([BITS_SOURCE_MASK],[63])
 # Equals 2**BITS_SOURCE_NUM_BITS
 AC_SUBST([BITS_SOURCE_EXPT2],[64])
 
-AC_ARG_WITH([ats2-spookyhash],
-  [AS_HELP_STRING([--without-ats2-spookyhash],
-    [disable support for SpookyHash])],
-    [],
-    [with_ats2_spookyhash=yes])
+# Which hash functions/packages to support.
+AC_ARG_WITH([hash],
+  [AS_HELP_STRING([--with-hash=HASH_LIST],
+    [HASH_LIST=no,spookyhash,murmurhash3_32,halfsiphash_32,halfsiphash_64,siphash_64,siphash_128 @{:@comma-separated; @&t@ preferred hash listed first@:}@ @<:@--with-hash=spookyhash@:>@])],
+  [],
+  [with_hash=spookyhash])
 
 #--------------------------------------------------------------------------
 #
@@ -108,11 +109,58 @@ PKG_INSTALLDIR
 #
 # Checks for libraries.
 
+default_hash=
+with_spookyhash=no
+with_murmurhash3_32=no
+with_halfsiphash_32=no
+with_halfsiphash_64=no
+with_siphash_64=no
+with_siphash_128=no
+with_ats2_spookyhash=no
+with_ats2_murmurhash3=no
+with_ats2_siphash=no
+for hash in `printf "%s" "${with_hash}" | ${SED} -e 's/,/ /g'`; do
+  test x"${default_hash}" = x && default_hash="${hash}"
+  AS_CASE([x"${hash}"],
+    [xno],[],
+    [xspookyhash],[with_spookyhash=yes
+                   with_ats2_spookyhash=yes],
+    [xmurmurhash3_32],[with_murmurhash3_32=yes
+                       with_ats2_murmurhash3=yes],
+    [xhalfsiphash_32],[with_halfsiphash_32=yes
+                       with_ats2_siphash=yes],
+    [xhalfsiphash_64],[with_halfsiphash_64=yes
+                       with_ats2_siphash=yes],
+    [xsiphash_64],[with_siphash_64=yes
+                   with_ats2_siphash=yes],
+    [xsiphash_128],[with_siphash_128=yes
+                    with_ats2_siphash=yes],
+    [x*],[AC_MSG_ERROR([--with-hash entry not supported: "${hash}"])])
+done
+DEFAULT_HASH=
+AS_IF([test x"${default_hash}" != xno],
+      [DEFAULT_HASH="${default_hash}"])
+AC_SUBST([DEFAULT_HASH])
+
 AS_IF([test "x${with_ats2_spookyhash}" != xno],
   [PKG_CHECK_MODULES([ATS2_SPOOKYHASH],[ats2-spookyhash],
     [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-spookyhash"
      PKG_CHECK_VAR([ATS2_SPOOKYHASH_PATSOPTFLAGS],[ats2-spookyhash],[PATSOPTFLAGS])],
-    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider either installing it or configuring --without-ats2-spookyhash])])
+    [AC_MSG_FAILURE([ats2-spookyhash not found. Consider installing it, configuring --without-hash, etc.])])
+])
+
+AS_IF([test "x${with_ats2_murmurhash3}" != xno],
+  [PKG_CHECK_MODULES([ATS2_MURMURHASH3],[ats2-murmurhash3],
+    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-murmurhash3"
+     PKG_CHECK_VAR([ATS2_MURMURHASH3_PATSOPTFLAGS],[ats2-murmurhash3],[PATSOPTFLAGS])],
+    [AC_MSG_FAILURE([ats2-murmurhash3 not found. Consider installing it or configuring without it])])
+])
+
+AS_IF([test "x${with_ats2_siphash}" != xno],
+  [PKG_CHECK_MODULES([ATS2_SIPHASH],[ats2-siphash],
+    [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-siphash"
+     PKG_CHECK_VAR([ATS2_SIPHASH_PATSOPTFLAGS],[ats2-siphash],[PATSOPTFLAGS])],
+    [AC_MSG_FAILURE([ats2-siphash not found. Consider installing it or configuring without it])])
 ])
 
 PKG_CHECK_MODULES([ATS2_POPCOUNT],[ats2-popcount],
@@ -232,8 +280,38 @@ AC_CONFIG_FILES([tests/2021.11.06.15.55.49.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.50.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.51.structure.reference])
 
+AM_CONDITIONAL([WITH_DEFAULT_HASH_SPOOKYHASH],
+               [test "x${DEFAULT_HASH}" = xspookyhash])
+AM_CONDITIONAL([WITH_DEFAULT_HASH_MURMURHASH3_32],
+               [test "x${DEFAULT_HASH}" = xmurmurhash3_32])
+AM_CONDITIONAL([WITH_DEFAULT_HASH_HALFSIPHASH_32],
+               [test "x${DEFAULT_HASH}" = xhalfsiphash_32])
+AM_CONDITIONAL([WITH_DEFAULT_HASH_HALFSIPHASH_64],
+               [test "x${DEFAULT_HASH}" = xhalfsiphash_64])
+AM_CONDITIONAL([WITH_DEFAULT_HASH_SIPHASH_64],
+               [test "x${DEFAULT_HASH}" = xsiphash_64])
+AM_CONDITIONAL([WITH_DEFAULT_HASH_SIPHASH_128],
+               [test "x${DEFAULT_HASH}" = xsiphash_128])
+
+AM_CONDITIONAL([WITH_SPOOKYHASH],
+               [test "x${with_spookyhash}" != xno])
+AM_CONDITIONAL([WITH_MURMURHASH3_32],
+               [test "x${with_murmurhash3_32}" != xno])
+AM_CONDITIONAL([WITH_HALFSIPHASH_32],
+               [test "x${with_halfsiphash_32}" != xno])
+AM_CONDITIONAL([WITH_HALFSIPHASH_64],
+               [test "x${with_halfsiphash_64}" != xno])
+AM_CONDITIONAL([WITH_SIPHASH_64],
+               [test "x${with_siphash_64}" != xno])
+AM_CONDITIONAL([WITH_SIPHASH_128],
+               [test "x${with_siphash_128}" != xno])
+
 AM_CONDITIONAL([WITH_ATS2_SPOOKYHASH],
                [test "x${with_ats2_spookyhash}" != xno])
+AM_CONDITIONAL([WITH_ATS2_MURMURHASH3],
+               [test "x${with_ats2_murmurhash3}" != xno])
+AM_CONDITIONAL([WITH_ATS2_SIPHASH],
+               [test "x${with_ats2_siphash}" != xno])
 
 AC_OUTPUT
 

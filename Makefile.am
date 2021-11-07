@@ -70,6 +70,12 @@ AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
 if WITH_ATS2_SPOOKYHASH
 AM_CFLAGS += $(ATS2_SPOOKYHASH_CFLAGS)
 endif WITH_ATS2_SPOOKYHASH
+if WITH_ATS2_MURMURHASH3
+AM_CFLAGS += $(ATS2_MURMURHASH3_CFLAGS)
+endif WITH_ATS2_MURMURHASH3
+if WITH_ATS2_SIPHASH
+AM_CFLAGS += $(ATS2_SIPHASH_CFLAGS)
+endif WITH_ATS2_SIPHASH
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
@@ -109,6 +115,12 @@ AM_PATSOPTFLAGS += $(ATS2_POPCOUNT_PATSOPTFLAGS)
 if WITH_ATS2_SPOOKYHASH
 AM_PATSOPTFLAGS += $(ATS2_SPOOKYHASH_PATSOPTFLAGS)
 endif WITH_ATS2_SPOOKYHASH
+if WITH_ATS2_MURMURHASH3
+AM_PATSOPTFLAGS += $(ATS2_MURMURHASH3_PATSOPTFLAGS)
+endif WITH_ATS2_MURMURHASH3
+if WITH_ATS2_SIPHASH
+AM_PATSOPTFLAGS += $(ATS2_SIPHASH_PATSOPTFLAGS)
+endif WITH_ATS2_SIPHASH
 
 TOTAL_PATSOPTFLAGS =
 TOTAL_PATSOPTFLAGS += $(AM_PATSOPTFLAGS)
@@ -156,6 +168,12 @@ libats2_hashmap_la_LIBADD += $(ATS2_POPCOUNT_LIBS)
 if WITH_ATS2_SPOOKYHASH
 libats2_hashmap_la_LIBADD += $(ATS2_SPOOKYHASH_LIBS)
 endif WITH_ATS2_SPOOKYHASH
+if WITH_ATS2_MURMURHASH3
+libats2_hashmap_la_LIBADD += $(ATS2_MURMURHASH3_LIBS)
+endif WITH_ATS2_MURMURHASH3
+if WITH_ATS2_SIPHASH
+libats2_hashmap_la_LIBADD += $(ATS2_SIPHASH_LIBS)
+endif WITH_ATS2_SIPHASH
 
 libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
 libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
@@ -321,14 +339,105 @@ nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
 CLEANFILES += hashmap/SATS/strnptrmap_sats.c
 EXTRA_DIST += hashmap/SATS/strnptrmap.sats
 
-if WITH_ATS2_SPOOKYHASH
+EXTRA_DIST += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+
+if WITH_SPOOKYHASH
 libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-spookyhash.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-spookyhash.hats
-endif WITH_ATS2_SPOOKYHASH
+endif WITH_SPOOKYHASH
 CLEANFILES += hashmap/DATS/strnptrmap-spookyhash_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-spookyhash.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-spookyhash.hats
+
+if WITH_MURMURHASH3_32
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-murmurhash3_32.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-murmurhash3_32.hats
+endif WITH_MURMURHASH3_32
+CLEANFILES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
+EXTRA_DIST += hashmap/DATS/strnptrmap-murmurhash3_32.dats
+EXTRA_DIST += hashmap/HATS/strnptrmap-murmurhash3_32.hats
+
+if WITH_HALFSIPHASH_32
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_32.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_32.hats
+endif WITH_HALFSIPHASH_32
+CLEANFILES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
+EXTRA_DIST += hashmap/DATS/strnptrmap-halfsiphash_32.dats
+EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_32.hats
+
+if WITH_HALFSIPHASH_64
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_64.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_64.hats
+endif WITH_HALFSIPHASH_64
+CLEANFILES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
+EXTRA_DIST += hashmap/DATS/strnptrmap-halfsiphash_64.dats
+EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_64.hats
+
+if WITH_SIPHASH_64
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_64_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_64.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_64.hats
+endif WITH_SIPHASH_64
+CLEANFILES += hashmap/DATS/strnptrmap-siphash_64_dats.c
+EXTRA_DIST += hashmap/DATS/strnptrmap-siphash_64.dats
+EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_64.hats
+
+if WITH_SIPHASH_128
+libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_128_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_128.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_128.hats
+endif WITH_SIPHASH_128
+CLEANFILES += hashmap/DATS/strnptrmap-siphash_128_dats.c
+EXTRA_DIST += hashmap/DATS/strnptrmap-siphash_128.dats
+EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_128.hats
+
+if WITH_DEFAULT_HASH_SPOOKYHASH
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-spookyhash.hats"' > $(@)
+endif WITH_DEFAULT_HASH_SPOOKYHASH
+if WITH_DEFAULT_HASH_MURMURHASH3_32
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' > $(@)
+endif WITH_DEFAULT_HASH_MURMURHASH3_32
+if WITH_DEFAULT_HASH_HALFSIPHASH_32
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' > $(@)
+endif WITH_DEFAULT_HASH_HALFSIPHASH_32
+if WITH_DEFAULT_HASH_HALFSIPHASH_64
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' > $(@)
+endif WITH_DEFAULT_HASH_HALFSIPHASH_64
+if WITH_DEFAULT_HASH_SIPHASH_64
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_64.hats"' > $(@)
+endif WITH_DEFAULT_HASH_SIPHASH_64
+if WITH_DEFAULT_HASH_SIPHASH_128
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+hashmap/HATS/strnptrmap.hats: GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_128.hats"' > $(@)
+endif WITH_DEFAULT_HASH_SIPHASH_128
+CLEANFILES += hashmap/HATS/strnptrmap.hats
 
 #--------------------------------------------------------------------------
 #
