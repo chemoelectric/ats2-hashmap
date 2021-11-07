@@ -40,13 +40,17 @@ staload "hashmap/SATS/strnptrmap.sats"
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
 staload "hashmap/SATS/hashmap.sats"
-staload "siphash/SATS/halfsiphash.sats"
+
+#include "siphash/HATS/halfsiphash.hats"
 staload "siphash/SATS/key.sats"
 
 local
 
   typedef hash_t = uint32
   vtypedef key_vt = Strnptr1
+
+  implement {} halfsiphash$crounds () = 2U
+  implement {} halfsiphash$drounds () = 4U
 
   implement
   hashmap$hash_function<hash_t><key_vt> (key, hash) =
@@ -56,7 +60,7 @@ local
       val p = string2ptr s
       val (pf_bytes, consume_pf | p) = $UN.ptr_vtake {@[byte][n]} p
       val (pf_key, fpf_consume_pf_key | key) = halfsiphash_key ()
-      val () = hash := halfsiphash_32 (!p, n, !key)
+      val () = hash := halfsiphash_32<> (!p, n, !key)
       prval () = fpf_consume_pf_key pf_key
       prval () = consume_pf pf_bytes
     }

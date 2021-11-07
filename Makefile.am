@@ -559,6 +559,66 @@ endif WITH_MURMURHASH3_32
 CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32
 
+if WITH_HALFSIPHASH_32
+check_PROGRAMS += tests/test-strnptr2strnptr-map-halfsiphash_32
+tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-halfsiphash_32.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_HALFSIPHASH_32
+CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_32.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_32
+
+if WITH_HALFSIPHASH_64
+check_PROGRAMS += tests/test-strnptr2strnptr-map-halfsiphash_64
+tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-halfsiphash_64.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_HALFSIPHASH_64
+CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_64.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_64
+
+if WITH_SIPHASH_64
+check_PROGRAMS += tests/test-strnptr2strnptr-map-siphash_64
+tests_test_strnptr2strnptr_map_siphash_64_SOURCES = tests/test-strnptr2strnptr-map-siphash_64_dats.c
+tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_siphash_64_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_siphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-siphash_64.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-siphash_64.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_SIPHASH_64
+CLEANFILES += tests/test-strnptr2strnptr-map-siphash_64.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-siphash_64
+
+if WITH_SIPHASH_128
+check_PROGRAMS += tests/test-strnptr2strnptr-map-siphash_128
+tests_test_strnptr2strnptr_map_siphash_128_SOURCES = tests/test-strnptr2strnptr-map-siphash_128_dats.c
+tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_siphash_128_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_siphash_128_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-siphash_128.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-siphash_128.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_SIPHASH_128
+CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128
+
 EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
 .PHONY: tests-clean

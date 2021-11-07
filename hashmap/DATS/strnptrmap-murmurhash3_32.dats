@@ -40,7 +40,8 @@ staload "hashmap/SATS/strnptrmap.sats"
 staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
 staload "hashmap/SATS/hashmap.sats"
-staload "murmurhash3/SATS/murmurhash3_32.sats"
+
+#include "murmurhash3/HATS/murmurhash3_32.hats"
 
 local
 

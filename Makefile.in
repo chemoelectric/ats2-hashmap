@@ -184,12 +184,17 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-separate-chaining-1$(EXEEXT) \
 	tests/test-separate-chaining-2$(EXEEXT) \
 	tests/test-separate-chaining-3$(EXEEXT) $(am__EXEEXT_1) \
-	$(am__EXEEXT_2)
+	$(am__EXEEXT_2) $(am__EXEEXT_3) $(am__EXEEXT_4) \
+	$(am__EXEEXT_5) $(am__EXEEXT_6)
 
 # This SpookyHash test includes ‘compare_structure’ tests.
 @WITH_SPOOKYHASH_TRUE@am__append_28 = tests/test-strnptr2strnptr-spookyhash-map \
 @WITH_SPOOKYHASH_TRUE@	tests/test-strnptr2strnptr-map-spookyhash
 @WITH_MURMURHASH3_32_TRUE@am__append_29 = tests/test-strnptr2strnptr-map-murmurhash3_32
+@WITH_HALFSIPHASH_32_TRUE@am__append_30 = tests/test-strnptr2strnptr-map-halfsiphash_32
+@WITH_HALFSIPHASH_64_TRUE@am__append_31 = tests/test-strnptr2strnptr-map-halfsiphash_64
+@WITH_SIPHASH_64_TRUE@am__append_32 = tests/test-strnptr2strnptr-map-siphash_64
+@WITH_SIPHASH_128_TRUE@am__append_33 = tests/test-strnptr2strnptr-map-siphash_128
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -282,6 +287,10 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 @WITH_SPOOKYHASH_TRUE@am__EXEEXT_1 = tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT) \
 @WITH_SPOOKYHASH_TRUE@	tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT)
 @WITH_MURMURHASH3_32_TRUE@am__EXEEXT_2 = tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)
+@WITH_HALFSIPHASH_32_TRUE@am__EXEEXT_3 = tests/test-strnptr2strnptr-map-halfsiphash_32$(EXEEXT)
+@WITH_HALFSIPHASH_64_TRUE@am__EXEEXT_4 = tests/test-strnptr2strnptr-map-halfsiphash_64$(EXEEXT)
+@WITH_SIPHASH_64_TRUE@am__EXEEXT_5 = tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT)
+@WITH_SIPHASH_128_TRUE@am__EXEEXT_6 = tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -442,6 +451,20 @@ am_tests_test_separate_chaining_3_OBJECTS = tests/test_separate_chaining_3-test-
 tests_test_separate_chaining_3_OBJECTS =  \
 	$(am_tests_test_separate_chaining_3_OBJECTS)
 tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@WITH_HALFSIPHASH_32_TRUE@am_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS)
+@WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_DEPENDENCIES =  \
+@WITH_HALFSIPHASH_32_TRUE@	$(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@WITH_HALFSIPHASH_64_TRUE@am_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS)
+@WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_DEPENDENCIES =  \
+@WITH_HALFSIPHASH_64_TRUE@	$(lib_LTLIBRARIES)
 am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST =  \
 	tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
 @WITH_MURMURHASH3_32_TRUE@am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS = tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT)
@@ -449,6 +472,20 @@ tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS =  \
 	$(am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS)
 @WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES =  \
 @WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_siphash_128_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@WITH_SIPHASH_128_TRUE@am_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS = tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_siphash_128_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS)
+@WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_DEPENDENCIES =  \
+@WITH_SIPHASH_128_TRUE@	$(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_siphash_64_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@WITH_SIPHASH_64_TRUE@am_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS = tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_siphash_64_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS)
+@WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_DEPENDENCIES =  \
+@WITH_SIPHASH_64_TRUE@	$(lib_LTLIBRARIES)
 am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST =  \
 	tests/test-strnptr2strnptr-map-spookyhash_dats.c
 @WITH_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS = tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT)
@@ -548,7 +585,11 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po \
 	tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po \
 	tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po \
 	tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 am__mv = mv -f
@@ -585,7 +626,11 @@ SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
 	$(tests_test_separate_chaining_3_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES) \
 	$(tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_siphash_128_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_siphash_64_SOURCES) \
 	$(tests_test_strnptr2strnptr_map_spookyhash_SOURCES) \
 	$(tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
 DIST_SOURCES = $(list_ats_dependencies_SOURCES) \
@@ -602,7 +647,11 @@ DIST_SOURCES = $(list_ats_dependencies_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
 	$(tests_test_separate_chaining_3_SOURCES) \
+	$(am__tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES_DIST) \
+	$(am__tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES_DIST) \
 	$(am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST) \
+	$(am__tests_test_strnptr2strnptr_map_siphash_128_SOURCES_DIST) \
+	$(am__tests_test_strnptr2strnptr_map_siphash_64_SOURCES_DIST) \
 	$(am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST) \
 	$(am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST)
 am__can_run_installinfo = \
@@ -1188,6 +1237,14 @@ CLEANFILES = hashmap/DATS/bits_source_uint8.dats \
 	tests/test-strnptr2strnptr-map-spookyhash \
 	tests/test-strnptr2strnptr-map-murmurhash3_32.dats \
 	tests/test-strnptr2strnptr-map-murmurhash3_32 \
+	tests/test-strnptr2strnptr-map-halfsiphash_32.dats \
+	tests/test-strnptr2strnptr-map-halfsiphash_32 \
+	tests/test-strnptr2strnptr-map-halfsiphash_64.dats \
+	tests/test-strnptr2strnptr-map-halfsiphash_64 \
+	tests/test-strnptr2strnptr-map-siphash_64.dats \
+	tests/test-strnptr2strnptr-map-siphash_64 \
+	tests/test-strnptr2strnptr-map-siphash_128.dats \
+	tests/test-strnptr2strnptr-map-siphash_128 \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
@@ -1386,6 +1443,30 @@ tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES) \
 @WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_MURMURHASH3_32_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_MURMURHASH3_32_TRUE@	-latslib
+@WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD =  \
+@WITH_HALFSIPHASH_32_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_HALFSIPHASH_32_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_HALFSIPHASH_32_TRUE@	-latslib
+@WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD =  \
+@WITH_HALFSIPHASH_64_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_HALFSIPHASH_64_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_HALFSIPHASH_64_TRUE@	-latslib
+@WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_SOURCES = tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_LDADD =  \
+@WITH_SIPHASH_64_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_SIPHASH_64_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_SIPHASH_64_TRUE@	-latslib
+@WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_SOURCES = tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_LDADD =  \
+@WITH_SIPHASH_128_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_SIPHASH_128_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_SIPHASH_128_TRUE@	-latslib
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1916,12 +1997,36 @@ tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT):  \
 tests/test-separate-chaining-3$(EXEEXT): $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_3_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-separate-chaining-3$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-halfsiphash_32$(EXEEXT): $(tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS) $(tests_test_strnptr2strnptr_map_halfsiphash_32_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_halfsiphash_32_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-halfsiphash_32$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS) $(tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-halfsiphash_64$(EXEEXT): $(tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS) $(tests_test_strnptr2strnptr_map_halfsiphash_64_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_halfsiphash_64_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-halfsiphash_64$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS) $(tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD) $(LIBS)
 tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT):  \
 	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT): $(tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS) $(tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS) $(tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT): $(tests_test_strnptr2strnptr_map_siphash_128_OBJECTS) $(tests_test_strnptr2strnptr_map_siphash_128_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_siphash_128_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_siphash_128_OBJECTS) $(tests_test_strnptr2strnptr_map_siphash_128_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT): $(tests_test_strnptr2strnptr_map_siphash_64_OBJECTS) $(tests_test_strnptr2strnptr_map_siphash_64_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_siphash_64_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_siphash_64_OBJECTS) $(tests_test_strnptr2strnptr_map_siphash_64_LDADD) $(LIBS)
 tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT):  \
 	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -2016,7 +2121,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po@am__quote@ # am--include-marker
 
@@ -2120,6 +2229,34 @@ tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj: tests/test-sep
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj `if test -f 'tests/test-separate-chaining-3_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-3_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-3_dats.c'; fi`
 
+tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.o: tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Tpo -c -o tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.o `test -f 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c' object='tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.o `test -f 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+
+tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.obj: tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Tpo -c -o tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c' object='tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c'; fi`
+
+tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.o: tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Tpo -c -o tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.o `test -f 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c' object='tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.o `test -f 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+
+tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.obj: tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Tpo -c -o tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c' object='tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c'; fi`
+
 tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o: tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o `test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
@@ -2133,6 +2270,34 @@ tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhas
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' object='tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; fi`
+
+tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.o: tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Tpo -c -o tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.o `test -f 'tests/test-strnptr2strnptr-map-siphash_128_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-siphash_128_dats.c' object='tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.o `test -f 'tests/test-strnptr2strnptr-map-siphash_128_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-siphash_128_dats.c
+
+tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.obj: tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Tpo -c -o tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-siphash_128_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-siphash_128_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-siphash_128_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-siphash_128_dats.c' object='tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-siphash_128_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-siphash_128_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-siphash_128_dats.c'; fi`
+
+tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.o: tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Tpo -c -o tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.o `test -f 'tests/test-strnptr2strnptr-map-siphash_64_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-siphash_64_dats.c' object='tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.o `test -f 'tests/test-strnptr2strnptr-map-siphash_64_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-siphash_64_dats.c
+
+tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.obj: tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Tpo -c -o tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-siphash_64_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-siphash_64_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-siphash_64_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-siphash_64_dats.c' object='tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-siphash_64_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-siphash_64_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-siphash_64_dats.c'; fi`
 
 tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o: tests/test-strnptr2strnptr-map-spookyhash_dats.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Tpo -c -o tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o `test -f 'tests/test-strnptr2strnptr-map-spookyhash_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-spookyhash_dats.c
@@ -2555,6 +2720,34 @@ tests/test-strnptr2strnptr-map-murmurhash3_32.log: tests/test-strnptr2strnptr-ma
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-halfsiphash_32.log: tests/test-strnptr2strnptr-map-halfsiphash_32$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-halfsiphash_32$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-halfsiphash_32'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-halfsiphash_64.log: tests/test-strnptr2strnptr-map-halfsiphash_64$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-halfsiphash_64$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-halfsiphash_64'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-siphash_64.log: tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-siphash_64'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-siphash_128.log: tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-siphash_128'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -2879,7 +3072,11 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
@@ -3001,7 +3198,11 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
@@ -3156,6 +3357,26 @@ libs-clean:
 @WITH_MURMURHASH3_32_TRUE@	 	'#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' \
 @WITH_MURMURHASH3_32_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
 @WITH_MURMURHASH3_32_TRUE@		> $(@)
+@WITH_HALFSIPHASH_32_TRUE@tests/test-strnptr2strnptr-map-halfsiphash_32.dats: GNUmakefile
+@WITH_HALFSIPHASH_32_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_HALFSIPHASH_32_TRUE@	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' \
+@WITH_HALFSIPHASH_32_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_HALFSIPHASH_32_TRUE@		> $(@)
+@WITH_HALFSIPHASH_64_TRUE@tests/test-strnptr2strnptr-map-halfsiphash_64.dats: GNUmakefile
+@WITH_HALFSIPHASH_64_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_HALFSIPHASH_64_TRUE@	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' \
+@WITH_HALFSIPHASH_64_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_HALFSIPHASH_64_TRUE@		> $(@)
+@WITH_SIPHASH_64_TRUE@tests/test-strnptr2strnptr-map-siphash_64.dats: GNUmakefile
+@WITH_SIPHASH_64_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_SIPHASH_64_TRUE@	 	'#include "hashmap/HATS/strnptrmap-siphash_64.hats"' \
+@WITH_SIPHASH_64_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_SIPHASH_64_TRUE@		> $(@)
+@WITH_SIPHASH_128_TRUE@tests/test-strnptr2strnptr-map-siphash_128.dats: GNUmakefile
+@WITH_SIPHASH_128_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_SIPHASH_128_TRUE@	 	'#include "hashmap/HATS/strnptrmap-siphash_128.hats"' \
+@WITH_SIPHASH_128_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_SIPHASH_128_TRUE@		> $(@)
 
 .PHONY: tests-clean
 tests-clean:

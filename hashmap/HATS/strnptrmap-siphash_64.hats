@@ -18,6 +18,7 @@ along with this program. If not, see
 
 *)
 
+#include "siphash/HATS/siphash.hats"
 #include "hashmap/HATS/hashmap.hats"
 
 staload "hashmap/SATS/strnptrmap.sats"

@@ -18,6 +18,7 @@ along with this program. If not, see
 
 *)
 
+#include "murmurhash3/HATS/murmurhash3_32.hats"
 #include "hashmap/HATS/hashmap.hats"
 
 staload "hashmap/SATS/strnptrmap.sats"
