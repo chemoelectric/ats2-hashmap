@@ -386,124 +386,107 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
-list_ats_dependencies_OBJECTS = $(am_list_ats_dependencies_OBJECTS)
-am_tests_test_a_uint8_map_OBJECTS =  \
+nodist_list_ats_dependencies_OBJECTS = list_ats_dependencies-list-ats-dependencies_depsprog.$(OBJEXT)
+list_ats_dependencies_OBJECTS =  \
+	$(nodist_list_ats_dependencies_OBJECTS)
+nodist_tests_test_a_uint8_map_OBJECTS =  \
 	tests/test_a_uint8_map-test-a-uint8-map_dats.$(OBJEXT)
-tests_test_a_uint8_map_OBJECTS = $(am_tests_test_a_uint8_map_OBJECTS)
+tests_test_a_uint8_map_OBJECTS =  \
+	$(nodist_tests_test_a_uint8_map_OBJECTS)
 tests_test_a_uint8_map_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_16bytes_OBJECTS =  \
+nodist_tests_test_bits_source_16bytes_OBJECTS =  \
 	tests/test-bits_source_16bytes_dats.$(OBJEXT)
 tests_test_bits_source_16bytes_OBJECTS =  \
-	$(am_tests_test_bits_source_16bytes_OBJECTS)
+	$(nodist_tests_test_bits_source_16bytes_OBJECTS)
 tests_test_bits_source_16bytes_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_1byte_OBJECTS =  \
+nodist_tests_test_bits_source_1byte_OBJECTS =  \
 	tests/test-bits_source_1byte_dats.$(OBJEXT)
 tests_test_bits_source_1byte_OBJECTS =  \
-	$(am_tests_test_bits_source_1byte_OBJECTS)
+	$(nodist_tests_test_bits_source_1byte_OBJECTS)
 tests_test_bits_source_1byte_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_8bytes_OBJECTS =  \
+nodist_tests_test_bits_source_8bytes_OBJECTS =  \
 	tests/test-bits_source_8bytes_dats.$(OBJEXT)
 tests_test_bits_source_8bytes_OBJECTS =  \
-	$(am_tests_test_bits_source_8bytes_OBJECTS)
+	$(nodist_tests_test_bits_source_8bytes_OBJECTS)
 tests_test_bits_source_8bytes_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_uint16_OBJECTS =  \
+nodist_tests_test_bits_source_uint16_OBJECTS =  \
 	tests/test-bits_source_uint16_dats.$(OBJEXT)
 tests_test_bits_source_uint16_OBJECTS =  \
-	$(am_tests_test_bits_source_uint16_OBJECTS)
+	$(nodist_tests_test_bits_source_uint16_OBJECTS)
 tests_test_bits_source_uint16_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_uint32_OBJECTS =  \
+nodist_tests_test_bits_source_uint32_OBJECTS =  \
 	tests/test-bits_source_uint32_dats.$(OBJEXT)
 tests_test_bits_source_uint32_OBJECTS =  \
-	$(am_tests_test_bits_source_uint32_OBJECTS)
+	$(nodist_tests_test_bits_source_uint32_OBJECTS)
 tests_test_bits_source_uint32_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_uint64_OBJECTS =  \
+nodist_tests_test_bits_source_uint64_OBJECTS =  \
 	tests/test-bits_source_uint64_dats.$(OBJEXT)
 tests_test_bits_source_uint64_OBJECTS =  \
-	$(am_tests_test_bits_source_uint64_OBJECTS)
+	$(nodist_tests_test_bits_source_uint64_OBJECTS)
 tests_test_bits_source_uint64_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_bits_source_uint64_uint64_OBJECTS =  \
+nodist_tests_test_bits_source_uint64_uint64_OBJECTS =  \
 	tests/test-bits_source_uint64_uint64_dats.$(OBJEXT)
 tests_test_bits_source_uint64_uint64_OBJECTS =  \
-	$(am_tests_test_bits_source_uint64_uint64_OBJECTS)
+	$(nodist_tests_test_bits_source_uint64_uint64_OBJECTS)
 tests_test_bits_source_uint64_uint64_DEPENDENCIES =  \
 	$(lib_LTLIBRARIES)
-am_tests_test_bits_source_uint8_OBJECTS =  \
+nodist_tests_test_bits_source_uint8_OBJECTS =  \
 	tests/test-bits_source_uint8_dats.$(OBJEXT)
 tests_test_bits_source_uint8_OBJECTS =  \
-	$(am_tests_test_bits_source_uint8_OBJECTS)
+	$(nodist_tests_test_bits_source_uint8_OBJECTS)
 tests_test_bits_source_uint8_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_population_map_OBJECTS =  \
+nodist_tests_test_population_map_OBJECTS =  \
 	tests/test-population_map_dats.$(OBJEXT)
 tests_test_population_map_OBJECTS =  \
-	$(am_tests_test_population_map_OBJECTS)
+	$(nodist_tests_test_population_map_OBJECTS)
 tests_test_population_map_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_separate_chaining_1_OBJECTS = tests/test_separate_chaining_1-test-separate-chaining-1_dats.$(OBJEXT)
+nodist_tests_test_separate_chaining_1_OBJECTS = tests/test_separate_chaining_1-test-separate-chaining-1_dats.$(OBJEXT)
 tests_test_separate_chaining_1_OBJECTS =  \
-	$(am_tests_test_separate_chaining_1_OBJECTS)
+	$(nodist_tests_test_separate_chaining_1_OBJECTS)
 tests_test_separate_chaining_1_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_separate_chaining_2_OBJECTS = tests/test_separate_chaining_2-test-separate-chaining-2_dats.$(OBJEXT)
+nodist_tests_test_separate_chaining_2_OBJECTS = tests/test_separate_chaining_2-test-separate-chaining-2_dats.$(OBJEXT)
 tests_test_separate_chaining_2_OBJECTS =  \
-	$(am_tests_test_separate_chaining_2_OBJECTS)
+	$(nodist_tests_test_separate_chaining_2_OBJECTS)
 tests_test_separate_chaining_2_DEPENDENCIES = $(lib_LTLIBRARIES)
-am_tests_test_separate_chaining_3_OBJECTS = tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT)
+nodist_tests_test_separate_chaining_3_OBJECTS = tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT)
 tests_test_separate_chaining_3_OBJECTS =  \
-	$(am_tests_test_separate_chaining_3_OBJECTS)
+	$(nodist_tests_test_separate_chaining_3_OBJECTS)
 tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_default_hash_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-default_hash_dats.c
-@WITH_DEFAULT_HASH_TRUE@am_tests_test_strnptr2strnptr_map_default_hash_OBJECTS = tests/test_strnptr2strnptr_map_default_hash-test-strnptr2strnptr-map-default_hash_dats.$(OBJEXT)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptr2strnptr_map_default_hash_OBJECTS = tests/test_strnptr2strnptr_map_default_hash-test-strnptr2strnptr-map-default_hash_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_map_default_hash_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_default_hash_OBJECTS)
+	$(nodist_tests_test_strnptr2strnptr_map_default_hash_OBJECTS)
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2strnptr_map_default_hash_DEPENDENCIES =  \
 @WITH_DEFAULT_HASH_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
-@WITH_HALFSIPHASH_32_TRUE@am_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.$(OBJEXT)
-tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS)
+@WITH_HALFSIPHASH_32_TRUE@nodist_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_32-test-strnptr2strnptr-map-halfsiphash_32_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS = $(nodist_tests_test_strnptr2strnptr_map_halfsiphash_32_OBJECTS)
 @WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_DEPENDENCIES =  \
 @WITH_HALFSIPHASH_32_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
-@WITH_HALFSIPHASH_64_TRUE@am_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.$(OBJEXT)
-tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS)
+@WITH_HALFSIPHASH_64_TRUE@nodist_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS = tests/test_strnptr2strnptr_map_halfsiphash_64-test-strnptr2strnptr-map-halfsiphash_64_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS = $(nodist_tests_test_strnptr2strnptr_map_halfsiphash_64_OBJECTS)
 @WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_DEPENDENCIES =  \
 @WITH_HALFSIPHASH_64_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
-@WITH_MURMURHASH3_32_TRUE@am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS = tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT)
-tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS)
+@WITH_MURMURHASH3_32_TRUE@nodist_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS = tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS = $(nodist_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS)
 @WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES =  \
 @WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_siphash_128_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-siphash_128_dats.c
-@WITH_SIPHASH_128_TRUE@am_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS = tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.$(OBJEXT)
+@WITH_SIPHASH_128_TRUE@nodist_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS = tests/test_strnptr2strnptr_map_siphash_128-test-strnptr2strnptr-map-siphash_128_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_map_siphash_128_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS)
+	$(nodist_tests_test_strnptr2strnptr_map_siphash_128_OBJECTS)
 @WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_DEPENDENCIES =  \
 @WITH_SIPHASH_128_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_siphash_64_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-siphash_64_dats.c
-@WITH_SIPHASH_64_TRUE@am_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS = tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.$(OBJEXT)
+@WITH_SIPHASH_64_TRUE@nodist_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS = tests/test_strnptr2strnptr_map_siphash_64-test-strnptr2strnptr-map-siphash_64_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_map_siphash_64_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS)
+	$(nodist_tests_test_strnptr2strnptr_map_siphash_64_OBJECTS)
 @WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_DEPENDENCIES =  \
 @WITH_SIPHASH_64_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-map-spookyhash_dats.c
-@WITH_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS = tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT)
+@WITH_SPOOKYHASH_TRUE@nodist_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS = tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_map_spookyhash_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS)
+	$(nodist_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS)
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_DEPENDENCIES =  \
 @WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
-am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST =  \
-	tests/test-strnptr2strnptr-spookyhash-map_dats.c
-@WITH_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
+@WITH_SPOOKYHASH_TRUE@nodist_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_spookyhash_map_OBJECTS =  \
-	$(am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS)
+	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS)
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
 @WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -619,50 +602,29 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
-	$(list_ats_dependencies_SOURCES) \
-	$(tests_test_a_uint8_map_SOURCES) \
-	$(tests_test_bits_source_16bytes_SOURCES) \
-	$(tests_test_bits_source_1byte_SOURCES) \
-	$(tests_test_bits_source_8bytes_SOURCES) \
-	$(tests_test_bits_source_uint16_SOURCES) \
-	$(tests_test_bits_source_uint32_SOURCES) \
-	$(tests_test_bits_source_uint64_SOURCES) \
-	$(tests_test_bits_source_uint64_uint64_SOURCES) \
-	$(tests_test_bits_source_uint8_SOURCES) \
-	$(tests_test_population_map_SOURCES) \
-	$(tests_test_separate_chaining_1_SOURCES) \
-	$(tests_test_separate_chaining_2_SOURCES) \
-	$(tests_test_separate_chaining_3_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_default_hash_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_siphash_128_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_siphash_64_SOURCES) \
-	$(tests_test_strnptr2strnptr_map_spookyhash_SOURCES) \
-	$(tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
-DIST_SOURCES = $(list_ats_dependencies_SOURCES) \
-	$(tests_test_a_uint8_map_SOURCES) \
-	$(tests_test_bits_source_16bytes_SOURCES) \
-	$(tests_test_bits_source_1byte_SOURCES) \
-	$(tests_test_bits_source_8bytes_SOURCES) \
-	$(tests_test_bits_source_uint16_SOURCES) \
-	$(tests_test_bits_source_uint32_SOURCES) \
-	$(tests_test_bits_source_uint64_SOURCES) \
-	$(tests_test_bits_source_uint64_uint64_SOURCES) \
-	$(tests_test_bits_source_uint8_SOURCES) \
-	$(tests_test_population_map_SOURCES) \
-	$(tests_test_separate_chaining_1_SOURCES) \
-	$(tests_test_separate_chaining_2_SOURCES) \
-	$(tests_test_separate_chaining_3_SOURCES) \
-	$(am__tests_test_strnptr2strnptr_map_default_hash_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_siphash_128_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_siphash_64_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST) \
-	$(am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST)
+	$(nodist_list_ats_dependencies_SOURCES) \
+	$(nodist_tests_test_a_uint8_map_SOURCES) \
+	$(nodist_tests_test_bits_source_16bytes_SOURCES) \
+	$(nodist_tests_test_bits_source_1byte_SOURCES) \
+	$(nodist_tests_test_bits_source_8bytes_SOURCES) \
+	$(nodist_tests_test_bits_source_uint16_SOURCES) \
+	$(nodist_tests_test_bits_source_uint32_SOURCES) \
+	$(nodist_tests_test_bits_source_uint64_SOURCES) \
+	$(nodist_tests_test_bits_source_uint64_uint64_SOURCES) \
+	$(nodist_tests_test_bits_source_uint8_SOURCES) \
+	$(nodist_tests_test_population_map_SOURCES) \
+	$(nodist_tests_test_separate_chaining_1_SOURCES) \
+	$(nodist_tests_test_separate_chaining_2_SOURCES) \
+	$(nodist_tests_test_separate_chaining_3_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_default_hash_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_siphash_128_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_siphash_64_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_map_spookyhash_SOURCES) \
+	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
+DIST_SOURCES =
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -1402,89 +1364,90 @@ nodist_libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS) $(am__append_7) \
 	$(am__append_8) $(am__append_9)
-tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
+nodist_tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
 tests_test_bits_source_uint8_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
+nodist_tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
 tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
+nodist_tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
 tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
+nodist_tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
 tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
+nodist_tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
+nodist_tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
 tests_test_bits_source_1byte_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
+nodist_tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
-tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
+nodist_tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
 tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
-tests_test_population_map_SOURCES = tests/test-population_map_dats.c
+nodist_tests_test_population_map_SOURCES = tests/test-population_map_dats.c
 tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
-tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
+nodist_tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
 tests_test_a_uint8_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
+nodist_tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
 tests_test_separate_chaining_1_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_1_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
+nodist_tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
 tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
+nodist_tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
 tests_test_separate_chaining_3_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
+@WITH_SPOOKYHASH_TRUE@nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_LDADD =  \
 @WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_SPOOKYHASH_TRUE@	-latslib
-@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@WITH_SPOOKYHASH_TRUE@nodist_tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_LDADD =  \
 @WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_SPOOKYHASH_TRUE@	-latslib
-@WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES = tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@WITH_MURMURHASH3_32_TRUE@nodist_tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES = tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
 @WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD =  \
 @WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_MURMURHASH3_32_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_MURMURHASH3_32_TRUE@	-latslib
-@WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
+@WITH_HALFSIPHASH_32_TRUE@nodist_tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
 @WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_HALFSIPHASH_32_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD =  \
 @WITH_HALFSIPHASH_32_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_HALFSIPHASH_32_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_HALFSIPHASH_32_TRUE@	-latslib
-@WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
+@WITH_HALFSIPHASH_64_TRUE@nodist_tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
 @WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_HALFSIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD =  \
 @WITH_HALFSIPHASH_64_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_HALFSIPHASH_64_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_HALFSIPHASH_64_TRUE@	-latslib
-@WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_SOURCES = tests/test-strnptr2strnptr-map-siphash_64_dats.c
+@WITH_SIPHASH_64_TRUE@nodist_tests_test_strnptr2strnptr_map_siphash_64_SOURCES = tests/test-strnptr2strnptr-map-siphash_64_dats.c
 @WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_SIPHASH_64_TRUE@tests_test_strnptr2strnptr_map_siphash_64_LDADD =  \
 @WITH_SIPHASH_64_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_SIPHASH_64_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_SIPHASH_64_TRUE@	-latslib
-@WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_SOURCES = tests/test-strnptr2strnptr-map-siphash_128_dats.c
+@WITH_SIPHASH_128_TRUE@nodist_tests_test_strnptr2strnptr_map_siphash_128_SOURCES = tests/test-strnptr2strnptr-map-siphash_128_dats.c
 @WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_LDADD =  \
 @WITH_SIPHASH_128_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_SIPHASH_128_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_SIPHASH_128_TRUE@	-latslib
-@WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2strnptr_map_default_hash_SOURCES = tests/test-strnptr2strnptr-map-default_hash_dats.c
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptr2strnptr_map_default_hash_SOURCES = tests/test-strnptr2strnptr-map-default_hash_dats.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2strnptr_map_default_hash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2strnptr_map_default_hash_LDADD =  \
 @WITH_DEFAULT_HASH_TRUE@	$(lib_LTLIBRARIES) \
 @WITH_DEFAULT_HASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
 @WITH_DEFAULT_HASH_TRUE@	-latslib
-list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
+nodist_list_ats_dependencies_SOURCES =  \
+	list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
 list_ats_dependencies_LDADD = -L'$(PATSHOME)/ccomp/atslib/lib' \
