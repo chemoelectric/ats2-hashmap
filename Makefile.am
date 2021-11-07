@@ -79,6 +79,7 @@ endif WITH_ATS2_SIPHASH
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
+clean-local: libs-clean
 clean-local: tests-clean
 
 #---------------------------------------------------------------------
@@ -160,7 +161,7 @@ EXTRA_DIST += ats-nodeptracking-rules.mk
 
 lib_LTLIBRARIES += libats2-hashmap.la
 
-libats2_hashmap_la_SOURCES =
+nodist_libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD =
 
@@ -175,76 +176,58 @@ if WITH_ATS2_SIPHASH
 libats2_hashmap_la_LIBADD += $(ATS2_SIPHASH_LIBS)
 endif WITH_ATS2_SIPHASH
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
-CLEANFILES += hashmap/SATS/array-proofs_sats.c
-CLEANFILES += hashmap/DATS/array-proofs_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/array-proofs_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/array-proofs.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/array-proofs.dats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
-CLEANFILES += hashmap/SATS/memory_sats.c
-CLEANFILES += hashmap/DATS/memory_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/memory.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/memory.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/CATS/memory.cats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source-parameters_sats.c
-libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint8_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint16_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint32_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_uint64_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_nbytes_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_1byte_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_2bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_3bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_4bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_5bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_6bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_7bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_8bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_9bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_10bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_11bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_12bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_13bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_14bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_15bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_16bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_17bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_18bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_19bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_20bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_21bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_22bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_23bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_24bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_25bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_26bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_27bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_28bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_29bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_30bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_31bytes_implementation_dats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_32bytes_implementation_dats.c
-CLEANFILES += hashmap/SATS/bits_source-parameters_sats.c
-CLEANFILES += hashmap/SATS/bits_source_sats.c
-CLEANFILES += hashmap/DATS/bits_source_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint8_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint8.dats
-CLEANFILES += hashmap/DATS/bits_source_uint16_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint16.dats
-CLEANFILES += hashmap/DATS/bits_source_uint32_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint32.dats
-CLEANFILES += hashmap/DATS/bits_source_uint64_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint64.dats
-CLEANFILES += hashmap/DATS/bits_source_uint64_uint64_dats.c
-CLEANFILES += hashmap/DATS/bits_source_uint64_uint64.dats
-CLEANFILES += hashmap/DATS/bits_source_nbytes_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source-parameters_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/bits_source_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint8_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint16_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint32_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_uint64_uint64_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_nbytes_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_1byte_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_2bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_3bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_4bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_5bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_6bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_7bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_8bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_9bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_10bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_11bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_12bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_13bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_14bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_15bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_16bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_17bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_18bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_19bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_20bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_21bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_22bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_23bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_24bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_25bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_26bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_27bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_28bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_29bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_30bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_31bytes_implementation_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_32bytes_implementation_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source-parameters.sats
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/bits_source.dats
@@ -258,6 +241,11 @@ hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_uint32.dats.m4 \
 hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_uint64.dats.m4 \
 									hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint64_uint64.dats: hashmap/DATS/bits_source_uint64_uint64.dats.m4
+CLEANFILES += hashmap/DATS/bits_source_uint8.dats
+CLEANFILES += hashmap/DATS/bits_source_uint16.dats
+CLEANFILES += hashmap/DATS/bits_source_uint32.dats
+CLEANFILES += hashmap/DATS/bits_source_uint64.dats
+CLEANFILES += hashmap/DATS/bits_source_uint64_uint64.dats
 
 BUILT_SOURCES += hashmap/DATS/bits_source_1byte_implementation.dats
 BUILT_SOURCES += hashmap/DATS/bits_source_2bytes_implementation.dats
@@ -294,8 +282,8 @@ BUILT_SOURCES += hashmap/DATS/bits_source_32bytes_implementation.dats
 
 .PHONY: bits_source_bytes_clean
 bits_source_bytes_clean:
-	-rm -f hashmap/DATS/bits_source_1byte_implementation{_dats.c,.dats}
-	-rm -f hashmap/DATS/bits_source_*bytes_implementation{_dats.c,.dats}
+	-rm -f hashmap/DATS/bits_source_1byte_implementation.dats
+	-rm -f hashmap/DATS/bits_source_*bytes_implementation.dats
 
 hashmap/DATS/bits_source_1byte_implementation.dats: GNUmakefile
 	$(call v,GEN)printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
@@ -319,85 +307,74 @@ hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
 		'  bits_source_nbytes (i2sz $(*), hash, depth)' \
 		> $(@)
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/population_map_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/population_map_dats.c
-CLEANFILES += hashmap/SATS/population_map_sats.c
-CLEANFILES += hashmap/DATS/population_map_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/population_map_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/population_map_dats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/population_map.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/population_map.dats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
-libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
-CLEANFILES += hashmap/SATS/hashmap_sats.c
-CLEANFILES += hashmap/DATS/hashmap_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
-libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap_sats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
-CLEANFILES += hashmap/SATS/strnptrmap_sats.c
 EXTRA_DIST += hashmap/SATS/strnptrmap.sats
 
 EXTRA_DIST += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 
 if WITH_SPOOKYHASH
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-spookyhash_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-spookyhash.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-spookyhash.hats
 endif WITH_SPOOKYHASH
-CLEANFILES += hashmap/DATS/strnptrmap-spookyhash_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-spookyhash.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-spookyhash.hats
 
 if WITH_MURMURHASH3_32
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-murmurhash3_32.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-murmurhash3_32.hats
 endif WITH_MURMURHASH3_32
-CLEANFILES += hashmap/DATS/strnptrmap-murmurhash3_32_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-murmurhash3_32.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-murmurhash3_32.hats
 
 if WITH_HALFSIPHASH_32
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_32.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_32.hats
 endif WITH_HALFSIPHASH_32
-CLEANFILES += hashmap/DATS/strnptrmap-halfsiphash_32_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-halfsiphash_32.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_32.hats
 
 if WITH_HALFSIPHASH_64
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-halfsiphash_64.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-halfsiphash_64.hats
 endif WITH_HALFSIPHASH_64
-CLEANFILES += hashmap/DATS/strnptrmap-halfsiphash_64_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-halfsiphash_64.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-halfsiphash_64.hats
 
 if WITH_SIPHASH_64
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_64_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_64_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_64.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_64.hats
 endif WITH_SIPHASH_64
-CLEANFILES += hashmap/DATS/strnptrmap-siphash_64_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-siphash_64.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_64.hats
 
 if WITH_SIPHASH_128
-libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_128_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrmap-siphash_128_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrmap-siphash_128.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-siphash_128.hats
 endif WITH_SIPHASH_128
-CLEANFILES += hashmap/DATS/strnptrmap-siphash_128_dats.c
 EXTRA_DIST += hashmap/DATS/strnptrmap-siphash_128.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_128.hats
 
@@ -439,6 +416,13 @@ hashmap/HATS/strnptrmap.hats: GNUmakefile
 endif WITH_DEFAULT_HASH_SIPHASH_128
 CLEANFILES += hashmap/HATS/strnptrmap.hats
 
+.PHONY: libs-clean
+libs-clean:
+	-rm -f hashmap/SATS/*_sats.c
+	-rm -f hashmap/SATS/*_sats.$(OBJEXT)
+	-rm -f hashmap/DATS/*_dats.c
+	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
+
 #--------------------------------------------------------------------------
 #
 # Tests.
@@ -453,63 +437,54 @@ tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
 tests_test_bits_source_uint8_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint8.dats
 CLEANFILES += tests/test-bits_source_uint8
-CLEANFILES += tests/test-bits_source_uint8_dats.c
 
 check_PROGRAMS += tests/test-bits_source_uint16
 tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
 tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint16.dats
 CLEANFILES += tests/test-bits_source_uint16
-CLEANFILES += tests/test-bits_source_uint16_dats.c
 
 check_PROGRAMS += tests/test-bits_source_uint32
 tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
 tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint32.dats
 CLEANFILES += tests/test-bits_source_uint32
-CLEANFILES += tests/test-bits_source_uint32_dats.c
 
 check_PROGRAMS += tests/test-bits_source_uint64
 tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
 tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64
-CLEANFILES += tests/test-bits_source_uint64_dats.c
 
 check_PROGRAMS += tests/test-bits_source_uint64_uint64
 tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64_uint64
-CLEANFILES += tests/test-bits_source_uint64_uint64_dats.c
 
 check_PROGRAMS += tests/test-bits_source_1byte
 tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
 tests_test_bits_source_1byte_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_1byte.dats
 CLEANFILES += tests/test-bits_source_1byte
-CLEANFILES += tests/test-bits_source_1byte_dats.c
 
 check_PROGRAMS += tests/test-bits_source_8bytes
 tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_8bytes.dats
 CLEANFILES += tests/test-bits_source_8bytes
-CLEANFILES += tests/test-bits_source_8bytes_dats.c
 
 check_PROGRAMS += tests/test-bits_source_16bytes
 tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
 tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_16bytes.dats
 CLEANFILES += tests/test-bits_source_16bytes
-CLEANFILES += tests/test-bits_source_16bytes_dats.c
 
 check_PROGRAMS += tests/test-population_map
 tests_test_population_map_SOURCES = tests/test-population_map_dats.c
 tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-population_map.dats
 CLEANFILES += tests/test-population_map
-CLEANFILES += tests/test-population_map_dats.c
 
 check_PROGRAMS += tests/test-a-uint8-map
 tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
@@ -518,7 +493,6 @@ tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES)
 tests_test_a_uint8_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-a-uint8-map.dats
 CLEANFILES += tests/test-a-uint8-map
-CLEANFILES += tests/test-a-uint8-map_dats.c
 
 check_PROGRAMS += tests/test-separate-chaining-1
 tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
@@ -527,7 +501,6 @@ tests_test_separate_chaining_1_LDADD = $(lib_LTLIBRARIES)
 tests_test_separate_chaining_1_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-1.dats
 CLEANFILES += tests/test-separate-chaining-1
-CLEANFILES += tests/test-separate-chaining-1_dats.c
 
 check_PROGRAMS += tests/test-separate-chaining-2
 tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
@@ -536,7 +509,6 @@ tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES)
 tests_test_separate_chaining_2_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-2.dats
 CLEANFILES += tests/test-separate-chaining-2
-CLEANFILES += tests/test-separate-chaining-2_dats.c
 
 check_PROGRAMS += tests/test-separate-chaining-3
 tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
@@ -545,22 +517,55 @@ tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
 tests_test_separate_chaining_3_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-3.dats
 CLEANFILES += tests/test-separate-chaining-3
-CLEANFILES += tests/test-separate-chaining-3_dats.c
 
-if WITH_ATS2_SPOOKYHASH
+if WITH_SPOOKYHASH
+# This SpookyHash test includes ‘compare_structure’ tests.
 check_PROGRAMS += tests/test-strnptr2strnptr-spookyhash-map
 tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
 tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_spookyhash_map_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_spookyhash_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-endif WITH_ATS2_SPOOKYHASH
+endif WITH_SPOOKYHASH
 EXTRA_DIST += tests/test-strnptr2strnptr-spookyhash-map.dats
 CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map
-CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map_dats.c
+
+if WITH_SPOOKYHASH
+check_PROGRAMS += tests/test-strnptr2strnptr-map-spookyhash
+tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
+tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_spookyhash_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_spookyhash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-spookyhash.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-spookyhash.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_SPOOKYHASH
+CLEANFILES += tests/test-strnptr2strnptr-map-spookyhash.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-spookyhash
+
+if WITH_MURMURHASH3_32
+check_PROGRAMS += tests/test-strnptr2strnptr-map-murmurhash3_32
+tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES = tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-murmurhash3_32.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_MURMURHASH3_32
+CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32
+
+EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
+	-rm -f tests/*_sats.c
+	-rm -f tests/*_dats.c
 
 #--------------------------------------------------------------------------
 #

@@ -183,8 +183,13 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-a-uint8-map$(EXEEXT) \
 	tests/test-separate-chaining-1$(EXEEXT) \
 	tests/test-separate-chaining-2$(EXEEXT) \
-	tests/test-separate-chaining-3$(EXEEXT) $(am__EXEEXT_1)
-@WITH_ATS2_SPOOKYHASH_TRUE@am__append_28 = tests/test-strnptr2strnptr-spookyhash-map
+	tests/test-separate-chaining-3$(EXEEXT) $(am__EXEEXT_1) \
+	$(am__EXEEXT_2)
+
+# This SpookyHash test includes ‘compare_structure’ tests.
+@WITH_SPOOKYHASH_TRUE@am__append_28 = tests/test-strnptr2strnptr-spookyhash-map \
+@WITH_SPOOKYHASH_TRUE@	tests/test-strnptr2strnptr-map-spookyhash
+@WITH_MURMURHASH3_32_TRUE@am__append_29 = tests/test-strnptr2strnptr-map-murmurhash3_32
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -274,7 +279,9 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
 	"$(DESTDIR)$(pkgincludedir)"
-@WITH_ATS2_SPOOKYHASH_TRUE@am__EXEEXT_1 = tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)
+@WITH_SPOOKYHASH_TRUE@am__EXEEXT_1 = tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT) \
+@WITH_SPOOKYHASH_TRUE@	tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT)
+@WITH_MURMURHASH3_32_TRUE@am__EXEEXT_2 = tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -309,60 +316,6 @@ am__DEPENDENCIES_1 =
 @WITH_ATS2_MURMURHASH3_TRUE@am__DEPENDENCIES_3 =  \
 @WITH_ATS2_MURMURHASH3_TRUE@	$(am__DEPENDENCIES_1)
 @WITH_ATS2_SIPHASH_TRUE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_1)
-am__libats2_hashmap_la_SOURCES_DIST =  \
-	hashmap/SATS/array-proofs_sats.c \
-	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
-	hashmap/DATS/memory_dats.c \
-	hashmap/SATS/bits_source-parameters_sats.c \
-	hashmap/SATS/bits_source_sats.c \
-	hashmap/DATS/bits_source_dats.c \
-	hashmap/DATS/bits_source_uint8_dats.c \
-	hashmap/DATS/bits_source_uint16_dats.c \
-	hashmap/DATS/bits_source_uint32_dats.c \
-	hashmap/DATS/bits_source_uint64_dats.c \
-	hashmap/DATS/bits_source_uint64_uint64_dats.c \
-	hashmap/DATS/bits_source_nbytes_dats.c \
-	hashmap/DATS/bits_source_1byte_implementation_dats.c \
-	hashmap/DATS/bits_source_2bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_3bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_4bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_5bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_6bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_7bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_8bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_9bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_10bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_11bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_12bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_13bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_14bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_15bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_16bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_17bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_18bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_19bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_20bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_21bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_22bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_23bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_24bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_25bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_26bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_27bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_28bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_29bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_30bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_31bytes_implementation_dats.c \
-	hashmap/DATS/bits_source_32bytes_implementation_dats.c \
-	hashmap/SATS/population_map_sats.c \
-	hashmap/DATS/population_map_dats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c hashmap/SATS/strnptrmap_sats.c \
-	hashmap/DATS/strnptrmap-spookyhash_dats.c \
-	hashmap/DATS/strnptrmap-murmurhash3_32_dats.c \
-	hashmap/DATS/strnptrmap-halfsiphash_32_dats.c \
-	hashmap/DATS/strnptrmap-halfsiphash_64_dats.c \
-	hashmap/DATS/strnptrmap-siphash_64_dats.c \
-	hashmap/DATS/strnptrmap-siphash_128_dats.c
 am__dirstamp = $(am__leading_dot)dirstamp
 @WITH_SPOOKYHASH_TRUE@am__objects_1 = hashmap/DATS/strnptrmap-spookyhash_dats.lo
 @WITH_MURMURHASH3_32_TRUE@am__objects_2 = hashmap/DATS/strnptrmap-murmurhash3_32_dats.lo
@@ -370,7 +323,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @WITH_HALFSIPHASH_64_TRUE@am__objects_4 = hashmap/DATS/strnptrmap-halfsiphash_64_dats.lo
 @WITH_SIPHASH_64_TRUE@am__objects_5 = hashmap/DATS/strnptrmap-siphash_64_dats.lo
 @WITH_SIPHASH_128_TRUE@am__objects_6 = hashmap/DATS/strnptrmap-siphash_128_dats.lo
-am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
+nodist_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/DATS/array-proofs_dats.lo hashmap/SATS/memory_sats.lo \
 	hashmap/DATS/memory_dats.lo \
 	hashmap/SATS/bits_source-parameters_sats.lo \
@@ -420,7 +373,7 @@ am_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/SATS/strnptrmap_sats.lo $(am__objects_1) \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6)
-libats2_hashmap_la_OBJECTS = $(am_libats2_hashmap_la_OBJECTS)
+libats2_hashmap_la_OBJECTS = $(nodist_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -489,13 +442,27 @@ am_tests_test_separate_chaining_3_OBJECTS = tests/test_separate_chaining_3-test-
 tests_test_separate_chaining_3_OBJECTS =  \
 	$(am_tests_test_separate_chaining_3_OBJECTS)
 tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@WITH_MURMURHASH3_32_TRUE@am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS = tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS)
+@WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES =  \
+@WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES)
+am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST =  \
+	tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@WITH_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS = tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT)
+tests_test_strnptr2strnptr_map_spookyhash_OBJECTS =  \
+	$(am_tests_test_strnptr2strnptr_map_spookyhash_OBJECTS)
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_DEPENDENCIES =  \
+@WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
 am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST =  \
 	tests/test-strnptr2strnptr-spookyhash-map_dats.c
-@WITH_ATS2_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
+@WITH_SPOOKYHASH_TRUE@am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS = tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT)
 tests_test_strnptr2strnptr_spookyhash_map_OBJECTS =  \
 	$(am_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS)
-@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
-@WITH_ATS2_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
+@WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -581,6 +548,8 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po \
 	tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po \
+	tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po \
 	tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -601,7 +570,7 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libats2_hashmap_la_SOURCES) \
+SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(list_ats_dependencies_SOURCES) \
 	$(tests_test_a_uint8_map_SOURCES) \
 	$(tests_test_bits_source_16bytes_SOURCES) \
@@ -616,9 +585,10 @@ SOURCES = $(libats2_hashmap_la_SOURCES) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
 	$(tests_test_separate_chaining_3_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES) \
+	$(tests_test_strnptr2strnptr_map_spookyhash_SOURCES) \
 	$(tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
-DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
-	$(list_ats_dependencies_SOURCES) \
+DIST_SOURCES = $(list_ats_dependencies_SOURCES) \
 	$(tests_test_a_uint8_map_SOURCES) \
 	$(tests_test_bits_source_16bytes_SOURCES) \
 	$(tests_test_bits_source_1byte_SOURCES) \
@@ -632,6 +602,8 @@ DIST_SOURCES = $(am__libats2_hashmap_la_SOURCES_DIST) \
 	$(tests_test_separate_chaining_1_SOURCES) \
 	$(tests_test_separate_chaining_2_SOURCES) \
 	$(tests_test_separate_chaining_3_SOURCES) \
+	$(am__tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES_DIST) \
+	$(am__tests_test_strnptr2strnptr_map_spookyhash_SOURCES_DIST) \
 	$(am__tests_test_strnptr2strnptr_spookyhash_map_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -1195,60 +1167,27 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-separate-chaining-2.dats \
 	tests/test-separate-chaining-3.dats \
 	tests/test-strnptr2strnptr-spookyhash-map.dats \
+	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-CLEANFILES = hashmap/SATS/array-proofs_sats.c \
-	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
-	hashmap/DATS/memory_dats.c \
-	hashmap/SATS/bits_source-parameters_sats.c \
-	hashmap/SATS/bits_source_sats.c \
-	hashmap/DATS/bits_source_dats.c \
-	hashmap/DATS/bits_source_uint8_dats.c \
-	hashmap/DATS/bits_source_uint8.dats \
-	hashmap/DATS/bits_source_uint16_dats.c \
+CLEANFILES = hashmap/DATS/bits_source_uint8.dats \
 	hashmap/DATS/bits_source_uint16.dats \
-	hashmap/DATS/bits_source_uint32_dats.c \
 	hashmap/DATS/bits_source_uint32.dats \
-	hashmap/DATS/bits_source_uint64_dats.c \
 	hashmap/DATS/bits_source_uint64.dats \
-	hashmap/DATS/bits_source_uint64_uint64_dats.c \
 	hashmap/DATS/bits_source_uint64_uint64.dats \
-	hashmap/DATS/bits_source_nbytes_dats.c \
-	hashmap/SATS/population_map_sats.c \
-	hashmap/DATS/population_map_dats.c hashmap/SATS/hashmap_sats.c \
-	hashmap/DATS/hashmap_dats.c hashmap/SATS/strnptrmap_sats.c \
-	hashmap/DATS/strnptrmap-spookyhash_dats.c \
-	hashmap/DATS/strnptrmap-murmurhash3_32_dats.c \
-	hashmap/DATS/strnptrmap-halfsiphash_32_dats.c \
-	hashmap/DATS/strnptrmap-halfsiphash_64_dats.c \
-	hashmap/DATS/strnptrmap-siphash_64_dats.c \
-	hashmap/DATS/strnptrmap-siphash_128_dats.c \
 	hashmap/HATS/strnptrmap.hats tests/test-bits_source_uint8 \
-	tests/test-bits_source_uint8_dats.c \
-	tests/test-bits_source_uint16 \
-	tests/test-bits_source_uint16_dats.c \
-	tests/test-bits_source_uint32 \
-	tests/test-bits_source_uint32_dats.c \
+	tests/test-bits_source_uint16 tests/test-bits_source_uint32 \
 	tests/test-bits_source_uint64 \
-	tests/test-bits_source_uint64_dats.c \
 	tests/test-bits_source_uint64_uint64 \
-	tests/test-bits_source_uint64_uint64_dats.c \
-	tests/test-bits_source_1byte \
-	tests/test-bits_source_1byte_dats.c \
-	tests/test-bits_source_8bytes \
-	tests/test-bits_source_8bytes_dats.c \
-	tests/test-bits_source_16bytes \
-	tests/test-bits_source_16bytes_dats.c \
-	tests/test-population_map tests/test-population_map_dats.c \
-	tests/test-a-uint8-map tests/test-a-uint8-map_dats.c \
-	tests/test-separate-chaining-1 \
-	tests/test-separate-chaining-1_dats.c \
-	tests/test-separate-chaining-2 \
-	tests/test-separate-chaining-2_dats.c \
-	tests/test-separate-chaining-3 \
-	tests/test-separate-chaining-3_dats.c \
+	tests/test-bits_source_1byte tests/test-bits_source_8bytes \
+	tests/test-bits_source_16bytes tests/test-population_map \
+	tests/test-a-uint8-map tests/test-separate-chaining-1 \
+	tests/test-separate-chaining-2 tests/test-separate-chaining-3 \
 	tests/test-strnptr2strnptr-spookyhash-map \
-	tests/test-strnptr2strnptr-spookyhash-map_dats.c \
+	tests/test-strnptr2strnptr-map-spookyhash.dats \
+	tests/test-strnptr2strnptr-map-spookyhash \
+	tests/test-strnptr2strnptr-map-murmurhash3_32.dats \
+	tests/test-strnptr2strnptr-map-murmurhash3_32 \
 	list-ats-dependencies list-ats-dependencies_depsprog.c
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
@@ -1343,7 +1282,7 @@ AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir) \
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
-libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
+nodist_libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
 	hashmap/DATS/memory_dats.c \
 	hashmap/SATS/bits_source-parameters_sats.c \
@@ -1429,12 +1368,24 @@ tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
 tests_test_separate_chaining_3_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES) \
 	-L'$(PATSHOME)/ccomp/atslib/lib' -latslib
-@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
-@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
-@WITH_ATS2_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_LDADD =  \
-@WITH_ATS2_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
-@WITH_ATS2_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
-@WITH_ATS2_SPOOKYHASH_TRUE@	-latslib
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_LDADD =  \
+@WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_SPOOKYHASH_TRUE@	-latslib
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_map_spookyhash_LDADD =  \
+@WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_SPOOKYHASH_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_SPOOKYHASH_TRUE@	-latslib
+@WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES = tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+@WITH_MURMURHASH3_32_TRUE@tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD =  \
+@WITH_MURMURHASH3_32_TRUE@	$(lib_LTLIBRARIES) \
+@WITH_MURMURHASH3_32_TRUE@	-L'$(PATSHOME)/ccomp/atslib/lib' \
+@WITH_MURMURHASH3_32_TRUE@	-latslib
 list_ats_dependencies_SOURCES = list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES = list-ats-dependencies.dats
@@ -1965,6 +1916,18 @@ tests/test_separate_chaining_3-test-separate-chaining-3_dats.$(OBJEXT):  \
 tests/test-separate-chaining-3$(EXEEXT): $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_3_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-separate-chaining-3$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT): $(tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS) $(tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_murmurhash3_32_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_murmurhash3_32_OBJECTS) $(tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD) $(LIBS)
+tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT): $(tests_test_strnptr2strnptr_map_spookyhash_OBJECTS) $(tests_test_strnptr2strnptr_map_spookyhash_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_map_spookyhash_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_map_spookyhash_OBJECTS) $(tests_test_strnptr2strnptr_map_spookyhash_LDADD) $(LIBS)
 tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT):  \
 	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -2053,6 +2016,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -2154,6 +2119,34 @@ tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj: tests/test-sep
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-separate-chaining-3_dats.c' object='tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_separate_chaining_3_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_separate_chaining_3-test-separate-chaining-3_dats.obj `if test -f 'tests/test-separate-chaining-3_dats.c'; then $(CYGPATH_W) 'tests/test-separate-chaining-3_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-separate-chaining-3_dats.c'; fi`
+
+tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o: tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o `test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' object='tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.o `test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+
+tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj: tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c' object='tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c'; fi`
+
+tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o: tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Tpo -c -o tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o `test -f 'tests/test-strnptr2strnptr-map-spookyhash_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-spookyhash_dats.c' object='tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.o `test -f 'tests/test-strnptr2strnptr-map-spookyhash_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-map-spookyhash_dats.c
+
+tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.obj: tests/test-strnptr2strnptr-map-spookyhash_dats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.obj -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Tpo -c -o tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-spookyhash_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-spookyhash_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-spookyhash_dats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Tpo tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/test-strnptr2strnptr-map-spookyhash_dats.c' object='tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.obj `if test -f 'tests/test-strnptr2strnptr-map-spookyhash_dats.c'; then $(CYGPATH_W) 'tests/test-strnptr2strnptr-map-spookyhash_dats.c'; else $(CYGPATH_W) '$(srcdir)/tests/test-strnptr2strnptr-map-spookyhash_dats.c'; fi`
 
 tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o: tests/test-strnptr2strnptr-spookyhash-map_dats.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o -MD -MP -MF tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Tpo -c -o tests/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.o `test -f 'tests/test-strnptr2strnptr-spookyhash-map_dats.c' || echo '$(srcdir)/'`tests/test-strnptr2strnptr-spookyhash-map_dats.c
@@ -2548,6 +2541,20 @@ tests/test-strnptr2strnptr-spookyhash-map.log: tests/test-strnptr2strnptr-spooky
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-spookyhash.log: tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-spookyhash$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-spookyhash'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2strnptr-map-murmurhash3_32.log: tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)
+	@p='tests/test-strnptr2strnptr-map-murmurhash3_32$(EXEEXT)'; \
+	b='tests/test-strnptr2strnptr-map-murmurhash3_32'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -2872,6 +2879,8 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -2992,6 +3001,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_1-test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_2-test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test_separate_chaining_3-test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_murmurhash3_32-test-strnptr2strnptr-map-murmurhash3_32_dats.Po
+	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_map_spookyhash-test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test_strnptr2strnptr_spookyhash_map-test-strnptr2strnptr-spookyhash-map_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
@@ -3053,6 +3064,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 
 clean-local: ats-includes-clean
 clean-local: bits_source_bytes_clean
+clean-local: libs-clean
 clean-local: tests-clean
 
 @GNU@ include $(top_srcdir)/m4-rules.mk
@@ -3085,8 +3097,8 @@ hashmap/DATS/bits_source_uint64_uint64.dats: hashmap/DATS/bits_source_uint64_uin
 
 .PHONY: bits_source_bytes_clean
 bits_source_bytes_clean:
-	-rm -f hashmap/DATS/bits_source_1byte_implementation{_dats.c,.dats}
-	-rm -f hashmap/DATS/bits_source_*bytes_implementation{_dats.c,.dats}
+	-rm -f hashmap/DATS/bits_source_1byte_implementation.dats
+	-rm -f hashmap/DATS/bits_source_*bytes_implementation.dats
 
 hashmap/DATS/bits_source_1byte_implementation.dats: GNUmakefile
 	$(call v,GEN)printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
@@ -3128,9 +3140,28 @@ hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
 @WITH_DEFAULT_HASH_SIPHASH_128_TRUE@	@$(MKDIR_P) $(@D)
 @WITH_DEFAULT_HASH_SIPHASH_128_TRUE@	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_128.hats"' > $(@)
 
+.PHONY: libs-clean
+libs-clean:
+	-rm -f hashmap/SATS/*_sats.c
+	-rm -f hashmap/SATS/*_sats.$(OBJEXT)
+	-rm -f hashmap/DATS/*_dats.c
+	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
+@WITH_SPOOKYHASH_TRUE@tests/test-strnptr2strnptr-map-spookyhash.dats: GNUmakefile
+@WITH_SPOOKYHASH_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_SPOOKYHASH_TRUE@	 	'#include "hashmap/HATS/strnptrmap-spookyhash.hats"' \
+@WITH_SPOOKYHASH_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_SPOOKYHASH_TRUE@		> $(@)
+@WITH_MURMURHASH3_32_TRUE@tests/test-strnptr2strnptr-map-murmurhash3_32.dats: GNUmakefile
+@WITH_MURMURHASH3_32_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_MURMURHASH3_32_TRUE@	 	'#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' \
+@WITH_MURMURHASH3_32_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+@WITH_MURMURHASH3_32_TRUE@		> $(@)
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
+	-rm -f tests/*_sats.c
+	-rm -f tests/*_dats.c
 
 #--------------------------------------------------------------------------
 
