@@ -692,6 +692,8 @@ WITH_DEFAULT_HASH_MURMURHASH3_32_FALSE
 WITH_DEFAULT_HASH_MURMURHASH3_32_TRUE
 WITH_DEFAULT_HASH_SPOOKYHASH_FALSE
 WITH_DEFAULT_HASH_SPOOKYHASH_TRUE
+WITH_DEFAULT_HASH_FALSE
+WITH_DEFAULT_HASH_TRUE
 ifnGNUmake
 ifGNUmake
 GNU_MAKE
@@ -15182,6 +15184,14 @@ ac_config_files="$ac_config_files tests/2021.11.06.15.55.50.structure.reference"
 ac_config_files="$ac_config_files tests/2021.11.06.15.55.51.structure.reference"
 
 
+ if test "x${DEFAULT_HASH}" != x; then
+  WITH_DEFAULT_HASH_TRUE=
+  WITH_DEFAULT_HASH_FALSE='#'
+else
+  WITH_DEFAULT_HASH_TRUE='#'
+  WITH_DEFAULT_HASH_FALSE=
+fi
+
  if test "x${DEFAULT_HASH}" = xspookyhash; then
   WITH_DEFAULT_HASH_SPOOKYHASH_TRUE=
   WITH_DEFAULT_HASH_SPOOKYHASH_FALSE='#'
@@ -15503,6 +15513,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${DEPENDENCY_TRACKING_TRUE}" && test -z "${DEPENDENCY_TRACKING_FALSE}"; then
   as_fn_error $? "conditional \"DEPENDENCY_TRACKING\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${WITH_DEFAULT_HASH_TRUE}" && test -z "${WITH_DEFAULT_HASH_FALSE}"; then
+  as_fn_error $? "conditional \"WITH_DEFAULT_HASH\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WITH_DEFAULT_HASH_SPOOKYHASH_TRUE}" && test -z "${WITH_DEFAULT_HASH_SPOOKYHASH_FALSE}"; then

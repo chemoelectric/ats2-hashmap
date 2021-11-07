@@ -616,6 +616,21 @@ endif WITH_SIPHASH_128
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128
 
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-strnptr2strnptr-map-default_hash
+tests_test_strnptr2strnptr_map_default_hash_SOURCES = tests/test-strnptr2strnptr-map-default_hash_dats.c
+tests_test_strnptr2strnptr_map_default_hash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
+tests_test_strnptr2strnptr_map_default_hash_LDADD = $(lib_LTLIBRARIES)
+tests_test_strnptr2strnptr_map_default_hash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
+tests/test-strnptr2strnptr-map-default_hash.dats: GNUmakefile
+	$(call v,GEN)printf "%s\n%s\n" \
+	 	'#include "hashmap/HATS/strnptrmap.hats"' \
+		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
+		> $(@)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-strnptr2strnptr-map-default_hash.dats
+CLEANFILES += tests/test-strnptr2strnptr-map-default_hash
+
 EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
 .PHONY: tests-clean

@@ -280,6 +280,8 @@ AC_CONFIG_FILES([tests/2021.11.06.15.55.49.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.50.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.51.structure.reference])
 
+AM_CONDITIONAL([WITH_DEFAULT_HASH],
+               [test "x${DEFAULT_HASH}" != x])
 AM_CONDITIONAL([WITH_DEFAULT_HASH_SPOOKYHASH],
                [test "x${DEFAULT_HASH}" = xspookyhash])
 AM_CONDITIONAL([WITH_DEFAULT_HASH_MURMURHASH3_32],
