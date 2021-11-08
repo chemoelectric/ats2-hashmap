@@ -278,7 +278,14 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.11.06.15.55.49.structure.reference \
 	tests/2021.11.06.15.55.50.structure.reference \
 	tests/2021.11.06.15.55.51.structure.reference \
-	tests/2021.11.08.12.16.37.contents.reference
+	tests/2021.11.08.12.16.37.contents.reference \
+	tests/2021.11.08.12.16.38.contents.reference \
+	tests/2021.11.08.12.16.39.contents.reference \
+	tests/2021.11.08.12.16.40.contents.reference \
+	tests/2021.11.08.12.16.41.contents.reference \
+	tests/2021.11.08.12.16.42.contents.reference \
+	tests/2021.11.08.12.16.43.contents.reference \
+	tests/2021.11.08.12.16.44.contents.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -908,6 +915,13 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.38.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.39.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.40.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.41.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.42.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.43.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.44.contents.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -1158,7 +1172,14 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.49.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in \
-	$(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in
+	$(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.38.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.39.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.40.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.41.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.42.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.43.contents.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.44.contents.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
@@ -1636,6 +1657,20 @@ tests/2021.11.06.15.55.50.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.11.06.15.55.51.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.11.08.12.16.37.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.38.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.38.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.39.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.39.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.40.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.40.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.41.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.41.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.42.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.42.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.43.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.43.contents.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.44.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.44.contents.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)

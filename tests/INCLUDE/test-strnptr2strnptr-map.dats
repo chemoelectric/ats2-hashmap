@@ -45,8 +45,8 @@ list_vt_mergesort$cmp<@(Strnptr1, Strnptr1)> (x, y) =
                      $UN.strnptr2string (y.0))
   in
     if i = 0 then
-      compare($UN.strnptr2string (x.1),
-              $UN.strnptr2string (y.1))
+      compare ($UN.strnptr2string (x.1),
+               $UN.strnptr2string (y.1))
     else
       i
   end
@@ -309,11 +309,10 @@ fprint_strnptr_list_vt
         void =
       case+ lst of
       | NIL => ()
-      | @ head :: tail =>
+      | head :: tail =>
         {
           val _ = fprint! (f, separator, head)
           val _ = loop (tail, " ")
-          prval _ = fold@ lst
         }
     prval _ = lemma_list_vt_param lst
   in
@@ -336,12 +335,11 @@ fprint_strnptr_pair_list_vt
         void =
       case+ lst of
       | NIL => ()
-      | @ head :: tail =>
+      | head :: tail =>
         {
           val _ = fprint! (f, separator,
                            "(", head.0, " . ", head.1, ")")
           val _ = loop (tail, " ")
-          prval _ = fold@ lst
         }
     prval _ = lemma_list_vt_param lst
   in
@@ -351,12 +349,48 @@ fprint_strnptr_pair_list_vt
   end
 
 fn
+fprint_strnptr_pair_list_vt_on_separate_lines
+        {n   : int}
+        (f   : FILEref,
+         lst : !list_vt (@(Strnptr1, Strnptr1), n) >> _) :
+    void =
+  let
+    fun
+    loop {m         : int | 0 <= m} .<m>.
+         (lst       : !list_vt (@(Strnptr1, Strnptr1), m) >> _) :
+        void =
+      case+ lst of
+      | NIL => ()
+      | head :: tail =>
+        {
+          val _ = fprintln! (f, "(", head.0, " . ", head.1, ")")
+          val _ = loop (tail)
+        }
+    prval _ = lemma_list_vt_param lst
+  in
+    loop (lst)
+  end
+
+fn
 compare_contents
         {size               : int}
         (map                : !strnptrmap_vt (Strnptr1, size) >> _,
          filename           : String0,
          reference_filename : String0) : bool =
   let
+    implement
+    list_vt_mergesort$cmp<@(Strnptr1, Strnptr1)> (x, y) =
+      let
+        val i = compare_num ($UN.strnptr2string (x.0),
+                             $UN.strnptr2string (y.0))
+      in
+        if i = 0 then
+          compare_num ($UN.strnptr2string (x.1),
+                       $UN.strnptr2string (y.1))
+        else
+          i
+      end
+
     val command = string_append ("mkdir -p ", SUBDIR)
     val _ =
       $extfcall (int, "system", $UNSAFE.castvwtp1{string} command)
@@ -370,8 +404,7 @@ compare_contents
                               file_mode_w)
     val pairs = s2s_map_pairs (map)
     val pairs = list_vt_mergesort<@(Strnptr1, Strnptr1)> pairs
-    val _ = fprint_strnptr_pair_list_vt (f, pairs)
-    val _ = fprintln! (f)
+    val _ = fprint_strnptr_pair_list_vt_on_separate_lines (f, pairs)
     val _ = list_vt_freelin pairs
     val _ = fileref_close (f)
 
@@ -917,25 +950,53 @@ test3 () : void =
            "2021.11.08.12.16.37.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 1)
     val _ = assertloc (size map = i2sz 999)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.38.contents",
+           "2021.11.08.12.16.38.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 10)
     val _ = assertloc (size map = i2sz 990)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.39.contents",
+           "2021.11.08.12.16.39.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 900, i2sz 90)
     val _ = assertloc (size map = i2sz 900)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.40.contents",
+           "2021.11.08.12.16.40.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 990)
     val _ = assertloc (size map = i2sz 10)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.41.contents",
+           "2021.11.08.12.16.41.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 0, i2sz 998)
     val _ = assertloc (size map = i2sz 2)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.42.contents",
+           "2021.11.08.12.16.42.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 999, i2sz 1)
     val _ = assertloc (size map = i2sz 1)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.43.contents",
+           "2021.11.08.12.16.43.contents.reference"))
     val map = diminish_map (map, numbers_in_order, i2sz 998, i2sz 1)
     val _ = assertloc (size map = i2sz 0)
-    // FIXME: PUT TESTS IN HERE
+    val _ =
+      assertloc
+        (compare_contents
+          (map, "2021.11.08.12.16.44.contents",
+           "2021.11.08.12.16.44.contents.reference"))
     val _ = free map
   }
 

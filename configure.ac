@@ -280,6 +280,13 @@ AC_CONFIG_FILES([tests/2021.11.06.15.55.49.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.50.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.06.15.55.51.structure.reference])
 AC_CONFIG_FILES([tests/2021.11.08.12.16.37.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.38.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.39.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.40.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.41.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.42.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.43.contents.reference])
+AC_CONFIG_FILES([tests/2021.11.08.12.16.44.contents.reference])
 
 AM_CONDITIONAL([WITH_DEFAULT_HASH],
                [test "x${DEFAULT_HASH}" != x])

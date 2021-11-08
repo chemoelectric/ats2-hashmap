@@ -15185,6 +15185,20 @@ ac_config_files="$ac_config_files tests/2021.11.06.15.55.51.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.11.08.12.16.37.contents.reference"
 
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.38.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.39.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.40.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.41.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.42.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.43.contents.reference"
+
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.44.contents.reference"
+
 
  if test "x${DEFAULT_HASH}" != x; then
   WITH_DEFAULT_HASH_TRUE=
@@ -16512,6 +16526,13 @@ do
     "tests/2021.11.06.15.55.50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.06.15.55.50.structure.reference" ;;
     "tests/2021.11.06.15.55.51.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.06.15.55.51.structure.reference" ;;
     "tests/2021.11.08.12.16.37.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.37.contents.reference" ;;
+    "tests/2021.11.08.12.16.38.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.38.contents.reference" ;;
+    "tests/2021.11.08.12.16.39.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.39.contents.reference" ;;
+    "tests/2021.11.08.12.16.40.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.40.contents.reference" ;;
+    "tests/2021.11.08.12.16.41.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.41.contents.reference" ;;
+    "tests/2021.11.08.12.16.42.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.42.contents.reference" ;;
+    "tests/2021.11.08.12.16.43.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.43.contents.reference" ;;
+    "tests/2021.11.08.12.16.44.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.44.contents.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
