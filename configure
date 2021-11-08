@@ -15183,6 +15183,8 @@ ac_config_files="$ac_config_files tests/2021.11.06.15.55.50.structure.reference"
 
 ac_config_files="$ac_config_files tests/2021.11.06.15.55.51.structure.reference"
 
+ac_config_files="$ac_config_files tests/2021.11.08.12.16.37.contents.reference"
+
 
  if test "x${DEFAULT_HASH}" != x; then
   WITH_DEFAULT_HASH_TRUE=
@@ -16509,6 +16511,7 @@ do
     "tests/2021.11.06.15.55.49.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.06.15.55.49.structure.reference" ;;
     "tests/2021.11.06.15.55.50.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.06.15.55.50.structure.reference" ;;
     "tests/2021.11.06.15.55.51.structure.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.06.15.55.51.structure.reference" ;;
+    "tests/2021.11.08.12.16.37.contents.reference") CONFIG_FILES="$CONFIG_FILES tests/2021.11.08.12.16.37.contents.reference" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

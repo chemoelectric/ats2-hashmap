@@ -277,7 +277,8 @@ CONFIG_CLEAN_FILES = common-macros.m4 \
 	tests/2021.11.06.15.55.48.structure.reference \
 	tests/2021.11.06.15.55.49.structure.reference \
 	tests/2021.11.06.15.55.50.structure.reference \
-	tests/2021.11.06.15.55.51.structure.reference
+	tests/2021.11.06.15.55.51.structure.reference \
+	tests/2021.11.08.12.16.37.contents.reference
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" \
@@ -906,6 +907,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.49.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in \
 	AUTHORS COPYING INSTALL README build-aux/compile \
 	build-aux/config.guess build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
@@ -1155,7 +1157,8 @@ CONFIG_STATUS_DEPENDENCIES = $(top_srcdir)/common-macros.m4.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.48.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.49.structure.reference.in \
 	$(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in \
-	$(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in
+	$(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in \
+	$(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in
 EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
@@ -1631,6 +1634,8 @@ tests/2021.11.06.15.55.49.structure.reference: $(top_builddir)/config.status $(t
 tests/2021.11.06.15.55.50.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.50.structure.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tests/2021.11.06.15.55.51.structure.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.06.15.55.51.structure.reference.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+tests/2021.11.08.12.16.37.contents.reference: $(top_builddir)/config.status $(top_srcdir)/tests/2021.11.08.12.16.37.contents.reference.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -3360,38 +3365,28 @@ libs-clean:
 	-rm -f hashmap/SATS/*_sats.$(OBJEXT)
 	-rm -f hashmap/DATS/*_dats.c
 	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
+
+@GNU@ define print-test-strnptr2strnptr-map-dats =
+@GNU@   printf "%s\n%s\n%s\n" \
+@GNU@     '#define SUBDIR "tests/$(1)/"' \
+@GNU@     '#include "hashmap/HATS/strnptrmap-$(1).hats"' \
+@GNU@     '#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"'
+@GNU@ endef
 @WITH_SPOOKYHASH_TRUE@tests/test-strnptr2strnptr-map-spookyhash.dats: GNUmakefile
-@WITH_SPOOKYHASH_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_SPOOKYHASH_TRUE@	 	'#include "hashmap/HATS/strnptrmap-spookyhash.hats"' \
-@WITH_SPOOKYHASH_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_SPOOKYHASH_TRUE@		> $(@)
+@WITH_SPOOKYHASH_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,spookyhash) > $(@)
 @WITH_MURMURHASH3_32_TRUE@tests/test-strnptr2strnptr-map-murmurhash3_32.dats: GNUmakefile
-@WITH_MURMURHASH3_32_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_MURMURHASH3_32_TRUE@	 	'#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' \
-@WITH_MURMURHASH3_32_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_MURMURHASH3_32_TRUE@		> $(@)
+@WITH_MURMURHASH3_32_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,murmurhash3_32) > $(@)
 @WITH_HALFSIPHASH_32_TRUE@tests/test-strnptr2strnptr-map-halfsiphash_32.dats: GNUmakefile
-@WITH_HALFSIPHASH_32_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_HALFSIPHASH_32_TRUE@	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' \
-@WITH_HALFSIPHASH_32_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_HALFSIPHASH_32_TRUE@		> $(@)
+@WITH_HALFSIPHASH_32_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_32) > $(@)
 @WITH_HALFSIPHASH_64_TRUE@tests/test-strnptr2strnptr-map-halfsiphash_64.dats: GNUmakefile
-@WITH_HALFSIPHASH_64_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_HALFSIPHASH_64_TRUE@	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' \
-@WITH_HALFSIPHASH_64_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_HALFSIPHASH_64_TRUE@		> $(@)
+@WITH_HALFSIPHASH_64_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_64) > $(@)
 @WITH_SIPHASH_64_TRUE@tests/test-strnptr2strnptr-map-siphash_64.dats: GNUmakefile
-@WITH_SIPHASH_64_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_SIPHASH_64_TRUE@	 	'#include "hashmap/HATS/strnptrmap-siphash_64.hats"' \
-@WITH_SIPHASH_64_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_SIPHASH_64_TRUE@		> $(@)
+@WITH_SIPHASH_64_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_64) > $(@)
 @WITH_SIPHASH_128_TRUE@tests/test-strnptr2strnptr-map-siphash_128.dats: GNUmakefile
-@WITH_SIPHASH_128_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
-@WITH_SIPHASH_128_TRUE@	 	'#include "hashmap/HATS/strnptrmap-siphash_128.hats"' \
-@WITH_SIPHASH_128_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-@WITH_SIPHASH_128_TRUE@		> $(@)
+@WITH_SIPHASH_128_TRUE@	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_128) > $(@)
 @WITH_DEFAULT_HASH_TRUE@tests/test-strnptr2strnptr-map-default_hash.dats: GNUmakefile
-@WITH_DEFAULT_HASH_TRUE@	$(call v,GEN)printf "%s\n%s\n" \
+@WITH_DEFAULT_HASH_TRUE@	$(call v,GEN)printf "%s\n%s\n%s\n" \
+@WITH_DEFAULT_HASH_TRUE@		'#define SUBDIR "tests/default_hash/"' \
 @WITH_DEFAULT_HASH_TRUE@	 	'#include "hashmap/HATS/strnptrmap.hats"' \
 @WITH_DEFAULT_HASH_TRUE@		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
 @WITH_DEFAULT_HASH_TRUE@		> $(@)
@@ -3399,6 +3394,7 @@ libs-clean:
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
+	-rm -f tests/*/*.contents
 	-rm -f tests/*_sats.c
 	-rm -f tests/*_dats.c
 

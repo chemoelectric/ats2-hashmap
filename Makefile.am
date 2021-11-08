@@ -526,6 +526,13 @@ endif WITH_SPOOKYHASH
 EXTRA_DIST += tests/test-strnptr2strnptr-spookyhash-map.dats
 CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map
 
+@GNU@ define print-test-strnptr2strnptr-map-dats =
+@GNU@   printf "%s\n%s\n%s\n" \
+@GNU@     '#define SUBDIR "tests/$(1)/"' \
+@GNU@     '#include "hashmap/HATS/strnptrmap-$(1).hats"' \
+@GNU@     '#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"'
+@GNU@ endef
+
 if WITH_SPOOKYHASH
 check_PROGRAMS += tests/test-strnptr2strnptr-map-spookyhash
 nodist_tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
@@ -533,10 +540,7 @@ tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALL
 tests_test_strnptr2strnptr_map_spookyhash_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_spookyhash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-spookyhash.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-spookyhash.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,spookyhash) > $(@)
 endif WITH_SPOOKYHASH
 CLEANFILES += tests/test-strnptr2strnptr-map-spookyhash.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-spookyhash
@@ -548,10 +552,7 @@ tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_ME
 tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-murmurhash3_32.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,murmurhash3_32) > $(@)
 endif WITH_MURMURHASH3_32
 CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32
@@ -563,10 +564,7 @@ tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_ME
 tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-halfsiphash_32.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_32) > $(@)
 endif WITH_HALFSIPHASH_32
 CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_32.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_32
@@ -578,10 +576,7 @@ tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_ME
 tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-halfsiphash_64.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_64) > $(@)
 endif WITH_HALFSIPHASH_64
 CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_64.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_64
@@ -593,10 +588,7 @@ tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALL
 tests_test_strnptr2strnptr_map_siphash_64_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_siphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-siphash_64.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-siphash_64.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_64) > $(@)
 endif WITH_SIPHASH_64
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_64.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_64
@@ -608,10 +600,7 @@ tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMAL
 tests_test_strnptr2strnptr_map_siphash_128_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_siphash_128_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-siphash_128.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
-	 	'#include "hashmap/HATS/strnptrmap-siphash_128.hats"' \
-		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
-		> $(@)
+	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_128) > $(@)
 endif WITH_SIPHASH_128
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128
@@ -623,7 +612,8 @@ tests_test_strnptr2strnptr_map_default_hash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMA
 tests_test_strnptr2strnptr_map_default_hash_LDADD = $(lib_LTLIBRARIES)
 tests_test_strnptr2strnptr_map_default_hash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-default_hash.dats: GNUmakefile
-	$(call v,GEN)printf "%s\n%s\n" \
+	$(call v,GEN)printf "%s\n%s\n%s\n" \
+		'#define SUBDIR "tests/default_hash/"' \
 	 	'#include "hashmap/HATS/strnptrmap.hats"' \
 		'#include "tests/INCLUDE/test-strnptr2strnptr-map.dats"' \
 		> $(@)
@@ -636,6 +626,7 @@ EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
+	-rm -f tests/*/*.contents
 	-rm -f tests/*_sats.c
 	-rm -f tests/*_dats.c
 
