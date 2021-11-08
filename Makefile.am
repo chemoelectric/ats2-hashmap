@@ -662,7 +662,39 @@ list_ats_dependencies_LDADD += -latslib
 
 #--------------------------------------------------------------------------
 
-#nodist_pkgconfig_DATA += ats2-hashmap.pc
+nodist_pkgconfig_DATA += ats2-hashmap.pc
+
+CLEANFILES += ats2-hashmap.pc
+
+ats2-hashmap.pc: configure GNUmakefile
+	$(call v,GEN)printf '' > $(@)
+	@echo '' >> $(@)
+	@echo 'prefix=@prefix@' >> $(@)
+	@echo 'exec_prefix=@exec_prefix@' >> $(@)
+	@echo 'libdir=@libdir@' >> $(@)
+	@echo 'includedir=@includedir@' >> $(@)
+	@echo 'package=@PACKAGE@' >> $(@)
+	@echo 'version=@VERSION@' >> $(@)
+	@echo 'pkgincludedir="$${includedir}/$${package}"' >> $(@)
+	@echo '' >> $(@)
+	@echo '# It is recommended you override this with' >> $(@)
+	@echo '# --define-variable=PATSHOME="$${PATSHOME}"' >> $(@)
+	@echo 'PATSHOME="@PKGCONFIG_PATSHOME@"' >> $(@)
+	@echo '' >> $(@)
+	@echo 'CPPFLAGS="-I$${pkgincludedir} -I$${PATSHOME} -I$${PATSHOME}/ccomp/runtime"' >> $(@)
+	@echo '' >> $(@)
+	@echo '# Options for patsopt.' >> $(@)
+	@echo 'PATSOPTFLAGS="-IATS $${pkgincludedir}"' >> $(@)
+	@echo '' >> $(@)
+	@echo '# Options for patscc.' >> $(@)
+	@echo 'PATSCCFLAGS="-IIATS $${pkgincludedir}"' >> $(@)
+	@echo '' >> $(@)
+	@echo 'Name: @PACKAGE@' >> $(@)
+	@echo 'Description: Hash Maps (Ideal Hash Trees) for ATS2/Postiats' >> $(@)
+	@echo 'Version: @VERSION@' >> $(@)
+	@echo 'Requires.private: @REQUIRES_PRIVATE_PKGS@' >> $(@)
+	@echo 'Libs: -L$${libdir} -lats2-hashmap' >> $(@)
+	@echo 'Cflags: $${CPPFLAGS}' >> $(@)
 
 #--------------------------------------------------------------------------
 # local variables:
