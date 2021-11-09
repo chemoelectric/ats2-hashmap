@@ -417,9 +417,27 @@ nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2uintptrmap.sats
 
 if WITH_DEFAULT_HASH
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_size_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_set_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_del_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_get_opt_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_has_key_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_pairs_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_keys_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_values_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_free_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptr2uintptrmap.dats
 endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_size.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_set.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_del.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_get_opt.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_has_key.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_pairs.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_keys.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_values.dats
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_free.dats
 
 .PHONY: libs-clean
 libs-clean:
@@ -433,60 +451,80 @@ libs-clean:
 # Tests.
 #
 
+# FIXME:
+# FIXME:
+# FIXME:
+# FIXME: Compiling the tests with -DATS_MEMALLOC_LIBC is going to prove
+# FIXME: inadequate. Probably I should add my own malloc/free
+# FIXME: implementations to the library: calling the libc code, but with
+# FIXME: hooks so the programmer can use alternate implementations.
+# FIXME:
+# FIXME:
+# FIXME:
+
 TESTS += $(check_PROGRAMS)
 
 check_PROGRAMS =
 
 check_PROGRAMS += tests/test-bits_source_uint8
 nodist_tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
+tests_test_bits_source_uint8_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint8_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint8.dats
 CLEANFILES += tests/test-bits_source_uint8
 
 check_PROGRAMS += tests/test-bits_source_uint16
 nodist_tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
+tests_test_bits_source_uint16_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint16.dats
 CLEANFILES += tests/test-bits_source_uint16
 
 check_PROGRAMS += tests/test-bits_source_uint32
 nodist_tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
+tests_test_bits_source_uint32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint32.dats
 CLEANFILES += tests/test-bits_source_uint32
 
 check_PROGRAMS += tests/test-bits_source_uint64
 nodist_tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
+tests_test_bits_source_uint64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64
 
 check_PROGRAMS += tests/test-bits_source_uint64_uint64
 nodist_tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
+tests_test_bits_source_uint64_uint64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64_uint64
 
 check_PROGRAMS += tests/test-bits_source_1byte
 nodist_tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
+tests_test_bits_source_1byte_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_1byte_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_1byte.dats
 CLEANFILES += tests/test-bits_source_1byte
 
 check_PROGRAMS += tests/test-bits_source_8bytes
 nodist_tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
+tests_test_bits_source_8bytes_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_8bytes.dats
 CLEANFILES += tests/test-bits_source_8bytes
 
 check_PROGRAMS += tests/test-bits_source_16bytes
 nodist_tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
+tests_test_bits_source_16bytes_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_16bytes.dats
 CLEANFILES += tests/test-bits_source_16bytes
 
 check_PROGRAMS += tests/test-population_map
 nodist_tests_test_population_map_SOURCES = tests/test-population_map_dats.c
+tests_test_population_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-population_map.dats
 CLEANFILES += tests/test-population_map

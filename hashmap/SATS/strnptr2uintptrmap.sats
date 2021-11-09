@@ -195,6 +195,13 @@ strnptr2uintptrmap_pairs
 overload pairs with strnptr2uintptrmap_pairs
 
 fun
+strnptr2uintptrmap_pairs_free
+        {size  : int}
+        (pairs : list_vt (@(Strnptr1, uintptr), size)) :
+    void
+overload free with strnptr2uintptrmap_pairs_free
+
+fun
 strnptr2uintptrmap_keys
         {size : int}
         (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
@@ -202,11 +209,25 @@ strnptr2uintptrmap_keys
 overload keys with strnptr2uintptrmap_keys
 
 fun
+strnptr2uintptrmap_keys_free
+        {size : int}
+        (keys : list_vt (Strnptr1, size)) :
+    void
+overload free with strnptr2uintptrmap_keys_free
+
+fun
 strnptr2uintptrmap_values
         {size : int}
         (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
     list_vt (uintptr, size)
 overload values with strnptr2uintptrmap_values
+
+fun
+strnptr2uintptrmap_values_free
+        {size   : int}
+        (values : list_vt (uintptr, size)) :
+    void
+overload free with strnptr2uintptrmap_values_free
 
 fun
 strnptr2uintptrmap_free
