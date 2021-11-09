@@ -65,16 +65,16 @@ prval _ =
   A "view tunnel": view v enters through the entry, then exits
   through the exit.
 
-  FIXME:
   This "view tunnel" seems to me "safe", and good for informal proof,
-  as long as you use the "entry" before you use the "exit".
-  One avoids tedious passing-around of proof objects, views, etc.
-  But is there a *nice* way to *ensure* the entry and exit are used
-  in the correct order?
+  (indeed, better than more tedious alternatives), as long as you use
+  the "entry" before you use the "exit".
 
-  (If the exit runs before the entry, then you may have two copies of
-  the view at the same time, thus violating linearity. One may or may
-  not consider this a problem.)
+  FIXME: But is there a *nice* way to *ensure* the entry and exit are
+  used in the correct order?
+  
+  (On the other hand, to see it by inspection is likely to be easy.
+  If the exit *does* occur before the entry, then you may have two
+  copies of one view at the same time, thus violating linearity.)
 *)
 extern praxi
 make_view_tunnel :
