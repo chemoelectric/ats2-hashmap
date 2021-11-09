@@ -319,8 +319,7 @@ nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap_sats.c
-nobase_nodist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
-EXTRA_DIST += hashmap/SATS/strnptrmap.sats
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
 
 EXTRA_DIST += hashmap/DATS/INCLUDE/strnptrmap-implementations.dats
 if WITH_STRNPTRMAP
@@ -412,6 +411,15 @@ hashmap/HATS/strnptrmap.hats: GNUmakefile
 	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_128.hats"' > $(@)
 endif WITH_DEFAULT_HASH_SIPHASH_128
 CLEANFILES += hashmap/HATS/strnptrmap.hats
+
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2uintptrmap_sats.c
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2uintptrmap.sats
+
+if WITH_DEFAULT_HASH
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptr2uintptrmap.dats
+endif WITH_DEFAULT_HASH
+EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap.dats
 
 .PHONY: libs-clean
 libs-clean:
