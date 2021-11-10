@@ -58,21 +58,18 @@ strnptr2uintptrmap_size
         {size     : int}
         (map      : !strnptr2uintptrmap_vt (size) >> _) :
     size_t size
-overload size with strnptr2uintptrmap_size of 20
 
 fun {}
 strnptr2uintptrmap_is_empty
         {size     : int}
         (map      : !strnptr2uintptrmap_vt (size) >> _) :
     bool (size == 0)
-overload iseqz with strnptr2uintptrmap_is_empty of 20
 
 fun {}
 strnptr2uintptrmap_isnot_empty
         {size     : int}
         (map      : !strnptr2uintptrmap_vt (size) >> _) :
     bool (size != 0)
-overload isneqz with strnptr2uintptrmap_isnot_empty of 20
 
 fun
 strnptr2uintptrmap_set_string
@@ -104,7 +101,6 @@ overload strnptr2uintptrmap_set with
   strnptr2uintptrmap_set_strptr of 10
 overload strnptr2uintptrmap_set with
   strnptr2uintptrmap_set_strnptr of 20
-overload set with strnptr2uintptrmap_set
 
 fun
 strnptr2uintptrmap_del_string
@@ -133,7 +129,6 @@ overload strnptr2uintptrmap_del with
   strnptr2uintptrmap_del_strptr of 10
 overload strnptr2uintptrmap_del with
   strnptr2uintptrmap_del_strnptr of 20
-overload del with strnptr2uintptrmap_del
 
 fun
 strnptr2uintptrmap_get_opt_string
@@ -159,7 +154,6 @@ overload strnptr2uintptrmap_get_opt with
   strnptr2uintptrmap_get_opt_strptr of 10
 overload strnptr2uintptrmap_get_opt with
   strnptr2uintptrmap_get_opt_strnptr of 20
-overload get_opt with strnptr2uintptrmap_get_opt
 
 fun
 strnptr2uintptrmap_has_key_string
@@ -185,55 +179,47 @@ overload strnptr2uintptrmap_has_key with
   strnptr2uintptrmap_has_key_strptr of 10
 overload strnptr2uintptrmap_has_key with
   strnptr2uintptrmap_has_key_strnptr of 20
-overload has_key with strnptr2uintptrmap_has_key
 
 fun
 strnptr2uintptrmap_pairs
         {size : int}
         (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
     list_vt (@(Strnptr1, uintptr), size)
-overload pairs with strnptr2uintptrmap_pairs
 
 fun
 strnptr2uintptrmap_pairs_free
         {size  : int}
         (pairs : list_vt (@(Strnptr1, uintptr), size)) :
     void
-overload free with strnptr2uintptrmap_pairs_free
 
 fun
 strnptr2uintptrmap_keys
         {size : int}
         (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
     list_vt (Strnptr1, size)
-overload keys with strnptr2uintptrmap_keys
 
 fun
 strnptr2uintptrmap_keys_free
         {size : int}
         (keys : list_vt (Strnptr1, size)) :
     void
-overload free with strnptr2uintptrmap_keys_free
 
 fun
 strnptr2uintptrmap_values
         {size : int}
         (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
     list_vt (uintptr, size)
-overload values with strnptr2uintptrmap_values
 
 fun
 strnptr2uintptrmap_values_free
         {size   : int}
         (values : list_vt (uintptr, size)) :
     void
-overload free with strnptr2uintptrmap_values_free
 
 fun
 strnptr2uintptrmap_free
         {size : int}
         (map  : strnptr2uintptrmap_vt (size)) :
     void
-overload free with strnptr2uintptrmap_free
 
 (********************************************************************)

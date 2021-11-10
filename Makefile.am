@@ -104,6 +104,10 @@ TOTAL_M4FLAGS += $(XM4FLAGS)
 @GNU@ include $(top_srcdir)/m4-rules.mk
 EXTRA_DIST += m4-rules.mk
 
+@GNU@ define make-extern-inline =
+@GNU@	$(call v,M4)$(M4) $(TOTAL_M4FLAGS) -DEXTERN_INLINE='$(1)'
+@GNU@ endef
+
 #--------------------------------------------------------------------------
 
 PATSOPT_DEPS =
@@ -426,7 +430,23 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_pairs_dats.
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_keys_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_values_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_get_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_has_key_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_string2uintptrmap_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_is_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_isnot_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_size_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_set_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_del_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_keys_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_keys_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptr2uintptrmap.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/string2uintptrmap.h
 endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_size.dats
@@ -438,6 +458,11 @@ EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_pairs.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_keys.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_values.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_free.dats
+EXTRA_DIST += hashmap/DATS/string2uintptrmap_get.dats
+EXTRA_DIST += hashmap/DATS/string2uintptrmap_has_key.dats
+EXTRA_DIST += hashmap/DATS/string2uintptrmap_extern_inline.dats.m4
+EXTRA_DIST += hashmap/string2uintptrmap.h
+include string2uintptrmap_extern_inline.am
 
 .PHONY: libs-clean
 libs-clean:
@@ -445,22 +470,12 @@ libs-clean:
 	-rm -f hashmap/SATS/*_sats.$(OBJEXT)
 	-rm -f hashmap/DATS/*_dats.c
 	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
+	-rm -f hashmap/DATS/string2uintptrmap_EXTERN_INLINE_*.dats
 
 #--------------------------------------------------------------------------
 #
 # Tests.
 #
-
-# FIXME:
-# FIXME:
-# FIXME:
-# FIXME: Compiling the tests with -DATS_MEMALLOC_LIBC is going to prove
-# FIXME: inadequate. Probably I should add my own malloc/free
-# FIXME: implementations to the library: calling the libc code, but with
-# FIXME: hooks so the programmer can use alternate implementations.
-# FIXME:
-# FIXME:
-# FIXME:
 
 TESTS += $(check_PROGRAMS)
 
@@ -669,6 +684,14 @@ CLEANFILES += tests/test-strnptr2strnptr-map-default_hash
 
 EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-string2uintptrmap-C
+nodist_tests_test_string2uintptrmap_C_SOURCES = tests/test-string2uintptrmap-C.c
+tests_test_string2uintptrmap_C_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-string2uintptrmap-C
+EXTRA_DIST += tests/test-string2uintptrmap-C.c
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
@@ -727,7 +750,7 @@ ats2-hashmap.pc: configure GNUmakefile
 	@echo 'PATSCCFLAGS="-IIATS $${pkgincludedir}"' >> $(@)
 	@echo '' >> $(@)
 	@echo 'Name: @PACKAGE@' >> $(@)
-	@echo 'Description: Hash Maps (Ideal Hash Trees) for ATS2/Postiats' >> $(@)
+	@echo 'Description: Hash Maps (Ideal Hash Trees) for ATS2/Postiats and C' >> $(@)
 	@echo 'Version: @VERSION@' >> $(@)
 	@echo 'Requires.private: @REQUIRES_PRIVATE_PKGS@' >> $(@)
 	@echo 'Libs: -L$${libdir} -lats2-hashmap' >> $(@)
