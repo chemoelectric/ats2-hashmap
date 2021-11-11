@@ -31,6 +31,8 @@ staload "hashmap/SATS/population_map.sats"
 
 staload _ = "hashmap/DATS/population_map.dats"
 
+#include "tests/INCLUDE/runtime-support.dats"
+
 macdef castpop = $UNSAFE.cast{population_map_t}
 macdef bits2map = bits_to_population_map
 

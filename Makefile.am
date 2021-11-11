@@ -56,15 +56,15 @@ EXTRA_DIST += AUTHORS
 DISTCLEANFILES += Makefile
 DISTCLEANFILES += GNUmakefile
 
-# We will not be using exceptions.
-AM_CPPFLAGS += -D_ATS_CCOMP_EXCEPTION_NONE
-
 AM_CPPFLAGS += -I$(builddir)
 AM_CPPFLAGS += -I$(srcdir)
 AM_CPPFLAGS += -I$(builddir)/lib
 AM_CPPFLAGS += -I$(srcdir)/lib
 AM_CPPFLAGS += -I$(PATSHOME)
 AM_CPPFLAGS += -I$(PATSHOME)/ccomp/runtime/
+
+# Leave out runtime support in tests. We will supply it.
+AM_CPPFLAGS += -D_ATS_CCOMP_RUNTIME_NONE_
 
 AM_CFLAGS += $(ATS2_POPCOUNT_CFLAGS)
 if WITH_ATS2_SPOOKYHASH
@@ -479,100 +479,85 @@ libs-clean:
 
 TESTS += $(check_PROGRAMS)
 
+EXTRA_DIST += tests/INCLUDE/runtime-support.dats
+
 check_PROGRAMS =
 
 check_PROGRAMS += tests/test-bits_source_uint8
 nodist_tests_test_bits_source_uint8_SOURCES = tests/test-bits_source_uint8_dats.c
-tests_test_bits_source_uint8_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint8_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint8.dats
 CLEANFILES += tests/test-bits_source_uint8
 
 check_PROGRAMS += tests/test-bits_source_uint16
 nodist_tests_test_bits_source_uint16_SOURCES = tests/test-bits_source_uint16_dats.c
-tests_test_bits_source_uint16_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint16_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint16.dats
 CLEANFILES += tests/test-bits_source_uint16
 
 check_PROGRAMS += tests/test-bits_source_uint32
 nodist_tests_test_bits_source_uint32_SOURCES = tests/test-bits_source_uint32_dats.c
-tests_test_bits_source_uint32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint32_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint32.dats
 CLEANFILES += tests/test-bits_source_uint32
 
 check_PROGRAMS += tests/test-bits_source_uint64
 nodist_tests_test_bits_source_uint64_SOURCES = tests/test-bits_source_uint64_dats.c
-tests_test_bits_source_uint64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64
 
 check_PROGRAMS += tests/test-bits_source_uint64_uint64
 nodist_tests_test_bits_source_uint64_uint64_SOURCES = tests/test-bits_source_uint64_uint64_dats.c
-tests_test_bits_source_uint64_uint64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_uint64_uint64_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_uint64_uint64.dats
 CLEANFILES += tests/test-bits_source_uint64_uint64
 
 check_PROGRAMS += tests/test-bits_source_1byte
 nodist_tests_test_bits_source_1byte_SOURCES = tests/test-bits_source_1byte_dats.c
-tests_test_bits_source_1byte_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_1byte_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_1byte.dats
 CLEANFILES += tests/test-bits_source_1byte
 
 check_PROGRAMS += tests/test-bits_source_8bytes
 nodist_tests_test_bits_source_8bytes_SOURCES = tests/test-bits_source_8bytes_dats.c
-tests_test_bits_source_8bytes_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_8bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_8bytes.dats
 CLEANFILES += tests/test-bits_source_8bytes
 
 check_PROGRAMS += tests/test-bits_source_16bytes
 nodist_tests_test_bits_source_16bytes_SOURCES = tests/test-bits_source_16bytes_dats.c
-tests_test_bits_source_16bytes_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_bits_source_16bytes_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-bits_source_16bytes.dats
 CLEANFILES += tests/test-bits_source_16bytes
 
 check_PROGRAMS += tests/test-population_map
 nodist_tests_test_population_map_SOURCES = tests/test-population_map_dats.c
-tests_test_population_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_population_map_LDADD = $(lib_LTLIBRARIES)
 EXTRA_DIST += tests/test-population_map.dats
 CLEANFILES += tests/test-population_map
 
 check_PROGRAMS += tests/test-a-uint8-map
 nodist_tests_test_a_uint8_map_SOURCES = tests/test-a-uint8-map_dats.c
-tests_test_a_uint8_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_a_uint8_map_LDADD = $(lib_LTLIBRARIES)
-tests_test_a_uint8_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-a-uint8-map.dats
 CLEANFILES += tests/test-a-uint8-map
 
 check_PROGRAMS += tests/test-separate-chaining-1
 nodist_tests_test_separate_chaining_1_SOURCES = tests/test-separate-chaining-1_dats.c
-tests_test_separate_chaining_1_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_1_LDADD = $(lib_LTLIBRARIES)
-tests_test_separate_chaining_1_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-1.dats
 CLEANFILES += tests/test-separate-chaining-1
 
 check_PROGRAMS += tests/test-separate-chaining-2
 nodist_tests_test_separate_chaining_2_SOURCES = tests/test-separate-chaining-2_dats.c
-tests_test_separate_chaining_2_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_2_LDADD = $(lib_LTLIBRARIES)
-tests_test_separate_chaining_2_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-2.dats
 CLEANFILES += tests/test-separate-chaining-2
 
 check_PROGRAMS += tests/test-separate-chaining-3
 nodist_tests_test_separate_chaining_3_SOURCES = tests/test-separate-chaining-3_dats.c
-tests_test_separate_chaining_3_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
-tests_test_separate_chaining_3_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 EXTRA_DIST += tests/test-separate-chaining-3.dats
 CLEANFILES += tests/test-separate-chaining-3
 
@@ -580,9 +565,7 @@ if WITH_SPOOKYHASH
 # This SpookyHash test includes ‘compare_structure’ tests.
 check_PROGRAMS += tests/test-strnptr2strnptr-spookyhash-map
 nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES = tests/test-strnptr2strnptr-spookyhash-map_dats.c
-tests_test_strnptr2strnptr_spookyhash_map_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_spookyhash_map_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_spookyhash_map_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 endif WITH_SPOOKYHASH
 EXTRA_DIST += tests/test-strnptr2strnptr-spookyhash-map.dats
 CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map
@@ -597,9 +580,7 @@ CLEANFILES += tests/test-strnptr2strnptr-spookyhash-map
 if WITH_SPOOKYHASH
 check_PROGRAMS += tests/test-strnptr2strnptr-map-spookyhash
 nodist_tests_test_strnptr2strnptr_map_spookyhash_SOURCES = tests/test-strnptr2strnptr-map-spookyhash_dats.c
-tests_test_strnptr2strnptr_map_spookyhash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_spookyhash_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_spookyhash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-spookyhash.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,spookyhash) > $(@)
 endif WITH_SPOOKYHASH
@@ -609,9 +590,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-spookyhash
 if WITH_MURMURHASH3_32
 check_PROGRAMS += tests/test-strnptr2strnptr-map-murmurhash3_32
 nodist_tests_test_strnptr2strnptr_map_murmurhash3_32_SOURCES = tests/test-strnptr2strnptr-map-murmurhash3_32_dats.c
-tests_test_strnptr2strnptr_map_murmurhash3_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_murmurhash3_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-murmurhash3_32.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,murmurhash3_32) > $(@)
 endif WITH_MURMURHASH3_32
@@ -621,9 +600,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-murmurhash3_32
 if WITH_HALFSIPHASH_32
 check_PROGRAMS += tests/test-strnptr2strnptr-map-halfsiphash_32
 nodist_tests_test_strnptr2strnptr_map_halfsiphash_32_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_32_dats.c
-tests_test_strnptr2strnptr_map_halfsiphash_32_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_halfsiphash_32_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-halfsiphash_32.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_32) > $(@)
 endif WITH_HALFSIPHASH_32
@@ -633,9 +610,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_32
 if WITH_HALFSIPHASH_64
 check_PROGRAMS += tests/test-strnptr2strnptr-map-halfsiphash_64
 nodist_tests_test_strnptr2strnptr_map_halfsiphash_64_SOURCES = tests/test-strnptr2strnptr-map-halfsiphash_64_dats.c
-tests_test_strnptr2strnptr_map_halfsiphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_halfsiphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-halfsiphash_64.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,halfsiphash_64) > $(@)
 endif WITH_HALFSIPHASH_64
@@ -645,9 +620,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-halfsiphash_64
 if WITH_SIPHASH_64
 check_PROGRAMS += tests/test-strnptr2strnptr-map-siphash_64
 nodist_tests_test_strnptr2strnptr_map_siphash_64_SOURCES = tests/test-strnptr2strnptr-map-siphash_64_dats.c
-tests_test_strnptr2strnptr_map_siphash_64_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_siphash_64_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_siphash_64_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-siphash_64.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_64) > $(@)
 endif WITH_SIPHASH_64
@@ -657,9 +630,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-siphash_64
 if WITH_SIPHASH_128
 check_PROGRAMS += tests/test-strnptr2strnptr-map-siphash_128
 nodist_tests_test_strnptr2strnptr_map_siphash_128_SOURCES = tests/test-strnptr2strnptr-map-siphash_128_dats.c
-tests_test_strnptr2strnptr_map_siphash_128_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_siphash_128_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_siphash_128_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-siphash_128.dats: GNUmakefile
 	$(call v,GEN)$(call print-test-strnptr2strnptr-map-dats,siphash_128) > $(@)
 endif WITH_SIPHASH_128
@@ -669,9 +640,7 @@ CLEANFILES += tests/test-strnptr2strnptr-map-siphash_128
 if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-strnptr2strnptr-map-default_hash
 nodist_tests_test_strnptr2strnptr_map_default_hash_SOURCES = tests/test-strnptr2strnptr-map-default_hash_dats.c
-tests_test_strnptr2strnptr_map_default_hash_CPPFLAGS = ${AM_CPPFLAGS} -DATS_MEMALLOC_LIBC
 tests_test_strnptr2strnptr_map_default_hash_LDADD = $(lib_LTLIBRARIES)
-tests_test_strnptr2strnptr_map_default_hash_LDADD += -L'$(PATSHOME)/ccomp/atslib/lib' -latslib
 tests/test-strnptr2strnptr-map-default_hash.dats: GNUmakefile
 	$(call v,GEN)printf "%s\n%s\n%s\n" \
 		'#define SUBDIR "tests/default_hash/"' \
@@ -713,6 +682,7 @@ nodist_list_ats_dependencies_SOURCES =
 nodist_list_ats_dependencies_SOURCES += list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS =
 list_ats_dependencies_CPPFLAGS += $(AM_CPPFLAGS)
+list_ats_dependencies_CPPFLAGS += -U_ATS_CCOMP_RUNTIME_NONE_
 list_ats_dependencies_CPPFLAGS += -DATS_MEMALLOC_LIBC
 list_ats_dependencies_DEPENDENCIES =
 list_ats_dependencies_DEPENDENCIES += list-ats-dependencies.dats

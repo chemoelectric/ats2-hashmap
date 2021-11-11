@@ -27,6 +27,7 @@ along with this program. If not, see
 #include "share/atspre_staload.hats"
 
 #include "hashmap/HATS/hashmap.hats"
+#include "tests/INCLUDE/runtime-support.dats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons

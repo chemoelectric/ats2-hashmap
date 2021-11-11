@@ -31,6 +31,8 @@ staload "hashmap/SATS/bits_source.sats"
 
 staload _ = "hashmap/DATS/bits_source.dats"
 
+#include "tests/INCLUDE/runtime-support.dats"
+
 prval _ = prop_verify {BITS_SOURCE_NUM_BITS == 6} ()
 
 macdef castb = $UNSAFE.cast{byte}

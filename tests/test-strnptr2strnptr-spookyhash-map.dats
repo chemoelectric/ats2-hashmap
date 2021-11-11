@@ -30,6 +30,7 @@ along with this program. If not, see
 #include "share/atspre_staload.hats"
 
 #include "hashmap/HATS/strnptrmap-spookyhash.hats"
+#include "tests/INCLUDE/runtime-support.dats"
 
 staload UN = "prelude/SATS/unsafe.sats"
 

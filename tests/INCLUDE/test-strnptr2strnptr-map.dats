@@ -29,6 +29,8 @@ along with this program. If not, see
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
+#include "tests/INCLUDE/runtime-support.dats"
+
 staload UN = "prelude/SATS/unsafe.sats"
 
 #define NIL list_vt_nil ()
