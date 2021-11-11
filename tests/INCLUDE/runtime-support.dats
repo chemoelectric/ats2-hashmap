@@ -50,6 +50,7 @@ atsruntime_handle_unmatchedval (char *msg0)
 {
   fprintf (stderr, "ATS error: unmatched value at run-time:\n%s\n",
            msg0);
+  exit (1);
 }
 
 %}
