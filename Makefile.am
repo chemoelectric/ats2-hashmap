@@ -446,9 +446,11 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLIN
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_free_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptr2uintptrmap.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptr2uintptrmap.hats
 nobase_nodist_pkginclude_HEADERS += hashmap/string2uintptrmap.h
 endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap.dats
+EXTRA_DIST += hashmap/HATS/strnptr2uintptrmap.hats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_size.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_set.dats
 EXTRA_DIST += hashmap/DATS/strnptr2uintptrmap_del.dats
@@ -480,6 +482,7 @@ libs-clean:
 TESTS += $(check_PROGRAMS)
 
 EXTRA_DIST += tests/INCLUDE/runtime-support.dats
+EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
 check_PROGRAMS =
 
@@ -651,7 +654,13 @@ endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-strnptr2strnptr-map-default_hash.dats
 CLEANFILES += tests/test-strnptr2strnptr-map-default_hash
 
-EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-strnptr2uintptrmap
+nodist_tests_test_strnptr2uintptrmap_SOURCES = tests/test-strnptr2uintptrmap_dats.c
+tests_test_strnptr2uintptrmap_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-strnptr2uintptrmap
+EXTRA_DIST += tests/test-strnptr2uintptrmap.dats
 
 if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-string2uintptrmap-C

@@ -213,6 +213,7 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free_dats.c
 @WITH_DEFAULT_HASH_TRUE@am__append_30 =  \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2uintptrmap.dats \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/HATS/strnptr2uintptrmap.hats \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/string2uintptrmap.h
 check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint16$(EXEEXT) \
@@ -239,6 +240,7 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 @WITH_SIPHASH_64_TRUE@am__append_35 = tests/test-strnptr2strnptr-map-siphash_64
 @WITH_SIPHASH_128_TRUE@am__append_36 = tests/test-strnptr2strnptr-map-siphash_128
 @WITH_DEFAULT_HASH_TRUE@am__append_37 = tests/test-strnptr2strnptr-map-default_hash \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-strnptr2uintptrmap \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -345,6 +347,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 @WITH_SIPHASH_64_TRUE@am__EXEEXT_5 = tests/test-strnptr2strnptr-map-siphash_64$(EXEEXT)
 @WITH_SIPHASH_128_TRUE@am__EXEEXT_6 = tests/test-strnptr2strnptr-map-siphash_128$(EXEEXT)
 @WITH_DEFAULT_HASH_TRUE@am__EXEEXT_7 = tests/test-strnptr2strnptr-map-default_hash$(EXEEXT) \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-strnptr2uintptrmap$(EXEEXT) \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -579,6 +582,11 @@ tests_test_strnptr2strnptr_spookyhash_map_OBJECTS =  \
 	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_OBJECTS)
 @WITH_SPOOKYHASH_TRUE@tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES =  \
 @WITH_SPOOKYHASH_TRUE@	$(lib_LTLIBRARIES)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptr2uintptrmap_OBJECTS = tests/test-strnptr2uintptrmap_dats.$(OBJEXT)
+tests_test_strnptr2uintptrmap_OBJECTS =  \
+	$(nodist_tests_test_strnptr2uintptrmap_OBJECTS)
+@WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2uintptrmap_DEPENDENCIES =  \
+@WITH_DEFAULT_HASH_TRUE@	$(lib_LTLIBRARIES)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -698,7 +706,8 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-strnptr2strnptr-map-siphash_128_dats.Po \
 	tests/$(DEPDIR)/test-strnptr2strnptr-map-siphash_64_dats.Po \
 	tests/$(DEPDIR)/test-strnptr2strnptr-map-spookyhash_dats.Po \
-	tests/$(DEPDIR)/test-strnptr2strnptr-spookyhash-map_dats.Po
+	tests/$(DEPDIR)/test-strnptr2strnptr-spookyhash-map_dats.Po \
+	tests/$(DEPDIR)/test-strnptr2uintptrmap_dats.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -741,7 +750,8 @@ SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(nodist_tests_test_strnptr2strnptr_map_siphash_128_SOURCES) \
 	$(nodist_tests_test_strnptr2strnptr_map_siphash_64_SOURCES) \
 	$(nodist_tests_test_strnptr2strnptr_map_spookyhash_SOURCES) \
-	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES)
+	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES) \
+	$(nodist_tests_test_strnptr2uintptrmap_SOURCES)
 DIST_SOURCES =
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -1309,6 +1319,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/strnptrmap-siphash_128.dats \
 	hashmap/HATS/strnptrmap-siphash_128.hats \
 	hashmap/DATS/strnptr2uintptrmap.dats \
+	hashmap/HATS/strnptr2uintptrmap.hats \
 	hashmap/DATS/strnptr2uintptrmap_size.dats \
 	hashmap/DATS/strnptr2uintptrmap_set.dats \
 	hashmap/DATS/strnptr2uintptrmap_del.dats \
@@ -1322,6 +1333,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/string2uintptrmap_has_key.dats \
 	hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 \
 	hashmap/string2uintptrmap.h tests/INCLUDE/runtime-support.dats \
+	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
 	tests/test-bits_source_uint32.dats \
@@ -1335,7 +1347,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-separate-chaining-2.dats \
 	tests/test-separate-chaining-3.dats \
 	tests/test-strnptr2strnptr-spookyhash-map.dats \
-	tests/INCLUDE/test-strnptr2strnptr-map.dats \
+	tests/test-strnptr2uintptrmap.dats \
 	tests/test-string2uintptrmap-C.c list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/DATS/bits_source_uint8.dats \
@@ -1366,8 +1378,9 @@ CLEANFILES = hashmap/DATS/bits_source_uint8.dats \
 	tests/test-strnptr2strnptr-map-siphash_128 \
 	tests/test-strnptr2strnptr-map-default_hash.dats \
 	tests/test-strnptr2strnptr-map-default_hash \
-	tests/test-string2uintptrmap-C list-ats-dependencies \
-	list-ats-dependencies_depsprog.c ats2-hashmap.pc
+	tests/test-strnptr2uintptrmap tests/test-string2uintptrmap-C \
+	list-ats-dependencies list-ats-dependencies_depsprog.c \
+	ats2-hashmap.pc
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
 	hashmap/DATS/bits_source_2bytes_implementation.dats \
@@ -1560,6 +1573,8 @@ tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
 @WITH_SIPHASH_128_TRUE@tests_test_strnptr2strnptr_map_siphash_128_LDADD = $(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptr2strnptr_map_default_hash_SOURCES = tests/test-strnptr2strnptr-map-default_hash_dats.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2strnptr_map_default_hash_LDADD = $(lib_LTLIBRARIES)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptr2uintptrmap_SOURCES = tests/test-strnptr2uintptrmap_dats.c
+@WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2uintptrmap_LDADD = $(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_SOURCES = tests/test-string2uintptrmap-C.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_string2uintptrmap_C_LDADD = $(lib_LTLIBRARIES)
 nodist_list_ats_dependencies_SOURCES =  \
@@ -2240,6 +2255,12 @@ tests/test-strnptr2strnptr-spookyhash-map_dats.$(OBJEXT):  \
 tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT): $(tests_test_strnptr2strnptr_spookyhash_map_OBJECTS) $(tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES) $(EXTRA_tests_test_strnptr2strnptr_spookyhash_map_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-strnptr2strnptr-spookyhash-map$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2strnptr_spookyhash_map_OBJECTS) $(tests_test_strnptr2strnptr_spookyhash_map_LDADD) $(LIBS)
+tests/test-strnptr2uintptrmap_dats.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-strnptr2uintptrmap$(EXEEXT): $(tests_test_strnptr2uintptrmap_OBJECTS) $(tests_test_strnptr2uintptrmap_DEPENDENCIES) $(EXTRA_tests_test_strnptr2uintptrmap_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-strnptr2uintptrmap$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_strnptr2uintptrmap_OBJECTS) $(tests_test_strnptr2uintptrmap_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -2357,6 +2378,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-strnptr2strnptr-map-siphash_64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-strnptr2strnptr-map-spookyhash_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-strnptr2strnptr-spookyhash-map_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-strnptr2uintptrmap_dats.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -2830,6 +2852,13 @@ tests/test-strnptr2strnptr-map-default_hash.log: tests/test-strnptr2strnptr-map-
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-strnptr2uintptrmap.log: tests/test-strnptr2uintptrmap$(EXEEXT)
+	@p='tests/test-strnptr2uintptrmap$(EXEEXT)'; \
+	b='tests/test-strnptr2uintptrmap'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 tests/test-string2uintptrmap-C.log: tests/test-string2uintptrmap-C$(EXEEXT)
 	@p='tests/test-string2uintptrmap-C$(EXEEXT)'; \
 	b='tests/test-string2uintptrmap-C'; \
@@ -3196,6 +3225,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-siphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-spookyhash-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test-strnptr2uintptrmap_dats.Po
 	-rm -f GNUmakefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -3350,6 +3380,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-siphash_64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-spookyhash_dats.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-spookyhash-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test-strnptr2uintptrmap_dats.Po
 	-rm -f GNUmakefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

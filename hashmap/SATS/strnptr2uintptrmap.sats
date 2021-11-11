@@ -221,5 +221,6 @@ strnptr2uintptrmap_free
         {size : int}
         (map  : strnptr2uintptrmap_vt (size)) :
     void
+overload free with strnptr2uintptrmap_free
 
 (********************************************************************)
