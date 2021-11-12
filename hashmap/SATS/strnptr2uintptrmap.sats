@@ -25,6 +25,12 @@ along with this program. If not, see
 (* These are useful for making string maps in C, because uintptr    *)
 (* can represent all C pointers and most integer values.            *)
 (*                                                                  *)
+(* They also are a reasonable representation for string sets,       *)
+(* although the unused uintptr field takes up space.                *)
+(*                                                                  *)
+(* One can use the uintptr field as an element count in string      *)
+(* bags.                                                            *)
+(*                                                                  *)
 (********************************************************************)
 
 #define ATS_PACKNAME "ats2-hashmap"
@@ -42,7 +48,7 @@ vtypedef strnptr2uintptrmap_vt =
 
 prfun
 lemma_strnptr2uintptrmap_vt_param :
-  {size     : int}
+  {size : int}
   (!strnptr2uintptrmap_vt (size) >> _) -<prf>
     [0 <= size] void
 
@@ -54,20 +60,20 @@ strnptr2uintptrmap () :
 
 fun
 strnptr2uintptrmap_size
-        {size     : int}
-        (map      : !strnptr2uintptrmap_vt (size) >> _) :
+        {size : int}
+        (map  : !strnptr2uintptrmap_vt (size) >> _) :
     size_t size
 
 fun {}
 strnptr2uintptrmap_is_empty
-        {size     : int}
-        (map      : !strnptr2uintptrmap_vt (size) >> _) :
+        {size : int}
+        (map  : !strnptr2uintptrmap_vt (size) >> _) :
     bool (size == 0)
 
 fun {}
 strnptr2uintptrmap_isnot_empty
-        {size     : int}
-        (map      : !strnptr2uintptrmap_vt (size) >> _) :
+        {size : int}
+        (map  : !strnptr2uintptrmap_vt (size) >> _) :
     bool (size != 0)
 
 fun

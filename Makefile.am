@@ -466,6 +466,23 @@ EXTRA_DIST += hashmap/DATS/string2uintptrmap_extern_inline.dats.m4
 EXTRA_DIST += hashmap/string2uintptrmap.h
 include string2uintptrmap_extern_inline.am
 
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrset_sats.c
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrset.sats
+
+if WITH_DEFAULT_HASH
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrset_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrset.dats
+#nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrset.hats
+nobase_nodist_pkginclude_HEADERS += hashmap/stringset.h
+endif WITH_DEFAULT_HASH
+EXTRA_DIST += hashmap/DATS/strnptrset.dats
+#EXTRA_DIST += hashmap/HATS/strnptrset.hats
+#EXTRA_DIST += hashmap/DATS/stringset_get.dats
+#EXTRA_DIST += hashmap/DATS/stringset_has_key.dats
+#EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
+EXTRA_DIST += hashmap/stringset.h
+#include stringset_extern_inline.am
+
 .PHONY: libs-clean
 libs-clean:
 	-rm -f hashmap/SATS/*_sats.c
@@ -670,6 +687,14 @@ endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-string2uintptrmap-C
 EXTRA_DIST += tests/test-string2uintptrmap-C.c
 
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-stringset-C
+nodist_tests_test_stringset_C_SOURCES = tests/test-stringset-C.c
+tests_test_stringset_C_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-stringset-C
+EXTRA_DIST += tests/test-stringset-C.c
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
@@ -734,6 +759,16 @@ ats2-hashmap.pc: configure GNUmakefile
 	@echo 'Requires.private: @REQUIRES_PRIVATE_PKGS@' >> $(@)
 	@echo 'Libs: -L$${libdir} -lats2-hashmap' >> $(@)
 	@echo 'Cflags: $${CPPFLAGS}' >> $(@)
+
+#--------------------------------------------------------------------------
+#
+# To create an .indent.pro in the builddir.
+
+.PHONY: indent-pro
+indent-pro: $(builddir)/.indent.pro
+
+$(builddir)/.indent.pro: GNUmakefile
+	printf "%s\n" "-l70" > $(@)
 
 #--------------------------------------------------------------------------
 # local variables:
