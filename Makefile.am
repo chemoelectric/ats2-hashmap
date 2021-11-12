@@ -468,13 +468,25 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrset_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrset.sats
 if WITH_DEFAULT_HASH
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrset_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_stringset_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_is_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_isnot_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_size_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_add_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_del_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_contains_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_elements_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_elements_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/stringset_EXTERN_INLINE_free_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrset.dats
 nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrset.hats
 nobase_nodist_pkginclude_HEADERS += hashmap/stringset.h
 endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/DATS/strnptrset.dats
 EXTRA_DIST += hashmap/HATS/strnptrset.hats
+EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
 EXTRA_DIST += hashmap/stringset.h
+include stringset_extern_inline.am
 
 .PHONY: libs-clean
 libs-clean:
@@ -483,6 +495,7 @@ libs-clean:
 	-rm -f hashmap/DATS/*_dats.c
 	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
 	-rm -f hashmap/DATS/string2uintptrmap_EXTERN_INLINE_*.dats
+	-rm -f hashmap/DATS/stringset_EXTERN_INLINE_*.dats
 
 #--------------------------------------------------------------------------
 #

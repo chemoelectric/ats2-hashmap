@@ -1,0 +1,80 @@
+#
+# Copyright © 2021 Barry Schwartz
+#
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License, as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received copies of the GNU General Public License
+# along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
+hashmap/DATS/stringset_EXTERN_INLINE_stringset.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline stringset_t \
+ats2_hashmap_stringset (void)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_is_empty.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_stringset_is_empty (stringset_t set)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_isnot_empty.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_stringset_isnot_empty (stringset_t set)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_size.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline size_t \
+ats2_hashmap_stringset_size (stringset_t set)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_add.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline stringset_t \
+ats2_hashmap_stringset_add (stringset_t set, \
+                            const char *element)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_del.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline stringset_t \
+ats2_hashmap_stringset_del (stringset_t set, \
+                            const char *element)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_contains.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_stringset_contains (stringset_t set, \
+                                 const char *element)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_elements.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline stringset_elements_t \
+ats2_hashmap_stringset_elements (stringset_t set)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_elements_free.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_stringset_elements_free (stringset_elements_t elements)) $(<) > $(@)
+
+hashmap/DATS/stringset_EXTERN_INLINE_free.dats: hashmap/DATS/stringset_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_stringset_free (stringset_t set)) $(<) > $(@)
