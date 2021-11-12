@@ -23,8 +23,7 @@ along with this program. If not, see
 (* Maps from strings to uintptr                                     *)
 (*                                                                  *)
 (* These are useful for making string maps in C, because uintptr    *)
-(* can represent all C pointers and most integer values. They also  *)
-(* might serve as a representation for string sets.                 *)
+(* can represent all C pointers and most integer values.            *)
 (*                                                                  *)
 (********************************************************************)
 
