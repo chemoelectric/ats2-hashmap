@@ -379,46 +379,44 @@ EXTRA_DIST += hashmap/DATS/strnptrmap-siphash_128.dats
 EXTRA_DIST += hashmap/HATS/strnptrmap-siphash_128.hats
 
 if WITH_DEFAULT_HASH_SPOOKYHASH
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-spookyhash.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-spookyhash.dats"' > $(@)
 endif WITH_DEFAULT_HASH_SPOOKYHASH
 if WITH_DEFAULT_HASH_MURMURHASH3_32
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-murmurhash3_32.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-murmurhash3_32.dats"' > $(@)
 endif WITH_DEFAULT_HASH_MURMURHASH3_32
 if WITH_DEFAULT_HASH_HALFSIPHASH_32
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-halfsiphash_32.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-halfsiphash_32.dats"' > $(@)
 endif WITH_DEFAULT_HASH_HALFSIPHASH_32
 if WITH_DEFAULT_HASH_HALFSIPHASH_64
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-halfsiphash_64.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-halfsiphash_64.dats"' > $(@)
 endif WITH_DEFAULT_HASH_HALFSIPHASH_64
 if WITH_DEFAULT_HASH_SIPHASH_64
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_64.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-siphash_64.dats"' > $(@)
 endif WITH_DEFAULT_HASH_SIPHASH_64
 if WITH_DEFAULT_HASH_SIPHASH_128
-nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
-hashmap/HATS/strnptrmap.hats: GNUmakefile
+hashmap/HATS/strnptrmap-dats.hats: GNUmakefile
 	@$(MKDIR_P) $(@D)
-	$(call v,GEN)echo '#include "hashmap/HATS/strnptrmap-siphash_128.hats"' > $(@)
+	$(call v,GEN)echo 'staload _ = "hashmap/DATS/strnptrmap-siphash_128.dats"' > $(@)
 endif WITH_DEFAULT_HASH_SIPHASH_128
-CLEANFILES += hashmap/HATS/strnptrmap.hats
+if WITH_DEFAULT_HASH
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap.hats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrmap-dats.hats
+endif WITH_DEFAULT_HASH
+EXTRA_DIST += hashmap/HATS/strnptrmap.hats
+CLEANFILES += hashmap/HATS/strnptrmap-dats.hats
 
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2uintptrmap_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2uintptrmap.sats
-
 if WITH_DEFAULT_HASH
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2uintptrmap_size_dats.c
@@ -468,20 +466,15 @@ include string2uintptrmap_extern_inline.am
 
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrset_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrset.sats
-
 if WITH_DEFAULT_HASH
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptrset_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptrset.dats
-#nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrset.hats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptrset.hats
 nobase_nodist_pkginclude_HEADERS += hashmap/stringset.h
 endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/DATS/strnptrset.dats
-#EXTRA_DIST += hashmap/HATS/strnptrset.hats
-#EXTRA_DIST += hashmap/DATS/stringset_get.dats
-#EXTRA_DIST += hashmap/DATS/stringset_has_key.dats
-#EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
+EXTRA_DIST += hashmap/HATS/strnptrset.hats
 EXTRA_DIST += hashmap/stringset.h
-#include stringset_extern_inline.am
 
 .PHONY: libs-clean
 libs-clean:
@@ -678,6 +671,14 @@ tests_test_strnptr2uintptrmap_LDADD = $(lib_LTLIBRARIES)
 endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-strnptr2uintptrmap
 EXTRA_DIST += tests/test-strnptr2uintptrmap.dats
+
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-strnptrset
+nodist_tests_test_strnptrset_SOURCES = tests/test-strnptrset_dats.c
+tests_test_strnptrset_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-strnptrset
+EXTRA_DIST += tests/test-strnptrset.dats
 
 if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-string2uintptrmap-C

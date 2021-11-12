@@ -51,18 +51,21 @@ strnptrset_size
         {size : int}
         (set  : !strnptrset_vt (size) >> _) :
     size_t size
+overload size with strnptrset_size
 
 fun {}
 strnptrset_is_empty
         {size : int}
         (set  : !strnptrset_vt (size) >> _) :
     bool (size == 0)
+overload iseqz with strnptrset_is_empty
 
 fun {}
 strnptrset_isnot_empty
         {size : int}
         (set  : !strnptrset_vt (size) >> _) :
     bool (size != 0)
+overload isneqz with strnptrset_isnot_empty
 
 fun {}
 strnptrset_add_string
