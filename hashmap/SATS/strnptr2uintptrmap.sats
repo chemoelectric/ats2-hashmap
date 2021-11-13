@@ -28,9 +28,6 @@ along with this program. If not, see
 (* They also are a reasonable representation for string sets,       *)
 (* although the unused uintptr field takes up space.                *)
 (*                                                                  *)
-(* One can use the uintptr field as an element count in string      *)
-(* bags.                                                            *)
-(*                                                                  *)
 (********************************************************************)
 
 #define ATS_PACKNAME "ats2-hashmap"
