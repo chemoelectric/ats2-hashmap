@@ -77,6 +77,27 @@ check_fail (const char *expr, const char *file, size_t line,
   exit (1);
 }
 
+bool value_is_freed;
+void *value_freed_env;
+
+void
+value_free (uintptr_t v, void *environment)
+{
+  value_is_freed = true;
+  value_freed_env = environment;
+}
+
+bool value_is_copied;
+void *value_copied_env;
+
+uintptr_t
+value_copy (uintptr_t v, void *environment)
+{
+  value_is_copied = true;
+  value_copied_env = environment;
+  return v;
+}
+
 void
 test1 (void)
 {
@@ -232,16 +253,6 @@ test1 (void)
   string2uintptrmap_free (map);
 }
 
-bool value_is_freed;
-void *value_freed_env;
-
-void
-value_free (uintptr_t v, void *environment)
-{
-  value_is_freed = true;
-  value_freed_env = environment;
-}
-
 void
 test2 (void)
 {
@@ -318,11 +329,51 @@ test3 (void)
   string2uintptrmap_free (map);
 }
 
+void
+test4 (void)
+{
+  _Bool result_found;
+  uintptr_t result;
+  string2uintptrmap_t map;
+
+  map = string2uintptrmap ();
+
+  value_is_copied = false;
+  value_copied_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+
+  string2uintptrmap_get (map, "one", NULL, NULL,
+			 &result_found, &result);
+  check (result_found);
+  check (result == 1);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+
+  string2uintptrmap_get (map, "one", value_copy, NULL,
+			 &result_found, &result);
+  check (result_found);
+  check (result == 1);
+  check (value_is_copied);
+  check (value_copied_env == NULL);
+
+  string2uintptrmap_get (map, "one", value_copy, &result,
+			 &result_found, &result);
+  check (result_found);
+  check (result == 1);
+  check (value_is_copied);
+  check (value_copied_env == &result);
+
+  string2uintptrmap_free (map);
+}
+
 int
 main (int argc, char *argv[])
 {
   test1 ();
   test2 ();
   test3 ();
+  test4 ();
   return 0;
 }
