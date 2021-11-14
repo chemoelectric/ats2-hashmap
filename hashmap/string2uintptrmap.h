@@ -86,14 +86,14 @@ ats2_hashmap_string2uintptrmap_size (string2uintptrmap_t map)
 inline string2uintptrmap_t
   ats2_hashmap_string2uintptrmap_set
   (string2uintptrmap_t map, const char *key, uintptr_t value,
-   void (*value_free) (uintptr_t))
+   void (*value_free) (uintptr_t, void *), void *environment)
 {
   extern string2uintptrmap_t
     ats2_055_hashmap__strnptr2uintptrmap_set_string
     (void *map, void *key, uintptr_t value,
-     void (*value_free) (uintptr_t));
+     void (*value_free) (uintptr_t, void *), void *environment);
   return ats2_055_hashmap__strnptr2uintptrmap_set_string
-    (map, (void *) key, value, value_free);
+    (map, (void *) key, value, value_free, environment);
 }
 
 inline string2uintptrmap_t

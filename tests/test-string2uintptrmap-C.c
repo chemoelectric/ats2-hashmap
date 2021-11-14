@@ -92,9 +92,9 @@ test1 (void)
   //printf ("%zu\n", string2uintptrmap_size (map));
   check (string2uintptrmap_size (map) == 0);
 
-  map = string2uintptrmap_set (map, "one", 1, NULL);
-  map = string2uintptrmap_set (map, "two", 2, NULL);
-  map = string2uintptrmap_set (map, "three", 3, NULL);
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL, NULL);
 
   //printf ("%d\n", (int) string2uintptrmap_is_empty (map));
   check (!string2uintptrmap_is_empty (map));
@@ -225,11 +225,13 @@ test1 (void)
 }
 
 bool value_is_freed;
+void *value_freed_env;
 
 void
-value_free (uintptr_t v)
+value_free (uintptr_t v, void *environment)
 {
   value_is_freed = true;
+  value_freed_env = environment;
 }
 
 void
@@ -239,20 +241,31 @@ test2 (void)
 
   map = string2uintptrmap ();
   value_is_freed = false;
-  map = string2uintptrmap_set (map, "one", 1, NULL);
+  value_freed_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
   check (!value_is_freed);
-  map = string2uintptrmap_set (map, "one", 1, NULL);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
   check (!value_is_freed);
-  map = string2uintptrmap_set (map, "one", 1, value_free);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_set (map, "one", 1, value_free, NULL);
   check (value_is_freed);
+  check (value_freed_env == NULL);
   string2uintptrmap_free (map);
 
   map = string2uintptrmap ();
   value_is_freed = false;
-  map = string2uintptrmap_set (map, "one", 1, value_free);
+  value_freed_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, value_free, NULL);
   check (!value_is_freed);
-  map = string2uintptrmap_set (map, "one", 1, value_free);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_set (map, "one", 1, value_free, NULL);
   check (value_is_freed);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_set (map, "one", 1, value_free,
+                               &value_freed_env);
+  check (value_is_freed);
+  check (value_freed_env == &value_freed_env);
   string2uintptrmap_free (map);
 }
 

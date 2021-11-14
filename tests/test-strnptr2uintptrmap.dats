@@ -36,7 +36,7 @@ macdef up = $UNSAFE.cast{uintptr}
 macdef str1 = $UNSAFE.castvwtp1{string}
 
 fn {}
-null_value_free () : uintptr -> void =
+null_value_free () : (uintptr, ptr) -> void =
   $UNSAFE.cast the_null_ptr
 
 fn
@@ -60,11 +60,14 @@ test1 () : void =
     val _ = assertloc (strnptr2uintptrmap_size map = i2sz 0)
 
     val map = strnptr2uintptrmap_set (map, "one", up 1,
-                                      null_value_free ())
+                                      null_value_free (),
+                                      the_null_ptr)
     val map = strnptr2uintptrmap_set (map, string0_copy "two", up 2,
-                                      null_value_free ())
+                                      null_value_free (),
+                                      the_null_ptr)
     val map = strnptr2uintptrmap_set (map, string1_copy "three", up 3,
-                                      null_value_free ())
+                                      null_value_free (),
+                                      the_null_ptr)
 
     val _ = assertloc (not (strnptr2uintptrmap_is_empty map))
     val _ = assertloc (not (iseqz map))
@@ -172,7 +175,8 @@ test1 () : void =
     val _ = strnptr2uintptrmap_pairs_free pairs
 
     val map = strnptr2uintptrmap_set (map, "two", up 2,
-                                      null_value_free ())
+                                      null_value_free (),
+                                      the_null_ptr)
     val s = string0_copy "two"
     val map = strnptr2uintptrmap_del (map, s)
     val _ = free s
@@ -192,7 +196,8 @@ test1 () : void =
     val _ = strnptr2uintptrmap_pairs_free pairs
 
     val map = strnptr2uintptrmap_set (map, "two", up 2,
-                                      null_value_free ())
+                                      null_value_free (),
+                                      the_null_ptr)
     val s = string1_copy "two"
     val map = strnptr2uintptrmap_del (map, s)
     val _ = free s

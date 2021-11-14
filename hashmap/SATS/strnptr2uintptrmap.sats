@@ -73,32 +73,37 @@ strnptr2uintptrmap_isnot_empty
         (map  : !strnptr2uintptrmap_vt (size) >> _) :
     bool (size != 0)
 
-(* The "value_free" argument may be a NULL pointer. *)
+(* The "value_free" argument may be a NULL pointer.
+   The "ptr" argument to value_free is for passing a
+   closure environment in C. *)
 fun
 strnptr2uintptrmap_set_string
-        {size       : int}
-        (map        : strnptr2uintptrmap_vt (size),
-         key        : string,
-         value      : uintptr,
-         value_free : uintptr -> void) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : string,
+         value       : uintptr,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size + 1]
     strnptr2uintptrmap_vt (new_size)
 fun
 strnptr2uintptrmap_set_strptr
-        {size       : int}
-        (map        : strnptr2uintptrmap_vt (size),
-         key        : Strptr1,
-         value      : uintptr,
-         value_free : uintptr -> void) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : Strptr1,
+         value       : uintptr,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size + 1]
     strnptr2uintptrmap_vt (new_size)
 fun
 strnptr2uintptrmap_set_strnptr
-        {size       : int}
-        (map        : strnptr2uintptrmap_vt (size),
-         key        : Strnptr1,
-         value      : uintptr,
-         value_free : uintptr -> void) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : Strnptr1,
+         value       : uintptr,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size + 1]
     strnptr2uintptrmap_vt (new_size)
 overload strnptr2uintptrmap_set with

@@ -55,17 +55,20 @@ strnptrset_isnot_empty (set) =
 implement {}
 strnptrset_add_string (set, element) =
   strnptr2uintptrmap_set_string (set, element, $UNSAFE.cast 0,
-                                 $UNSAFE.cast the_null_ptr)
+                                 $UNSAFE.cast the_null_ptr,
+                                 the_null_ptr)
 
 implement {}
 strnptrset_add_strptr (set, element) =
   strnptr2uintptrmap_set_strptr (set, element, $UNSAFE.cast 0,
-                                 $UNSAFE.cast the_null_ptr)
+                                 $UNSAFE.cast the_null_ptr,
+                                 the_null_ptr)
 
 implement {}
 strnptrset_add_strnptr (set, element) =
   strnptr2uintptrmap_set_strnptr (set, element, $UNSAFE.cast 0,
-                                  $UNSAFE.cast the_null_ptr)
+                                  $UNSAFE.cast the_null_ptr,
+                                  the_null_ptr)
 
 implement {}
 strnptrset_del_string (set, element) =
