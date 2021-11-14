@@ -103,22 +103,26 @@ test1 (void)
   //printf ("%zu\n", string2uintptrmap_size (map));
   check (string2uintptrmap_size (map) == 3);
 
-  string2uintptrmap_get (map, "one", &result_found, &result);
+  string2uintptrmap_get (map, "one", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d %zu\n", (int) result_found, result);
   check (result_found);
   check (result == 1);
 
-  string2uintptrmap_get (map, "two", &result_found, &result);
+  string2uintptrmap_get (map, "two", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d %zu\n", (int) result_found, result);
   check (result_found);
   check (result == 2);
 
-  string2uintptrmap_get (map, "three", &result_found, &result);
+  string2uintptrmap_get (map, "three", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d %zu\n", (int) result_found, result);
   check (result_found);
   check (result == 3);
 
-  string2uintptrmap_get (map, "four", &result_found, &result);
+  string2uintptrmap_get (map, "four", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d\n", (int) result_found);
   check (!result_found);
 
@@ -191,21 +195,25 @@ test1 (void)
 
   map = string2uintptrmap_del (map, "two", NULL, NULL);
 
-  string2uintptrmap_get (map, "one", &result_found, &result);
+  string2uintptrmap_get (map, "one", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d %zu\n", (int) result_found, result);
   check (result_found);
   check (result == 1);
 
-  string2uintptrmap_get (map, "two", &result_found, &result);
+  string2uintptrmap_get (map, "two", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d\n", (int) result_found, result);
   check (!result_found);
 
-  string2uintptrmap_get (map, "three", &result_found, &result);
+  string2uintptrmap_get (map, "three", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d %zu\n", (int) result_found, result);
   check (result_found);
   check (result == 3);
 
-  string2uintptrmap_get (map, "four", &result_found, &result);
+  string2uintptrmap_get (map, "four", NULL, NULL, &result_found,
+			 &result);
   //printf ("%d\n", (int) result_found);
   check (!result_found);
 
@@ -263,7 +271,7 @@ test2 (void)
   check (value_is_freed);
   check (value_freed_env == NULL);
   map = string2uintptrmap_set (map, "one", 1, value_free,
-                               &value_freed_env);
+			       &value_freed_env);
   check (value_is_freed);
   check (value_freed_env == &value_freed_env);
   string2uintptrmap_free (map);
@@ -300,11 +308,11 @@ test3 (void)
   value_is_freed = false;
   value_freed_env = NULL;
   map = string2uintptrmap_set (map, "one", 1, value_free,
-                               &value_freed_env);
+			       &value_freed_env);
   check (!value_is_freed);
   check (value_freed_env == NULL);
   map = string2uintptrmap_del (map, "one", value_free,
-                               &value_freed_env);
+			       &value_freed_env);
   check (value_is_freed);
   check (value_freed_env == &value_freed_env);
   string2uintptrmap_free (map);

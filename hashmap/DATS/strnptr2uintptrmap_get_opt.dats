@@ -30,35 +30,45 @@ staload "hashmap/SATS/strnptr2uintptrmap.sats"
 #include "hashmap/HATS/strnptrmap.hats"
 
 implement
-strnptr2uintptrmap_get_opt_strnptr (map, key) =
+strnptr2uintptrmap_get_opt_strnptr (map, key, value_copy,
+                                    environment) =
   let
     implement
-    hashmap$value_vt_copy<uintptr> (value) =
-      value
+    hashmap$value_vt_copy<uintptr> (v) =
+      if iseqz ($UNSAFE.cast{ptr} value_copy) then
+        v
+      else
+        value_copy (v, environment)
   in
     strnptrmap_get_opt<uintptr> (map, key)
   end
 
 implement
-strnptr2uintptrmap_get_opt_strptr (map, key) =
+strnptr2uintptrmap_get_opt_strptr (map, key, value_copy,
+                                   environment) =
   let
     val s = $UNSAFE.castvwtp1{Strnptr1} key
     prval _ = lemma_strnptr_param s
-    val result = strnptr2uintptrmap_get_opt_strnptr (map, s)
+    val result =
+      strnptr2uintptrmap_get_opt_strnptr (map, s, value_copy,
+                                          environment)
     val _ = $UNSAFE.castvwtp0{void} s
   in
     result
   end
 
 implement
-strnptr2uintptrmap_get_opt_string (map, key) =
+strnptr2uintptrmap_get_opt_string (map, key, value_copy,
+                                   environment) =
   (* WARNING: The following implementation really does assume that
      the "key" argument to strnptr2uintptrmap_del_strnptr is
      read-only. (You could implement this template without that
      assumption, by using string1_copy. *)
   let
     val s = $UNSAFE.castvwtp0{Strnptr1} key
-    val result = strnptr2uintptrmap_get_opt_strnptr (map, s)
+    val result =
+      strnptr2uintptrmap_get_opt_strnptr (map, s, value_copy,
+                                          environment)
     prval _ = $UNSAFE.castvwtp0{void} s
   in
     result

@@ -149,21 +149,27 @@ overload strnptr2uintptrmap_del with
 
 fun
 strnptr2uintptrmap_get_opt_string
-        {size : int}
-        (map  : !RD(strnptr2uintptrmap_vt (size)) >> _,
-         key  : string) :
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         key         : string,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr) :
     Option_vt (uintptr)
 fun
 strnptr2uintptrmap_get_opt_strptr
-        {size : int}
-        (map  : !RD(strnptr2uintptrmap_vt (size)) >> _,
-         key  : !RD(Strptr1) >> _) :
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         key         : !RD(Strptr1) >> _,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr) :
     Option_vt (uintptr)
 fun
 strnptr2uintptrmap_get_opt_strnptr
-        {size : int}
-        (map  : !RD(strnptr2uintptrmap_vt (size)) >> _,
-         key  : !RD(Strnptr1) >> _) :
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         key         : !RD(Strnptr1) >> _,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr) :
     Option_vt (uintptr)
 overload strnptr2uintptrmap_get_opt with
   strnptr2uintptrmap_get_opt_string of 0

@@ -65,7 +65,7 @@ ats2_hashmap_stringset_add (stringset_t set, const char *element)
   extern stringset_t
     ats2_055_hashmap__strnptr2uintptrmap_set_string
     (void *map, void *key, uintptr_t value,
-     void (*) (uintptr_t, void *), void *);
+     void (*)(uintptr_t, void *), void *);
   return ats2_055_hashmap__strnptr2uintptrmap_set_string
     (set, (void *) element, 0, NULL, NULL);
 }
@@ -75,7 +75,7 @@ ats2_hashmap_stringset_del (stringset_t set, const char *element)
 {
   extern stringset_t
     ats2_055_hashmap__strnptr2uintptrmap_del_string
-    (void *map, void *key, void (*) (uintptr_t, void *), void *);
+    (void *map, void *key, void (*)(uintptr_t, void *), void *);
   return ats2_055_hashmap__strnptr2uintptrmap_del_string
     (set, (void *) element, NULL, NULL);
 }

@@ -111,8 +111,9 @@ inline string2uintptrmap_t
 
 extern void
   ats2_hashmap_string2uintptrmap_get
-  (string2uintptrmap_t map,
-   const char *key, _Bool *has_key, uintptr_t * value);
+  (string2uintptrmap_t map, const char *key,
+   uintptr_t (*value_copy) (uintptr_t, void *),
+   void *environment, _Bool *has_key, uintptr_t * value);
 
 extern _Bool
   ats2_hashmap_string2uintptrmap_has_key

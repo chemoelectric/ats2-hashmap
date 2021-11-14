@@ -31,18 +31,21 @@ staload "hashmap/SATS/strnptr2uintptrmap.sats"
 
 extern fun
 ats2_hashmap_string2uintptrmap_get__internal
-        {size   : int}
-        (map    : !RD(strnptr2uintptrmap_vt (size)) >> _,
-         key    : string,
-         found  : &bool? >> bool,
-         result : &uintptr? >> uintptr) : void =
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         key         : string,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr,
+         found       : &bool? >> bool,
+         result      : &uintptr? >> uintptr) : void =
   "sta#ats2_hashmap_string2uintptrmap_get__internal"
 
 implement
-ats2_hashmap_string2uintptrmap_get__internal (map, key, found,
-                                              result) =
+ats2_hashmap_string2uintptrmap_get__internal
+        (map, key, value_copy, environment, found, result) =
   let
-    val value_opt = strnptr2uintptrmap_get_opt (map, key)
+    val value_opt = strnptr2uintptrmap_get_opt (map, key, value_copy,
+                                                environment)
   in
     case+ value_opt of
     | ~ Some_vt value =>
@@ -63,14 +66,17 @@ ats2_hashmap_string2uintptrmap_get__internal (map, key, found,
 #include <hashmap/string2uintptrmap.h>
 
 void
-ats2_hashmap_string2uintptrmap_get (string2uintptrmap_t map,
-                                    const char *key,
-                                    _Bool *has_key,
-                                    uintptr_t *value)
+ats2_hashmap_string2uintptrmap_get
+        (string2uintptrmap_t map,
+         const char *key,
+         uintptr_t (*value_copy) (uintptr_t, void *),
+         void *environment,
+         _Bool *has_key,
+         uintptr_t *value)
 {
   atstype_bool found;
-  ats2_hashmap_string2uintptrmap_get__internal (map, (void *) key,
-                                                &found, value);
+  ats2_hashmap_string2uintptrmap_get__internal
+    (map, (void *) key, value_copy, environment, &found, value);
   *has_key = (_Bool) found;
 }
 
