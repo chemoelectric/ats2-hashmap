@@ -98,13 +98,15 @@ inline string2uintptrmap_t
 
 inline string2uintptrmap_t
   ats2_hashmap_string2uintptrmap_del
-  (string2uintptrmap_t map, const char *key)
+  (string2uintptrmap_t map, const char *key,
+   void (*value_free) (uintptr_t, void *), void *environment)
 {
   extern string2uintptrmap_t
     ats2_055_hashmap__strnptr2uintptrmap_del_string
-    (void *map, void *key);
+    (void *map, void *key,
+     void (*value_free) (uintptr_t, void *), void *environment);
   return ats2_055_hashmap__strnptr2uintptrmap_del_string
-    (map, (void *) key);
+    (map, (void *) key, value_free, environment);
 }
 
 extern void

@@ -115,23 +115,29 @@ overload strnptr2uintptrmap_set with
 
 fun
 strnptr2uintptrmap_del_string
-        {size : int}
-        (map  : strnptr2uintptrmap_vt (size),
-         key  : string) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : string,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size - 1]
     strnptr2uintptrmap_vt (new_size)
 fun
 strnptr2uintptrmap_del_strptr
-        {size : int}
-        (map  : strnptr2uintptrmap_vt (size),
-         key  : !RD(Strptr1) >> _) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : !RD(Strptr1) >> _,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size - 1]
     strnptr2uintptrmap_vt (new_size)
 fun
 strnptr2uintptrmap_del_strnptr
-        {size : int}
-        (map  : strnptr2uintptrmap_vt (size),
-         key  : !RD(Strnptr1) >> _) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         key         : !RD(Strnptr1) >> _,
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     [new_size : int | new_size == size || new_size == size - 1]
     strnptr2uintptrmap_vt (new_size)
 overload strnptr2uintptrmap_del with

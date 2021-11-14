@@ -189,7 +189,7 @@ test1 (void)
   check (values->next->next->next == NULL);
   string2uintptrmap_values_free (values);
 
-  map = string2uintptrmap_del (map, "two");
+  map = string2uintptrmap_del (map, "two", NULL, NULL);
 
   string2uintptrmap_get (map, "one", &result_found, &result);
   //printf ("%d %zu\n", (int) result_found, result);
@@ -269,10 +269,52 @@ test2 (void)
   string2uintptrmap_free (map);
 }
 
+void
+test3 (void)
+{
+  string2uintptrmap_t map;
+
+  map = string2uintptrmap ();
+  value_is_freed = false;
+  value_freed_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_del (map, "one", NULL, NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  string2uintptrmap_free (map);
+
+  map = string2uintptrmap ();
+  value_is_freed = false;
+  value_freed_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, value_free, NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_del (map, "one", value_free, NULL);
+  check (value_is_freed);
+  check (value_freed_env == NULL);
+  string2uintptrmap_free (map);
+
+  map = string2uintptrmap ();
+  value_is_freed = false;
+  value_freed_env = NULL;
+  map = string2uintptrmap_set (map, "one", 1, value_free,
+                               &value_freed_env);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  map = string2uintptrmap_del (map, "one", value_free,
+                               &value_freed_env);
+  check (value_is_freed);
+  check (value_freed_env == &value_freed_env);
+  string2uintptrmap_free (map);
+}
+
 int
 main (int argc, char *argv[])
 {
   test1 ();
   test2 ();
+  test3 ();
   return 0;
 }

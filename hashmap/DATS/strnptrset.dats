@@ -72,15 +72,21 @@ strnptrset_add_strnptr (set, element) =
 
 implement {}
 strnptrset_del_string (set, element) =
-  strnptr2uintptrmap_del_string (set, element)
+  strnptr2uintptrmap_del_string (set, element,
+                                 $UNSAFE.cast the_null_ptr,
+                                 the_null_ptr)
 
 implement {}
 strnptrset_del_strptr (set, element) =
-  strnptr2uintptrmap_del_strptr (set, element)
+  strnptr2uintptrmap_del_strptr (set, element,
+                                 $UNSAFE.cast the_null_ptr,
+                                 the_null_ptr)
 
 implement {}
 strnptrset_del_strnptr (set, element) =
-  strnptr2uintptrmap_del_strnptr (set, element)
+  strnptr2uintptrmap_del_strnptr (set, element,
+                                  $UNSAFE.cast the_null_ptr,
+                                  the_null_ptr)
 
 implement {}
 strnptrset_contains_string (set, element) =

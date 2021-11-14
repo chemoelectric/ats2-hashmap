@@ -158,7 +158,9 @@ test1 () : void =
     prval _ = fold@ values
     val _ = strnptr2uintptrmap_values_free values
 
-    val map = strnptr2uintptrmap_del (map, "two")
+    val map = strnptr2uintptrmap_del (map, "two",
+                                      null_value_free (),
+                                      the_null_ptr)
 
     val pairs = strnptr2uintptrmap_pairs (map)
     val _ = assertloc (length pairs = 2)
@@ -178,7 +180,10 @@ test1 () : void =
                                       null_value_free (),
                                       the_null_ptr)
     val s = string0_copy "two"
-    val map = strnptr2uintptrmap_del (map, s)
+    val map = strnptr2uintptrmap_del (map, s,
+                                      null_value_free (),
+                                      the_null_ptr)
+
     val _ = free s
 
     val pairs = strnptr2uintptrmap_pairs (map)
@@ -199,7 +204,9 @@ test1 () : void =
                                       null_value_free (),
                                       the_null_ptr)
     val s = string1_copy "two"
-    val map = strnptr2uintptrmap_del (map, s)
+    val map = strnptr2uintptrmap_del (map, s,
+                                      null_value_free (),
+                                      the_null_ptr)
     val _ = free s
 
     val pairs = strnptr2uintptrmap_pairs (map)
