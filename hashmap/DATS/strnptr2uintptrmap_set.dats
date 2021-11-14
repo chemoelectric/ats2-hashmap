@@ -30,30 +30,31 @@ staload "hashmap/SATS/strnptr2uintptrmap.sats"
 #include "hashmap/HATS/strnptrmap.hats"
 
 implement
-strnptr2uintptrmap_set_strnptr (map, key, value) =
+strnptr2uintptrmap_set_strnptr (map, key, value, value_free) =
   let
     implement
-    hashmap$value_vt_free<uintptr> (value) =
-      ()
+    hashmap$value_vt_free<uintptr> (v) =
+      if isneqz ($UNSAFE.cast{ptr} value_free) then
+        value_free (v)
   in
     strnptrmap_set<uintptr> (map, key, value)
   end
 
 implement
-strnptr2uintptrmap_set_strptr (map, key, value) =
+strnptr2uintptrmap_set_strptr (map, key, value, value_free) =
   let
     val s = strptr2strnptr key
     prval _ = lemma_strnptr_param s
   in
-    strnptr2uintptrmap_set_strnptr (map, s, value)
+    strnptr2uintptrmap_set_strnptr (map, s, value, value_free)
   end
 
 implement
-strnptr2uintptrmap_set_string (map, key, value) =
+strnptr2uintptrmap_set_string (map, key, value, value_free) =
   let
     val key = g1ofg0 key
     prval _ = lemma_string_param key
     val s = string1_copy key
   in
-    strnptr2uintptrmap_set_strnptr (map, s, value)
+    strnptr2uintptrmap_set_strnptr (map, s, value, value_free)
   end

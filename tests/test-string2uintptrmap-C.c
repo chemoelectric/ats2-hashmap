@@ -20,6 +20,7 @@ along with this program. If not, see
 
 #include <hashmap/string2uintptrmap.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
@@ -76,8 +77,8 @@ check_fail (const char *expr, const char *file, size_t line,
   exit (1);
 }
 
-int
-main (int argc, char *argv[])
+void
+test1 (void)
 {
   _Bool result_found;
   uintptr_t result;
@@ -91,9 +92,9 @@ main (int argc, char *argv[])
   //printf ("%zu\n", string2uintptrmap_size (map));
   check (string2uintptrmap_size (map) == 0);
 
-  map = string2uintptrmap_set (map, "one", 1);
-  map = string2uintptrmap_set (map, "two", 2);
-  map = string2uintptrmap_set (map, "three", 3);
+  map = string2uintptrmap_set (map, "one", 1, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL);
 
   //printf ("%d\n", (int) string2uintptrmap_is_empty (map));
   check (!string2uintptrmap_is_empty (map));
@@ -221,6 +222,44 @@ main (int argc, char *argv[])
   check (!string2uintptrmap_has_key (map, "four"));
 
   string2uintptrmap_free (map);
+}
 
+bool value_is_freed;
+
+void
+value_free (uintptr_t v)
+{
+  value_is_freed = true;
+}
+
+void
+test2 (void)
+{
+  string2uintptrmap_t map;
+
+  map = string2uintptrmap ();
+  value_is_freed = false;
+  map = string2uintptrmap_set (map, "one", 1, NULL);
+  check (!value_is_freed);
+  map = string2uintptrmap_set (map, "one", 1, NULL);
+  check (!value_is_freed);
+  map = string2uintptrmap_set (map, "one", 1, value_free);
+  check (value_is_freed);
+  string2uintptrmap_free (map);
+
+  map = string2uintptrmap ();
+  value_is_freed = false;
+  map = string2uintptrmap_set (map, "one", 1, value_free);
+  check (!value_is_freed);
+  map = string2uintptrmap_set (map, "one", 1, value_free);
+  check (value_is_freed);
+  string2uintptrmap_free (map);
+}
+
+int
+main (int argc, char *argv[])
+{
+  test1 ();
+  test2 ();
   return 0;
 }

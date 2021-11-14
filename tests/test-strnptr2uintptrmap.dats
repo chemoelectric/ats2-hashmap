@@ -35,6 +35,10 @@ along with this program. If not, see
 macdef up = $UNSAFE.cast{uintptr}
 macdef str1 = $UNSAFE.castvwtp1{string}
 
+fn {}
+null_value_free () : uintptr -> void =
+  $UNSAFE.cast the_null_ptr
+
 fn
 pairs_equal_strnptr_string
         (x : &(@(Strnptr1, uintptr)) >> _,
@@ -43,8 +47,8 @@ pairs_equal_strnptr_string
   (str1 (x.0) = (y.0)) && ((x.1) = (y.1))
 overload = with pairs_equal_strnptr_string of 100
 
-implement
-main0 () =
+fn
+test1 () : void =
   {
     val map = strnptr2uintptrmap ()
 
@@ -55,9 +59,12 @@ main0 () =
     val _ = assertloc (size map = i2sz 0)
     val _ = assertloc (strnptr2uintptrmap_size map = i2sz 0)
 
-    val map = strnptr2uintptrmap_set (map, "one", up 1)
-    val map = strnptr2uintptrmap_set (map, string0_copy "two", up 2)
-    val map = strnptr2uintptrmap_set (map, string1_copy "three", up 3)
+    val map = strnptr2uintptrmap_set (map, "one", up 1,
+                                      null_value_free ())
+    val map = strnptr2uintptrmap_set (map, string0_copy "two", up 2,
+                                      null_value_free ())
+    val map = strnptr2uintptrmap_set (map, string1_copy "three", up 3,
+                                      null_value_free ())
 
     val _ = assertloc (not (strnptr2uintptrmap_is_empty map))
     val _ = assertloc (not (iseqz map))
@@ -164,7 +171,8 @@ main0 () =
     prval _ = fold@ pairs
     val _ = strnptr2uintptrmap_pairs_free pairs
 
-    val map = strnptr2uintptrmap_set (map, "two", up 2)
+    val map = strnptr2uintptrmap_set (map, "two", up 2,
+                                      null_value_free ())
     val s = string0_copy "two"
     val map = strnptr2uintptrmap_del (map, s)
     val _ = free s
@@ -183,7 +191,8 @@ main0 () =
     prval _ = fold@ pairs
     val _ = strnptr2uintptrmap_pairs_free pairs
 
-    val map = strnptr2uintptrmap_set (map, "two", up 2)
+    val map = strnptr2uintptrmap_set (map, "two", up 2,
+                                      null_value_free ())
     val s = string1_copy "two"
     val map = strnptr2uintptrmap_del (map, s)
     val _ = free s
@@ -203,4 +212,10 @@ main0 () =
     val _ = strnptr2uintptrmap_pairs_free pairs
 
     val _ = free map
+  }
+
+implement
+main0 () =
+  {
+    val _ = test1 ()
   }

@@ -3737,7 +3737,8 @@ hashmap/DATS/string2uintptrmap_EXTERN_INLINE_set.dats: hashmap/DATS/string2uintp
 	$(call make-extern-inline, \
 extern inline string2uintptrmap_t \
 ats2_hashmap_string2uintptrmap_set (string2uintptrmap_t map, \
-                                    const char *key, uintptr_t value)) $(<) > $(@)
+                                    const char *key, uintptr_t value, \
+									void (*value_free) (uintptr_t))) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_del.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)

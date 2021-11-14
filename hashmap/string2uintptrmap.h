@@ -81,15 +81,19 @@ ats2_hashmap_string2uintptrmap_size (string2uintptrmap_t map)
   return ats2_055_hashmap__strnptr2uintptrmap_size (map);
 }
 
+/* "value_free" may be a NULL pointer. If non-NULL, it points to a
+   function that frees a stored value object. */
 inline string2uintptrmap_t
   ats2_hashmap_string2uintptrmap_set
-  (string2uintptrmap_t map, const char *key, uintptr_t value)
+  (string2uintptrmap_t map, const char *key, uintptr_t value,
+   void (*value_free) (uintptr_t))
 {
   extern string2uintptrmap_t
     ats2_055_hashmap__strnptr2uintptrmap_set_string
-    (void *map, void *key, uintptr_t value);
+    (void *map, void *key, uintptr_t value,
+     void (*value_free) (uintptr_t));
   return ats2_055_hashmap__strnptr2uintptrmap_set_string
-    (map, (void *) key, value);
+    (map, (void *) key, value, value_free);
 }
 
 inline string2uintptrmap_t
