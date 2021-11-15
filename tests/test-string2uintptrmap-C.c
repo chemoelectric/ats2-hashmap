@@ -369,6 +369,78 @@ test4 (void)
   string2uintptrmap_free (map);
 }
 
+void
+test5 (void)
+{
+  string2uintptrmap_t map;
+  string2uintptrmap_pairs_t pairs;
+
+  map = string2uintptrmap ();
+
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL, NULL);
+
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  pairs = string2uintptrmap_pairs (map, NULL, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_pairs_free (pairs, NULL, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  pairs = string2uintptrmap_pairs (map, value_copy, NULL);
+  check (value_is_copied);
+  check (value_copied_env == NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_pairs_free (pairs, value_free, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (value_is_freed);
+  check (value_freed_env == NULL);
+
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  pairs = string2uintptrmap_pairs (map, value_copy, &value_copy);
+  check (value_is_copied);
+  check (value_copied_env == &value_copy);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_pairs_free (pairs, value_free, &value_free);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (value_is_freed);
+  check (value_freed_env == &value_free);
+
+  string2uintptrmap_free (map);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -376,5 +448,6 @@ main (int argc, char *argv[])
   test2 ();
   test3 ();
   test4 ();
+  test5 ();
   return 0;
 }
