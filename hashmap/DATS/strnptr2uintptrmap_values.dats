@@ -29,22 +29,45 @@ along with this program. If not, see
 staload "hashmap/SATS/strnptr2uintptrmap.sats"
 #include "hashmap/HATS/strnptrmap.hats"
 
+#define NIL list_vt_nil ()
+#define :: list_vt_cons
+
 implement
-strnptr2uintptrmap_values (map) =
+strnptr2uintptrmap_values (map, value_copy, environment) =
   let
     implement
-    hashmap$value_vt_copy<uintptr> (value) =
-      value
+    hashmap$value_vt_copy<uintptr> (v) =
+      if iseqz ($UNSAFE.cast{ptr} value_copy) then
+        v
+      else
+        value_copy (v, environment)
   in
     strnptrmap_values<uintptr> (map)
   end
 
 implement
-strnptr2uintptrmap_values_free (values) =
-  let
-    implement
-    list_vt_freelin$clear<uintptr> (x) =
-      ()
-  in
-    list_vt_freelin<uintptr> values
-  end
+strnptr2uintptrmap_values_free (values, value_free, environment) =
+  if iseqz ($UNSAFE.cast{ptr} value_free) then
+    let
+      implement
+      list_vt_freelin$clear<uintptr> (x) =
+        ()
+    in
+      list_vt_freelin<uintptr> values
+    end
+  else
+    let
+      fun
+      loop {n      : int | 0 <= n} .<n>.
+           (values : list_vt (uintptr, n)) : void =
+        case+ values of
+        | ~ NIL => ()
+        | ~ v :: tail =>
+          begin
+            value_free (v, environment);
+            loop tail
+          end
+      prval _ = lemma_list_vt_param values
+    in
+      loop values
+    end

@@ -233,14 +233,18 @@ strnptr2uintptrmap_keys_free
 
 fun
 strnptr2uintptrmap_values
-        {size : int}
-        (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr) :
     list_vt (uintptr, size)
 
 fun
 strnptr2uintptrmap_values_free
-        {size   : int}
-        (values : list_vt (uintptr, size)) :
+        {size        : int}
+        (values      : list_vt (uintptr, size),
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     void
 
 fun

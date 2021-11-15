@@ -3782,13 +3782,17 @@ hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values.dats: hashmap/DATS/string2ui
 	@$(MKDIR_P) $(@D)
 	$(call make-extern-inline, \
 extern inline string2uintptrmap_values_t \
-ats2_hashmap_string2uintptrmap_values (string2uintptrmap_t map)) $(<) > $(@)
+ats2_hashmap_string2uintptrmap_values (string2uintptrmap_t map, \
+                                       uintptr_t (*value_copy) (uintptr_t, void *), \
+                                       void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_free.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)
 	$(call make-extern-inline, \
 extern inline void \
-ats2_hashmap_string2uintptrmap_values_free (string2uintptrmap_values_t values)) $(<) > $(@)
+ats2_hashmap_string2uintptrmap_values_free (string2uintptrmap_values_t values, \
+                                            void (*value_free) (uintptr_t, void *), \
+                                            void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)
