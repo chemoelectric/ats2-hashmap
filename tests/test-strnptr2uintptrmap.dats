@@ -246,7 +246,8 @@ test1 () : void =
     val _ = strnptr2uintptrmap_pairs_free (pairs, value_free_null (),
                                            the_null_ptr)
 
-    val _ = free map
+    val _ = strnptr2uintptrmap_free (map, value_free_null (),
+                                     the_null_ptr)
   }
 
 implement

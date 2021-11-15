@@ -110,4 +110,5 @@ strnptrset_elements_free (elements) =
 
 implement {}
 strnptrset_free (set) =
-  strnptr2uintptrmap_free (set)
+  strnptr2uintptrmap_free (set, $UNSAFE.cast the_null_ptr,
+                           the_null_ptr)

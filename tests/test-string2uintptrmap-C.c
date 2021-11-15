@@ -252,7 +252,7 @@ test1 (void)
   //printf ("%d\n", (int) string2uintptrmap_has_key (map, "four"));
   check (!string2uintptrmap_has_key (map, "four"));
 
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 }
 
 void
@@ -272,7 +272,7 @@ test2 (void)
   map = string2uintptrmap_set (map, "one", 1, value_free, NULL);
   check (value_is_freed);
   check (value_freed_env == NULL);
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 
   map = string2uintptrmap ();
   value_is_freed = false;
@@ -288,7 +288,7 @@ test2 (void)
 			   &value_freed_env);
   check (value_is_freed);
   check (value_freed_env == &value_freed_env);
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 }
 
 void
@@ -305,7 +305,7 @@ test3 (void)
   map = string2uintptrmap_del (map, "one", NULL, NULL);
   check (!value_is_freed);
   check (value_freed_env == NULL);
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 
   map = string2uintptrmap ();
   value_is_freed = false;
@@ -316,7 +316,7 @@ test3 (void)
   map = string2uintptrmap_del (map, "one", value_free, NULL);
   check (value_is_freed);
   check (value_freed_env == NULL);
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 
   map = string2uintptrmap ();
   value_is_freed = false;
@@ -330,7 +330,7 @@ test3 (void)
     string2uintptrmap_del (map, "one", value_free, &value_freed_env);
   check (value_is_freed);
   check (value_freed_env == &value_freed_env);
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 }
 
 void
@@ -369,7 +369,7 @@ test4 (void)
   check (value_is_copied);
   check (value_copied_env == &result);
 
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 }
 
 void
@@ -441,7 +441,7 @@ test5 (void)
   check (value_is_freed);
   check (value_freed_env == &value_free);
 
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
 }
 
 void
@@ -513,7 +513,56 @@ test6 (void)
   check (value_is_freed);
   check (value_freed_env == &value_free);
 
-  string2uintptrmap_free (map);
+  string2uintptrmap_free (map, NULL, NULL);
+}
+
+void
+test7 (void)
+{
+  string2uintptrmap_t map;
+
+  map = string2uintptrmap ();
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL, NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_free (map, NULL, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (!value_is_freed);
+  check (value_freed_env == NULL);
+
+  map = string2uintptrmap ();
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL, NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_free (map, value_free, NULL);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (value_is_freed);
+  check (value_freed_env == NULL);
+
+
+  map = string2uintptrmap ();
+  map = string2uintptrmap_set (map, "one", 1, NULL, NULL);
+  map = string2uintptrmap_set (map, "two", 2, NULL, NULL);
+  map = string2uintptrmap_set (map, "three", 3, NULL, NULL);
+  value_is_copied = false;
+  value_copied_env = NULL;
+  value_is_freed = false;
+  value_freed_env = NULL;
+  string2uintptrmap_free (map, value_free, &string2uintptrmap_free);
+  check (!value_is_copied);
+  check (value_copied_env == NULL);
+  check (value_is_freed);
+  check (value_freed_env == &string2uintptrmap_free);
 }
 
 int
@@ -525,5 +574,6 @@ main (int argc, char *argv[])
   test4 ();
   test5 ();
   test6 ();
+  test7 ();
   return 0;
 }

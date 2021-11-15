@@ -176,22 +176,26 @@ inline string2uintptrmap_values_t
 
 inline void
   ats2_hashmap_string2uintptrmap_values_free
-  (string2uintptrmap_values_t
-   values, void (*value_free) (uintptr_t, void *), void *environment)
+  (string2uintptrmap_values_t values,
+   void (*value_free) (uintptr_t, void *), void *environment)
 {
   extern void ats2_055_hashmap__strnptr2uintptrmap_values_free
-    (void
-     *values,
+    (void *values,
      void (*value_free) (uintptr_t, void *), void *environment);
   ats2_055_hashmap__strnptr2uintptrmap_values_free
     (values, value_free, environment);
 }
 
 inline void
-ats2_hashmap_string2uintptrmap_free (string2uintptrmap_t map)
+  ats2_hashmap_string2uintptrmap_free
+  (string2uintptrmap_t map, void (*value_free) (uintptr_t, void *),
+   void *environment)
 {
-  extern void ats2_055_hashmap__strnptr2uintptrmap_free (void *map);
-  ats2_055_hashmap__strnptr2uintptrmap_free (map);
+  extern void ats2_055_hashmap__strnptr2uintptrmap_free
+    (void *map, void (*value_free) (uintptr_t, void *),
+     void *environment);
+  ats2_055_hashmap__strnptr2uintptrmap_free
+    (map, value_free, environment);
 }
 
 /* The following macro names are nicer to use. */

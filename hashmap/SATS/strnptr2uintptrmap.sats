@@ -249,9 +249,10 @@ strnptr2uintptrmap_values_free
 
 fun
 strnptr2uintptrmap_free
-        {size : int}
-        (map  : strnptr2uintptrmap_vt (size)) :
+        {size        : int}
+        (map         : strnptr2uintptrmap_vt (size),
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     void
-overload free with strnptr2uintptrmap_free
 
 (********************************************************************)

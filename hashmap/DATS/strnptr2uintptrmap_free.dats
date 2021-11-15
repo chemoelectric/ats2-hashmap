@@ -30,11 +30,12 @@ staload "hashmap/SATS/strnptr2uintptrmap.sats"
 #include "hashmap/HATS/strnptrmap.hats"
 
 implement
-strnptr2uintptrmap_free (map) =
+strnptr2uintptrmap_free (map, value_free, environment) =
   let
     implement
-    hashmap$value_vt_free<uintptr> (value) =
-      ()
+    hashmap$value_vt_free<uintptr> (v) =
+      if isneqz ($UNSAFE.cast{ptr} value_free) then
+        value_free (v, environment)
   in
     strnptrmap_free<uintptr> (map)
   end

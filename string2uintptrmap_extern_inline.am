@@ -106,4 +106,6 @@ hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free.dats: hashmap/DATS/string2uint
 	@$(MKDIR_P) $(@D)
 	$(call make-extern-inline, \
 extern inline void \
-ats2_hashmap_string2uintptrmap_free (string2uintptrmap_t map)) $(<) > $(@)
+ats2_hashmap_string2uintptrmap_free (string2uintptrmap_t map, \
+                                     void (*value_free) (uintptr_t, void *), \
+                                     void *environment)) $(<) > $(@)
