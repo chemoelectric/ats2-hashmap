@@ -46,8 +46,8 @@ hashmap/DATS/string2uintptrmap_EXTERN_INLINE_set.dats: hashmap/DATS/string2uintp
 extern inline string2uintptrmap_t \
 ats2_hashmap_string2uintptrmap_set (string2uintptrmap_t map, \
                                     const char *key, uintptr_t value, \
-									void (*value_free) (uintptr_t, void *), \
-									void *environment)) $(<) > $(@)
+                                    void (*value_free) (uintptr_t, void *), \
+                                    void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_del.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)
@@ -56,19 +56,23 @@ extern inline string2uintptrmap_t \
 ats2_hashmap_string2uintptrmap_del (string2uintptrmap_t map, \
                                     const char *key, \
                                     void (*value_free) (uintptr_t, void *), \
-									void *environment)) $(<) > $(@)
+                                    void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)
 	$(call make-extern-inline, \
 extern inline string2uintptrmap_pairs_t \
-ats2_hashmap_string2uintptrmap_pairs (string2uintptrmap_t map)) $(<) > $(@)
+ats2_hashmap_string2uintptrmap_pairs (string2uintptrmap_t map, \
+                                      uintptr_t (*value_copy) (uintptr_t, void *), \
+                                      void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs_free.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)
 	$(call make-extern-inline, \
 extern inline void \
-ats2_hashmap_string2uintptrmap_pairs_free (string2uintptrmap_pairs_t pairs)) $(<) > $(@)
+ats2_hashmap_string2uintptrmap_pairs_free (string2uintptrmap_pairs_t pairs, \
+                                           void (*value_free) (uintptr_t, void *), \
+                                           void *environment)) $(<) > $(@)
 
 hashmap/DATS/string2uintptrmap_EXTERN_INLINE_keys.dats: hashmap/DATS/string2uintptrmap_extern_inline.dats.m4 GNUmakefile
 	@$(MKDIR_P) $(@D)

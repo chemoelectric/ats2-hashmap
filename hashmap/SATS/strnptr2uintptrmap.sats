@@ -205,14 +205,18 @@ overload strnptr2uintptrmap_has_key with
 
 fun
 strnptr2uintptrmap_pairs
-        {size : int}
-        (map  : !RD(strnptr2uintptrmap_vt (size)) >> _) :
+        {size        : int}
+        (map         : !RD(strnptr2uintptrmap_vt (size)) >> _,
+         value_copy  : (uintptr, ptr) -> uintptr,
+         environment : ptr) :
     list_vt (@(Strnptr1, uintptr), size)
 
 fun
 strnptr2uintptrmap_pairs_free
-        {size  : int}
-        (pairs : list_vt (@(Strnptr1, uintptr), size)) :
+        {size        : int}
+        (pairs       : list_vt (@(Strnptr1, uintptr), size),
+         value_free  : (uintptr, ptr) -> void,
+         environment : ptr) :
     void
 
 fun

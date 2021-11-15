@@ -159,7 +159,8 @@ test1 (void)
   //printf ("%d\n", (int) string2uintptrmap_has_key (map, "four"));
   check (!string2uintptrmap_has_key (map, "four"));
 
-  string2uintptrmap_pairs_t pairs = string2uintptrmap_pairs (map);
+  string2uintptrmap_pairs_t pairs =
+    string2uintptrmap_pairs (map, NULL, NULL);
   //printf ("%s %" PRIuPTR "\n", pairs->pair.key, pairs->pair.value);
   //printf ("%s %" PRIuPTR "\n", pairs->next->pair.key, pairs->next->pair.value);
   //printf ("%s %" PRIuPTR "\n", pairs->next->next->pair.key, pairs->next->next->pair.value);
@@ -182,7 +183,7 @@ test1 (void)
 	 || (strcmp (pairs->next->next->pair.key, "three") == 0
 	     && pairs->next->next->pair.value == 3));
   check (pairs->next->next->next == NULL);
-  string2uintptrmap_pairs_free (pairs);
+  string2uintptrmap_pairs_free (pairs, NULL, NULL);
 
   string2uintptrmap_keys_t keys = string2uintptrmap_keys (map);
   //printf ("%s\n", keys->key);

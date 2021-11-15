@@ -107,7 +107,8 @@ test1 () : void =
                                                     null_value_copy (),
                                                     the_null_ptr)
 
-    val pairs = strnptr2uintptrmap_pairs (map)
+    val pairs = strnptr2uintptrmap_pairs (map, null_value_copy (),
+                                          the_null_ptr)
     val _ = assertloc (length pairs = 3)
     val- @ head :: tail = pairs
     val _ = assertloc (head = @("one", up 1) ||
@@ -126,7 +127,8 @@ test1 () : void =
     prval _ = fold@ tail2
     prval _ = fold@ tail
     prval _ = fold@ pairs
-    val _ = strnptr2uintptrmap_pairs_free pairs
+    val _ = strnptr2uintptrmap_pairs_free (pairs, null_value_free (),
+                                           the_null_ptr)
 
     val keys = strnptr2uintptrmap_keys (map)
     val _ = assertloc (length keys = 3)
@@ -174,7 +176,8 @@ test1 () : void =
                                       null_value_free (),
                                       the_null_ptr)
 
-    val pairs = strnptr2uintptrmap_pairs (map)
+    val pairs = strnptr2uintptrmap_pairs (map, null_value_copy (),
+                                          the_null_ptr)
     val _ = assertloc (length pairs = 2)
     val- @ head :: tail = pairs
     val _ = assertloc (head = @("one", up 1) ||
@@ -186,7 +189,8 @@ test1 () : void =
     prval _ = fold@ tail2
     prval _ = fold@ tail
     prval _ = fold@ pairs
-    val _ = strnptr2uintptrmap_pairs_free pairs
+    val _ = strnptr2uintptrmap_pairs_free (pairs, null_value_free (),
+                                           the_null_ptr)
 
     val map = strnptr2uintptrmap_set (map, "two", up 2,
                                       null_value_free (),
@@ -198,7 +202,8 @@ test1 () : void =
 
     val _ = free s
 
-    val pairs = strnptr2uintptrmap_pairs (map)
+    val pairs = strnptr2uintptrmap_pairs (map, null_value_copy (),
+                                          the_null_ptr)
     val _ = assertloc (length pairs = 2)
     val- @ head :: tail = pairs
     val _ = assertloc (head = @("one", up 1) ||
@@ -210,7 +215,8 @@ test1 () : void =
     prval _ = fold@ tail2
     prval _ = fold@ tail
     prval _ = fold@ pairs
-    val _ = strnptr2uintptrmap_pairs_free pairs
+    val _ = strnptr2uintptrmap_pairs_free (pairs, null_value_free (),
+                                           the_null_ptr)
 
     val map = strnptr2uintptrmap_set (map, "two", up 2,
                                       null_value_free (),
@@ -221,7 +227,8 @@ test1 () : void =
                                       the_null_ptr)
     val _ = free s
 
-    val pairs = strnptr2uintptrmap_pairs (map)
+    val pairs = strnptr2uintptrmap_pairs (map, null_value_copy (),
+                                          the_null_ptr)
     val _ = assertloc (length pairs = 2)
     val- @ head :: tail = pairs
     val _ = assertloc (head = @("one", up 1) ||
@@ -233,7 +240,8 @@ test1 () : void =
     prval _ = fold@ tail2
     prval _ = fold@ tail
     prval _ = fold@ pairs
-    val _ = strnptr2uintptrmap_pairs_free pairs
+    val _ = strnptr2uintptrmap_pairs_free (pairs, null_value_free (),
+                                           the_null_ptr)
 
     val _ = free map
   }
