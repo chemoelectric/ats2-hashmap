@@ -790,6 +790,11 @@ dist_tests_test_bits_source_uint16_C_SOURCES = tests/test-bits_source_uint16-C.c
 tests_test_bits_source_uint16_C_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits_source_uint16-C
 
+check_PROGRAMS += tests/test-bits_source_uint32-C
+dist_tests_test_bits_source_uint32_C_SOURCES = tests/test-bits_source_uint32-C.c
+tests_test_bits_source_uint32_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_uint32-C
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure
