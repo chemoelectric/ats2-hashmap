@@ -261,7 +261,11 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint8-C$(EXEEXT) \
 	tests/test-bits_source_uint16-C$(EXEEXT) \
 	tests/test-bits_source_uint32-C$(EXEEXT) \
-	tests/test-bits_source_uint64-C$(EXEEXT)
+	tests/test-bits_source_uint64-C$(EXEEXT) \
+	tests/test-bits_source_uint64_uint64-C$(EXEEXT) \
+	tests/test-bits_source_1byte-C$(EXEEXT) \
+	tests/test-bits_source_8bytes-C$(EXEEXT) \
+	tests/test-bits_source_16bytes-C$(EXEEXT)
 
 # This SpookyHash test includes ‘compare_structure’ tests.
 @WITH_SPOOKYHASH_TRUE@am__append_26 = tests/test-strnptr2strnptr-spookyhash-map \
@@ -565,16 +569,40 @@ nodist_tests_test_bits_source_16bytes_OBJECTS =  \
 tests_test_bits_source_16bytes_OBJECTS =  \
 	$(nodist_tests_test_bits_source_16bytes_OBJECTS)
 tests_test_bits_source_16bytes_DEPENDENCIES = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_16bytes_C_OBJECTS =  \
+	tests/test-bits_source_16bytes-C.$(OBJEXT)
+nodist_tests_test_bits_source_16bytes_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
+tests_test_bits_source_16bytes_C_OBJECTS =  \
+	$(dist_tests_test_bits_source_16bytes_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_16bytes_C_OBJECTS)
+tests_test_bits_source_16bytes_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_1byte_OBJECTS =  \
 	tests/test-bits_source_1byte_dats.$(OBJEXT)
 tests_test_bits_source_1byte_OBJECTS =  \
 	$(nodist_tests_test_bits_source_1byte_OBJECTS)
 tests_test_bits_source_1byte_DEPENDENCIES = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_1byte_C_OBJECTS =  \
+	tests/test-bits_source_1byte-C.$(OBJEXT)
+nodist_tests_test_bits_source_1byte_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
+tests_test_bits_source_1byte_C_OBJECTS =  \
+	$(dist_tests_test_bits_source_1byte_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_1byte_C_OBJECTS)
+tests_test_bits_source_1byte_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_8bytes_OBJECTS =  \
 	tests/test-bits_source_8bytes_dats.$(OBJEXT)
 tests_test_bits_source_8bytes_OBJECTS =  \
 	$(nodist_tests_test_bits_source_8bytes_OBJECTS)
 tests_test_bits_source_8bytes_DEPENDENCIES = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_8bytes_C_OBJECTS =  \
+	tests/test-bits_source_8bytes-C.$(OBJEXT)
+nodist_tests_test_bits_source_8bytes_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
+tests_test_bits_source_8bytes_C_OBJECTS =  \
+	$(dist_tests_test_bits_source_8bytes_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_8bytes_C_OBJECTS)
+tests_test_bits_source_8bytes_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_uint16_OBJECTS =  \
 	tests/test-bits_source_uint16_dats.$(OBJEXT)
 tests_test_bits_source_uint16_OBJECTS =  \
@@ -582,8 +610,11 @@ tests_test_bits_source_uint16_OBJECTS =  \
 tests_test_bits_source_uint16_DEPENDENCIES = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint16_C_OBJECTS =  \
 	tests/test-bits_source_uint16-C.$(OBJEXT)
+nodist_tests_test_bits_source_uint16_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
 tests_test_bits_source_uint16_C_OBJECTS =  \
-	$(dist_tests_test_bits_source_uint16_C_OBJECTS)
+	$(dist_tests_test_bits_source_uint16_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_uint16_C_OBJECTS)
 tests_test_bits_source_uint16_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_uint32_OBJECTS =  \
 	tests/test-bits_source_uint32_dats.$(OBJEXT)
@@ -592,8 +623,11 @@ tests_test_bits_source_uint32_OBJECTS =  \
 tests_test_bits_source_uint32_DEPENDENCIES = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint32_C_OBJECTS =  \
 	tests/test-bits_source_uint32-C.$(OBJEXT)
+nodist_tests_test_bits_source_uint32_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
 tests_test_bits_source_uint32_C_OBJECTS =  \
-	$(dist_tests_test_bits_source_uint32_C_OBJECTS)
+	$(dist_tests_test_bits_source_uint32_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_uint32_C_OBJECTS)
 tests_test_bits_source_uint32_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_uint64_OBJECTS =  \
 	tests/test-bits_source_uint64_dats.$(OBJEXT)
@@ -602,14 +636,26 @@ tests_test_bits_source_uint64_OBJECTS =  \
 tests_test_bits_source_uint64_DEPENDENCIES = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint64_C_OBJECTS =  \
 	tests/test-bits_source_uint64-C.$(OBJEXT)
+nodist_tests_test_bits_source_uint64_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
 tests_test_bits_source_uint64_C_OBJECTS =  \
-	$(dist_tests_test_bits_source_uint64_C_OBJECTS)
+	$(dist_tests_test_bits_source_uint64_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_uint64_C_OBJECTS)
 tests_test_bits_source_uint64_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_uint64_uint64_OBJECTS =  \
 	tests/test-bits_source_uint64_uint64_dats.$(OBJEXT)
 tests_test_bits_source_uint64_uint64_OBJECTS =  \
 	$(nodist_tests_test_bits_source_uint64_uint64_OBJECTS)
 tests_test_bits_source_uint64_uint64_DEPENDENCIES =  \
+	$(lib_LTLIBRARIES)
+dist_tests_test_bits_source_uint64_uint64_C_OBJECTS =  \
+	tests/test-bits_source_uint64_uint64-C.$(OBJEXT)
+nodist_tests_test_bits_source_uint64_uint64_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
+tests_test_bits_source_uint64_uint64_C_OBJECTS =  \
+	$(dist_tests_test_bits_source_uint64_uint64_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_uint64_uint64_C_OBJECTS)
+tests_test_bits_source_uint64_uint64_C_DEPENDENCIES =  \
 	$(lib_LTLIBRARIES)
 nodist_tests_test_bits_source_uint8_OBJECTS =  \
 	tests/test-bits_source_uint8_dats.$(OBJEXT)
@@ -618,8 +664,11 @@ tests_test_bits_source_uint8_OBJECTS =  \
 tests_test_bits_source_uint8_DEPENDENCIES = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint8_C_OBJECTS =  \
 	tests/test-bits_source_uint8-C.$(OBJEXT)
+nodist_tests_test_bits_source_uint8_C_OBJECTS =  \
+	tests/ats-runtime.$(OBJEXT)
 tests_test_bits_source_uint8_C_OBJECTS =  \
-	$(dist_tests_test_bits_source_uint8_C_OBJECTS)
+	$(dist_tests_test_bits_source_uint8_C_OBJECTS) \
+	$(nodist_tests_test_bits_source_uint8_C_OBJECTS)
 tests_test_bits_source_uint8_C_DEPENDENCIES = $(lib_LTLIBRARIES)
 nodist_tests_test_population_map_OBJECTS =  \
 	tests/test-population_map_dats.$(OBJEXT)
@@ -641,13 +690,15 @@ nodist_tests_test_separate_chaining_3_OBJECTS =  \
 tests_test_separate_chaining_3_OBJECTS =  \
 	$(nodist_tests_test_separate_chaining_3_OBJECTS)
 tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
-@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_OBJECTS = tests/test-string2uintptrmap-C.$(OBJEXT)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_OBJECTS = tests/test-string2uintptrmap-C.$(OBJEXT) \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.$(OBJEXT)
 tests_test_string2uintptrmap_C_OBJECTS =  \
 	$(nodist_tests_test_string2uintptrmap_C_OBJECTS)
 @WITH_DEFAULT_HASH_TRUE@tests_test_string2uintptrmap_C_DEPENDENCIES =  \
 @WITH_DEFAULT_HASH_TRUE@	$(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@nodist_tests_test_stringset_C_OBJECTS =  \
-@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C.$(OBJEXT)
+@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C.$(OBJEXT) \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.$(OBJEXT)
 tests_test_stringset_C_OBJECTS =  \
 	$(nodist_tests_test_stringset_C_OBJECTS)
 @WITH_DEFAULT_HASH_TRUE@tests_test_stringset_C_DEPENDENCIES =  \
@@ -842,9 +893,13 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo \
+	tests/$(DEPDIR)/ats-runtime.Po \
 	tests/$(DEPDIR)/test-a-uint8-map_dats.Po \
+	tests/$(DEPDIR)/test-bits_source_16bytes-C.Po \
 	tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po \
+	tests/$(DEPDIR)/test-bits_source_1byte-C.Po \
 	tests/$(DEPDIR)/test-bits_source_1byte_dats.Po \
+	tests/$(DEPDIR)/test-bits_source_8bytes-C.Po \
 	tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint16-C.Po \
 	tests/$(DEPDIR)/test-bits_source_uint16_dats.Po \
@@ -852,6 +907,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-bits_source_uint32_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint64-C.Po \
 	tests/$(DEPDIR)/test-bits_source_uint64_dats.Po \
+	tests/$(DEPDIR)/test-bits_source_uint64_uint64-C.Po \
 	tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po \
 	tests/$(DEPDIR)/test-bits_source_uint8-C.Po \
 	tests/$(DEPDIR)/test-bits_source_uint8_dats.Po \
@@ -894,17 +950,29 @@ SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(nodist_list_ats_dependencies_SOURCES) \
 	$(nodist_tests_test_a_uint8_map_SOURCES) \
 	$(nodist_tests_test_bits_source_16bytes_SOURCES) \
+	$(dist_tests_test_bits_source_16bytes_C_SOURCES) \
+	$(nodist_tests_test_bits_source_16bytes_C_SOURCES) \
 	$(nodist_tests_test_bits_source_1byte_SOURCES) \
+	$(dist_tests_test_bits_source_1byte_C_SOURCES) \
+	$(nodist_tests_test_bits_source_1byte_C_SOURCES) \
 	$(nodist_tests_test_bits_source_8bytes_SOURCES) \
+	$(dist_tests_test_bits_source_8bytes_C_SOURCES) \
+	$(nodist_tests_test_bits_source_8bytes_C_SOURCES) \
 	$(nodist_tests_test_bits_source_uint16_SOURCES) \
 	$(dist_tests_test_bits_source_uint16_C_SOURCES) \
+	$(nodist_tests_test_bits_source_uint16_C_SOURCES) \
 	$(nodist_tests_test_bits_source_uint32_SOURCES) \
 	$(dist_tests_test_bits_source_uint32_C_SOURCES) \
+	$(nodist_tests_test_bits_source_uint32_C_SOURCES) \
 	$(nodist_tests_test_bits_source_uint64_SOURCES) \
 	$(dist_tests_test_bits_source_uint64_C_SOURCES) \
+	$(nodist_tests_test_bits_source_uint64_C_SOURCES) \
 	$(nodist_tests_test_bits_source_uint64_uint64_SOURCES) \
+	$(dist_tests_test_bits_source_uint64_uint64_C_SOURCES) \
+	$(nodist_tests_test_bits_source_uint64_uint64_C_SOURCES) \
 	$(nodist_tests_test_bits_source_uint8_SOURCES) \
 	$(dist_tests_test_bits_source_uint8_C_SOURCES) \
+	$(nodist_tests_test_bits_source_uint8_C_SOURCES) \
 	$(nodist_tests_test_population_map_SOURCES) \
 	$(nodist_tests_test_separate_chaining_1_SOURCES) \
 	$(nodist_tests_test_separate_chaining_2_SOURCES) \
@@ -921,9 +989,13 @@ SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(nodist_tests_test_strnptr2strnptr_spookyhash_map_SOURCES) \
 	$(nodist_tests_test_strnptr2uintptrmap_SOURCES) \
 	$(nodist_tests_test_strnptrset_SOURCES)
-DIST_SOURCES = $(dist_tests_test_bits_source_uint16_C_SOURCES) \
+DIST_SOURCES = $(dist_tests_test_bits_source_16bytes_C_SOURCES) \
+	$(dist_tests_test_bits_source_1byte_C_SOURCES) \
+	$(dist_tests_test_bits_source_8bytes_C_SOURCES) \
+	$(dist_tests_test_bits_source_uint16_C_SOURCES) \
 	$(dist_tests_test_bits_source_uint32_C_SOURCES) \
 	$(dist_tests_test_bits_source_uint64_C_SOURCES) \
+	$(dist_tests_test_bits_source_uint64_uint64_C_SOURCES) \
 	$(dist_tests_test_bits_source_uint8_C_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -1511,7 +1583,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/HATS/strnptrset.hats \
 	hashmap/DATS/stringset_extern_inline.dats.m4 \
 	hashmap/stringset.h hashmap/bits_source.h.m4 \
-	tests/INCLUDE/runtime-support.dats \
+	tests/ats-runtime.c tests/INCLUDE/runtime-support.dats \
 	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
@@ -1563,7 +1635,10 @@ CLEANFILES = hashmap/SATS/bits_source.sats \
 	tests/test-string2uintptrmap-C tests/test-stringset-C \
 	tests/test-bits_source_uint8-C tests/test-bits_source_uint16-C \
 	tests/test-bits_source_uint32-C \
-	tests/test-bits_source_uint64-C list-ats-dependencies \
+	tests/test-bits_source_uint64-C \
+	tests/test-bits_source_uint64_uint64-C \
+	tests/test-bits_source_1byte-C tests/test-bits_source_8bytes-C \
+	tests/test-bits_source_16bytes-C list-ats-dependencies \
 	list-ats-dependencies_depsprog.c ats2-hashmap.pc
 DISTCLEANFILES = Makefile GNUmakefile
 BUILT_SOURCES = hashmap/DATS/bits_source_1byte_implementation.dats \
@@ -1826,18 +1901,38 @@ tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptr2uintptrmap_LDADD = $(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@nodist_tests_test_strnptrset_SOURCES = tests/test-strnptrset_dats.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_strnptrset_LDADD = $(lib_LTLIBRARIES)
-@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_SOURCES = tests/test-string2uintptrmap-C.c
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_SOURCES =  \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C.c \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_string2uintptrmap_C_LDADD = $(lib_LTLIBRARIES)
-@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_stringset_C_SOURCES = tests/test-stringset-C.c
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_stringset_C_SOURCES =  \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C.c \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_stringset_C_LDADD = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint8_C_SOURCES = tests/test-bits_source_uint8-C.c
+nodist_tests_test_bits_source_uint8_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint8_C_LDADD = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint16_C_SOURCES = tests/test-bits_source_uint16-C.c
+nodist_tests_test_bits_source_uint16_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint16_C_LDADD = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint32_C_SOURCES = tests/test-bits_source_uint32-C.c
+nodist_tests_test_bits_source_uint32_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint32_C_LDADD = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint64_C_SOURCES = tests/test-bits_source_uint64-C.c
+nodist_tests_test_bits_source_uint64_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint64_C_LDADD = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_uint64_uint64_C_SOURCES = tests/test-bits_source_uint64_uint64-C.c
+nodist_tests_test_bits_source_uint64_uint64_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_uint64_uint64_C_LDADD = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_1byte_C_SOURCES = tests/test-bits_source_1byte-C.c
+nodist_tests_test_bits_source_1byte_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_1byte_C_LDADD = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_8bytes_C_SOURCES = tests/test-bits_source_8bytes-C.c
+nodist_tests_test_bits_source_8bytes_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_8bytes_C_LDADD = $(lib_LTLIBRARIES)
+dist_tests_test_bits_source_16bytes_C_SOURCES = tests/test-bits_source_16bytes-C.c
+nodist_tests_test_bits_source_16bytes_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_16bytes_C_LDADD = $(lib_LTLIBRARIES)
 nodist_list_ats_dependencies_SOURCES =  \
 	list-ats-dependencies_depsprog.c
 list_ats_dependencies_CPPFLAGS = $(AM_CPPFLAGS) \
@@ -2526,18 +2621,38 @@ tests/test-bits_source_16bytes_dats.$(OBJEXT): tests/$(am__dirstamp) \
 tests/test-bits_source_16bytes$(EXEEXT): $(tests_test_bits_source_16bytes_OBJECTS) $(tests_test_bits_source_16bytes_DEPENDENCIES) $(EXTRA_tests_test_bits_source_16bytes_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits_source_16bytes$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_16bytes_OBJECTS) $(tests_test_bits_source_16bytes_LDADD) $(LIBS)
+tests/test-bits_source_16bytes-C.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+tests/ats-runtime.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bits_source_16bytes-C$(EXEEXT): $(tests_test_bits_source_16bytes_C_OBJECTS) $(tests_test_bits_source_16bytes_C_DEPENDENCIES) $(EXTRA_tests_test_bits_source_16bytes_C_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bits_source_16bytes-C$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_16bytes_C_OBJECTS) $(tests_test_bits_source_16bytes_C_LDADD) $(LIBS)
 tests/test-bits_source_1byte_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-bits_source_1byte$(EXEEXT): $(tests_test_bits_source_1byte_OBJECTS) $(tests_test_bits_source_1byte_DEPENDENCIES) $(EXTRA_tests_test_bits_source_1byte_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits_source_1byte$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_1byte_OBJECTS) $(tests_test_bits_source_1byte_LDADD) $(LIBS)
+tests/test-bits_source_1byte-C.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bits_source_1byte-C$(EXEEXT): $(tests_test_bits_source_1byte_C_OBJECTS) $(tests_test_bits_source_1byte_C_DEPENDENCIES) $(EXTRA_tests_test_bits_source_1byte_C_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bits_source_1byte-C$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_1byte_C_OBJECTS) $(tests_test_bits_source_1byte_C_LDADD) $(LIBS)
 tests/test-bits_source_8bytes_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
 tests/test-bits_source_8bytes$(EXEEXT): $(tests_test_bits_source_8bytes_OBJECTS) $(tests_test_bits_source_8bytes_DEPENDENCIES) $(EXTRA_tests_test_bits_source_8bytes_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits_source_8bytes$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_8bytes_OBJECTS) $(tests_test_bits_source_8bytes_LDADD) $(LIBS)
+tests/test-bits_source_8bytes-C.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bits_source_8bytes-C$(EXEEXT): $(tests_test_bits_source_8bytes_C_OBJECTS) $(tests_test_bits_source_8bytes_C_DEPENDENCIES) $(EXTRA_tests_test_bits_source_8bytes_C_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bits_source_8bytes-C$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_8bytes_C_OBJECTS) $(tests_test_bits_source_8bytes_C_LDADD) $(LIBS)
 tests/test-bits_source_uint16_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -2580,6 +2695,12 @@ tests/test-bits_source_uint64_uint64_dats.$(OBJEXT):  \
 tests/test-bits_source_uint64_uint64$(EXEEXT): $(tests_test_bits_source_uint64_uint64_OBJECTS) $(tests_test_bits_source_uint64_uint64_DEPENDENCIES) $(EXTRA_tests_test_bits_source_uint64_uint64_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-bits_source_uint64_uint64$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_uint64_uint64_OBJECTS) $(tests_test_bits_source_uint64_uint64_LDADD) $(LIBS)
+tests/test-bits_source_uint64_uint64-C.$(OBJEXT):  \
+	tests/$(am__dirstamp) tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-bits_source_uint64_uint64-C$(EXEEXT): $(tests_test_bits_source_uint64_uint64_C_OBJECTS) $(tests_test_bits_source_uint64_uint64_C_DEPENDENCIES) $(EXTRA_tests_test_bits_source_uint64_uint64_C_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-bits_source_uint64_uint64-C$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_bits_source_uint64_uint64_C_OBJECTS) $(tests_test_bits_source_uint64_uint64_C_LDADD) $(LIBS)
 tests/test-bits_source_uint8_dats.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -2827,9 +2948,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/ats-runtime.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-a-uint8-map_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_16bytes-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_1byte-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_1byte_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_8bytes-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint16-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint16_dats.Po@am__quote@ # am--include-marker
@@ -2837,6 +2962,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint32_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint64-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint64_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint64_uint64-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint8-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-bits_source_uint8_dats.Po@am__quote@ # am--include-marker
@@ -3385,6 +3511,34 @@ tests/test-bits_source_uint64-C.log: tests/test-bits_source_uint64-C$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-bits_source_uint64_uint64-C.log: tests/test-bits_source_uint64_uint64-C$(EXEEXT)
+	@p='tests/test-bits_source_uint64_uint64-C$(EXEEXT)'; \
+	b='tests/test-bits_source_uint64_uint64-C'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-bits_source_1byte-C.log: tests/test-bits_source_1byte-C$(EXEEXT)
+	@p='tests/test-bits_source_1byte-C$(EXEEXT)'; \
+	b='tests/test-bits_source_1byte-C'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-bits_source_8bytes-C.log: tests/test-bits_source_8bytes-C$(EXEEXT)
+	@p='tests/test-bits_source_8bytes-C$(EXEEXT)'; \
+	b='tests/test-bits_source_8bytes-C'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-bits_source_16bytes-C.log: tests/test-bits_source_16bytes-C$(EXEEXT)
+	@p='tests/test-bits_source_16bytes-C$(EXEEXT)'; \
+	b='tests/test-bits_source_16bytes-C'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -3766,9 +3920,13 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo
+	-rm -f tests/$(DEPDIR)/ats-runtime.Po
 	-rm -f tests/$(DEPDIR)/test-a-uint8-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_1byte-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16_dats.Po
@@ -3776,6 +3934,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po
@@ -3971,9 +4130,13 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo
+	-rm -f tests/$(DEPDIR)/ats-runtime.Po
 	-rm -f tests/$(DEPDIR)/test-a-uint8-map_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_16bytes_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_1byte-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_1byte_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_8bytes_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint16_dats.Po
@@ -3981,6 +4144,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint32_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_dats.Po
+	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint64_uint64_dats.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8-C.Po
 	-rm -f tests/$(DEPDIR)/test-bits_source_uint8_dats.Po

@@ -41,8 +41,8 @@ fn
 test_num_bits_eq_6 () : void =
   {
     typedef hash128_t = @(uint64, uint64)
-    var hash : hash128_t = @(cast64 0xBA5EBA11FACEF00DU,
-                             cast64 0xDEADBEEF12345678U)
+    var hash : hash128_t = @(cast64 0xBA5EBA11FACEF00DULL,
+                             cast64 0xDEADBEEF12345678ULL)
     val _ = assertloc (bits_source<hash128_t> (hash, 0U) = 0x0D)
     val _ = assertloc (bits_source<hash128_t> (hash, 1U) = 0x00)
     val _ = assertloc (bits_source<hash128_t> (hash, 2U) = 0x2F)

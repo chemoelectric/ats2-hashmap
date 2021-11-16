@@ -42,23 +42,14 @@ check_fail (const char *expr, const char *file, size_t line,
 void
 test_num_bits_eq_6 (void)
 {
-  uint64_t hash = 0xBA5EBA11FACEF00DULL;
-  check (bits_source_uint64 (&hash, 0U) == 13);
-  check (bits_source_uint64 (&hash, 1U) == 0);
-  check (bits_source_uint64 (&hash, 2U) == 47);
-  check (bits_source_uint64 (&hash, 3U) == 51);
-  check (bits_source_uint64 (&hash, 4U) == 58);
-  check (bits_source_uint64 (&hash, 5U) == 7);
-  check (bits_source_uint64 (&hash, 6U) == 33);
-  check (bits_source_uint64 (&hash, 7U) == 46);
-  check (bits_source_uint64 (&hash, 8U) == 30);
-  check (bits_source_uint64 (&hash, 9U) == 41);
-  check (bits_source_uint64 (&hash, 10U) == 11);
-  check (bits_source_uint64 (&hash, 11U) == BITS_SOURCE_EXHAUSTED);
-  check (bits_source_uint64 (&hash, 12U) == BITS_SOURCE_EXHAUSTED);
-  check (bits_source_uint64 (&hash, 13U) == BITS_SOURCE_EXHAUSTED);
-  check (bits_source_uint64 (&hash, 14U) == BITS_SOURCE_EXHAUSTED);
-  check (bits_source_uint64 (&hash, 100U) == BITS_SOURCE_EXHAUSTED);
+  uint8_t hash[1] = { 0x96U };
+  check (bits_source_1byte (hash, 0U) == 0x16);
+  check (bits_source_1byte (hash, 1U) == 0x02);
+  check (bits_source_1byte (hash, 2U) == BITS_SOURCE_EXHAUSTED);
+  check (bits_source_1byte (hash, 3U) == BITS_SOURCE_EXHAUSTED);
+  check (bits_source_1byte (hash, 4U) == BITS_SOURCE_EXHAUSTED);
+  check (bits_source_1byte (hash, 5U) == BITS_SOURCE_EXHAUSTED);
+  check (bits_source_1byte (hash, 100U) == BITS_SOURCE_EXHAUSTED);
 }
 
 int

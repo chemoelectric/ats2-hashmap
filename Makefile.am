@@ -575,6 +575,7 @@ libs-clean:
 
 TESTS += $(check_PROGRAMS)
 
+EXTRA_DIST += tests/ats-runtime.c
 EXTRA_DIST += tests/INCLUDE/runtime-support.dats
 EXTRA_DIST += tests/INCLUDE/test-strnptr2strnptr-map.dats
 
@@ -767,6 +768,7 @@ EXTRA_DIST += tests/test-strnptrset.dats
 if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-string2uintptrmap-C
 nodist_tests_test_string2uintptrmap_C_SOURCES = tests/test-string2uintptrmap-C.c
+nodist_tests_test_string2uintptrmap_C_SOURCES += tests/ats-runtime.c
 tests_test_string2uintptrmap_C_LDADD = $(lib_LTLIBRARIES)
 endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-string2uintptrmap-C
@@ -775,6 +777,7 @@ EXTRA_DIST += tests/test-string2uintptrmap-C.c
 if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-stringset-C
 nodist_tests_test_stringset_C_SOURCES = tests/test-stringset-C.c
+nodist_tests_test_stringset_C_SOURCES += tests/ats-runtime.c
 tests_test_stringset_C_LDADD = $(lib_LTLIBRARIES)
 endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-stringset-C
@@ -782,23 +785,51 @@ EXTRA_DIST += tests/test-stringset-C.c
 
 check_PROGRAMS += tests/test-bits_source_uint8-C
 dist_tests_test_bits_source_uint8_C_SOURCES = tests/test-bits_source_uint8-C.c
+nodist_tests_test_bits_source_uint8_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint8_C_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits_source_uint8-C
 
 check_PROGRAMS += tests/test-bits_source_uint16-C
 dist_tests_test_bits_source_uint16_C_SOURCES = tests/test-bits_source_uint16-C.c
+nodist_tests_test_bits_source_uint16_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint16_C_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits_source_uint16-C
 
 check_PROGRAMS += tests/test-bits_source_uint32-C
 dist_tests_test_bits_source_uint32_C_SOURCES = tests/test-bits_source_uint32-C.c
+nodist_tests_test_bits_source_uint32_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint32_C_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits_source_uint32-C
 
 check_PROGRAMS += tests/test-bits_source_uint64-C
 dist_tests_test_bits_source_uint64_C_SOURCES = tests/test-bits_source_uint64-C.c
+nodist_tests_test_bits_source_uint64_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint64_C_LDADD = $(lib_LTLIBRARIES)
 CLEANFILES += tests/test-bits_source_uint64-C
+
+check_PROGRAMS += tests/test-bits_source_uint64_uint64-C
+dist_tests_test_bits_source_uint64_uint64_C_SOURCES = tests/test-bits_source_uint64_uint64-C.c
+nodist_tests_test_bits_source_uint64_uint64_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_uint64_uint64_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_uint64_uint64-C
+
+check_PROGRAMS += tests/test-bits_source_1byte-C
+dist_tests_test_bits_source_1byte_C_SOURCES = tests/test-bits_source_1byte-C.c
+nodist_tests_test_bits_source_1byte_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_1byte_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_1byte-C
+
+check_PROGRAMS += tests/test-bits_source_8bytes-C
+dist_tests_test_bits_source_8bytes_C_SOURCES = tests/test-bits_source_8bytes-C.c
+nodist_tests_test_bits_source_8bytes_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_8bytes_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_8bytes-C
+
+check_PROGRAMS += tests/test-bits_source_16bytes-C
+dist_tests_test_bits_source_16bytes_C_SOURCES = tests/test-bits_source_16bytes-C.c
+nodist_tests_test_bits_source_16bytes_C_SOURCES = tests/ats-runtime.c
+tests_test_bits_source_16bytes_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_16bytes-C
 
 .PHONY: tests-clean
 tests-clean:

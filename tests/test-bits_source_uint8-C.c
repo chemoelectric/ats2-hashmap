@@ -24,42 +24,6 @@ along with this program. If not, see
 #include <inttypes.h>
 
 /********************************************************************/
-/*
- * ATS runtime routines.
- *
- * C programmers will have to supply whatever implementations they
- * deem appropriate for their program. (For instance,
- * atsruntime_malloc_undef and atsruntime_mfree_undef might call Boehm
- * GC instead of malloc/free.)
- */
-
-void *
-atsruntime_malloc_undef (size_t n)
-{
-  void *p = malloc (n);
-  if (!p)
-    {
-      fprintf (stderr, "Virtual memory exhausted.\n");
-      exit (1);
-    }
-  return p;
-}
-
-void
-atsruntime_mfree_undef (void *p)
-{
-  free (p);
-}
-
-void
-atsruntime_handle_unmatchedval (char *msg0)
-{
-  fprintf (stderr, "ATS error: unmatched value at run-time:\n%s\n",
-	   msg0);
-  exit (1);
-}
-
-/********************************************************************/
 
 #define check(expr)                                     \
   ((expr) ?                                             \
