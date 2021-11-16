@@ -42,10 +42,11 @@ ats2_hashmap_bits_source_func_t ats2_055_hashmap__bits_source_uint16;
 ats2_hashmap_bits_source_func_t ats2_055_hashmap__bits_source_uint32;
 ats2_hashmap_bits_source_func_t ats2_055_hashmap__bits_source_uint64;
 
-/* For hash values that are two uint64_t stored in native-endian
-   order, with the first uint64_t used as a bit source first.
-   (This is a common way to store 128-bit integers while employing
-   only standard C.) */
+/* For hash values that are a struct of two uint64_t, each stored in
+   native-endian order, with the first uint64_t used as a bit source
+   first. (On little-endian platforms, if there is no padding in the
+   struct, then this is equivalent to taking bits from a 128-bit
+   integer.) */
 ats2_hashmap_bits_source_func_t
   ats2_055_hashmap__bits_source_uint64_uint64;
 
