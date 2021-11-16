@@ -782,7 +782,7 @@ ats2-hashmap.pc: configure GNUmakefile
 indent-pro: $(builddir)/.indent.pro
 
 $(builddir)/.indent.pro: GNUmakefile
-	printf "%s\n" "-l70" > $(@)
+	printf "%s\n" "-l70 -Tuintptr_t" > $(@)
 
 #--------------------------------------------------------------------------
 # local variables:

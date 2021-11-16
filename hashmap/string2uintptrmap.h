@@ -24,6 +24,8 @@ along with this program. If not, see
 #include <stddef.h>
 #include <stdint.h>
 
+/********************************************************************/
+
 struct string2uintptrmap_struct;
 typedef struct string2uintptrmap_struct *string2uintptrmap_t;
 
@@ -56,24 +58,44 @@ struct string2uintptrmap_values_struct
 typedef struct string2uintptrmap_values_struct
   *string2uintptrmap_values_t;
 
+/********************************************************************/
+
+/* In arguments of the functions below, "value_free" and "value_copy"
+   may be NULL pointers. If non-NULL, "value_free" points to a
+   function that frees a stored value object, and "value_copy" to a
+   function that returns a copy of a stored value object. Both
+   functions are effectively "closures" that accept an "environment"
+   variable. */
+
+/********************************************************************/
+
+/* A new map is simply a NULL pointer. You may rely on that, or use
+   ats2_hashmap_string2uintptrmap() for documentation. */
 inline string2uintptrmap_t
 ats2_hashmap_string2uintptrmap (void)
 {
   return NULL;
 }
 
+/* An empty map is simply a NULL pointer. You may rely on that, or use
+   ats2_hashmap_string2uintptrmap_is_empty(map) for documentation. */
 inline _Bool
 ats2_hashmap_string2uintptrmap_is_empty (string2uintptrmap_t map)
 {
   return (map == NULL);
 }
 
+/* An unempty map is simply a non-NULL pointer. You may rely on that,
+   or use ats2_hashmap_string2uintptrmap_isnot_empty(map) for
+   documentation. */
 inline _Bool
 ats2_hashmap_string2uintptrmap_isnot_empty (string2uintptrmap_t map)
 {
   return (map != NULL);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_size(map) to get the cardinality
+   of the map. */
 inline size_t
 ats2_hashmap_string2uintptrmap_size (string2uintptrmap_t map)
 {
@@ -81,8 +103,9 @@ ats2_hashmap_string2uintptrmap_size (string2uintptrmap_t map)
   return ats2_055_hashmap__strnptr2uintptrmap_size (map);
 }
 
-/* "value_free" may be a NULL pointer. If non-NULL, it points to a
-   function that frees a stored value object. */
+/* Use ats2_hashmap_string2uintptrmap_set(map, key, value, value_free,
+   environment) to add an entry to the map or to replace an existing
+   entry. */
 inline string2uintptrmap_t
   ats2_hashmap_string2uintptrmap_set
   (string2uintptrmap_t map, const char *key, uintptr_t value,
@@ -96,6 +119,10 @@ inline string2uintptrmap_t
     (map, (void *) key, value, value_free, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_del(map, key, value_free,
+   environment) to remove an entry from a map. If no matching entry is
+   found, the new map will be equivalent to the old map (though it is
+   not guaranteed to be the same storage). */
 inline string2uintptrmap_t
   ats2_hashmap_string2uintptrmap_del
   (string2uintptrmap_t map,
@@ -110,15 +137,24 @@ inline string2uintptrmap_t
     (map, (void *) key, value_free, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_get(map, key, value_copy,
+   environment, &has_key, &value) to get a copy of a value from the
+   map, given a key. You may also learn that there is no match to the
+   key. */
 extern void ats2_hashmap_string2uintptrmap_get
   (string2uintptrmap_t map, const char *key,
    uintptr_t (*value_copy) (uintptr_t, void *), void *environment,
-   _Bool *has_key, uintptr_t * value);
+   _Bool *has_key, uintptr_t *value);
 
+/* Use ats2_hashmap_string2uintptrmap_has_key(map, key) to learn
+   whether or not there is a match to a given key. */
 extern _Bool
   ats2_hashmap_string2uintptrmap_has_key
   (string2uintptrmap_t map, const char *key);
 
+/* Use ats2_hashmap_string2uintptrmap_pairs(map, value_copy,
+   environment) to get a linked list of copies of the key-value pairs
+   in the map. */
 inline string2uintptrmap_pairs_t
   ats2_hashmap_string2uintptrmap_pairs
   (string2uintptrmap_t map,
@@ -132,6 +168,9 @@ inline string2uintptrmap_pairs_t
     (map, value_copy, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_pairs_free(pairs_list,
+   value_free, environment) to free a list returned by
+   ats2_hashmap_string2uintptrmap_pairs. */
 inline void
   ats2_hashmap_string2uintptrmap_pairs_free
   (string2uintptrmap_pairs_t
@@ -144,6 +183,8 @@ inline void
     (pairs, value_free, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_keys(map) to get a linked list
+   of copies of the keys in the map. */
 inline string2uintptrmap_keys_t
 ats2_hashmap_string2uintptrmap_keys (string2uintptrmap_t map)
 {
@@ -152,6 +193,8 @@ ats2_hashmap_string2uintptrmap_keys (string2uintptrmap_t map)
     ats2_055_hashmap__strnptr2uintptrmap_keys (map);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_pairs_free(keys_list) to free a
+   list returned by ats2_hashmap_string2uintptrmap_keys. */
 inline void
   ats2_hashmap_string2uintptrmap_keys_free
   (string2uintptrmap_keys_t keys)
@@ -161,6 +204,9 @@ inline void
   ats2_055_hashmap__strnptr2uintptrmap_keys_free (keys);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_values(map, value_copy,
+   environment) to get a linked list of copies of the values in the
+   map. */
 inline string2uintptrmap_values_t
   ats2_hashmap_string2uintptrmap_values
   (string2uintptrmap_t map,
@@ -174,6 +220,9 @@ inline string2uintptrmap_values_t
     (map, value_copy, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_values_free(values_list,
+   value_free, environment) to free a list returned by
+   ats2_hashmap_string2uintptrmap_values. */
 inline void
   ats2_hashmap_string2uintptrmap_values_free
   (string2uintptrmap_values_t values,
@@ -186,6 +235,8 @@ inline void
     (values, value_free, environment);
 }
 
+/* Use ats2_hashmap_string2uintptrmap_free(map, value_free,
+   environment) to free a map. */
 inline void
   ats2_hashmap_string2uintptrmap_free
   (string2uintptrmap_t map, void (*value_free) (uintptr_t, void *),
@@ -197,6 +248,8 @@ inline void
   ats2_055_hashmap__strnptr2uintptrmap_free
     (map, value_free, environment);
 }
+
+/********************************************************************/
 
 /* The following macro names are nicer to use. */
 #define string2uintptrmap ats2_hashmap_string2uintptrmap
@@ -214,5 +267,7 @@ inline void
 #define string2uintptrmap_values ats2_hashmap_string2uintptrmap_values
 #define string2uintptrmap_values_free ats2_hashmap_string2uintptrmap_values_free
 #define string2uintptrmap_free ats2_hashmap_string2uintptrmap_free
+
+/********************************************************************/
 
 #endif /* HEADER_GUARD_FOR_HASHMAP_STRING2UINTPTRMAP_H__ */

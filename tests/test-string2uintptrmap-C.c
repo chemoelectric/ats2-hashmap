@@ -101,7 +101,7 @@ value_copy (uintptr_t v, void *environment)
 void
 test1 (void)
 {
-  _Bool result_found;
+  bool result_found;
   uintptr_t result;
 
   string2uintptrmap_t map = string2uintptrmap ();
@@ -336,7 +336,7 @@ test3 (void)
 void
 test4 (void)
 {
-  _Bool result_found;
+  bool result_found;
   uintptr_t result;
   string2uintptrmap_t map;
 
