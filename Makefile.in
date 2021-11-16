@@ -1443,6 +1443,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
 	hashmap/DATS/bits_source_nbytes.dats \
+	hashmap/SATS/bits_source.sats.m4 \
 	hashmap/DATS/INCLUDE/strnptrmap-implementations.dats \
 	hashmap/DATS/strnptrmap-spookyhash.dats \
 	hashmap/HATS/strnptrmap-spookyhash.hats \
@@ -1474,7 +1475,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/string2uintptrmap.h hashmap/DATS/strnptrset.dats \
 	hashmap/HATS/strnptrset.hats \
 	hashmap/DATS/stringset_extern_inline.dats.m4 \
-	hashmap/stringset.h tests/INCLUDE/runtime-support.dats \
+	hashmap/stringset.h hashmap/bits_source.h.m4 \
+	tests/INCLUDE/runtime-support.dats \
 	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
@@ -1493,14 +1495,15 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-string2uintptrmap-C.c tests/test-stringset-C.c \
 	list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
-CLEANFILES = hashmap/DATS/bits_source_uint8.dats \
+CLEANFILES = hashmap/SATS/bits_source.sats \
+	hashmap/DATS/bits_source_uint8.dats \
 	hashmap/DATS/bits_source_uint16.dats \
 	hashmap/DATS/bits_source_uint32.dats \
 	hashmap/DATS/bits_source_uint64.dats \
 	hashmap/DATS/bits_source_uint64_uint64.dats \
-	hashmap/HATS/strnptrmap-dats.hats tests/test-bits_source_uint8 \
-	tests/test-bits_source_uint16 tests/test-bits_source_uint32 \
-	tests/test-bits_source_uint64 \
+	hashmap/HATS/strnptrmap-dats.hats hashmap/bits_source.h \
+	tests/test-bits_source_uint8 tests/test-bits_source_uint16 \
+	tests/test-bits_source_uint32 tests/test-bits_source_uint64 \
 	tests/test-bits_source_uint64_uint64 \
 	tests/test-bits_source_1byte tests/test-bits_source_8bytes \
 	tests/test-bits_source_16bytes tests/test-population_map \
@@ -1612,8 +1615,8 @@ LDADD =
 # The ATS2 libraries.
 #
 lib_LTLIBRARIES = libats2-hashmap.la
-nobase_dist_pkginclude_HEADERS = hashmap/SATS/bits_source.sats \
-	hashmap/DATS/bits_source.dats hashmap/SATS/population_map.sats \
+nobase_dist_pkginclude_HEADERS = hashmap/DATS/bits_source.dats \
+	hashmap/SATS/population_map.sats \
 	hashmap/DATS/population_map.dats hashmap/SATS/hashmap.sats \
 	hashmap/DATS/hashmap.dats hashmap/HATS/hashmap.hats \
 	hashmap/SATS/strnptrmap.sats \
@@ -1622,10 +1625,11 @@ nobase_dist_pkginclude_HEADERS = hashmap/SATS/bits_source.sats \
 nobase_nodist_pkginclude_HEADERS = hashmap/SATS/array-proofs.sats \
 	hashmap/DATS/array-proofs.dats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/memory.cats \
-	hashmap/SATS/bits_source-parameters.sats $(am__append_10) \
+	hashmap/SATS/bits_source-parameters.sats \
+	hashmap/SATS/bits_source.sats $(am__append_10) \
 	$(am__append_12) $(am__append_14) $(am__append_16) \
 	$(am__append_18) $(am__append_20) $(am__append_22) \
-	$(am__append_23)
+	$(am__append_23) hashmap/bits_source.h
 
 #--------------------------------------------------------------------------
 nodist_pkgconfig_DATA = ats2-hashmap.pc
@@ -3972,6 +3976,7 @@ ats-includes-clean:
 
 @DEPENDENCY_TRACKING_TRUE@@GNU@ include $(top_srcdir)/ats-deptracking-rules.mk
 @DEPENDENCY_TRACKING_FALSE@@GNU@ include $(top_srcdir)/ats-nodeptracking-rules.mk
+hashmap/SATS/bits_source.sats: hashmap/SATS/bits_source.sats.m4
 hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_uint8.dats.m4 \
 									hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_uint16.dats.m4 \
@@ -4264,7 +4269,13 @@ ats2-hashmap.pc: configure GNUmakefile
 indent-pro: $(builddir)/.indent.pro
 
 $(builddir)/.indent.pro: GNUmakefile
-	printf "%s\n" "-l70 -Tuintptr_t" > $(@)
+	printf > $(@) "%s\n" "\
+-l70 \
+-Tuintptr_t \
+-Tats2_hashmap_bits_source_func_t \
+-Tats2_hashmap_bits_source_t \
+-Tbits_source_func_t \
+-Tbits_source_t"
 
 #--------------------------------------------------------------------------
 # local variables:

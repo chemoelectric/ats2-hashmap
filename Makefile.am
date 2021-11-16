@@ -265,9 +265,11 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_62bytes_implementa
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_63bytes_implementation_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/bits_source_64bytes_implementation_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source-parameters.sats
-nobase_dist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/bits_source.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/bits_source.dats
 EXTRA_DIST += hashmap/DATS/bits_source_nbytes.dats
+EXTRA_DIST += hashmap/SATS/bits_source.sats.m4
+hashmap/SATS/bits_source.sats: hashmap/SATS/bits_source.sats.m4
 hashmap/DATS/bits_source_uint8.dats: hashmap/DATS/bits_source_uint8.dats.m4 \
 									hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint16.dats: hashmap/DATS/bits_source_uint16.dats.m4 \
@@ -277,6 +279,7 @@ hashmap/DATS/bits_source_uint32.dats: hashmap/DATS/bits_source_uint32.dats.m4 \
 hashmap/DATS/bits_source_uint64.dats: hashmap/DATS/bits_source_uint64.dats.m4 \
 									hashmap/DATS/bits_source_UINTnn.dats.m4
 hashmap/DATS/bits_source_uint64_uint64.dats: hashmap/DATS/bits_source_uint64_uint64.dats.m4
+CLEANFILES += hashmap/SATS/bits_source.sats
 CLEANFILES += hashmap/DATS/bits_source_uint8.dats
 CLEANFILES += hashmap/DATS/bits_source_uint16.dats
 CLEANFILES += hashmap/DATS/bits_source_uint32.dats
@@ -551,6 +554,10 @@ EXTRA_DIST += hashmap/HATS/strnptrset.hats
 EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
 EXTRA_DIST += hashmap/stringset.h
 include stringset_extern_inline.am
+
+nobase_nodist_pkginclude_HEADERS += hashmap/bits_source.h
+CLEANFILES += hashmap/bits_source.h
+EXTRA_DIST += hashmap/bits_source.h.m4
 
 .PHONY: libs-clean
 libs-clean:
@@ -846,7 +853,13 @@ ats2-hashmap.pc: configure GNUmakefile
 indent-pro: $(builddir)/.indent.pro
 
 $(builddir)/.indent.pro: GNUmakefile
-	printf "%s\n" "-l70 -Tuintptr_t" > $(@)
+	printf > $(@) "%s\n" "\
+-l70 \
+-Tuintptr_t \
+-Tats2_hashmap_bits_source_func_t \
+-Tats2_hashmap_bits_source_t \
+-Tbits_source_func_t \
+-Tbits_source_t"
 
 #--------------------------------------------------------------------------
 # local variables:

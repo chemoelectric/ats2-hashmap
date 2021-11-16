@@ -18,8 +18,8 @@ along with this program. If not, see
 
 */
 
-#ifndef HEADER_GUARD_FOR_HASHMAP_STRING2UINTPTRMAP_H__
-#define HEADER_GUARD_FOR_HASHMAP_STRING2UINTPTRMAP_H__
+#ifndef HEADER_GUARD_FOR_ATS2_HASHMAP_HASHMAP_STRING2UINTPTRMAP_H__
+#define HEADER_GUARD_FOR_ATS2_HASHMAP_HASHMAP_STRING2UINTPTRMAP_H__
 
 #include <stddef.h>
 #include <stdint.h>
@@ -271,4 +271,4 @@ inline void
 
 /********************************************************************/
 
-#endif /* HEADER_GUARD_FOR_HASHMAP_STRING2UINTPTRMAP_H__ */
+#endif /* HEADER_GUARD_FOR_ATS2_HASHMAP_HASHMAP_STRING2UINTPTRMAP_H__ */
