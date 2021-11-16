@@ -780,6 +780,11 @@ endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-stringset-C
 EXTRA_DIST += tests/test-stringset-C.c
 
+check_PROGRAMS += tests/test-bits_source_uint8-C
+dist_tests_test_bits_source_uint8_C_SOURCES = tests/test-bits_source_uint8-C.c
+tests_test_bits_source_uint8_C_LDADD = $(lib_LTLIBRARIES)
+CLEANFILES += tests/test-bits_source_uint8-C
+
 .PHONY: tests-clean
 tests-clean:
 	-rm -f tests/*.structure

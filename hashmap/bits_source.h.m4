@@ -28,9 +28,11 @@ include(`common-macros.m4')dnl
 
 /********************************************************************/
 
-typedef ats2_hashmap_bits_source_func_t (void *hash,
-                                         unsigned int depth);
+typedef int ats2_hashmap_bits_source_func_t (void *hash,
+                                             unsigned int depth);
 typedef ats2_hashmap_bits_source_func_t *ats2_hashmap_bits_source_t;
+
+#define ATS2_HASHMAP_BITS_SOURCE_EXHAUSTED (-1)
 
 /********************************************************************/
 
@@ -56,6 +58,8 @@ m4_forloop(`i',2,64,`ats2_hashmap_bits_source_func_t ats2_055_hashmap__bits_sour
 
 /* The following macro names are nicer to use than the names declared
    above. */
+
+#define BITS_SOURCE_EXHAUSTED ATS2_HASHMAP_BITS_SOURCE_EXHAUSTED
 
 #define bits_source_func_t ats2_hashmap_bits_source_func_t
 #define bits_source_t ats2_hashmap_bits_source_t
