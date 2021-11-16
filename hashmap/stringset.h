@@ -24,6 +24,8 @@ along with this program. If not, see
 #include <stddef.h>
 #include <stdint.h>
 
+/********************************************************************/
+
 struct stringset_struct;
 typedef struct stringset_struct *stringset_t;
 
@@ -34,24 +36,35 @@ struct stringset_elements_struct
 };
 typedef struct stringset_elements_struct *stringset_elements_t;
 
+/********************************************************************/
+
+/* A new set is simply a NULL pointer. You may rely on that, or use
+   ats2_hashmap_stringset() for documentation. */
 inline stringset_t
 ats2_hashmap_stringset (void)
 {
   return NULL;
 }
 
+/* An empty set is simply a NULL pointer. You may rely on that, or use
+   ats2_hashmap_stringset_is_empty(set) for documentation. */
 inline _Bool
 ats2_hashmap_stringset_is_empty (stringset_t set)
 {
   return (set == NULL);
 }
 
+/* An unempty set is simply a non-NULL pointer. You may rely on that,
+   or use ats2_hashmap_stringset_isnot_empty(set) for
+   documentation. */
 inline _Bool
 ats2_hashmap_stringset_isnot_empty (stringset_t set)
 {
   return (set != NULL);
 }
 
+/* Use ats2_hashmap_stringset_size(set) to get the cardinality of the
+   set. */
 inline size_t
 ats2_hashmap_stringset_size (stringset_t set)
 {
@@ -59,6 +72,10 @@ ats2_hashmap_stringset_size (stringset_t set)
   return ats2_055_hashmap__strnptr2uintptrmap_size (set);
 }
 
+/* Use ats2_hashmap_stringset_add(set, element) to add an element to
+   the set. If the element already is in the set, an equivalent set is
+   returned, although the stored entry will be replaced with a copy of
+   the "element" argument. */
 inline stringset_t
 ats2_hashmap_stringset_add (stringset_t set, const char *element)
 {
@@ -70,6 +87,10 @@ ats2_hashmap_stringset_add (stringset_t set, const char *element)
     (set, (void *) element, 0, NULL, NULL);
 }
 
+/* Use ats2_hashmap_stringset_del(set, element) to remove an element
+   from a set. If no matching element is found, the new set will be
+   equivalent to the old set (though it is not guaranteed to be the
+   same storage). */
 inline stringset_t
 ats2_hashmap_stringset_del (stringset_t set, const char *element)
 {
@@ -80,6 +101,8 @@ ats2_hashmap_stringset_del (stringset_t set, const char *element)
     (set, (void *) element, NULL, NULL);
 }
 
+/* Use ats2_hashmap_stringset_has_key(set, element) to learn whether
+   or not there is a match to a given "element". */
 inline _Bool
 ats2_hashmap_stringset_contains (stringset_t set, const char *element)
 {
@@ -89,6 +112,9 @@ ats2_hashmap_stringset_contains (stringset_t set, const char *element)
   return ats2_hashmap_string2uintptrmap_has_key (set, element);
 }
 
+/* Use ats2_hashmap_stringset_elements(set) to get a linked list of
+   copies of the set's elements. The order of the list is
+   unspecified. */
 inline stringset_elements_t
 ats2_hashmap_stringset_elements (stringset_t set)
 {
@@ -97,6 +123,8 @@ ats2_hashmap_stringset_elements (stringset_t set)
     ats2_055_hashmap__strnptr2uintptrmap_keys (set);
 }
 
+/* Use ats2_hashmap_stringset_elements_free(elements_list) to free a
+   list returned by ats2_hashmap_stringset_elements. */
 inline void
 ats2_hashmap_stringset_elements_free (stringset_elements_t elements)
 {
@@ -105,12 +133,15 @@ ats2_hashmap_stringset_elements_free (stringset_elements_t elements)
   ats2_055_hashmap__strnptr2uintptrmap_keys_free (elements);
 }
 
+/* Use ats2_hashmap_stringset_free(set) to free a set. */
 inline void
 ats2_hashmap_stringset_free (stringset_t set)
 {
   extern void ats2_055_hashmap__strnptr2uintptrmap_free (void *map);
   ats2_055_hashmap__strnptr2uintptrmap_free (set);
 }
+
+/********************************************************************/
 
 /* The following macro names are nicer to use. */
 #define stringset ats2_hashmap_stringset
@@ -123,5 +154,7 @@ ats2_hashmap_stringset_free (stringset_t set)
 #define stringset_elements ats2_hashmap_stringset_elements
 #define stringset_elements_free ats2_hashmap_stringset_elements_free
 #define stringset_free ats2_hashmap_stringset_free
+
+/********************************************************************/
 
 #endif /* HEADER_GUARD_FOR_HASHMAP_STRINGSET_H__ */

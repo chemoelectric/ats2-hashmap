@@ -154,7 +154,7 @@ extern _Bool
 
 /* Use ats2_hashmap_string2uintptrmap_pairs(map, value_copy,
    environment) to get a linked list of copies of the key-value pairs
-   in the map. */
+   in the map. The order of the list is unspecified. */
 inline string2uintptrmap_pairs_t
   ats2_hashmap_string2uintptrmap_pairs
   (string2uintptrmap_t map,
@@ -184,7 +184,8 @@ inline void
 }
 
 /* Use ats2_hashmap_string2uintptrmap_keys(map) to get a linked list
-   of copies of the keys in the map. */
+   of copies of the keys in the map. The order of the list is
+   unspecified. */
 inline string2uintptrmap_keys_t
 ats2_hashmap_string2uintptrmap_keys (string2uintptrmap_t map)
 {
@@ -206,7 +207,7 @@ inline void
 
 /* Use ats2_hashmap_string2uintptrmap_values(map, value_copy,
    environment) to get a linked list of copies of the values in the
-   map. */
+   map. The order of the list is unspecified. */
 inline string2uintptrmap_values_t
   ats2_hashmap_string2uintptrmap_values
   (string2uintptrmap_t map,
