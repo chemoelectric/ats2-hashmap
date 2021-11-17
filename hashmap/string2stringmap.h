@@ -30,8 +30,8 @@ typedef struct string2stringmap_struct *string2stringmap_t;
 
 typedef struct
 {
-  const char *key;
-  const char *value;
+  char *key;
+  char *value;
 } string2stringmap_pair_t;
 struct string2stringmap_pairs_struct
 {
@@ -43,14 +43,14 @@ typedef struct string2stringmap_pairs_struct
 
 struct string2stringmap_keys_struct
 {
-  const char *key;
+  char *key;
   struct string2stringmap_keys_struct *next;
 };
 typedef struct string2stringmap_keys_struct *string2stringmap_keys_t;
 
 struct string2stringmap_values_struct
 {
-  const char *value;
+  char *value;
   struct string2stringmap_values_struct *next;
 };
 typedef struct string2stringmap_values_struct
@@ -125,7 +125,7 @@ inline string2stringmap_t
    learn that there is no match to the key. */
 extern void ats2_hashmap_string2stringmap_get
   (string2stringmap_t map, const char *key,
-   _Bool *has_key, const char **value);
+   _Bool *has_key, char **value);
 
 /* Use ats2_hashmap_string2stringmap_has_key(map, key) to learn
    whether or not there is a match to a given key. */

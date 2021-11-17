@@ -31,7 +31,7 @@ typedef struct string2uintptrmap_struct *string2uintptrmap_t;
 
 typedef struct
 {
-  const char *key;
+  char *key;
   uintptr_t value;
 } string2uintptrmap_pair_t;
 struct string2uintptrmap_pairs_struct
@@ -44,7 +44,7 @@ typedef struct string2uintptrmap_pairs_struct
 
 struct string2uintptrmap_keys_struct
 {
-  const char *key;
+  char *key;
   struct string2uintptrmap_keys_struct *next;
 };
 typedef struct string2uintptrmap_keys_struct

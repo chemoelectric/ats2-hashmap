@@ -67,7 +67,7 @@ ats2_hashmap_string2stringmap_get
         (string2stringmap_t map,
          const char *key,
          _Bool *has_key,
-         const char **value)
+         char **value)
 {
   atstype_bool found;
   ats2_hashmap_string2stringmap_get__internal

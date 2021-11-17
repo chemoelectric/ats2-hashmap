@@ -45,7 +45,7 @@ void
 test1 (void)
 {
   bool result_found;
-  const char *result;
+  char *result;
 
   string2stringmap_t map = string2stringmap ();
 
@@ -64,14 +64,17 @@ test1 (void)
   string2stringmap_get (map, "one", &result_found, &result);
   check (result_found);
   check (strcmp (result, "ett") == 0);
+  free (result);
 
   string2stringmap_get (map, "two", &result_found, &result);
   check (result_found);
   check (strcmp (result, "två") == 0);
+  free (result);
 
   string2stringmap_get (map, "three", &result_found, &result);
   check (result_found);
   check (strcmp (result, "tre") == 0);
+  free (result);
 
   string2stringmap_get (map, "four", &result_found, &result);
   check (!result_found);
@@ -134,6 +137,7 @@ test1 (void)
   string2stringmap_get (map, "one", &result_found, &result);
   check (result_found);
   check (strcmp (result, "ett") == 0);
+  free (result);
 
   string2stringmap_get (map, "two", &result_found, &result);
   check (!result_found);
@@ -141,6 +145,7 @@ test1 (void)
   string2stringmap_get (map, "three", &result_found, &result);
   check (result_found);
   check (strcmp (result, "tre") == 0);
+  free (result);
 
   string2stringmap_get (map, "four", &result_found, &result);
   check (!result_found);
