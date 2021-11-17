@@ -816,6 +816,14 @@ CLEANFILES += tests/test-strnptrset
 EXTRA_DIST += tests/test-strnptrset.dats
 
 if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-strnptr2strnptrmap
+nodist_tests_test_strnptr2strnptrmap_SOURCES = tests/test-strnptr2strnptrmap_dats.c
+tests_test_strnptr2strnptrmap_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-strnptr2strnptrmap
+EXTRA_DIST += tests/test-strnptr2strnptrmap.dats
+
+if WITH_DEFAULT_HASH
 check_PROGRAMS += tests/test-string2uintptrmap-C
 nodist_tests_test_string2uintptrmap_C_SOURCES = tests/test-string2uintptrmap-C.c
 nodist_tests_test_string2uintptrmap_C_SOURCES += tests/ats-runtime.c
