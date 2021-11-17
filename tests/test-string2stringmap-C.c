@@ -174,7 +174,8 @@ test1 (void)
   string2stringmap_free (map);
 }
 
-int main (int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
   test1 ();
   return 0;
