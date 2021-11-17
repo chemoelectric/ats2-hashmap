@@ -555,6 +555,55 @@ EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
 EXTRA_DIST += hashmap/stringset.h
 include stringset_extern_inline.am
 
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2strnptrmap_sats.c
+nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2strnptrmap.sats
+if WITH_DEFAULT_HASH
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_size_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_set_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_del_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_get_opt_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_has_key_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_pairs_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_keys_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_values_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/strnptr2strnptrmap_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_get_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_has_key_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_size_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_set_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_del_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_values_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2stringmap_EXTERN_INLINE_free_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/strnptr2strnptrmap.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/HATS/strnptr2strnptrmap.hats
+nobase_nodist_pkginclude_HEADERS += hashmap/string2stringmap.h
+endif WITH_DEFAULT_HASH
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap.dats
+EXTRA_DIST += hashmap/HATS/strnptr2strnptrmap.hats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_size.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_set.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_del.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_get_opt.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_has_key.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_pairs.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_keys.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_values.dats
+EXTRA_DIST += hashmap/DATS/strnptr2strnptrmap_free.dats
+EXTRA_DIST += hashmap/DATS/string2stringmap_get.dats
+EXTRA_DIST += hashmap/DATS/string2stringmap_has_key.dats
+EXTRA_DIST += hashmap/DATS/string2stringmap_extern_inline.dats.m4
+EXTRA_DIST += hashmap/string2stringmap.h
+include string2stringmap_extern_inline.am
+
 nobase_nodist_pkginclude_HEADERS += hashmap/bits_source.h
 CLEANFILES += hashmap/bits_source.h
 EXTRA_DIST += hashmap/bits_source.h.m4
@@ -567,6 +616,7 @@ libs-clean:
 	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
 	-rm -f hashmap/DATS/string2uintptrmap_EXTERN_INLINE_*.dats
 	-rm -f hashmap/DATS/stringset_EXTERN_INLINE_*.dats
+	-rm -f hashmap/DATS/string2stringmap_EXTERN_INLINE_*.dats
 
 #--------------------------------------------------------------------------
 #

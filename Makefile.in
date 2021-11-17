@@ -89,6 +89,24 @@
 # <https://www.gnu.org/licenses/>.
 #
 
+#
+# Copyright © 2021 Barry Schwartz
+#
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License, as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received copies of the GNU General Public License
+# along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
 
 
 
@@ -205,7 +223,10 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 @WITH_DEFAULT_HASH_TRUE@	hashmap/string2uintptrmap.h \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptrset.dats \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/HATS/strnptrset.hats \
-@WITH_DEFAULT_HASH_TRUE@	hashmap/stringset.h
+@WITH_DEFAULT_HASH_TRUE@	hashmap/stringset.h \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap.dats \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/HATS/strnptr2strnptrmap.hats \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/string2stringmap.h
 @WITH_DEFAULT_HASH_TRUE@am__append_24 = hashmap/DATS/strnptr2uintptrmap_dats.c \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2uintptrmap_size_dats.c \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2uintptrmap_set_dats.c \
@@ -243,6 +264,31 @@ EXTRA_PROGRAMS = list-ats-dependencies$(EXEEXT)
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_elements_dats.c \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_elements_free_dats.c \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_free_dats.c
+@WITH_DEFAULT_HASH_TRUE@am__append_26 = hashmap/DATS/strnptr2strnptrmap_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_size_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_set_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_del_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_get_opt_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_has_key_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_pairs_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_keys_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_values_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_free_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_get_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_has_key_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_size_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_set_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_del_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_values_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free_dats.c \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_free_dats.c
 check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_uint16$(EXEEXT) \
 	tests/test-bits_source_uint32$(EXEEXT) \
@@ -268,14 +314,14 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 	tests/test-bits_source_16bytes-C$(EXEEXT)
 
 # This SpookyHash test includes ‘compare_structure’ tests.
-@WITH_SPOOKYHASH_TRUE@am__append_26 = tests/test-strnptr2strnptr-spookyhash-map \
+@WITH_SPOOKYHASH_TRUE@am__append_27 = tests/test-strnptr2strnptr-spookyhash-map \
 @WITH_SPOOKYHASH_TRUE@	tests/test-strnptr2strnptr-map-spookyhash
-@WITH_MURMURHASH3_32_TRUE@am__append_27 = tests/test-strnptr2strnptr-map-murmurhash3_32
-@WITH_HALFSIPHASH_32_TRUE@am__append_28 = tests/test-strnptr2strnptr-map-halfsiphash_32
-@WITH_HALFSIPHASH_64_TRUE@am__append_29 = tests/test-strnptr2strnptr-map-halfsiphash_64
-@WITH_SIPHASH_64_TRUE@am__append_30 = tests/test-strnptr2strnptr-map-siphash_64
-@WITH_SIPHASH_128_TRUE@am__append_31 = tests/test-strnptr2strnptr-map-siphash_128
-@WITH_DEFAULT_HASH_TRUE@am__append_32 = tests/test-strnptr2strnptr-map-default_hash \
+@WITH_MURMURHASH3_32_TRUE@am__append_28 = tests/test-strnptr2strnptr-map-murmurhash3_32
+@WITH_HALFSIPHASH_32_TRUE@am__append_29 = tests/test-strnptr2strnptr-map-halfsiphash_32
+@WITH_HALFSIPHASH_64_TRUE@am__append_30 = tests/test-strnptr2strnptr-map-halfsiphash_64
+@WITH_SIPHASH_64_TRUE@am__append_31 = tests/test-strnptr2strnptr-map-siphash_64
+@WITH_SIPHASH_128_TRUE@am__append_32 = tests/test-strnptr2strnptr-map-siphash_128
+@WITH_DEFAULT_HASH_TRUE@am__append_33 = tests/test-strnptr2strnptr-map-default_hash \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptr2uintptrmap \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptrset \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C \
@@ -467,6 +513,31 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_elements_dats.lo \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_elements_free_dats.lo \
 @WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/stringset_EXTERN_INLINE_free_dats.lo
+@WITH_DEFAULT_HASH_TRUE@am__objects_9 = hashmap/DATS/strnptr2strnptrmap_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_size_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_set_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_del_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_get_opt_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_has_key_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_pairs_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_keys_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_values_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/strnptr2strnptrmap_free_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_get_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_has_key_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_size_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_set_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_del_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_values_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free_dats.lo \
+@WITH_DEFAULT_HASH_TRUE@	hashmap/DATS/string2stringmap_EXTERN_INLINE_free_dats.lo
 nodist_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/DATS/array-proofs_dats.lo hashmap/SATS/memory_sats.lo \
 	hashmap/DATS/memory_dats.lo \
@@ -550,7 +621,8 @@ nodist_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6) \
 	hashmap/SATS/strnptr2uintptrmap_sats.lo $(am__objects_7) \
-	hashmap/SATS/strnptrset_sats.lo $(am__objects_8)
+	hashmap/SATS/strnptrset_sats.lo $(am__objects_8) \
+	hashmap/SATS/strnptr2strnptrmap_sats.lo $(am__objects_9)
 libats2_hashmap_la_OBJECTS = $(nodist_libats2_hashmap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -842,6 +914,21 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/memory_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/population_map_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_del_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_is_empty_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_isnot_empty_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_set_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_size_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_string2stringmap_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_get_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/string2stringmap_has_key_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_del_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_free_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_is_empty_dats.Plo \
@@ -867,6 +954,16 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_isnot_empty_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_size_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_stringset_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_del_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_get_opt_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_has_key_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_keys_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_pairs_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_set_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_size_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_values_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_del_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_free_dats.Plo \
@@ -890,6 +987,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/memory_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/population_map_sats.Plo \
+	hashmap/SATS/$(DEPDIR)/strnptr2strnptrmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo \
@@ -1202,6 +1300,7 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common-macros.m4.in \
 	$(srcdir)/list-ats-dependencies.dats.in \
+	$(srcdir)/string2stringmap_extern_inline.am \
 	$(srcdir)/string2uintptrmap_extern_inline.am \
 	$(srcdir)/stringset_extern_inline.am \
 	$(top_srcdir)/build-aux/compile \
@@ -1582,7 +1681,21 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/string2uintptrmap.h hashmap/DATS/strnptrset.dats \
 	hashmap/HATS/strnptrset.hats \
 	hashmap/DATS/stringset_extern_inline.dats.m4 \
-	hashmap/stringset.h hashmap/bits_source.h.m4 \
+	hashmap/stringset.h hashmap/DATS/strnptr2strnptrmap.dats \
+	hashmap/HATS/strnptr2strnptrmap.hats \
+	hashmap/DATS/strnptr2strnptrmap_size.dats \
+	hashmap/DATS/strnptr2strnptrmap_set.dats \
+	hashmap/DATS/strnptr2strnptrmap_del.dats \
+	hashmap/DATS/strnptr2strnptrmap_get_opt.dats \
+	hashmap/DATS/strnptr2strnptrmap_has_key.dats \
+	hashmap/DATS/strnptr2strnptrmap_pairs.dats \
+	hashmap/DATS/strnptr2strnptrmap_keys.dats \
+	hashmap/DATS/strnptr2strnptrmap_values.dats \
+	hashmap/DATS/strnptr2strnptrmap_free.dats \
+	hashmap/DATS/string2stringmap_get.dats \
+	hashmap/DATS/string2stringmap_has_key.dats \
+	hashmap/DATS/string2stringmap_extern_inline.dats.m4 \
+	hashmap/string2stringmap.h hashmap/bits_source.h.m4 \
 	tests/ats-runtime.c tests/INCLUDE/runtime-support.dats \
 	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	tests/test-bits_source_uint8.dats \
@@ -1733,7 +1846,8 @@ nobase_dist_pkginclude_HEADERS = hashmap/DATS/bits_source.dats \
 	hashmap/DATS/hashmap.dats hashmap/HATS/hashmap.hats \
 	hashmap/SATS/strnptrmap.sats \
 	hashmap/SATS/strnptr2uintptrmap.sats \
-	hashmap/SATS/strnptrset.sats
+	hashmap/SATS/strnptrset.sats \
+	hashmap/SATS/strnptr2strnptrmap.sats
 nobase_nodist_pkginclude_HEADERS = hashmap/SATS/array-proofs.sats \
 	hashmap/DATS/array-proofs.dats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/memory.cats \
@@ -1851,7 +1965,8 @@ nodist_libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 	$(am__append_11) $(am__append_13) $(am__append_15) \
 	$(am__append_17) $(am__append_19) $(am__append_21) \
 	hashmap/SATS/strnptr2uintptrmap_sats.c $(am__append_24) \
-	hashmap/SATS/strnptrset_sats.c $(am__append_25)
+	hashmap/SATS/strnptrset_sats.c $(am__append_25) \
+	hashmap/SATS/strnptr2strnptrmap_sats.c $(am__append_26)
 libats2_hashmap_la_DEPENDENCIES = 
 libats2_hashmap_la_LIBADD = $(ATS2_POPCOUNT_LIBS) $(am__append_7) \
 	$(am__append_8) $(am__append_9)
@@ -1947,7 +2062,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .c .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: GNUmakefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/config-status-deps.am $(srcdir)/string2uintptrmap_extern_inline.am $(srcdir)/stringset_extern_inline.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/config-status-deps.am $(srcdir)/string2uintptrmap_extern_inline.am $(srcdir)/stringset_extern_inline.am $(srcdir)/string2stringmap_extern_inline.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1969,7 +2084,7 @@ GNUmakefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(top_srcdir)/config-status-deps.am $(srcdir)/string2uintptrmap_extern_inline.am $(srcdir)/stringset_extern_inline.am $(am__empty):
+$(top_srcdir)/config-status-deps.am $(srcdir)/string2uintptrmap_extern_inline.am $(srcdir)/stringset_extern_inline.am $(srcdir)/string2stringmap_extern_inline.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -2596,6 +2711,82 @@ hashmap/DATS/stringset_EXTERN_INLINE_elements_free_dats.lo:  \
 hashmap/DATS/stringset_EXTERN_INLINE_free_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/SATS/strnptr2strnptrmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
+	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_dats.lo: hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_size_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_set_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_del_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_get_opt_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_has_key_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_pairs_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_keys_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_values_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/strnptr2strnptrmap_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_get_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_has_key_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_size_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_set_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_del_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/string2stringmap_EXTERN_INLINE_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 
 libats2-hashmap.la: $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_DEPENDENCIES) $(EXTRA_libats2_hashmap_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) -rpath $(libdir) $(libats2_hashmap_la_OBJECTS) $(libats2_hashmap_la_LIBADD) $(LIBS)
@@ -2897,6 +3088,21 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/memory_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/population_map_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_del_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_is_empty_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_isnot_empty_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_set_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_size_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_string2stringmap_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_get_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2stringmap_has_key_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_del_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_free_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_is_empty_dats.Plo@am__quote@ # am--include-marker
@@ -2922,6 +3128,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_isnot_empty_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_size_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_stringset_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_del_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_get_opt_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_has_key_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_keys_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_pairs_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_set_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_size_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_values_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_del_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_free_dats.Plo@am__quote@ # am--include-marker
@@ -2945,6 +3161,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/memory_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/population_map_sats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptr2strnptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo@am__quote@ # am--include-marker
@@ -3869,6 +4086,21 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/population_map_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_is_empty_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_isnot_empty_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_set_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_string2stringmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_get_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_has_key_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_del_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_is_empty_dats.Plo
@@ -3894,6 +4126,16 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_isnot_empty_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_size_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_stringset_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_get_opt_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_has_key_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_pairs_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_set_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_values_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_del_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_free_dats.Plo
@@ -3917,6 +4159,7 @@ distclean: distclean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo
@@ -4079,6 +4322,21 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/hashmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/memory_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/population_map_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_is_empty_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_isnot_empty_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_keys_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_pairs_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_set_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_string2stringmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_EXTERN_INLINE_values_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_get_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/string2stringmap_has_key_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_del_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_free_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/string2uintptrmap_EXTERN_INLINE_is_empty_dats.Plo
@@ -4104,6 +4362,16 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_isnot_empty_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_size_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/stringset_EXTERN_INLINE_stringset_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_get_opt_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_has_key_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_pairs_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_set_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2strnptrmap_values_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_del_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptr2uintptrmap_free_dats.Plo
@@ -4127,6 +4395,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/SATS/$(DEPDIR)/hashmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/memory_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/population_map_sats.Plo
+	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptr2uintptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrmap_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/strnptrset_sats.Plo
@@ -4463,6 +4732,86 @@ hashmap/DATS/stringset_EXTERN_INLINE_free.dats: hashmap/DATS/stringset_extern_in
 extern inline void \
 ats2_hashmap_stringset_free (stringset_t set)) $(<) > $(@)
 
+hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap (void)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_string2stringmap_is_empty (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_string2stringmap_isnot_empty (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_size.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline size_t \
+ats2_hashmap_string2stringmap_size (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_set.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap_set (string2stringmap_t map, \
+                                   const char *key, const char *value)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_del.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap_del (string2stringmap_t map, \
+                                   const char *key)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_pairs_t \
+ats2_hashmap_string2stringmap_pairs (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_pairs_free (string2stringmap_pairs_t pairs)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_keys_t \
+ats2_hashmap_string2stringmap_keys (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_keys_free (string2stringmap_keys_t keys)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_values_t \
+ats2_hashmap_string2stringmap_values (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_values_free (string2stringmap_values_t values)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_free (string2stringmap_t map)) $(<) > $(@)
+
 .PHONY: libs-clean
 libs-clean:
 	-rm -f hashmap/SATS/*_sats.c
@@ -4471,6 +4820,7 @@ libs-clean:
 	-rm -f hashmap/DATS/*_dats.$(OBJEXT)
 	-rm -f hashmap/DATS/string2uintptrmap_EXTERN_INLINE_*.dats
 	-rm -f hashmap/DATS/stringset_EXTERN_INLINE_*.dats
+	-rm -f hashmap/DATS/string2stringmap_EXTERN_INLINE_*.dats
 
 @GNU@ define print-test-strnptr2strnptr-map-dats =
 @GNU@   printf "%s\n%s\n%s\n" \

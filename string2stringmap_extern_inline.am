@@ -1,0 +1,97 @@
+#
+# Copyright © 2021 Barry Schwartz
+#
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License, as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received copies of the GNU General Public License
+# along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_string2stringmap.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap (void)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_is_empty.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_string2stringmap_is_empty (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_isnot_empty.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline _Bool \
+ats2_hashmap_string2stringmap_isnot_empty (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_size.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline size_t \
+ats2_hashmap_string2stringmap_size (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_set.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap_set (string2stringmap_t map, \
+                                   const char *key, const char *value)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_del.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_t \
+ats2_hashmap_string2stringmap_del (string2stringmap_t map, \
+                                   const char *key)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_pairs_t \
+ats2_hashmap_string2stringmap_pairs (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_pairs_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_pairs_free (string2stringmap_pairs_t pairs)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_keys_t \
+ats2_hashmap_string2stringmap_keys (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_keys_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_keys_free (string2stringmap_keys_t keys)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline string2stringmap_values_t \
+ats2_hashmap_string2stringmap_values (string2stringmap_t map)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_values_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_values_free (string2stringmap_values_t values)) $(<) > $(@)
+
+hashmap/DATS/string2stringmap_EXTERN_INLINE_free.dats: hashmap/DATS/string2stringmap_extern_inline.dats.m4 GNUmakefile
+	@$(MKDIR_P) $(@D)
+	$(call make-extern-inline, \
+extern inline void \
+ats2_hashmap_string2stringmap_free (string2stringmap_t map)) $(<) > $(@)
