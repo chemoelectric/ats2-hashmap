@@ -833,6 +833,15 @@ endif WITH_DEFAULT_HASH
 CLEANFILES += tests/test-stringset-C
 EXTRA_DIST += tests/test-stringset-C.c
 
+if WITH_DEFAULT_HASH
+check_PROGRAMS += tests/test-string2stringmap-C
+nodist_tests_test_string2stringmap_C_SOURCES = tests/test-string2stringmap-C.c
+nodist_tests_test_string2stringmap_C_SOURCES += tests/ats-runtime.c
+tests_test_string2stringmap_C_LDADD = $(lib_LTLIBRARIES)
+endif WITH_DEFAULT_HASH
+CLEANFILES += tests/test-string2stringmap-C
+EXTRA_DIST += tests/test-string2stringmap-C.c
+
 check_PROGRAMS += tests/test-bits_source_uint8-C
 dist_tests_test_bits_source_uint8_C_SOURCES = tests/test-bits_source_uint8-C.c
 nodist_tests_test_bits_source_uint8_C_SOURCES = tests/ats-runtime.c

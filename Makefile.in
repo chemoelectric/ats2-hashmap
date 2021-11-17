@@ -325,7 +325,8 @@ check_PROGRAMS = tests/test-bits_source_uint8$(EXEEXT) \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptr2uintptrmap \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptrset \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C \
-@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C
+@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-string2stringmap-C
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -434,7 +435,8 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptr2uintptrmap$(EXEEXT) \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-strnptrset$(EXEEXT) \
 @WITH_DEFAULT_HASH_TRUE@	tests/test-string2uintptrmap-C$(EXEEXT) \
-@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C$(EXEEXT)
+@WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C$(EXEEXT) \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-string2stringmap-C$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -762,6 +764,12 @@ nodist_tests_test_separate_chaining_3_OBJECTS =  \
 tests_test_separate_chaining_3_OBJECTS =  \
 	$(nodist_tests_test_separate_chaining_3_OBJECTS)
 tests_test_separate_chaining_3_DEPENDENCIES = $(lib_LTLIBRARIES)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2stringmap_C_OBJECTS = tests/test-string2stringmap-C.$(OBJEXT) \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.$(OBJEXT)
+tests_test_string2stringmap_C_OBJECTS =  \
+	$(nodist_tests_test_string2stringmap_C_OBJECTS)
+@WITH_DEFAULT_HASH_TRUE@tests_test_string2stringmap_C_DEPENDENCIES =  \
+@WITH_DEFAULT_HASH_TRUE@	$(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2uintptrmap_C_OBJECTS = tests/test-string2uintptrmap-C.$(OBJEXT) \
 @WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.$(OBJEXT)
 tests_test_string2uintptrmap_C_OBJECTS =  \
@@ -1013,6 +1021,7 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	tests/$(DEPDIR)/test-separate-chaining-1_dats.Po \
 	tests/$(DEPDIR)/test-separate-chaining-2_dats.Po \
 	tests/$(DEPDIR)/test-separate-chaining-3_dats.Po \
+	tests/$(DEPDIR)/test-string2stringmap-C.Po \
 	tests/$(DEPDIR)/test-string2uintptrmap-C.Po \
 	tests/$(DEPDIR)/test-stringset-C.Po \
 	tests/$(DEPDIR)/test-strnptr2strnptr-map-default_hash_dats.Po \
@@ -1075,6 +1084,7 @@ SOURCES = $(nodist_libats2_hashmap_la_SOURCES) \
 	$(nodist_tests_test_separate_chaining_1_SOURCES) \
 	$(nodist_tests_test_separate_chaining_2_SOURCES) \
 	$(nodist_tests_test_separate_chaining_3_SOURCES) \
+	$(nodist_tests_test_string2stringmap_C_SOURCES) \
 	$(nodist_tests_test_string2uintptrmap_C_SOURCES) \
 	$(nodist_tests_test_stringset_C_SOURCES) \
 	$(nodist_tests_test_strnptr2strnptr_map_default_hash_SOURCES) \
@@ -1713,7 +1723,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	tests/test-strnptr2strnptr-spookyhash-map.dats \
 	tests/test-strnptr2uintptrmap.dats tests/test-strnptrset.dats \
 	tests/test-string2uintptrmap-C.c tests/test-stringset-C.c \
-	list-ats-dependencies.dats
+	tests/test-string2stringmap-C.c list-ats-dependencies.dats
 MOSTLYCLEANFILES = 
 CLEANFILES = hashmap/SATS/bits_source.sats \
 	hashmap/DATS/bits_source_uint8.dats \
@@ -1746,7 +1756,8 @@ CLEANFILES = hashmap/SATS/bits_source.sats \
 	tests/test-strnptr2strnptr-map-default_hash \
 	tests/test-strnptr2uintptrmap tests/test-strnptrset \
 	tests/test-string2uintptrmap-C tests/test-stringset-C \
-	tests/test-bits_source_uint8-C tests/test-bits_source_uint16-C \
+	tests/test-string2stringmap-C tests/test-bits_source_uint8-C \
+	tests/test-bits_source_uint16-C \
 	tests/test-bits_source_uint32-C \
 	tests/test-bits_source_uint64-C \
 	tests/test-bits_source_uint64_uint64-C \
@@ -2024,6 +2035,10 @@ tests_test_separate_chaining_3_LDADD = $(lib_LTLIBRARIES)
 @WITH_DEFAULT_HASH_TRUE@	tests/test-stringset-C.c \
 @WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.c
 @WITH_DEFAULT_HASH_TRUE@tests_test_stringset_C_LDADD = $(lib_LTLIBRARIES)
+@WITH_DEFAULT_HASH_TRUE@nodist_tests_test_string2stringmap_C_SOURCES =  \
+@WITH_DEFAULT_HASH_TRUE@	tests/test-string2stringmap-C.c \
+@WITH_DEFAULT_HASH_TRUE@	tests/ats-runtime.c
+@WITH_DEFAULT_HASH_TRUE@tests_test_string2stringmap_C_LDADD = $(lib_LTLIBRARIES)
 dist_tests_test_bits_source_uint8_C_SOURCES = tests/test-bits_source_uint8-C.c
 nodist_tests_test_bits_source_uint8_C_SOURCES = tests/ats-runtime.c
 tests_test_bits_source_uint8_C_LDADD = $(lib_LTLIBRARIES)
@@ -2928,6 +2943,12 @@ tests/test-separate-chaining-3_dats.$(OBJEXT): tests/$(am__dirstamp) \
 tests/test-separate-chaining-3$(EXEEXT): $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_DEPENDENCIES) $(EXTRA_tests_test_separate_chaining_3_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/test-separate-chaining-3$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_test_separate_chaining_3_OBJECTS) $(tests_test_separate_chaining_3_LDADD) $(LIBS)
+tests/test-string2stringmap-C.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/test-string2stringmap-C$(EXEEXT): $(tests_test_string2stringmap_C_OBJECTS) $(tests_test_string2stringmap_C_DEPENDENCIES) $(EXTRA_tests_test_string2stringmap_C_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test-string2stringmap-C$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_test_string2stringmap_C_OBJECTS) $(tests_test_string2stringmap_C_LDADD) $(LIBS)
 tests/test-string2uintptrmap-C.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -3187,6 +3208,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-separate-chaining-1_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-separate-chaining-2_dats.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-separate-chaining-3_dats.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-string2stringmap-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-string2uintptrmap-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-stringset-C.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test-strnptr2strnptr-map-default_hash_dats.Po@am__quote@ # am--include-marker
@@ -3700,6 +3722,13 @@ tests/test-stringset-C.log: tests/test-stringset-C$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/test-string2stringmap-C.log: tests/test-string2stringmap-C$(EXEEXT)
+	@p='tests/test-string2stringmap-C$(EXEEXT)'; \
+	b='tests/test-string2stringmap-C'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 tests/test-bits_source_uint8-C.log: tests/test-bits_source_uint8-C$(EXEEXT)
 	@p='tests/test-bits_source_uint8-C$(EXEEXT)'; \
 	b='tests/test-bits_source_uint8-C'; \
@@ -4185,6 +4214,7 @@ distclean: distclean-am
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test-string2stringmap-C.Po
 	-rm -f tests/$(DEPDIR)/test-string2uintptrmap-C.Po
 	-rm -f tests/$(DEPDIR)/test-stringset-C.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-default_hash_dats.Po
@@ -4421,6 +4451,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-1_dats.Po
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-2_dats.Po
 	-rm -f tests/$(DEPDIR)/test-separate-chaining-3_dats.Po
+	-rm -f tests/$(DEPDIR)/test-string2stringmap-C.Po
 	-rm -f tests/$(DEPDIR)/test-string2uintptrmap-C.Po
 	-rm -f tests/$(DEPDIR)/test-stringset-C.Po
 	-rm -f tests/$(DEPDIR)/test-strnptr2strnptr-map-default_hash_dats.Po
