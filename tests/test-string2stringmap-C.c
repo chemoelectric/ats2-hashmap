@@ -41,27 +41,6 @@ check_fail (const char *expr, const char *file, size_t line,
   exit (1);
 }
 
-bool value_is_freed;
-void *value_freed_env;
-
-void
-value_free (uintptr_t v, void *environment)
-{
-  value_is_freed = true;
-  value_freed_env = environment;
-}
-
-bool value_is_copied;
-void *value_copied_env;
-
-uintptr_t
-value_copy (uintptr_t v, void *environment)
-{
-  value_is_copied = true;
-  value_copied_env = environment;
-  return v;
-}
-
 void
 test1 (void)
 {
