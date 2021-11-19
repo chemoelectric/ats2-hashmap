@@ -114,7 +114,7 @@ inline string2uintptrmap_t
   extern string2uintptrmap_t
     ats2_055_hashmap__strnptr2uintptrmap_set_string
     (void *map, void *key, uintptr_t value,
-     void (*value_free) (uintptr_t, void *), void *environment);
+     void *value_free, void *environment);
   return ats2_055_hashmap__strnptr2uintptrmap_set_string
     (map, (void *) key, value, value_free, environment);
 }
@@ -131,8 +131,7 @@ inline string2uintptrmap_t
 {
   extern string2uintptrmap_t
     ats2_055_hashmap__strnptr2uintptrmap_del_string
-    (void *map, void *key, void (*value_free) (uintptr_t, void *),
-     void *environment);
+    (void *map, void *key, void *value_free, void *environment);
   return ats2_055_hashmap__strnptr2uintptrmap_del_string
     (map, (void *) key, value_free, environment);
 }
@@ -161,8 +160,7 @@ inline string2uintptrmap_pairs_t
    uintptr_t (*value_copy) (uintptr_t, void *), void *environment)
 {
   extern void *ats2_055_hashmap__strnptr2uintptrmap_pairs
-    (void *map, uintptr_t (*value_copy) (uintptr_t, void *),
-     void *environment);
+    (void *map, void *value_copy, void *environment);
   return (string2uintptrmap_pairs_t)
     ats2_055_hashmap__strnptr2uintptrmap_pairs
     (map, value_copy, environment);
@@ -177,8 +175,7 @@ inline void
    pairs, void (*value_free) (uintptr_t, void *), void *environment)
 {
   extern void ats2_055_hashmap__strnptr2uintptrmap_pairs_free
-    (void *pairs, void (*value_free) (uintptr_t, void *),
-     void *environment);
+    (void *pairs, void *value_free, void *environment);
   ats2_055_hashmap__strnptr2uintptrmap_pairs_free
     (pairs, value_free, environment);
 }
@@ -214,8 +211,7 @@ inline string2uintptrmap_values_t
    uintptr_t (*value_copy) (uintptr_t, void *), void *environment)
 {
   extern void *ats2_055_hashmap__strnptr2uintptrmap_values
-    (void *map,
-     uintptr_t (*value_copy) (uintptr_t, void *), void *environment);
+    (void *map, void *value_copy, void *environment);
   return (string2uintptrmap_values_t)
     ats2_055_hashmap__strnptr2uintptrmap_values
     (map, value_copy, environment);
@@ -230,8 +226,7 @@ inline void
    void (*value_free) (uintptr_t, void *), void *environment)
 {
   extern void ats2_055_hashmap__strnptr2uintptrmap_values_free
-    (void *values,
-     void (*value_free) (uintptr_t, void *), void *environment);
+    (void *values, void *value_free, void *environment);
   ats2_055_hashmap__strnptr2uintptrmap_values_free
     (values, value_free, environment);
 }
@@ -244,8 +239,7 @@ inline void
    void *environment)
 {
   extern void ats2_055_hashmap__strnptr2uintptrmap_free
-    (void *map, void (*value_free) (uintptr_t, void *),
-     void *environment);
+    (void *map, void *value_free, void *environment);
   ats2_055_hashmap__strnptr2uintptrmap_free
     (map, value_free, environment);
 }
