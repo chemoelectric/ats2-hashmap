@@ -71,6 +71,11 @@ typedef uintptr2uintptrmap_hash_function_t =
    &uintptr2uintptrmap_hash_t? >> uintptr2uintptrmap_hash_t,
    ptr) -> void
 
+typedef uintptr2uintptrmap_key_eq_t =
+  (* The "ptr" argument is for "closure" environment.
+     Return value is zero for false, non-zero for true. *)
+  (uintptr, uintptr, ptr) -> int
+
 typedef uintptr2uintptrmap_hash_free_t =
   (* The "ptr" argument is for "closure" environment. *)
   (&uintptr2uintptrmap_hash_t >> uintptr2uintptrmap_hash_t?,
@@ -84,10 +89,6 @@ typedef uintptr2uintptrmap_uintptr_copy_t =
   (* The "ptr" argument is for "closure" environment. *)
   (uintptr, ptr) -> uintptr
 
-typedef uintptr2uintptrmap_key_eq_t =
-  (* The "ptr" argument is for "closure" environment. *)
-  (uintptr, uintptr, ptr) -> bool
-
 (********************************************************************)
 
 local
@@ -99,12 +100,12 @@ local
 
   vtypedef bits_source_vt = uintptr2uintptrmap_bits_source_vt
   typedef hash_function_t = uintptr2uintptrmap_hash_function_t
+  typedef key_eq_t = uintptr2uintptrmap_key_eq_t
   typedef hash_free_t = uintptr2uintptrmap_hash_free_t
   typedef key_free_t = uintptr2uintptrmap_uintptr_free_t
   typedef value_free_t = uintptr2uintptrmap_uintptr_free_t
   typedef key_copy_t = uintptr2uintptrmap_uintptr_copy_t
   typedef value_copy_t = uintptr2uintptrmap_uintptr_copy_t
-  typedef key_eq_t = uintptr2uintptrmap_key_eq_t
 
 in
 
@@ -170,7 +171,6 @@ in
            hash_function : hash_function_t,
            key_eq        : key_eq_t,
            hash_free     : hash_free_t,
-           key_copy      : key_copy_t,
            value_copy    : value_copy_t,
            environment   : ptr) :
       Option_vt (uintptr)

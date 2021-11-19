@@ -53,7 +53,7 @@ uintptr2uintptrmap_del (map, key,
 
     implement
     hashmap$key_vt_eq<key_t> (k_arg, k_stored) =
-      key_eq (k_arg, k_stored, environment)
+      key_eq (k_arg, k_stored, environment) <> 0
 
     implement
     hashmap$hash_vt_free<hash_t> (hash) =

@@ -165,6 +165,7 @@ EXTRA_DIST += ats-nodeptracking-rules.mk
 
 lib_LTLIBRARIES += libats2-hashmap.la
 
+dist_libats2_hashmap_la_SOURCES =
 nodist_libats2_hashmap_la_SOURCES =
 libats2_hashmap_la_DEPENDENCIES =
 libats2_hashmap_la_LIBADD =
@@ -503,23 +504,25 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_pairs_dats.
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_keys_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_values_dats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_free_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_get_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_has_key_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_string2uintptrmap_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_is_empty_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_isnot_empty_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_size_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_set_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_del_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_pairs_free_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_keys_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_keys_free_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_values_free_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_free_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_get-C_dats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_has_key-C_dats.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_uintptr2uintptrmap.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_is_empty.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_isnot_empty.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_size.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_set.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_del.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_pairs.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_pairs_free.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_keys.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_keys_free.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_values.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_values_free.c
+dist_libats2_hashmap_la_SOURCES += hashmap/C/uintptr2uintptrmap_extern_inline_free.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/uintptr2uintptrmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/uintptr2uintptrmap.dats
+nobase_dist_pkginclude_HEADERS += hashmap/HATS/uintptr2uintptrmap.hats
+nobase_dist_pkginclude_HEADERS += hashmap/uintptr2uintptrmap.h
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_size.dats
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_set.dats
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_del.dats
@@ -529,15 +532,8 @@ EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_pairs.dats
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_keys.dats
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_values.dats
 EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_free.dats
-#nobase_nodist_pkginclude_HEADERS += hashmap/HATS/uintptr2uintptrmap.hats
-#nobase_nodist_pkginclude_HEADERS += hashmap/string2uintptrmap.h
-#endif WITH_DEFAULT_HASH
-#EXTRA_DIST += hashmap/HATS/uintptr2uintptrmap.hats
-#EXTRA_DIST += hashmap/DATS/string2uintptrmap_get.dats
-#EXTRA_DIST += hashmap/DATS/string2uintptrmap_has_key.dats
-#EXTRA_DIST += hashmap/DATS/string2uintptrmap_extern_inline.dats.m4
-#EXTRA_DIST += hashmap/string2uintptrmap.h
-#include string2uintptrmap_extern_inline.am
+EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_get-C.dats
+EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_has_key-C.dats
 
 # Hashmaps from strings to uintptr_t, primarily for use in C programs.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2uintptrmap_sats.c
