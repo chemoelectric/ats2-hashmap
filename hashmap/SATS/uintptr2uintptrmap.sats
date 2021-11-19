@@ -54,22 +54,13 @@ lemma_uintptr2uintptrmap_vt_param :
   "unsafely" accessed, probably by C code.
    
   The following says that the type is unspecified, except
-  insofar as it needs as much space as does a 64-tuple of bytes.
-  Thus hashmap routines will allocate that much space for hashes
-  it generates.
-
-  (Using an array instead of a tuple to specify the 64-byte size
-  would run into difficulties with the ATS2 implementation.)
+  insofar as it needs as much space as does a C struct of
+  64 atstype_byte elements. Thus hashmap routines will
+  allocate that much space for hash functions to write
+  into and bits source functions to read from.
 *)
 abst@ype uintptr2uintptrmap_hash_t =
-  @(byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte,
-    byte, byte, byte, byte, byte, byte, byte, byte)
+  $extype"struct { atstype_byte bytes[64]; }"
 
 vtypedef uintptr2uintptrmap_bits_source_vt =
   bits_source_vt (uintptr2uintptrmap_hash_t)
