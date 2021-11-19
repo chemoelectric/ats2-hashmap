@@ -628,6 +628,13 @@ nodist_libats2_hashmap_la_OBJECTS = hashmap/SATS/array-proofs_sats.lo \
 	hashmap/DATS/uintptr2uintptrmap_dats.lo \
 	hashmap/DATS/uintptr2uintptrmap_size_dats.lo \
 	hashmap/DATS/uintptr2uintptrmap_set_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_del_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_get_opt_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_has_key_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_pairs_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_keys_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_values_dats.lo \
+	hashmap/DATS/uintptr2uintptrmap_free_dats.lo \
 	hashmap/SATS/strnptr2uintptrmap_sats.lo $(am__objects_7) \
 	hashmap/SATS/strnptrset_sats.lo $(am__objects_8) \
 	hashmap/SATS/strnptr2strnptrmap_sats.lo $(am__objects_9)
@@ -1001,8 +1008,15 @@ am__depfiles_remade = ./$(DEPDIR)/list_ats_dependencies-list-ats-dependencies_de
 	hashmap/DATS/$(DEPDIR)/strnptrmap-spookyhash_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/strnptrset_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_del_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_free_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_get_opt_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_has_key_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_keys_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_pairs_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_set_dats.Plo \
 	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_size_dats.Plo \
+	hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_values_dats.Plo \
 	hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo \
 	hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo \
@@ -1693,6 +1707,13 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/HATS/strnptrmap.hats \
 	hashmap/DATS/uintptr2uintptrmap_size.dats \
 	hashmap/DATS/uintptr2uintptrmap_set.dats \
+	hashmap/DATS/uintptr2uintptrmap_del.dats \
+	hashmap/DATS/uintptr2uintptrmap_get_opt.dats \
+	hashmap/DATS/uintptr2uintptrmap_has_key.dats \
+	hashmap/DATS/uintptr2uintptrmap_pairs.dats \
+	hashmap/DATS/uintptr2uintptrmap_keys.dats \
+	hashmap/DATS/uintptr2uintptrmap_values.dats \
+	hashmap/DATS/uintptr2uintptrmap_free.dats \
 	hashmap/DATS/strnptr2uintptrmap.dats \
 	hashmap/HATS/strnptr2uintptrmap.hats \
 	hashmap/DATS/strnptr2uintptrmap_size.dats \
@@ -1871,13 +1892,6 @@ LDADD =
 # The ATS2 libraries.
 #
 lib_LTLIBRARIES = libats2-hashmap.la
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_del_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_get_opt_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_has_key_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_pairs_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_keys_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_values_dats.c
-#nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/uintptr2uintptrmap_free_dats.c
 #nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_get_dats.c
 #nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_has_key_dats.c
 #nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/string2uintptrmap_EXTERN_INLINE_string2uintptrmap_dats.c
@@ -1953,13 +1967,6 @@ TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
 #nobase_nodist_pkginclude_HEADERS += hashmap/string2uintptrmap.h
 #endif WITH_DEFAULT_HASH
 #EXTRA_DIST += hashmap/HATS/uintptr2uintptrmap.hats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_del.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_get_opt.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_has_key.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_pairs.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_keys.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_values.dats
-#EXTRA_DIST += hashmap/DATS/uintptr2uintptrmap_free.dats
 #EXTRA_DIST += hashmap/DATS/string2uintptrmap_get.dats
 #EXTRA_DIST += hashmap/DATS/string2uintptrmap_has_key.dats
 #EXTRA_DIST += hashmap/DATS/string2uintptrmap_extern_inline.dats.m4
@@ -2056,6 +2063,13 @@ nodist_libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/uintptr2uintptrmap_dats.c \
 	hashmap/DATS/uintptr2uintptrmap_size_dats.c \
 	hashmap/DATS/uintptr2uintptrmap_set_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_del_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_get_opt_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_has_key_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_pairs_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_keys_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_values_dats.c \
+	hashmap/DATS/uintptr2uintptrmap_free_dats.c \
 	hashmap/SATS/strnptr2uintptrmap_sats.c $(am__append_24) \
 	hashmap/SATS/strnptrset_sats.c $(am__append_25) \
 	hashmap/SATS/strnptr2strnptrmap_sats.c $(am__append_26)
@@ -2709,6 +2723,27 @@ hashmap/DATS/uintptr2uintptrmap_size_dats.lo:  \
 hashmap/DATS/uintptr2uintptrmap_set_dats.lo:  \
 	hashmap/DATS/$(am__dirstamp) \
 	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_del_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_get_opt_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_has_key_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_pairs_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_keys_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_values_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
+hashmap/DATS/uintptr2uintptrmap_free_dats.lo:  \
+	hashmap/DATS/$(am__dirstamp) \
+	hashmap/DATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/SATS/strnptr2uintptrmap_sats.lo: hashmap/SATS/$(am__dirstamp) \
 	hashmap/SATS/$(DEPDIR)/$(am__dirstamp)
 hashmap/DATS/strnptr2uintptrmap_dats.lo: hashmap/DATS/$(am__dirstamp) \
@@ -3276,8 +3311,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptrmap-spookyhash_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/strnptrset_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_del_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_free_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_get_opt_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_has_key_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_keys_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_pairs_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_set_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_size_dats.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_values_dats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo@am__quote@ # am--include-marker
@@ -4294,8 +4336,15 @@ distclean: distclean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptrmap-spookyhash_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptrset_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_get_opt_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_has_key_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_pairs_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_set_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_values_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo
@@ -4536,8 +4585,15 @@ maintainer-clean: maintainer-clean-am
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptrmap-spookyhash_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/strnptrset_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_del_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_free_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_get_opt_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_has_key_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_keys_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_pairs_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_set_dats.Plo
 	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_size_dats.Plo
+	-rm -f hashmap/DATS/$(DEPDIR)/uintptr2uintptrmap_values_dats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/array-proofs_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source-parameters_sats.Plo
 	-rm -f hashmap/SATS/$(DEPDIR)/bits_source_sats.Plo

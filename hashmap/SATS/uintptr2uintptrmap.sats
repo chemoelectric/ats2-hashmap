@@ -99,142 +99,162 @@ typedef uintptr2uintptrmap_key_eq_t =
 
 (********************************************************************)
 
-fun {}
-uintptr2uintptrmap () :
-  uintptr2uintptrmap_vt (0)
+local
 
-fun
-uintptr2uintptrmap_size
-        {size : int}
-        (map  : !uintptr2uintptrmap_vt (size) >> _) :
-    size_t size
+  #define map_vt uintptr2uintptrmap_vt
 
-fun {}
-uintptr2uintptrmap_is_empty
-        {size : int}
-        (map  : !uintptr2uintptrmap_vt (size) >> _) :
-    bool (size == 0)
+  typedef key_t = uintptr
+  typedef value_t = uintptr
 
-fun {}
-uintptr2uintptrmap_isnot_empty
-        {size : int}
-        (map  : !uintptr2uintptrmap_vt (size) >> _) :
-    bool (size != 0)
+  vtypedef bits_source_vt = uintptr2uintptrmap_bits_source_vt
+  typedef hash_function_t = uintptr2uintptrmap_hash_function_t
+  typedef hash_free_t = uintptr2uintptrmap_hash_free_t
+  typedef key_free_t = uintptr2uintptrmap_uintptr_free_t
+  typedef value_free_t = uintptr2uintptrmap_uintptr_free_t
+  typedef key_copy_t = uintptr2uintptrmap_uintptr_copy_t
+  typedef value_copy_t = uintptr2uintptrmap_uintptr_copy_t
+  typedef key_eq_t = uintptr2uintptrmap_key_eq_t
 
-fun
-uintptr2uintptrmap_set
-        {size          : int}
-        (map           : uintptr2uintptrmap_vt (size),
-         key           : uintptr,
-         value         : uintptr,
-         bits_source   : uintptr2uintptrmap_bits_source_vt,
-         hash_function : uintptr2uintptrmap_hash_function_t,
-         hash_free     : uintptr2uintptrmap_hash_free_t,
-         key_free      : uintptr2uintptrmap_uintptr_free_t,
-         value_free    : uintptr2uintptrmap_uintptr_free_t,
-         key_eq        : uintptr2uintptrmap_key_eq_t,
-         environment   : ptr) :
-    [new_size : int | new_size == size || new_size == size + 1]
-    uintptr2uintptrmap_vt (new_size)
+in
 
-(*
-fun
-uintptr2uintptrmap_del
-        {size        : int}
-        (map         : uintptr2uintptrmap_vt (size),
-         key         : uintptr,
-         key_free    : uintptr2uintptrmap_uintptr_free_t,
-         value_free  : uintptr2uintptrmap_uintptr_free_t,
-         environment : ptr) :
-    [new_size : int | new_size == size || new_size == size - 1]
-    uintptr2uintptrmap_vt (new_size)
+  fun {}
+  uintptr2uintptrmap () :
+    map_vt (0)
 
-fun
-uintptr2uintptrmap_get_opt
-        {size        : int}
-        (map         : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         key         : uintptr,
-         value_copy  : uintptr2uintptrmap_uintptr_copy_t,
-         environment : ptr) :
-    Option_vt (uintptr)
+  fun
+  uintptr2uintptrmap_size
+          {size : int}
+          (map  : !map_vt (size) >> _) :
+      size_t size
 
-fun
-uintptr2uintptrmap_get
-  (* Sets "value" to zero if "has_key" is false. *)
-        {size        : int}
-        (map         : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         key         : uintptr,
-         value_copy  : uintptr2uintptrmap_uintptr_copy_t,
-         environment : ptr,
-         has_key     : &bool? -> bool,
-         value       : &uintptr? -> uintptr) :
-    void
+  fun {}
+  uintptr2uintptrmap_is_empty
+          {size : int}
+          (map  : !map_vt (size) >> _) :
+      bool (size == 0)
 
-fun
-uintptr2uintptrmap_has_key
-        {size : int}
-        (map  : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         key  : uintptr) :
-    bool
+  fun {}
+  uintptr2uintptrmap_isnot_empty
+          {size : int}
+          (map  : !map_vt (size) >> _) :
+      bool (size != 0)
 
-fun
-uintptr2uintptrmap_pairs
-        {size        : int}
-        (map         : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         key_copy    : uintptr2uintptrmap_uintptr_copy_t,
-         value_copy  : uintptr2uintptrmap_uintptr_copy_t,
-         environment : ptr) :
-    list_vt (@(uintptr, uintptr), size)
+  fun
+  uintptr2uintptrmap_set
+          {size          : int}
+          (map           : map_vt (size),
+           key           : key_t,
+           value         : value_t,
+           bits_source   : bits_source_vt,
+           hash_function : hash_function_t,
+           key_eq        : key_eq_t,
+           hash_free     : hash_free_t,
+           key_free      : key_free_t,
+           value_free    : value_free_t,
+           environment   : ptr) :
+      [new_size : int | new_size == size || new_size == size + 1]
+      map_vt (new_size)
 
-fun
-uintptr2uintptrmap_pairs_free
-        {size        : int}
-        (pairs       : list_vt (@(uintptr, uintptr), size),
-         key_free    : uintptr2uintptrmap_uintptr_free_t,
-         value_free  : uintptr2uintptrmap_uintptr_free_t,
-         environment : ptr) :
-    void
+  fun
+  uintptr2uintptrmap_del
+          {size          : int}
+          (map           : map_vt (size),
+           key           : key_t,
+           bits_source   : bits_source_vt,
+           hash_function : hash_function_t,
+           key_eq        : key_eq_t,
+           hash_free     : hash_free_t,
+           key_free      : key_free_t,
+           value_free    : value_free_t,
+           environment   : ptr) :
+      [new_size : int | new_size == size || new_size == size - 1]
+      map_vt (new_size)
 
-fun
-uintptr2uintptrmap_keys
-        {size        : int}
-        (map         : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         key_copy    : uintptr2uintptrmap_uintptr_copy_t,
-         environment : ptr) :
-    list_vt (uintptr, size)
+  fun
+  uintptr2uintptrmap_get_opt
+          {size          : int}
+          (map           : !RD(map_vt (size)) >> _,
+           key           : key_t,
+           bits_source   : bits_source_vt,
+           hash_function : hash_function_t,
+           key_eq        : key_eq_t,
+           hash_free     : hash_free_t,
+           key_copy      : key_copy_t,
+           value_copy    : value_copy_t,
+           environment   : ptr) :
+      Option_vt (uintptr)
 
-fun
-uintptr2uintptrmap_keys_free
-        {size        : int}
-        (keys        : list_vt (uintptr, size),
-         key_free    : uintptr2uintptrmap_uintptr_free_t,
-         environment : ptr) :
-    void
+  fun
+  uintptr2uintptrmap_has_key
+          {size          : int}
+          (map           : !RD(map_vt (size)) >> _,
+           key           : key_t,
+           bits_source   : bits_source_vt,
+           hash_function : hash_function_t,
+           key_eq        : key_eq_t,
+           hash_free     : hash_free_t,
+           environment   : ptr) :
+      bool
 
-fun
-uintptr2uintptrmap_values
-        {size        : int}
-        (map         : !RD(uintptr2uintptrmap_vt (size)) >> _,
-         value_copy  : uintptr2uintptrmap_uintptr_copy_t,
-         environment : ptr) :
-    list_vt (uintptr, size)
+  fun
+  uintptr2uintptrmap_pairs
+          {size        : int}
+          (map         : !RD(map_vt (size)) >> _,
+           key_copy    : key_copy_t,
+           value_copy  : value_copy_t,
+           environment : ptr) :
+      list_vt (@(uintptr, uintptr), size)
 
-fun
-uintptr2uintptrmap_values_free
-        {size        : int}
-        (values      : list_vt (uintptr, size),
-         value_free  : uintptr2uintptrmap_uintptr_free_t,
-         environment : ptr) :
-    void
+  fun
+  uintptr2uintptrmap_pairs_free
+          {size        : int}
+          (pairs       : list_vt (@(uintptr, uintptr), size),
+           key_free    : key_free_t,
+           value_free  : value_free_t,
+           environment : ptr) :
+      void
 
-fun
-uintptr2uintptrmap_free
-        {size        : int}
-        (map         : uintptr2uintptrmap_vt (size),
-         key_free    : uintptr2uintptrmap_uintptr_free_t,
-         value_free  : uintptr2uintptrmap_uintptr_free_t,
-         environment : ptr) :
-    void
-*)
+  fun
+  uintptr2uintptrmap_keys
+          {size        : int}
+          (map         : !RD(map_vt (size)) >> _,
+           key_copy    : key_copy_t,
+           environment : ptr) :
+      list_vt (uintptr, size)
+
+  fun
+  uintptr2uintptrmap_keys_free
+          {size        : int}
+          (keys        : list_vt (uintptr, size),
+           key_free    : key_free_t,
+           environment : ptr) :
+      void
+
+  fun
+  uintptr2uintptrmap_values
+          {size        : int}
+          (map         : !RD(map_vt (size)) >> _,
+           value_copy  : value_copy_t,
+           environment : ptr) :
+      list_vt (uintptr, size)
+
+  fun
+  uintptr2uintptrmap_values_free
+          {size        : int}
+          (values      : list_vt (uintptr, size),
+           value_free  : value_free_t,
+           environment : ptr) :
+      void
+
+  fun
+  uintptr2uintptrmap_free
+          {size        : int}
+          (map         : map_vt (size),
+           key_free    : key_free_t,
+           value_free  : value_free_t,
+           environment : ptr) :
+      void
+
+end (* local *)
 
 (********************************************************************)

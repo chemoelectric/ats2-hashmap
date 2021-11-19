@@ -34,7 +34,7 @@ typedef key_t = uintptr
 typedef value_t = uintptr
 
 implement
-uintptr2uintptrmap_set (map, key, value,
+uintptr2uintptrmap_del (map, key,
                         bits_source, hash_function, key_eq,
                         hash_free, key_free, value_free,
                         environment) =
@@ -70,5 +70,5 @@ uintptr2uintptrmap_set (map, key, value,
       if isneqz ($UNSAFE.cast{ptr} value_free) then
         value_free (v, environment)
   in
-    hashmap_set<hash_t><key_t, value_t> (map, key, value)
+    hashmap_del<hash_t><key_t, value_t> (map, key)
   end

@@ -34,10 +34,10 @@ typedef key_t = uintptr
 typedef value_t = uintptr
 
 implement
-uintptr2uintptrmap_set (map, key, value,
-                        bits_source, hash_function, key_eq,
-                        hash_free, key_free, value_free,
-                        environment) =
+uintptr2uintptrmap_get_opt (map, key,
+                            bits_source, hash_function, key_eq,
+                            hash_free, key_copy, value_copy,
+                            environment) =
   let
     val _ = assertloc (isneqz ($UNSAFE.cast{ptr} bits_source))
     val _ = assertloc (isneqz ($UNSAFE.cast{ptr} hash_function))
@@ -61,14 +61,18 @@ uintptr2uintptrmap_set (map, key, value,
         hash_free (hash, environment)
 
     implement
-    hashmap$key_vt_free<key_t> (k) =
-      if isneqz ($UNSAFE.cast{ptr} key_free) then
-        key_free (k, environment)
+    hashmap$key_vt_copy<key_t> (k) =
+      if isneqz ($UNSAFE.cast{ptr} key_copy) then
+        key_copy (k, environment)
+      else
+        k
 
     implement
-    hashmap$value_vt_free<value_t> (v) =
-      if isneqz ($UNSAFE.cast{ptr} value_free) then
-        value_free (v, environment)
+    hashmap$value_vt_copy<value_t> (v) =
+      if isneqz ($UNSAFE.cast{ptr} value_copy) then
+        value_copy (v, environment)
+      else
+        v
   in
-    hashmap_set<hash_t><key_t, value_t> (map, key, value)
+    hashmap_get_opt<hash_t><key_t, value_t> (map, key)
   end
