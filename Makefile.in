@@ -1668,7 +1668,7 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	m4-rules.mk ats-deptracking-rules.mk \
 	ats-nodeptracking-rules.mk \
 	hashmap/DATS/bits_source_nbytes.dats \
-	hashmap/SATS/bits_source.sats.m4 \
+	hashmap/SATS/bits_source.sats.m4 hashmap/bits_source.h.m4 \
 	hashmap/DATS/INCLUDE/strnptrmap-implementations.dats \
 	hashmap/DATS/strnptrmap-spookyhash.dats \
 	hashmap/HATS/strnptrmap-spookyhash.hats \
@@ -1714,8 +1714,8 @@ EXTRA_DIST = silent-rules.mk COPYING INSTALL README AUTHORS \
 	hashmap/DATS/string2stringmap_get.dats \
 	hashmap/DATS/string2stringmap_has_key.dats \
 	hashmap/DATS/string2stringmap_extern_inline.dats.m4 \
-	hashmap/string2stringmap.h hashmap/bits_source.h.m4 \
-	tests/ats-runtime.c tests/INCLUDE/runtime-support.dats \
+	hashmap/string2stringmap.h tests/ats-runtime.c \
+	tests/INCLUDE/runtime-support.dats \
 	tests/INCLUDE/test-strnptr2strnptr-map.dats \
 	tests/test-bits_source_uint8.dats \
 	tests/test-bits_source_uint16.dats \
@@ -1741,7 +1741,7 @@ CLEANFILES = hashmap/SATS/bits_source.sats \
 	hashmap/DATS/bits_source_uint32.dats \
 	hashmap/DATS/bits_source_uint64.dats \
 	hashmap/DATS/bits_source_uint64_uint64.dats \
-	hashmap/HATS/strnptrmap-dats.hats hashmap/bits_source.h \
+	hashmap/bits_source.h hashmap/HATS/strnptrmap-dats.hats \
 	tests/test-bits_source_uint8 tests/test-bits_source_uint16 \
 	tests/test-bits_source_uint32 tests/test-bits_source_uint64 \
 	tests/test-bits_source_uint64_uint64 \
@@ -1869,14 +1869,16 @@ nobase_dist_pkginclude_HEADERS = hashmap/DATS/bits_source.dats \
 	hashmap/SATS/strnptr2uintptrmap.sats \
 	hashmap/SATS/strnptrset.sats \
 	hashmap/SATS/strnptr2strnptrmap.sats
+
+# A C interface to hashmap/SATS/bits_source.sats
 nobase_nodist_pkginclude_HEADERS = hashmap/SATS/array-proofs.sats \
 	hashmap/DATS/array-proofs.dats hashmap/SATS/memory.sats \
 	hashmap/DATS/memory.dats hashmap/CATS/memory.cats \
 	hashmap/SATS/bits_source-parameters.sats \
-	hashmap/SATS/bits_source.sats $(am__append_10) \
-	$(am__append_12) $(am__append_14) $(am__append_16) \
-	$(am__append_18) $(am__append_20) $(am__append_22) \
-	$(am__append_23) hashmap/bits_source.h
+	hashmap/SATS/bits_source.sats hashmap/bits_source.h \
+	$(am__append_10) $(am__append_12) $(am__append_14) \
+	$(am__append_16) $(am__append_18) $(am__append_20) \
+	$(am__append_22) $(am__append_23)
 
 #--------------------------------------------------------------------------
 nodist_pkgconfig_DATA = ats2-hashmap.pc
@@ -1904,6 +1906,19 @@ AM_PATSOPTFLAGS = -IATS $(builddir) -IATS $(srcdir) \
 TOTAL_PATSOPTFLAGS = $(AM_PATSOPTFLAGS) $(PATSOPTFLAGS) \
 	$(XPATSOPTFLAGS)
 TESTS_PATSOPTFLAGS = -IATS $(builddir)/tests -IATS $(srcdir)/tests
+
+# Bitmaps of which entries are actually stored in a sparsely populated
+# array.
+
+# The core hashmap implementation.
+
+# Hashmaps from strings to other objects.
+
+# Hashmaps from strings to uintptr_t, primarily for use in C programs.
+
+# String sets based on hashmaps. For use both in ATS and in C.
+
+# Hashmaps from strings to strings. For use both in ATS and in C.
 nodist_libats2_hashmap_la_SOURCES = hashmap/SATS/array-proofs_sats.c \
 	hashmap/DATS/array-proofs_dats.c hashmap/SATS/memory_sats.c \
 	hashmap/DATS/memory_dats.c \

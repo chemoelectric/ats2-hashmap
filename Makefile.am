@@ -378,17 +378,26 @@ hashmap/DATS/bits_source_%bytes_implementation.dats: GNUmakefile
 		'  bits_source_nbytes (i2sz $(*), hash, depth)' \
 		> $(@)
 
+# A C interface to hashmap/SATS/bits_source.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/bits_source.h
+CLEANFILES += hashmap/bits_source.h
+EXTRA_DIST += hashmap/bits_source.h.m4
+
+# Bitmaps of which entries are actually stored in a sparsely populated
+# array.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/population_map_sats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/population_map_dats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/population_map.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/population_map.dats
 
+# The core hashmap implementation.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/hashmap_sats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/hashmap_dats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/hashmap.sats
 nobase_dist_pkginclude_HEADERS += hashmap/DATS/hashmap.dats
 nobase_dist_pkginclude_HEADERS += hashmap/HATS/hashmap.hats
 
+# Hashmaps from strings to other objects.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrmap_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrmap.sats
 
@@ -482,6 +491,7 @@ endif WITH_DEFAULT_HASH
 EXTRA_DIST += hashmap/HATS/strnptrmap.hats
 CLEANFILES += hashmap/HATS/strnptrmap-dats.hats
 
+# Hashmaps from strings to uintptr_t, primarily for use in C programs.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2uintptrmap_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2uintptrmap.sats
 if WITH_DEFAULT_HASH
@@ -531,6 +541,7 @@ EXTRA_DIST += hashmap/DATS/string2uintptrmap_extern_inline.dats.m4
 EXTRA_DIST += hashmap/string2uintptrmap.h
 include string2uintptrmap_extern_inline.am
 
+# String sets based on hashmaps. For use both in ATS and in C.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptrset_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptrset.sats
 if WITH_DEFAULT_HASH
@@ -555,6 +566,7 @@ EXTRA_DIST += hashmap/DATS/stringset_extern_inline.dats.m4
 EXTRA_DIST += hashmap/stringset.h
 include stringset_extern_inline.am
 
+# Hashmaps from strings to strings. For use both in ATS and in C.
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/strnptr2strnptrmap_sats.c
 nobase_dist_pkginclude_HEADERS += hashmap/SATS/strnptr2strnptrmap.sats
 if WITH_DEFAULT_HASH
@@ -603,10 +615,6 @@ EXTRA_DIST += hashmap/DATS/string2stringmap_has_key.dats
 EXTRA_DIST += hashmap/DATS/string2stringmap_extern_inline.dats.m4
 EXTRA_DIST += hashmap/string2stringmap.h
 include string2stringmap_extern_inline.am
-
-nobase_nodist_pkginclude_HEADERS += hashmap/bits_source.h
-CLEANFILES += hashmap/bits_source.h
-EXTRA_DIST += hashmap/bits_source.h.m4
 
 .PHONY: libs-clean
 libs-clean:
