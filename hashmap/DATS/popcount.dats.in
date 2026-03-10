@@ -1,0 +1,148 @@
+(*
+
+Copyright © 2026 Barry Schwartz
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License, as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License
+along with this program. If not, see
+<https://www.gnu.org/licenses/>.
+
+*)
+
+#undef ATS_PACKNAME
+#define ATS_PACKNAME "@ATS_PACKNAME@"
+
+#undef ATS_EXTERN_PREFIX
+#define ATS_EXTERN_PREFIX "@ATS_EXTERN_PREFIX@"
+
+#define ATS_DYNLOADFLAG 0
+
+#include "share/atspre_define.hats"
+#include "share/atspre_staload.hats"
+
+staload "@ATS_SATS_DIRECTORY@/popcount.sats"
+
+(********************************************************************)
+
+primplement
+lemma_popcount_isfun {x} {popcount1, popcount2} () =
+  {
+    prval pf1 = popcount_relation_to_proof {x} {popcount1} ()
+    prval pf2 = popcount_relation_to_proof {x} {popcount2} ()
+    prval _ = popcount_isfun (pf1, pf2)
+  }
+
+primplement
+lemma_popcount_low_bits_isfun {x} {i} {popcount1, popcount2} () =
+  {
+    prval pf1 =
+      popcount_low_bits_relation_to_proof {x} {i} {popcount1} ()
+    prval pf2 =
+      popcount_low_bits_relation_to_proof {x} {i} {popcount2} ()
+    prval _ = popcount_low_bits_isfun (pf1, pf2)
+  }
+
+primplement
+lemma_popcount_is_nonnegative {x} {popcount} () =
+  popcount_is_nonnegative
+    (popcount_relation_to_proof {x} {popcount} ())
+
+primplement {tk}
+lemma_popcount_param {x} {popcount} (x) =
+  popcount_param (popcount_relation_to_proof {x} {popcount} () | x)
+
+primplement
+lemma_popcount_low_bits_is_nonnegative {x} {i} {popcount} () =
+  popcount_low_bits_is_nonnegative
+    (popcount_low_bits_relation_to_proof {x} {i} {popcount} ())
+
+primplement
+lemma_popcount_low_bits_bound {x} {i} {popcount} () =
+  popcount_low_bits_bound
+    (popcount_low_bits_relation_to_proof {x} {i} {popcount} ())
+
+primplement
+lemma_popcount_fewer_bits_1 {x} {i} {popcount1, popcount2} () =
+  {
+    prval pf1 = popcount_relation_to_proof {x} {popcount1} ()
+    prval pf2 =
+      popcount_low_bits_relation_to_proof {x} {i} {popcount2} ()
+    prval _ = popcount_fewer_bits_1 (pf1, pf2)
+  }
+
+primplement
+lemma_popcount_fewer_bits_2 {x} {i1, i2} {popcount1, popcount2} () =
+  {
+    prval pf1 =
+      popcount_low_bits_relation_to_proof {x} {i1} {popcount1} ()
+    prval pf2 =
+      popcount_low_bits_relation_to_proof {x} {i2} {popcount2} ()
+    prval _ = popcount_fewer_bits_2 (pf1, pf2)
+  }
+
+(********************************************************************)
+
+implement
+g0uint_popcount<uint32knd> (x) =
+  g0uint_popcount_uint32 (x)
+
+implement
+g0uint_popcount<uint64knd> (x) =
+  g0uint_popcount_uint64 (x)
+
+implement
+g1uint_popcount<uint32knd> {x} (x) =
+  g1uint_popcount_uint32 {x} (x)
+
+implement
+g1uint_popcount<uint64knd> {x} (x) =
+  g1uint_popcount_uint64 {x} (x)
+
+implement {tk}
+g1uint_popcount_with_proof {x} (x) =
+  let
+    val [popcount : int] popcount = g1uint_popcount<tk> {x} (x)
+    prval pf = popcount_relation_to_proof {x} {popcount} ()
+  in
+    @(pf | popcount)
+  end
+
+(********************************************************************)
+
+implement
+g0uint_popcount_low_bits<uint32knd> (x, i) =
+  g0uint_popcount_low_bits_uint32 (x, i)
+
+implement
+g0uint_popcount_low_bits<uint64knd> (x, i) =
+  g0uint_popcount_low_bits_uint64 (x, i)
+
+implement
+g1uint_popcount_low_bits<uint32knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint32 {x} {i} (x, i)
+
+implement
+g1uint_popcount_low_bits<uint64knd> {x} {i} (x, i) =
+  g1uint_popcount_low_bits_uint64 {x} {i} (x, i)
+
+implement {tk}
+g1uint_popcount_low_bits_with_proof {x} {i} (x, i) =
+  let
+    val [popcount : int] popcount =
+      g1uint_popcount_low_bits<tk> {x} {i} (x, i)
+    prval pf =
+      popcount_low_bits_relation_to_proof {x} {i} {popcount} ()
+  in
+    @(pf | popcount)
+  end
+
+(********************************************************************)

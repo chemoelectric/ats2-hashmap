@@ -1,6 +1,6 @@
 (*
 
-Copyright © 2021 Barry Schwartz
+Copyright © 2021, 2026 Barry Schwartz
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License, as
@@ -47,7 +47,7 @@ staload "hashmap/SATS/bits_source.sats"
 staload "hashmap/SATS/bits_source-parameters.sats"
 staload "hashmap/SATS/memory.sats"
 staload "hashmap/SATS/population_map.sats"
-staload "popcount/SATS/popcount.sats"
+staload "hashmap/SATS/popcount.sats"
 
 #define NIL list_vt_nil ()
 #define :: list_vt_cons
@@ -217,8 +217,8 @@ node_path_array_vt (key_vt         : vt@ype+,
     index = size_t index
   }
 vtypedef
-node_path_array_vt (key_vt         : vt@ype+,
-                    value_vt       : vt@ype+) =
+node_path_array_vt (key_vt   : vt@ype+,
+                    value_vt : vt@ype+) =
   [population_map : int]
   [length         : int]
   [p_array        : addr]

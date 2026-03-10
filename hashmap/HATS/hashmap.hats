@@ -1,6 +1,6 @@
 (*
 
-Copyright © 2021 Barry Schwartz
+Copyright © 2021, 2026 Barry Schwartz
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License, as
@@ -25,4 +25,4 @@ staload _ = "hashmap/DATS/hashmap.dats"
 staload _ = "hashmap/DATS/bits_source.dats"
 staload _ = "hashmap/DATS/memory.dats"
 staload _ = "hashmap/DATS/population_map.dats"
-staload _ = "popcount/DATS/popcount.dats"
+staload _ = "hashmap/DATS/popcount.dats"

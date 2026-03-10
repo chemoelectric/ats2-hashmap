@@ -1,5 +1,5 @@
 #
-# Copyright © 2021 Barry Schwartz
+# Copyright © 2026 Barry Schwartz
 #
 # This program is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License, as
@@ -19,9 +19,16 @@
 #--------------------------------------------------------------------------
 
 AC_PREREQ([2.71])
-AC_INIT([ats2-hashmap],[1.0.0],[],[ats2-hashmap],[])
+AC_INIT([ats2-hashmap],[1.1.0],[],[ats2-hashmap],[])
 
 AC_CONFIG_SRCDIR([hashmap/SATS/hashmap.sats])
+if test x"${PATSHOME}" = x; then
+  # Find PATSHOME by hacking the patsopt script.
+  awk '/^prog=`basename \$0`/{exit 0}{print}END{print "echo \"${PATSHOME}\""}' \
+    `which patsopt` > tmp.sh
+  PATSHOME=`sh tmp.sh`
+  rm tmp.sh
+fi
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -98,6 +105,11 @@ AC_PROG_SED
 AC_PROG_FGREP
 AC_PROG_EGREP
 
+CHEM_COMPILER_FLAGS([__c_compiler_flags],[
+  -std=gnu23
+])
+CFLAGS="${CFLAGS}${CFLAGS+ }${__c_compiler_flags}"
+
 AM_CONDITIONAL([DEPENDENCY_TRACKING],
   [test x"${enable_dependency_tracking}" != xno])
 
@@ -163,11 +175,6 @@ AS_IF([test "x${with_ats2_siphash}" != xno],
     [AC_MSG_FAILURE([ats2-siphash not found. Consider installing it or configuring without it])])
 ])
 
-PKG_CHECK_MODULES([ATS2_POPCOUNT],[ats2-popcount],
-  [REQUIRES_PRIVATE_PKGS="${REQUIRES_PRIVATE_PKGS}${REQUIRES_PRIVATE_PKGS+ }ats2-popcount"
-   PKG_CHECK_VAR([ATS2_POPCOUNT_PATSOPTFLAGS],[ats2-popcount],[PATSOPTFLAGS])],
-  [AC_MSG_FAILURE([ats2-popcount was not found.])])
-
 AC_SUBST([REQUIRES_PRIVATE_PKGS])
 
 #--------------------------------------------------------------------------
@@ -221,6 +228,10 @@ AC_CONFIG_FILES([hashmap/DATS/array-proofs.dats])
 AC_CONFIG_FILES([hashmap/CATS/memory.cats])
 AC_CONFIG_FILES([hashmap/SATS/memory.sats])
 AC_CONFIG_FILES([hashmap/DATS/memory.dats])
+
+AC_CONFIG_FILES([hashmap/CATS/popcount.cats])
+AC_CONFIG_FILES([hashmap/SATS/popcount.sats])
+AC_CONFIG_FILES([hashmap/DATS/popcount.dats])
 
 AC_CONFIG_FILES([list-ats-dependencies.dats])
 

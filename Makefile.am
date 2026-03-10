@@ -186,6 +186,12 @@ nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/array-proofs_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/array-proofs.sats
 nobase_nodist_pkginclude_HEADERS += hashmap/DATS/array-proofs.dats
 
+nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/popcount_sats.c
+nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/popcount_dats.c
+nobase_nodist_pkginclude_HEADERS += hashmap/SATS/popcount.sats
+nobase_nodist_pkginclude_HEADERS += hashmap/DATS/popcount.dats
+nobase_nodist_pkginclude_HEADERS += hashmap/CATS/popcount.cats
+
 nodist_libats2_hashmap_la_SOURCES += hashmap/SATS/memory_sats.c
 nodist_libats2_hashmap_la_SOURCES += hashmap/DATS/memory_dats.c
 nobase_nodist_pkginclude_HEADERS += hashmap/SATS/memory.sats

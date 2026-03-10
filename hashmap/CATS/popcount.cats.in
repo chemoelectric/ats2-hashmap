@@ -1,0 +1,58 @@
+/*
+
+   Copyright © 2026 Barry Schwartz
+
+   This program is free software: you can redistribute it and/or
+   modify it under the terms of the GNU General Public License, as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License
+   along with this program. If not, see
+   <https://www.gnu.org/licenses/>.
+
+*/
+
+#ifndef HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__
+#define HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__
+
+/********************************************************************/
+/*
+ * Population count.
+ */
+
+#include <stdint.h>
+#include <stdbit.h>
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint32(x) \
+        stdc_count_ones ((uint32_t) (x))
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_uint64(x) \
+        stdc_count_ones ((uint64_t) (x))
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint32(x) \
+        stdc_count_ones ((uint32_t) (x))
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_uint64(x) \
+        stdc_count_ones ((uint64_t) (x))
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint32(x, i) \
+  stdc_count_ones (((uint32_t) (x)) & ~((~(uint32_t) 0)<<(i)))
+
+#define @ATS_EXTERN_PREFIX@g0uint_popcount_low_bits_uint64(x, i) \
+  stdc_count_ones (((uint64_t) (x)) & ~((~(uint64_t) 0)<<(i)))
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint32(x, i) \
+  stdc_count_ones (((uint32_t) (x)) & ~((~(uint32_t) 0)<<(i)))
+
+#define @ATS_EXTERN_PREFIX@g1uint_popcount_low_bits_uint64(x, i) \
+  stdc_count_ones (((uint64_t) (x)) & ~((~(uint64_t) 0)<<(i)))
+
+/********************************************************************/
+
+#endif /* HEADER_GUARD_@ATS_EXTERN_PREFIX@POPCOUNT_CATS__ */
