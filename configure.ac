@@ -1,5 +1,5 @@
 #
-# Copyright © 2026 Barry Schwartz
+# Copyright © 2021, 2026 Barry Schwartz
 #
 # This program is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License, as
@@ -19,16 +19,9 @@
 #--------------------------------------------------------------------------
 
 AC_PREREQ([2.71])
-AC_INIT([ats2-hashmap],[1.1.0],[],[ats2-hashmap],[])
+AC_INIT([ats2-hashmap],[1.1.1],[],[ats2-hashmap],[])
 
 AC_CONFIG_SRCDIR([hashmap/SATS/hashmap.sats])
-if test x"${PATSHOME}" = x; then
-  # Find PATSHOME by hacking the patsopt script.
-  awk '/^prog=`basename \$0`/{exit 0}{print}END{print "echo \"${PATSHOME}\""}' \
-    `which patsopt` > tmp.sh
-  PATSHOME=`sh tmp.sh`
-  rm tmp.sh
-fi
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -42,6 +35,13 @@ AM_MAINTAINER_MODE
 LT_INIT
 
 AC_ARG_VAR([PATSHOME],[the home of the ATS2 compiler])
+if test x"${PATSHOME}" = x; then
+  # Find PATSHOME by hacking the patsopt script.
+  awk '/^prog=`basename \$0`/{exit 0}{print}END{print "echo \"${PATSHOME}\""}' \
+    `which patsopt` > tmp.sh
+  PATSHOME=`sh tmp.sh`
+  rm tmp.sh
+fi
 
 AC_ARG_VAR([PKGCONFIG_PATSHOME],
   [The PATSHOME setting to put in the pkg-config file [default="${PATSHOME}"]])
