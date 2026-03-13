@@ -15376,6 +15376,14 @@ printf "%s\n" "$ac_cv_path_EGREP" >&6; }
 
 
 { :;
+   if test x"${GCC}" = xyes; then
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+      { :;
    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the C compiler accepts -std=gnu23" >&5
 printf %s "checking whether the C compiler accepts -std=gnu23... " >&6; }
 if test ${ax_cv_check_cflags___std_gnu23+y}
@@ -15420,6 +15428,15 @@ else case e in #(
 esac
 fi
 
+}
+
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+   fi
 }
 CFLAGS="${CFLAGS}${CFLAGS+ }${__c_compiler_flags}"
 
@@ -16202,13 +16219,13 @@ fi
 { :;
 
    # If no GNU Make is found, recommend it.
-   if test -z "${_cv_gnu_make_command}" \
-         -a x"${__stm_config_makefiles_consider_gnu_make_printed}" != xyes; then
+   if test -z "${ax_cv_gnu_make_command}" \
+         -a x"${chem_config_makefiles_consider_gnu_make_printed}" != xyes; then
       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: Please consider installing and using GNU Make:
            http://www.gnu.org/software/make/" >&5
 printf "%s\n" "$as_me: WARNING: Please consider installing and using GNU Make:
            http://www.gnu.org/software/make/" >&2;}
-      __stm_config_makefiles_consider_gnu_make_printed=yes
+      chem_config_makefiles_consider_gnu_make_printed=yes
    fi
 
    # Create `Makefile' or its substitute. If GNU Make is present,
@@ -17649,7 +17666,7 @@ fi
 
 
 
-      __stm_config_makefiles_make_command="${_cv_gnu_make_command}"
+      chem_config_makefiles_make_command="${ax_cv_gnu_make_command}"
 
 
 _ACEOF
@@ -18820,15 +18837,15 @@ ltmain=$ac_aux_dir/ltmain.sh
  ;;
     "Makefile":F)
       # If GNU make is present, encourage other makes to call it instead.
-      if test -n "${__stm_config_makefiles_make_command}"; then
+      if test -n "${chem_config_makefiles_make_command}"; then
          cat > Makefile <<EOF
 # Attempt to have common non-GNU Make programs run GNU Make.
 
 .DEFAULT:
-	${__stm_config_makefiles_make_command} \$@
+	${chem_config_makefiles_make_command} \$@
 
 %:
-	${__stm_config_makefiles_make_command}
+	${chem_config_makefiles_make_command}
 EOF
       fi
     ;;

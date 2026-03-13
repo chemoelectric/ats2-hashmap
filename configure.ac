@@ -105,7 +105,7 @@ AC_PROG_SED
 AC_PROG_FGREP
 AC_PROG_EGREP
 
-CHEM_COMPILER_FLAGS([__c_compiler_flags],[
+CHEM_GNU_C_FLAGS([__c_compiler_flags],[
   -std=gnu23
 ])
 CFLAGS="${CFLAGS}${CFLAGS+ }${__c_compiler_flags}"
@@ -187,7 +187,7 @@ AC_SUBST([REQUIRES_PRIVATE_PKGS])
 
 AC_SUBST([WARNING_CFLAGS])
 if test -z "${WARNING_CFLAGS}"; then
-   StM_GNU_C_FLAGS([WARNING_CFLAGS],
+   CHEM_GNU_C_FLAGS([WARNING_CFLAGS],
       [-Wpointer-arith],
       [-Wl[,]--warn-common])
 fi
@@ -206,8 +206,8 @@ fi
 # @GNU@ here may be better.)
 AC_SUBST([GNU],[])
 
-StM_REQUIRE_GNU_MAKE_IN_PATH
-StM_CONFIG_MAKEFILES
+CHEM_REQUIRE_GNU_MAKE_IN_PATH
+CHEM_CONFIG_MAKEFILES
 
 #AC_CONFIG_FILES([ats2-hashmap.pc])
 #AC_CONFIG_FILES([hashmap.pc])
